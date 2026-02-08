@@ -51,6 +51,29 @@
         header {
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .hebbert {
+            width: 360px;
+            height: auto;
+            opacity: 0.85;
+            flex-shrink: 0;
+        }
+
+        .hebbert:hover {
+            opacity: 1;
+        }
+
+        .header-text {
+            flex-shrink: 0;
         }
 
         h1 {
@@ -367,13 +390,25 @@
             .termin-zeit {
                 width: auto;
             }
+            .hebbert {
+                width: 210px;
+            }
+            .header-inner {
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Termine in Recklinghausen</h1>
+            <div class="header-inner">
+                <img src="hebbert/1984-01.jpg" alt="Hebbert" class="hebbert">
+                <div class="header-text">
+                    <h1>Termine in Recklinghausen</h1>
+                </div>
+                <img src="hebbert/1985-04.jpg" alt="Hebbert am Terminplan" class="hebbert">
+            </div>
             <div class="nav">
                 <a href="termine_re_2026_03.html" class="nav-btn">&larr; März</a>
                 <span class="monat-titel">April 2026</span>
@@ -1140,7 +1175,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 15:05 Uhr<br>
+            Generiert am 08.02.2026 um 15:41 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;

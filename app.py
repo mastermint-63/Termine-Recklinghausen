@@ -212,6 +212,29 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         header {{
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
+        }}
+
+        .header-inner {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }}
+
+        .hebbert {{
+            width: 360px;
+            height: auto;
+            opacity: 0.85;
+            flex-shrink: 0;
+        }}
+
+        .hebbert:hover {{
+            opacity: 1;
+        }}
+
+        .header-text {{
+            flex-shrink: 0;
         }}
 
         h1 {{
@@ -528,13 +551,25 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             .termin-zeit {{
                 width: auto;
             }}
+            .hebbert {{
+                width: 210px;
+            }}
+            .header-inner {{
+                gap: 10px;
+            }}
         }}
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Termine in Recklinghausen</h1>
+            <div class="header-inner">
+                <img src="hebbert/1984-01.jpg" alt="Hebbert" class="hebbert">
+                <div class="header-text">
+                    <h1>Termine in Recklinghausen</h1>
+                </div>
+                <img src="hebbert/1985-04.jpg" alt="Hebbert am Terminplan" class="hebbert">
+            </div>
             <div class="nav">
                 <a href="{prev_link}" class="nav-btn{prev_class}">&larr; {monatsnamen[prev_monat]}</a>
                 <span class="monat-titel">{monatsnamen[monat]} {jahr}</span>
