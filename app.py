@@ -20,7 +20,8 @@ from scraper import (
     hole_regioactive, hole_stadt_re, hole_altstadtschmiede,
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
-    hole_akademie, hole_stadtarchiv, Termin,
+    hole_akademie, hole_stadtarchiv, hole_geschichte_re,
+    hole_gastkirche, Termin,
 )
 
 
@@ -37,6 +38,8 @@ QUELLEN = {
     'vhs': 'VHS',
     'akademie': 'Ev. Akademie',
     'stadtarchiv': 'Stadtarchiv',
+    'geschichte-re': 'Heimatkunde',
+    'gastkirche': 'Gastkirche',
 }
 
 
@@ -168,6 +171,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'vhs': 'badge-vhs',
                 'akademie': 'badge-akademie',
                 'stadtarchiv': 'badge-stadtarchiv',
+                'geschichte-re': 'badge-geschichte-re',
+                'gastkirche': 'badge-gastkirche',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -528,6 +533,16 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-geschichte-re {{
+            background: linear-gradient(135deg, #8a6a40 0%, #7a5a30 100%);
+            color: white;
+        }}
+
+        .badge-gastkirche {{
+            background: linear-gradient(135deg, #6a8a6a 0%, #5a7a5a 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -726,7 +741,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
             <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a> &middot;
             <a href="https://www.ahademie.com/veranstaltungen/" target="_blank">Ev. Akademie</a> &middot;
-            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a>
+            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a> &middot;
+            <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
+            <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a>
         </footer>
     </div>
 
@@ -868,6 +885,16 @@ def main():
         # 12. Stadtarchiv (PDF)
         events = hole_stadtarchiv(j, m)
         print(f"  -> {len(events)} Stadtarchiv")
+        alle_termine.extend(events)
+
+        # 13. Verein für Orts- und Heimatkunde
+        events = hole_geschichte_re(j, m)
+        print(f"  -> {len(events)} Heimatkunde")
+        alle_termine.extend(events)
+
+        # 14. Gastkirche
+        events = hole_gastkirche(j, m)
+        print(f"  -> {len(events)} Gastkirche")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)

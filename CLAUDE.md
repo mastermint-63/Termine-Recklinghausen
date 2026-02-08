@@ -22,10 +22,10 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-10 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+14 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
-**scraper.py** — Zehn Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. VHS-Scraper iteriert über 7 Kategorieseiten mit Paginierung und Schleifen-Erkennung; NLGR/Literaturtage teilen sich einen JSON-LD-Helper (`_hole_events_calendar`).
+**scraper.py** — 14 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. VHS-Scraper iteriert über 7 Kategorieseiten mit Paginierung und Schleifen-Erkennung; NLGR/Literaturtage teilen sich einen JSON-LD-Helper (`_hole_events_calendar`).
 
 **app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript, VHS-Toggle-Button zum Ein-/Ausblenden der dominanten VHS-Termine. Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
 
@@ -59,6 +59,10 @@ tail -f launchd.log                        # Live-Log
 | `hole_nlgr()` | nlgr.de | JSON-LD `Event` (The Events Calendar Plugin) |
 | `hole_literaturtage()` | literaturtage-recklinghausen.de | JSON-LD `Event` (The Events Calendar Plugin) |
 | `hole_vhs()` | vhs-recklinghausen.de | KuferWeb: 7 Kategorieseiten mit Paginierung, `h4.kw-ue-title` + `div.row`, interne Duplikat-Erkennung über Name+Datum |
+| `hole_akademie()` | ahademie.com | TYPO3: `div.col-md-4` mit `a.box-hov`, `p.eventdate-big`, `p.subheadline` |
+| `hole_stadtarchiv()` | recklinghausen.de (PDF) | PyMuPDF: Halbjahres-PDFs, Regex für deutsche Datumsformate |
+| `hole_geschichte_re()` | geschichte-recklinghausen.de | ECT-Timeline: `div.ect-timeline-post`, Datum aus `content`-Attribut (Stunde%12-Bug: 1–8→+12) |
+| `hole_gastkirche()` | gastkirche.de | JEvents (Joomla): Wochenansicht, Kat. 68+70, `li.ev_td_li` mit `a.ev_link_row` |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 

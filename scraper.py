@@ -4,7 +4,7 @@ import json
 import re
 import requests
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from calendar import monthrange
 from html import unescape
 from bs4 import BeautifulSoup
@@ -26,6 +26,8 @@ NLGR_URL = "https://nlgr.de/veranstaltungen/"
 LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
 VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
 AKADEMIE_URL = "https://www.ahademie.com/veranstaltungen/"
+GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
+GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
 STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
 
 
@@ -1071,5 +1073,229 @@ def hole_vhs(jahr: int, monat: int) -> list[Termin]:
 
             next_link = soup.find('a', href=lambda h: h and 'browse/forward' in h)
             url = next_link['href'] if next_link else None
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 13. Verein für Orts- und Heimatkunde (geschichte-recklinghausen.de)
+# ---------------------------------------------------------------------------
+
+def hole_geschichte_re(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events vom Verein für Orts- und Heimatkunde Recklinghausen.
+
+    WordPress mit The Events Calendar + ECT (Events Calendar Templates).
+    Timeline-Ansicht: div.ect-timeline-post mit content-Attribut für Datum,
+    h2>a für Titel/Link, meta[itemprop=name] für Ort, div.ect-event-content
+    für Beschreibung.
+    """
+    try:
+        response = requests.get(GESCHICHTE_RE_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (geschichte-re): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for post in soup.find_all('div', class_='ect-timeline-post'):
+        # Datum aus content-Attribut: "2026-03-25CET6:00" oder "2026-04-11CEST9:00"
+        date_area = post.find('div', class_='ect-date-area')
+        if not date_area:
+            continue
+
+        content = date_area.get('content', '')
+        if not content:
+            continue
+
+        # "2026-03-25CET6:00" → Datum + Uhrzeit
+        # ECT-Plugin-Bug: speichert Stunde % 12 (ohne AM/PM)
+        # 18:00→6:00, 14:00→2:00, 9:00→9:00
+        date_match = re.match(r'(\d{4}-\d{2}-\d{2})(?:CES?T)(\d{1,2}):(\d{2})', content)
+        if not date_match:
+            continue
+
+        try:
+            datum = datetime.strptime(date_match.group(1), '%Y-%m-%d')
+            stunde, minute = int(date_match.group(2)), int(date_match.group(3))
+            # Stunde 1–8 → Nachmittag/Abend (+12), 9–11 → Vormittag
+            if 1 <= stunde <= 8:
+                stunde += 12
+            datum = datum.replace(hour=stunde, minute=minute)
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        uhrzeit = f"{stunde:02d}:{minute:02d} Uhr" if stunde or minute else 'siehe Website'
+
+        # Titel + Link aus h2 > a
+        h2 = post.find('h2')
+        if not h2:
+            continue
+        a_tag = h2.find('a')
+        name = a_tag.get_text(strip=True) if a_tag else h2.get_text(strip=True)
+        if not name:
+            continue
+        link = a_tag.get('href', '') if a_tag else GESCHICHTE_RE_URL
+
+        # Ort aus venue meta-Tag
+        venue_block = post.find('div', class_='timeline-view-venue')
+        ort = ''
+        if venue_block:
+            venue_meta = venue_block.find('meta', itemprop='name')
+            if venue_meta:
+                ort = venue_meta.get('content', '')
+
+        # Beschreibung aus ect-event-content
+        desc_div = post.find('div', class_='ect-event-content')
+        beschreibung = ''
+        if desc_div:
+            beschreibung = desc_div.get_text(strip=True)
+            # "Finde mehr heraus »" entfernen
+            beschreibung = re.sub(r'\s*\[…\].*$', '', beschreibung)
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150] or 'Recklinghausen', link=link,
+            beschreibung=beschreibung[:200],
+            quelle='geschichte-re', kategorie='Geschichte',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 14. Gastkirche Recklinghausen — JEvents Wochenansicht
+# ---------------------------------------------------------------------------
+
+# Kategorie-IDs: 68 = Gruppentermine, 70 = Veranstaltungen
+_GASTKIRCHE_KATEGORIEN = {'68': 'Gruppentermine', '70': 'Veranstaltungen'}
+
+
+def _montage_fuer_monat(jahr: int, monat: int) -> list[datetime]:
+    """Gibt alle Montage zurück, deren Woche Tage im Zielmonat enthält."""
+    erster = datetime(jahr, monat, 1)
+    # Montag der Woche, die den 1. enthält
+    montag = erster - timedelta(days=erster.weekday())
+    letzter_tag = monthrange(jahr, monat)[1]
+    letzter = datetime(jahr, monat, letzter_tag)
+
+    montage = []
+    while montag <= letzter:
+        montage.append(montag)
+        montag += timedelta(days=7)
+    return montage
+
+
+def _parse_gastkirche_woche(soup: BeautifulSoup, jahr: int, monat: int,
+                            kategorie_name: str) -> list[Termin]:
+    """Parst Events aus einer JEvents-Wochenseite."""
+    termine = []
+
+    # Jahr aus Header: "09. Februar 2026 - 15. Februar 2026"
+    header = soup.find('td', class_='cal_td_daysnames')
+    header_jahr = jahr
+    if header:
+        jahr_match = re.search(r'(\d{4})', header.get_text())
+        if jahr_match:
+            header_jahr = int(jahr_match.group(1))
+
+    table = soup.find('table', class_='ev_table')
+    if not table:
+        return []
+
+    for row in table.find_all('tr'):
+        left = row.find('td', class_=lambda c: c and (
+            'ev_td_left' in c or 'ev_td_today' in c))
+        right = row.find('td', class_='ev_td_right')
+        if not left or not right:
+            continue
+        if 'Keine Events' in right.get_text():
+            continue
+
+        # Tag + Monat aus left: "Montag09. Februar" oder "Freitag13. Februar"
+        left_text = left.get_text(strip=True)
+        datum_match = re.search(r'(\d{1,2})\.\s*(\w+)', left_text)
+        if not datum_match:
+            continue
+
+        tag = int(datum_match.group(1))
+        monat_name = datum_match.group(2).lower()
+        event_monat = _MONATE.get(monat_name, 0)
+        if not event_monat:
+            continue
+
+        if event_monat != monat or header_jahr != jahr:
+            continue
+
+        # Events aus li.ev_td_li
+        for li in right.find_all('li', class_='ev_td_li'):
+            a_tag = li.find('a', class_='ev_link_row')
+            if not a_tag:
+                continue
+
+            name = a_tag.get('title', '') or a_tag.get_text(strip=True)
+            if not name:
+                continue
+
+            href = a_tag.get('href', '')
+            link = f"https://www.gastkirche.de{href}" if href and not href.startswith('http') else href
+
+            # Uhrzeit: Text vor dem Link, z.B. "15:00 Uhr"
+            li_text = li.get_text(strip=True)
+            uhrzeit = 'siehe Website'
+            zeit_match = re.search(r'(\d{1,2}:\d{2})\s*Uhr', li_text)
+            stunde, minute = 0, 0
+            if zeit_match:
+                uhrzeit = f"{zeit_match.group(1)} Uhr"
+                try:
+                    h, m = map(int, zeit_match.group(1).split(':'))
+                    stunde, minute = h, m
+                except ValueError:
+                    pass
+
+            try:
+                datum = datetime(header_jahr, event_monat, tag, stunde, minute)
+            except ValueError:
+                continue
+
+            # Ort: "Ort: ..." im Text
+            ort = ''
+            ort_match = re.search(r'Ort:\s*(.+?)$', li_text)
+            if ort_match:
+                ort = ort_match.group(1).strip()
+
+            termine.append(Termin(
+                name=name[:150], datum=datum, uhrzeit=uhrzeit,
+                ort=ort[:150] or 'Gastkirche', link=link,
+                quelle='gastkirche', kategorie=kategorie_name,
+            ))
+
+    return termine
+
+
+def hole_gastkirche(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Gastkirche Recklinghausen (Gruppentermine + Veranstaltungen).
+
+    JEvents (Joomla): Wochenansicht mit Kategoriefilter.
+    Iteriert über alle Wochen des Monats für Kategorien 68 und 70.
+    """
+    termine = []
+    montage = _montage_fuer_monat(jahr, monat)
+
+    for kat_id, kat_name in _GASTKIRCHE_KATEGORIEN.items():
+        for montag in montage:
+            url = f"{GASTKIRCHE_URL}/{montag.strftime('%Y/%m/%d')}/{kat_id}"
+            try:
+                response = requests.get(url, headers=HEADERS, timeout=30)
+                response.raise_for_status()
+            except requests.RequestException:
+                continue
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            termine.extend(_parse_gastkirche_woche(soup, jahr, monat, kat_name))
 
     return termine

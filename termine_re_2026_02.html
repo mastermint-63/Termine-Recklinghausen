@@ -298,6 +298,16 @@
             color: white;
         }
 
+        .badge-geschichte-re {
+            background: linear-gradient(135deg, #8a6a40 0%, #7a5a30 100%);
+            color: white;
+        }
+
+        .badge-gastkirche {
+            background: linear-gradient(135deg, #6a8a6a 0%, #5a7a5a 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -477,11 +487,11 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <div class="stats">
-                <span id="termine-count">183</span> Termine
+                <span id="termine-count">191</span> Termine
             </div>
         </div>
 
@@ -499,6 +509,18 @@
                             <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 3/4</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78245/70/homosexuelle-und-kirche" target="_blank">Homosexuelle und Kirche</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Veranstaltungen</span>
+                        </div>
+                        <div class="termin-ort">Gastkirche</div>
                         
                     </div>
                 </div>
@@ -1103,6 +1125,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78246/70/meditativer-tanzabend" target="_blank">Meditativer Tanzabend</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Veranstaltungen</span>
+                        </div>
+                        <div class="termin-ort">Gastkirche</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">20:00–21:30 Uhr</div>
                     <div class="termin-info">
@@ -1491,6 +1525,18 @@
             <div class="datum-header">Mo 09.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78305/68/trauercafe" target="_blank">Trauercafé</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Gruppentermine</span>
+                        </div>
+                        <div class="termin-ort">Gasthaus-Forum</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="altstadtschmiede">
                     <div class="termin-zeit">18:00 Uhr</div>
                     <div class="termin-info">
@@ -1663,6 +1709,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78304/70/sich-weigern-feinde-zu-sein" target="_blank">Sich weigern Feinde zu sein</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Veranstaltungen</span>
+                        </div>
+                        <div class="termin-ort">Gasthaus-Forum</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="regioactive">
                     <div class="termin-zeit">20:00 Uhr</div>
                     <div class="termin-info">
@@ -1820,6 +1878,18 @@
                         </div>
                         <div class="termin-ort">Altstadtschmiede, Kellerstraße 10</div>
                         <div class="termin-beschreibung">Es ist wieder Zeit für gute Musik, kalte Drinks und beste Stimmung: Die Altstadtschmiede lädt am 13.02. ein zur „kleinen Altstadtparty“, dem charmanten Clubabend im Herzen der Altstadt. Dann verwandel</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78254/70/global-local-konzert-das-maedchen-aus-dem-song" target="_blank">Global Local Konzert: "Das Mädchen aus dem Song"</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Veranstaltungen</span>
+                        </div>
+                        <div class="termin-ort">Gastkirche</div>
+                        
                     </div>
                 </div>
             
@@ -2067,6 +2137,18 @@
             <div class="datum-header">Mi 18.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78311/68/maenndertrauer-gruppe" target="_blank">Männdertrauer-Gruppe</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Gruppentermine</span>
+                        </div>
+                        <div class="termin-ort">Gasthaus</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -2272,6 +2354,18 @@
                         </div>
                         <div class="termin-ort">Planetarium, Eintritt: 12 €, ermäßigt 10 €Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
                         <div class="termin-beschreibung">Die unendliche Weite des Weltraums, ein sternenklarer Himmel - tauchen Sie ein in die Welt des Planetariums, unterstützt mit Klängen und Musik von Christina Zurhausen, die den Soundtrack live zur geze</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="gastkirche">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.gastkirche.de/index.php/termine/eventdetail/78255/70/global-local-konzert-mozart-bei-kerzenschein" target="_blank">Global Local Konzert: Mozart bei Kerzenschein</a>
+                            <span class="badge badge-gastkirche">Gastkirche</span> <span class="badge badge-kategorie">Veranstaltungen</span>
+                        </div>
+                        <div class="termin-ort">Gastkirche</div>
+                        
                     </div>
                 </div>
             
@@ -2564,6 +2658,18 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="geschichte-re">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://geschichte-recklinghausen.de/event/mitgliederversammlung-4/" target="_blank">Mitgliederversammlung</a>
+                            <span class="badge badge-geschichte-re">Heimatkunde</span> <span class="badge badge-kategorie">Geschichte</span>
+                        </div>
+                        <div class="termin-ort">Institut für Stadtgeschichte</div>
+                        <div class="termin-beschreibung">Zur diesjährigen Mitgliederversammlung laden wir herzlich ein. Es gibt den</div>
                     </div>
                 </div>
             
@@ -2910,7 +3016,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 20:00 Uhr<br>
+            Generiert am 08.02.2026 um 20:16 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -2923,7 +3029,9 @@
             <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
             <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a> &middot;
             <a href="https://www.ahademie.com/veranstaltungen/" target="_blank">Ev. Akademie</a> &middot;
-            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a>
+            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a> &middot;
+            <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
+            <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a>
         </footer>
     </div>
 
