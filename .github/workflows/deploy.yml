@@ -1,0 +1,36 @@
+name: Deploy Dashboard
+
+on:
+  # Manuell auslösbar
+  workflow_dispatch:
+  # Bei Push von HTML-Dateien auf main
+  push:
+    branches: [main]
+    paths:
+      - 'termine_re_*.html'
+      - 'index.html'
+
+# Berechtigungen für GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: GitHub Pages konfigurieren
+        uses: actions/configure-pages@v4
+
+      - name: Dateien für Pages vorbereiten
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Auf GitHub Pages deployen
+        uses: actions/deploy-pages@v4

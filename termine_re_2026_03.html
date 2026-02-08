@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termine Recklinghausen — März 2026</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #1a1a2e;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+            --accent-color: #0f3460;
+            --accent-light: #16213e;
+            --hover-color: #f8f9ff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1a1a2e;
+                --card-bg: #16213e;
+                --text-color: #e0e0e0;
+                --text-secondary: #a0a0b0;
+                --border-color: #2a2a4e;
+                --accent-color: #4a8cc7;
+                --accent-light: #0f3460;
+                --hover-color: #1e2a4a;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .monat-titel {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-bar select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .stats {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .datum-gruppe {
+            margin-bottom: 20px;
+        }
+
+        .datum-header {
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 10px 15px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .termine-liste {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .termin {
+            display: flex;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .termin:last-child {
+            border-bottom: none;
+        }
+
+        .termin:hover {
+            background: var(--hover-color);
+        }
+
+        .termin-zeit {
+            width: 110px;
+            font-weight: 500;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .termin-info {
+            flex: 1;
+        }
+
+        .termin-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .termin-name a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .termin-name a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-regioactive {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .badge-altstadtschmiede {
+            background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+            color: white;
+        }
+
+        .badge-sternwarte {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+        }
+
+        .badge-kunsthalle {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            color: white;
+        }
+
+        .badge-vesterleben {
+            background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+            color: white;
+        }
+
+        .badge-stadt {
+            background: linear-gradient(135deg, #2980b9 0%, #1a5276 100%);
+            color: white;
+        }
+
+        .badge-default {
+            background: var(--hover-color);
+            color: var(--text-secondary);
+        }
+
+        .badge-kategorie {
+            background: var(--hover-color);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .termin-ort {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .termin-beschreibung {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .termin-toggle {
+            cursor: pointer;
+            color: var(--text-color);
+            border-bottom: 1px dashed var(--text-secondary);
+        }
+
+        .termin-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        .termin-toggle::after {
+            content: ' \25B8';
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .termin.expanded .termin-toggle::after {
+            content: ' \25BE';
+        }
+
+        .termin:has(.termin-toggle) .termin-beschreibung {
+            display: none;
+        }
+
+        .termin.expanded .termin-beschreibung {
+            display: block;
+            -webkit-line-clamp: unset;
+            overflow: visible;
+        }
+
+        .zurueck-link {
+            text-align: right;
+            padding: 6px 15px;
+            font-size: 13px;
+        }
+
+        .zurueck-link a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .keine-termine {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        footer a {
+            color: var(--text-secondary);
+        }
+
+        .kalender {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 25px;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .kalender th {
+            padding: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .kalender td {
+            padding: 6px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        .kalender .kal-leer {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .kalender .kal-link {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .kalender .kal-link:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .termin {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .termin-zeit {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Termine in Recklinghausen</h1>
+            <div class="nav">
+                <a href="termine_re_2026_02.html" class="nav-btn">&larr; Februar</a>
+                <span class="monat-titel">März 2026</span>
+                <a href="termine_re_2026_04.html" class="nav-btn">April &rarr;</a>
+            </div>
+        </header>
+
+        <table class="kalender" id="kalender">
+<tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td><a href="#datum-2026-03-01" class="kal-link">1</a></td></tr>
+<tr><td><a href="#datum-2026-03-02" class="kal-link">2</a></td><td class="kal-leer">3</td><td><a href="#datum-2026-03-04" class="kal-link">4</a></td><td><a href="#datum-2026-03-05" class="kal-link">5</a></td><td><a href="#datum-2026-03-06" class="kal-link">6</a></td><td><a href="#datum-2026-03-07" class="kal-link">7</a></td><td><a href="#datum-2026-03-08" class="kal-link">8</a></td></tr>
+<tr><td><a href="#datum-2026-03-09" class="kal-link">9</a></td><td><a href="#datum-2026-03-10" class="kal-link">10</a></td><td><a href="#datum-2026-03-11" class="kal-link">11</a></td><td><a href="#datum-2026-03-12" class="kal-link">12</a></td><td><a href="#datum-2026-03-13" class="kal-link">13</a></td><td><a href="#datum-2026-03-14" class="kal-link">14</a></td><td><a href="#datum-2026-03-15" class="kal-link">15</a></td></tr>
+<tr><td><a href="#datum-2026-03-16" class="kal-link">16</a></td><td><a href="#datum-2026-03-17" class="kal-link">17</a></td><td><a href="#datum-2026-03-18" class="kal-link">18</a></td><td><a href="#datum-2026-03-19" class="kal-link">19</a></td><td><a href="#datum-2026-03-20" class="kal-link">20</a></td><td><a href="#datum-2026-03-21" class="kal-link">21</a></td><td><a href="#datum-2026-03-22" class="kal-link">22</a></td></tr>
+<tr><td><a href="#datum-2026-03-23" class="kal-link">23</a></td><td><a href="#datum-2026-03-24" class="kal-link">24</a></td><td><a href="#datum-2026-03-25" class="kal-link">25</a></td><td><a href="#datum-2026-03-26" class="kal-link">26</a></td><td><a href="#datum-2026-03-27" class="kal-link">27</a></td><td class="kal-leer">28</td><td><a href="#datum-2026-03-29" class="kal-link">29</a></td></tr>
+<tr><td><a href="#datum-2026-03-30" class="kal-link">30</a></td><td class="kal-leer">31</td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+        <div class="filter-bar">
+            <select id="quelle-filter" onchange="filterTermine()">
+                <option value="">Alle Quellen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option>
+            </select>
+            <div class="stats">
+                <span id="termine-count">100</span> Termine
+            </div>
+        </div>
+
+        <main id="termine-container">
+            
+        <div class="datum-gruppe" id="datum-2026-03-01">
+            <div class="datum-header">So 01.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="kunsthalle">
+                    <div class="termin-zeit">12:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
+                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
+                        <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401053" target="_blank">Frühjahrskonzert des Städtischen Chores</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401077" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-02">
+            <div class="datum-header">Mo 02.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">"Schweine im Weltall" - Weltraumtourismus, was ist da dran?</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Hörsaal</div>
+                        <div class="termin-beschreibung">Ist es bald möglich, den Urlaub im All zu verbringen? Nachdem einige Superreiche bereits zu privaten Flügen in den Erdorbit aufgebrochen sind, ist Weltraumtourismus ein großes Thema geworden. Der Vort</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400927" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-04">
+            <div class="datum-header">Mi 04.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Reise durch unser Sonnensystem (ab 5)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Die Sterne – Geschichte und Physik einer Sinneswahrnehmung</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Hörsaal</div>
+                        <div class="termin-beschreibung">Was sind die Sterne, wie leuchten sie, was unter-scheidet sie? Wie weit sind sie entfernt und wie groß sind sie? Kann man die Entfernung und Größe der Sterne überhaupt sicher bestimmen? Und wie verhäl</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/comedy/die-comedy-werkstatt-recklinghausen-altstadtschmiede-2026-03-04-tickets-1kJpVxRhHL" target="_blank">Die Comedy Werkstatt</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Comedy</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede, Kellerstraße 10</div>
+                        <div class="termin-beschreibung">Die Comedy Werkstatt ist eine neue offene Bühne in Aachen. Hier können bekannte Comedians und Anfänger an ihren Texten und an ihren Gags arbeiten. Comedy ist ein Handwerk und deshalb freuen wir uns, d</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/die-comedy-werkstatt-3" target="_blank">Die Comedy-Werkstatt</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">04. 03. / 20 Uhr / VVK 10€ über die Seite der Comedy-Werkstatt    Nach dem erfolgreichen Auftakt geht die Comedy Werkstatt in der Altstadtschmiede in die zweite Runde. An diesem Abend testen Comedians</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-05">
+            <div class="datum-header">Do 05.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/vergessene-stimmen" target="_blank">Vergessene Stimmen</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/vergessene-stimmen-2" target="_blank">Vergessene Stimmen</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401116" target="_blank">Ergebnisse der Kommunalen Wärmeplanung in Recklinghausen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400606" target="_blank">Vergessene Stimmen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-06">
+            <div class="datum-header">Fr 06.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sonne, Mond und Sterne (ab 5)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/prima-facie" target="_blank">Prima facie</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Der Sternenhimmel des Monats</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Entdecken Sie mit uns den aktuellen Sternenhimmel. Lernen Sie die Sternbilder und ihre Geschichten kennen. Erfahren Sie wo und wie die hellen Planeten zu finden sind und welche interessanten Objekte e</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400556" target="_blank">Prima facie</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401078" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-07">
+            <div class="datum-header">Sa 07.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/jazzy-maerz-frauen-im-jazz" target="_blank">Jazzy März: Frauen im Jazz</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/jochen-malmsheimer-dogensuppe-herzogin-ein-austopf-mit-einlage" target="_blank">Jochen Malmsheimer: Dogensuppe Herzogin – ein Austopf mit Einlage</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/jazzy-maerz-frauen-im-jazz-2" target="_blank">Jazzy März: Frauen im Jazz</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/jochen-malmsheimer-dogensuppe-herzogin-ein-austopf-mit-einlage-2" target="_blank">Jochen Malmsheimer: Dogensuppe Herzogin – ein Austopf mit Einlage</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/konzert/the-c-u-t-live-recklinghausen-druebbelken-2026-03-07-Jg8lR0xxd8" target="_blank">The C.U.T. Live</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                        </div>
+                        <div class="termin-ort">Drübbelken, Münsterstr.5</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/party/boente-s-80-90-party-recklinghausen-suberg-bei-die-hausbrauerei-2026-03-07-htFJ8BzbVD" target="_blank">Boente's 80's &amp; 90's Party</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Party</span>
+                        </div>
+                        <div class="termin-ort">Suberg's bei Boente - die Hausbrauerei, Augustinessenstraße 4</div>
+                        <div class="termin-beschreibung">Freut euch auf eine Zeitreise zurück in die Ära des Neonlichts, der wilden Frisuren und des unwiderstehlichen Grooves - lasst euren Gameboy zu Hause und feiert bei Boente zu den größten Hits der 80er </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400607" target="_blank">Jazzy März: Frauen im Jazz</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400567" target="_blank">Jochen Malmsheimer: Dogensuppe Herzogin – ein Austopf mit Einlage</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401079" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401011" target="_blank">Veranstaltungsreihe "Pubertät" (Teil 1)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-08">
+            <div class="datum-header">So 08.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="kunsthalle">
+                    <div class="termin-zeit">12:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
+                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
+                        <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/mitmach-musiktheater-pia-nino-retten-das-schlossfest" target="_blank">Mitmach-Musiktheater: Pia & Nino retten das Schlossfest</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/mitmach-musiktheater-pia-nino-retten-das-schlossfest-2" target="_blank">Mitmach-Musiktheater: Pia und Nino retten das Schlossfest</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/lesebuehne-extra-wer-redet-saet-wer-zuhoert-erntet" target="_blank">Lesebühne extra: Wer redet, sät, wer zuhört, erntet</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/lesebuehne-extra-wer-redet-saet-wer-zuhoert-erntet-2" target="_blank">Lesebühne extra: Wer redet, sät, wer zuhört, erntet</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400665" target="_blank">Lesebühne extra: Wer redet, sät, wer zuhört, erntet</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400575" target="_blank">Mitmach-Musiktheater: Pia & Nino retten das Schlossfest</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401080" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-09">
+            <div class="datum-header">Mo 09.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/queerer-stammtisch-9" target="_blank">Queerer Stammtisch</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">18 Uhr / Eintritt frei    Am Montag öffnet die Altstadtschmiede wieder ihre Türen für einen bunten Treffpunkt in Recklinghausen: den queeren Stammtisch. In lockerer Atmosphäre können sich hier queere </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400928" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-10">
+            <div class="datum-header">Di 10.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/7-sinfoniekonzert-filmmusik" target="_blank">7. Sinfoniekonzert - Filmmusik</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/7-sinfoniekonzert-filmmusik-2" target="_blank">7. Sinfoniekonzert - Filmmusik</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400533" target="_blank">7. Sinfoniekonzert - Filmmusik</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-11">
+            <div class="datum-header">Mi 11.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Neutronensterne - was wir durch sie über die Quantenwelt lernen</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Hörsaal</div>
+                        <div class="termin-beschreibung">Neutronensterne sind faszinierende Endstadien von Sternen, die wir den Eigenschaften der Quanten-mechanik verdanken. Die Quantenmechanik beschreibt den Mikrokosmos, also die winzigen Teilchen wie Atom</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/rock-pop-akustik-session-6" target="_blank">Rock-Pop-Akustik-Session</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">20 Uhr / Eintritt frei    Wer Bock auf akustische Rock- und Popmusik hat, ist hier genau richtig. Der Abend startet immer mit einer Opener-Band, die den Einstieg macht. Anschließend ist die Bühne offe</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401027" target="_blank">Das Stadt- und Vestische Archiv Recklinghausen stellt sich vor</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401103" target="_blank">KIRCHLICHES FILMFESTIVAL</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-12">
+            <div class="datum-header">Do 12.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">18:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/mantra-mitsingkonzert-in-der-friedhofskapelle-recklinghausen-12" target="_blank">Mantra: Mitsingkonzert in der Friedhofskapelle Recklinghausen</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/wildes-holz-block-party" target="_blank">Wildes Holz: Block Party</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/wildes-holz-block-party-2" target="_blank">Wildes Holz: Block Party</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/jazz-session-anna-karina-barthel-carlotta-ribbe-who-am-i" target="_blank">Jazz Session / Anna-Karina Barthel &amp; Carlotta Ribbe &#8220;Who Am I&#8221;</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">12.03. / 20:30 Uhr / Eintritt frei    Die Jazz Session öffnet mal wieder die Türen und eröffnet wird sie dieses Mal von Anna-Karina Barthel & Carlotta Ribbe.     Mit Stimme und Vibraphon erschaffen An</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401058" target="_blank">Mantra: Mitsingkonzert in der Friedhofskapelle Recklinghausen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400568" target="_blank">Wildes Holz: Block Party</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-13">
+            <div class="datum-header">Fr 13.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Weißt Du, welche Sternlein stehen? (ab 8)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/show/tatort-dinner-mord-in-paris-recklinghausen-suberg-s-im-festspielhaus-2026-03-13-bmHmJsZvrz" target="_blank">Tatort-Dinner - Mord in Paris</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Show</span>
+                        </div>
+                        <div class="termin-ort">Suberg`s im Festspielhaus, Otto-Burrmeister-Allee 1</div>
+                        <div class="termin-beschreibung">Willkommen zu „Mord in Paris“, einem exklusiven Kriminaldinner, das Sie in die glamouröse Welt des Variétés im Jahr 1889 entführt. Während Sie ein köstliches 4-Gänge-Menü genießen, werden Sie in eine </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Livekonzert! Sphärische Handpan-Klänge unter Sternen</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium, Eintritt: 15 €, ermäßigt 13 €, Kartenreservierungen unter 02361- 23134</div>
+                        <div class="termin-beschreibung">Tauche ein in eine besondere Klangreise mit unserem Handpan-Duo unter dem weiten Sternenhimmel. Die sphärischen Töne verweben sich mit der Stille der Nacht und öffnen Raum für innere Weite. Jeder Ansc</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/konzert/radioslave-backyard-club-recklinghausen-e-v-2026-03-13-HTJMPHBnvG" target="_blank">Radioslave-Backyard Club !</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                        </div>
+                        <div class="termin-ort">Backyard Club e.V., Alte Grenzstraße 153e</div>
+                        <div class="termin-beschreibung">RADIOSLAVE - Audioslave Tribute Band ist eine Band aus Düsseldorf, die einer der legendärsten Bands der 2000er Jahre, AUDIOSLAVE, und insbesondere ihrem verstorbenen Frontmann CHRIS CORNELL huldigt. A</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401099" target="_blank">Klassenkonzert Schlagzeug</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-14">
+            <div class="datum-header">Sa 14.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/familienfragen-leicht-gemacht-thema-babybegleitete-beikost-blw-2" target="_blank">Familienfragen - leicht gemacht! Thema: Babybegleitete Beikost (BLW)</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/familienfragen-leicht-gemacht-thema-babygeleitete-beikost-blw-2" target="_blank">Familienfragen - leicht gemacht! Thema: Babygeleitete Beikost (BLW)</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/repair-cafe-7" target="_blank">Repair Café</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">14.03. / 14-16 Uhr / kostenfreies Angebot    Am Samstag lädt die Altstadtschmiede Recklinghausen wieder zum Repair Café ein. Von 14:00 bis 16:00 Uhr können Besucher*innen defekte Alltagsgegenstände mi</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/konzert/the-pretty-heartbreakers-a-tribute-to-tom-petty-live-im-backyard-club-recklinghausen-e-v-2026-03-14-Cv9ZR7yp7h" target="_blank">The Pretty Heartbreakers - A Tribute to Tom Petty live im Backyard Club</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                        </div>
+                        <div class="termin-ort">Backyard Club e.V., Alte Grenzstraße 153e</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400958" target="_blank">Familienfragen - leicht gemacht! Thema: Babygeleitete Beikost (BLW)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401085" target="_blank">Passionskonzert</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401100" target="_blank">Workshop Drum Circle</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-15">
+            <div class="datum-header">So 15.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="kunsthalle">
+                    <div class="termin-zeit">12:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
+                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
+                        <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sterne, Planeten & Co. (ab 6)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Habt ihr schon einmal zum Himmel geschaut und euch gefragt, wie man sich bei den ganzen Sternen zurecht-finden soll? Ausgehend vom aktuellen Sternenhimmel geben wir eine kleine Anleitung, wie das ganz</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-16">
+            <div class="datum-header">Mo 16.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Das Planetarium – Fenster zum Universum</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Wie entsteht der Sternenhimmel über uns? Warum wandern Sonne, Mond und Planeten Nacht für Nacht über die Himmelskuppel? Ein Planetarium macht diese Bewegungen sichtbar – unabhängig von Wetter oder Lic</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401101" target="_blank">"Bläserwoche"</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400929" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400546" target="_blank">Vierzig Karat</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-17">
+            <div class="datum-header">Di 17.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401088" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-18">
+            <div class="datum-header">Mi 18.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Gibt es fremdes Leben im All? (ab 8) - Auf der Suche nach der zweiten Erde</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Hörsaal</div>
+                        <div class="termin-beschreibung">Existiert irgendwo im Weltall fremdes Leben? – Diese Frage ist besonders faszinierend und deshalb wird auch intensiv nach neuen Planeten und nach Spuren und Signalen fremden Lebens geforscht. Wie find</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400485" target="_blank">Tonie-Tauschbörse</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-19">
+            <div class="datum-header">Do 19.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401028" target="_blank">„Für Hinz und Kunz“ – Redewendungen am Objekt erklärt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-20">
+            <div class="datum-header">Fr 20.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Ausflug zu den Sternen (ab 5)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Jede Nacht leuchten uns tausende Sterne vom Himmel herab. Im Planetarium können wir den Sternenhimmel auch tagsüber beobachten und erleben. Zu unseren himmlischen Ausflugszielen gehören die Sonne, der</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Livekonzert! Ein Abend unter Sternen mit Nick Kutzinski</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium, Eintritt: 10 €, ermäßigt 8 €, Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
+                        <div class="termin-beschreibung">An diesem Abend besucht uns Nick, Gastronom und dabei schon fast vergessen, leidenschaftlicher Musiker aus Haltern am See. Mit dabei hat er sein Herz auf der Zunge, eine frisch produzierte EP mit neue</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-21">
+            <div class="datum-header">Sa 21.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/upreshe-die-frauenparty" target="_blank">UpReShe &#8211; Die Frauenparty</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">21..03. / 20 Uhr / AK 15€    Die Frauenparty in der Altstadtschmiede ist wieder zurück! 
+Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sind willkommen.    Die Altstadtsch</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401046" target="_blank">Literaturtreff am Samstag</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400600" target="_blank">Sitztanz</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401102" target="_blank">Tag der offenen Tür</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400904" target="_blank">Vater-Kind-Treff</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-22">
+            <div class="datum-header">So 22.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="kunsthalle">
+                    <div class="termin-zeit">12:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
+                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
+                        <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-23">
+            <div class="datum-header">Mo 23.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">In die Nacht mit Depeche Mode</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Genießen Sie zu den unverwechselbaren Klängen der britischen New Wave Band Depeche Mode den sternenreichen Himmel unseres Planetariums.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400930" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-24">
+            <div class="datum-header">Di 24.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401089" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-25">
+            <div class="datum-header">Mi 25.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Mathematik und Physik Schwarzer Löcher</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Hörsaal</div>
+                        <div class="termin-beschreibung">Schwarze Löcher gehören zu den faszinierendsten Objekten des Universums. In den vergangenen Jahren hat die Forschung einige – zum Teil Nobelpreis-gekrönte – Durchbrüche erzielt, man denke an den exper</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400893" target="_blank">Beratung zu Kindertagespflege</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400629" target="_blank">Konzertreihe - DEBUT um 11 e. V.</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401016" target="_blank">Mütter-/Väterberatung durch das Gesundheitsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401043" target="_blank">Untertage-Übertage: 25 Jahre Geschichtskreis Blumenthal</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-26">
+            <div class="datum-header">Do 26.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Jetzt Piekst Es Kurz!  - Eine satirisch-kabarettistische Visite in der Wunderwelt der Medizin</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Erweiterungsbau der Sternwarte, Eintritt: 15 €, ermäßigt 11 €Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
+                        <div class="termin-beschreibung">Mit „Jetzt Piekst Es Kurz!“, betreten Keim & Welke den mit Wunderlichem überreich gefüllten Kosmos Medizin, um prompt auf Erzählenswertes zu stoßen - was sie natürlich auf keinen Fall für sich behalte</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401012" target="_blank">Elternabend: Übergang Kita-Schule</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/jazz-session-erd-quintett" target="_blank">Jazz Session / ERD-Quintett</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung">26.03. / 20:30 / Eintritt frei    Es ist mal wieder Zeit für die Jazz Session und dieses Mal eröffnet das ERD-Quintett.     Die Band um den Saxophonisten Michael Erdmenger und dem Pianisten Martin The</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401081" target="_blank">Kleinkunst-Festival: Olaf Bossi: Generation XY</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401066" target="_blank">Lesung mit Annett Gröschner: "Schwebende Lasten"</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401029" target="_blank">Öffentliche Führung durch die RETRO STATION</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-27">
+            <div class="datum-header">Fr 27.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Streifzug ins All (ab 8)</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium</div>
+                        <div class="termin-beschreibung">Wer möchte in einer Stunde quer durchs Universum reisen und dabei allerhand Interessantes sehen? Wie entstehen die Mondphasen und warum wandern die Sterne über den Himmel? Was sind die Besonderheiten </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="sternwarte">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sphären im Wandel – Gustav Holsts musikalisches Sonnensystem live im Planetarium</a>
+                            <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
+                        </div>
+                        <div class="termin-ort">Planetarium, Eintritt: 15 €, ermäßigt 13 €, Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
+                        <div class="termin-beschreibung">Gustav Holsts Die Planeten (1916–1919) zählen zu den ikonischen Orchesterwerken des 20. Jahrhunderts – mächtig, archaisch, geheimnisvoll. In dieser Aufführung erklingen sie in der Fassung für zwei Kla</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-29">
+            <div class="datum-header">So 29.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="kunsthalle">
+                    <div class="termin-zeit">12:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
+                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
+                        <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="regioactive">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.regioactive.de/konzert/muddy-what-backyard-club-recklinghausen-de-e-v-2026-03-29-XmCpbVLc6z" target="_blank">MUDDY WHAT? • Backyard Club • Recklinghausen (DE)</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                        </div>
+                        <div class="termin-ort">Backyard Club e.V., Alte Grenzstraße 153e</div>
+                        <div class="termin-beschreibung">Muddy What? starten 2026 wieder durch – jung, wild und voller New-Blues-Power. Das Münchner Trio um die charismatischen Geschwister Ina und Fabian Spang reißt das Publikum mit virtuoser Gitarre, Mando</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-03-30">
+            <div class="datum-header">Mo 30.03.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400931" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        </main>
+
+        <footer>
+            Generiert am 08.02.2026 um 14:51 Uhr<br>
+            Quellen:
+            <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
+            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
+            <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank">Altstadtschmiede</a> &middot;
+            <a href="https://vesterleben.de/termine" target="_blank">Vesterleben.de</a> &middot;
+            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sternwarte</a> &middot;
+            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a>
+        </footer>
+    </div>
+
+    <script>
+        function filterTermine() {
+            const quelleFilter = document.getElementById('quelle-filter').value;
+            const termine = document.querySelectorAll('.termin');
+            let sichtbar = 0;
+
+            termine.forEach(t => {
+                const quelleMatch = !quelleFilter || t.dataset.quelle === quelleFilter;
+
+                if (quelleMatch) {
+                    t.classList.remove('hidden');
+                    sichtbar++;
+                } else {
+                    t.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('termine-count').textContent = sichtbar;
+
+            document.querySelectorAll('.datum-gruppe').forEach(g => {
+                const sichtbareTermine = g.querySelectorAll('.termin:not(.hidden)');
+                g.classList.toggle('hidden', sichtbareTermine.length === 0);
+            });
+        }
+    </script>
+</body>
+</html>
