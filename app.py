@@ -121,9 +121,10 @@ def generiere_kalender(jahr: int, monat: int, tage_mit_events: set[int]) -> str:
                 html += '<td></td>'
             elif tag in tage_mit_events:
                 datum_key = f"{jahr}-{monat:02d}-{tag:02d}"
-                html += f'<td><a href="#datum-{datum_key}" class="kal-link">{tag}</a></td>'
+                html += f'<td data-datum="{datum_key}"><a href="#datum-{datum_key}" class="kal-link">{tag}</a></td>'
             else:
-                html += f'<td class="kal-leer">{tag}</td>'
+                datum_key = f"{jahr}-{monat:02d}-{tag:02d}"
+                html += f'<td class="kal-leer" data-datum="{datum_key}">{tag}</td>'
         html += '</tr>\n'
 
     html += '</table>'
@@ -698,6 +699,15 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             opacity: 0.8;
         }}
 
+        .kalender .kal-heute {{
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
+        }}
+
+        .kalender .kal-heute .kal-link {{
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-color);
+        }}
+
         @media (max-width: 600px) {{
             .termin {{
                 flex-direction: column;
@@ -773,6 +783,16 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     </div>
 
     <script>
+        // Heutigen Tag im Kalender markieren
+        (function() {{
+            const heute = new Date();
+            const key = heute.getFullYear() + '-' +
+                String(heute.getMonth() + 1).padStart(2, '0') + '-' +
+                String(heute.getDate()).padStart(2, '0');
+            const td = document.querySelector('td[data-datum="' + key + '"]');
+            if (td) td.classList.add('kal-heute');
+        }})();
+
         let vhsAusgeblendet = false;
         let kinoAusgeblendet = false;
 

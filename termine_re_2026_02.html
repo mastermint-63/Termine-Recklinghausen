@@ -457,6 +457,15 @@
             opacity: 0.8;
         }
 
+        .kalender .kal-heute {
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
+        }
+
+        .kalender .kal-heute .kal-link {
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-color);
+        }
+
         @media (max-width: 600px) {
             .termin {
                 flex-direction: column;
@@ -493,11 +502,11 @@
 
         <table class="kalender" id="kalender">
 <tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>
-<tr><td></td><td></td><td></td><td></td><td></td><td></td><td><a href="#datum-2026-02-01" class="kal-link">1</a></td></tr>
-<tr><td><a href="#datum-2026-02-02" class="kal-link">2</a></td><td><a href="#datum-2026-02-03" class="kal-link">3</a></td><td><a href="#datum-2026-02-04" class="kal-link">4</a></td><td><a href="#datum-2026-02-05" class="kal-link">5</a></td><td><a href="#datum-2026-02-06" class="kal-link">6</a></td><td><a href="#datum-2026-02-07" class="kal-link">7</a></td><td><a href="#datum-2026-02-08" class="kal-link">8</a></td></tr>
-<tr><td><a href="#datum-2026-02-09" class="kal-link">9</a></td><td><a href="#datum-2026-02-10" class="kal-link">10</a></td><td><a href="#datum-2026-02-11" class="kal-link">11</a></td><td><a href="#datum-2026-02-12" class="kal-link">12</a></td><td><a href="#datum-2026-02-13" class="kal-link">13</a></td><td><a href="#datum-2026-02-14" class="kal-link">14</a></td><td><a href="#datum-2026-02-15" class="kal-link">15</a></td></tr>
-<tr><td><a href="#datum-2026-02-16" class="kal-link">16</a></td><td><a href="#datum-2026-02-17" class="kal-link">17</a></td><td><a href="#datum-2026-02-18" class="kal-link">18</a></td><td><a href="#datum-2026-02-19" class="kal-link">19</a></td><td><a href="#datum-2026-02-20" class="kal-link">20</a></td><td><a href="#datum-2026-02-21" class="kal-link">21</a></td><td><a href="#datum-2026-02-22" class="kal-link">22</a></td></tr>
-<tr><td><a href="#datum-2026-02-23" class="kal-link">23</a></td><td><a href="#datum-2026-02-24" class="kal-link">24</a></td><td><a href="#datum-2026-02-25" class="kal-link">25</a></td><td><a href="#datum-2026-02-26" class="kal-link">26</a></td><td><a href="#datum-2026-02-27" class="kal-link">27</a></td><td><a href="#datum-2026-02-28" class="kal-link">28</a></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td data-datum="2026-02-01"><a href="#datum-2026-02-01" class="kal-link">1</a></td></tr>
+<tr><td data-datum="2026-02-02"><a href="#datum-2026-02-02" class="kal-link">2</a></td><td data-datum="2026-02-03"><a href="#datum-2026-02-03" class="kal-link">3</a></td><td data-datum="2026-02-04"><a href="#datum-2026-02-04" class="kal-link">4</a></td><td data-datum="2026-02-05"><a href="#datum-2026-02-05" class="kal-link">5</a></td><td data-datum="2026-02-06"><a href="#datum-2026-02-06" class="kal-link">6</a></td><td data-datum="2026-02-07"><a href="#datum-2026-02-07" class="kal-link">7</a></td><td data-datum="2026-02-08"><a href="#datum-2026-02-08" class="kal-link">8</a></td></tr>
+<tr><td data-datum="2026-02-09"><a href="#datum-2026-02-09" class="kal-link">9</a></td><td data-datum="2026-02-10"><a href="#datum-2026-02-10" class="kal-link">10</a></td><td data-datum="2026-02-11"><a href="#datum-2026-02-11" class="kal-link">11</a></td><td data-datum="2026-02-12"><a href="#datum-2026-02-12" class="kal-link">12</a></td><td data-datum="2026-02-13"><a href="#datum-2026-02-13" class="kal-link">13</a></td><td data-datum="2026-02-14"><a href="#datum-2026-02-14" class="kal-link">14</a></td><td data-datum="2026-02-15"><a href="#datum-2026-02-15" class="kal-link">15</a></td></tr>
+<tr><td data-datum="2026-02-16"><a href="#datum-2026-02-16" class="kal-link">16</a></td><td data-datum="2026-02-17"><a href="#datum-2026-02-17" class="kal-link">17</a></td><td data-datum="2026-02-18"><a href="#datum-2026-02-18" class="kal-link">18</a></td><td data-datum="2026-02-19"><a href="#datum-2026-02-19" class="kal-link">19</a></td><td data-datum="2026-02-20"><a href="#datum-2026-02-20" class="kal-link">20</a></td><td data-datum="2026-02-21"><a href="#datum-2026-02-21" class="kal-link">21</a></td><td data-datum="2026-02-22"><a href="#datum-2026-02-22" class="kal-link">22</a></td></tr>
+<tr><td data-datum="2026-02-23"><a href="#datum-2026-02-23" class="kal-link">23</a></td><td data-datum="2026-02-24"><a href="#datum-2026-02-24" class="kal-link">24</a></td><td data-datum="2026-02-25"><a href="#datum-2026-02-25" class="kal-link">25</a></td><td data-datum="2026-02-26"><a href="#datum-2026-02-26" class="kal-link">26</a></td><td data-datum="2026-02-27"><a href="#datum-2026-02-27" class="kal-link">27</a></td><td data-datum="2026-02-28"><a href="#datum-2026-02-28" class="kal-link">28</a></td><td></td></tr>
 </table>
 
         <div class="filter-bar">
@@ -5048,7 +5057,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 20:53 Uhr<br>
+            Generiert am 08.02.2026 um 21:01 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -5071,6 +5080,16 @@
     </div>
 
     <script>
+        // Heutigen Tag im Kalender markieren
+        (function() {
+            const heute = new Date();
+            const key = heute.getFullYear() + '-' +
+                String(heute.getMonth() + 1).padStart(2, '0') + '-' +
+                String(heute.getDate()).padStart(2, '0');
+            const td = document.querySelector('td[data-datum="' + key + '"]');
+            if (td) td.classList.add('kal-heute');
+        })();
+
         let vhsAusgeblendet = false;
         let kinoAusgeblendet = false;
 
