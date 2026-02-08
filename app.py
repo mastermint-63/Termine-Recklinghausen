@@ -18,7 +18,8 @@ from datetime import datetime
 
 from scraper import (
     hole_regioactive, hole_stadt_re, hole_altstadtschmiede,
-    hole_vesterleben, hole_sternwarte, hole_kunsthalle, Termin,
+    hole_vesterleben, hole_sternwarte, hole_kunsthalle,
+    hole_stadtbibliothek, hole_nlgr, hole_literaturtage, Termin,
 )
 
 
@@ -29,6 +30,9 @@ QUELLEN = {
     'vesterleben': 'Vesterleben.de',
     'sternwarte': 'Sternwarte',
     'kunsthalle': 'Kunsthalle',
+    'stadtbibliothek': 'Stadtbibliothek',
+    'nlgr': 'Neue Lit. Gesellschaft',
+    'literaturtage': 'Literaturtage',
 }
 
 
@@ -154,6 +158,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'kunsthalle': 'badge-kunsthalle',
                 'vesterleben': 'badge-vesterleben',
                 'stadt-re': 'badge-stadt',
+                'stadtbibliothek': 'badge-stadtbibliothek',
+                'nlgr': 'badge-nlgr',
+                'literaturtage': 'badge-literaturtage',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -464,6 +471,21 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-stadtbibliothek {{
+            background: linear-gradient(135deg, #5a7ab0 0%, #4a6a9a 100%);
+            color: white;
+        }}
+
+        .badge-nlgr {{
+            background: linear-gradient(135deg, #8a5a8a 0%, #7a4a7a 100%);
+            color: white;
+        }}
+
+        .badge-literaturtage {{
+            background: linear-gradient(135deg, #a06050 0%, #905040 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -655,7 +677,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank">Altstadtschmiede</a> &middot;
             <a href="https://vesterleben.de/termine" target="_blank">Vesterleben.de</a> &middot;
             <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sternwarte</a> &middot;
-            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a>
+            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a> &middot;
+            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank">Stadtbibliothek</a> &middot;
+            <a href="https://nlgr.de/veranstaltungen/" target="_blank">NLGR</a> &middot;
+            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a>
         </footer>
     </div>
 
@@ -756,6 +781,21 @@ def main():
         # 6. Kunsthalle
         events = hole_kunsthalle(j, m)
         print(f"  -> {len(events)} Kunsthalle")
+        alle_termine.extend(events)
+
+        # 7. Stadtbibliothek
+        events = hole_stadtbibliothek(j, m)
+        print(f"  -> {len(events)} Stadtbibliothek")
+        alle_termine.extend(events)
+
+        # 8. NLGR
+        events = hole_nlgr(j, m)
+        print(f"  -> {len(events)} NLGR")
+        alle_termine.extend(events)
+
+        # 9. Literaturtage
+        events = hole_literaturtage(j, m)
+        print(f"  -> {len(events)} Literaturtage")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)

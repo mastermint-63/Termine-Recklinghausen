@@ -21,6 +21,9 @@ ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/aktuelle-veranstaltungen
 VESTERLEBEN_URL = "https://vesterleben.de/termine-alle"
 STERNWARTE_URL = "https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/"
 KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/en/program/calendar"
+STADTBIBLIOTHEK_URL = "https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp"
+NLGR_URL = "https://nlgr.de/veranstaltungen/"
+LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
 
 
 @dataclass
@@ -549,3 +552,187 @@ def hole_kunsthalle(jahr: int, monat: int) -> list[Termin]:
         ))
 
     return termine
+
+
+# ---------------------------------------------------------------------------
+# 7. Stadtbibliothek Recklinghausen — ASP-Datenbank (GKD)
+# ---------------------------------------------------------------------------
+
+def _selfdb_feld(entry, klasse: str) -> str:
+    """Extrahiert den Wert eines selfdb-Felds aus einem Reporteintrag."""
+    feld = entry.find('div', class_=klasse)
+    if not feld:
+        return ''
+    wert = feld.find('div', class_='selfdb_columnvalue')
+    return wert.get_text(strip=True) if wert else ''
+
+
+def hole_stadtbibliothek(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Stadtbibliothek Recklinghausen.
+
+    GKD-selfdb-System: div.selfdb_reportentry mit Feldern
+    selfdb_fieldTitel, selfdb_Veranstaltungsdatum, selfdb_fieldZeiten,
+    selfdb_fieldVeranstaltungssttte, selfdb_weiteredetails.
+    """
+    params = {
+        'db': '79',
+        'form': 'report',
+        'fieldStadt': 'Recklinghausen',
+        'fieldgkdveranstbeginn': f'01.{monat:02d}.{jahr}',
+        'fieldStichworte': 'stadtbuecherei',
+    }
+    try:
+        response = requests.get(STADTBIBLIOTHEK_URL, params=params, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (stadtbibliothek): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for entry in soup.find_all('div', class_='selfdb_reportentry'):
+        name = _selfdb_feld(entry, 'selfdb_fieldTitel')
+        if not name:
+            continue
+
+        datum_text = _selfdb_feld(entry, 'selfdb_Veranstaltungsdatum')
+        if not datum_text:
+            continue
+
+        try:
+            datum = datetime.strptime(datum_text, '%d.%m.%Y')
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        # Uhrzeit: "16:00" oder "11 Uhr" oder "18:30 - 20:30 Uhr"
+        uhrzeit = 'siehe Website'
+        zeit_text = _selfdb_feld(entry, 'selfdb_fieldZeiten')
+        if zeit_text:
+            zeit_match = re.search(r'(\d{1,2})[.:](\d{2})', zeit_text)
+            if zeit_match:
+                h, m = int(zeit_match.group(1)), int(zeit_match.group(2))
+                uhrzeit = f"{h:02d}:{m:02d} Uhr"
+                datum = datum.replace(hour=h, minute=m)
+            else:
+                # "11 Uhr" ohne Minuten
+                h_match = re.search(r'(\d{1,2})\s*Uhr', zeit_text)
+                if h_match:
+                    h = int(h_match.group(1))
+                    uhrzeit = f"{h:02d}:00 Uhr"
+                    datum = datum.replace(hour=h)
+
+        ort = _selfdb_feld(entry, 'selfdb_fieldVeranstaltungssttte') or 'Stadtbibliothek'
+
+        link = ''
+        details = entry.find('div', class_='selfdb_weiteredetails')
+        if details:
+            link_tag = details.find('a', href=True)
+            if link_tag:
+                href = link_tag['href']
+                link = f"https://www.recklinghausen.de{href}" if not href.startswith('http') else href
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link,
+            quelle='stadtbibliothek', kategorie='Bibliothek',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 8 + 9. NLGR & Literaturtage — The Events Calendar (JSON-LD)
+# ---------------------------------------------------------------------------
+
+def _hole_events_calendar(url: str, quelle: str, kategorie: str,
+                          jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von Seiten mit The Events Calendar Plugin via JSON-LD."""
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen ({quelle}): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for script in soup.find_all('script', type='application/ld+json'):
+        try:
+            data = json.loads(script.string)
+        except (json.JSONDecodeError, TypeError):
+            continue
+
+        events = []
+        if isinstance(data, list):
+            events = data
+        elif isinstance(data, dict):
+            if data.get('@type') == 'Event':
+                events = [data]
+            elif '@graph' in data:
+                events = [e for e in data['@graph'] if e.get('@type') == 'Event']
+
+        for event in events:
+            if event.get('@type') != 'Event':
+                continue
+
+            name = event.get('name', '').strip()
+            if not name:
+                continue
+
+            start = event.get('startDate', '')
+            if not start:
+                continue
+
+            try:
+                datum = datetime.fromisoformat(start)
+                datum = datum.replace(tzinfo=None)
+            except ValueError:
+                try:
+                    datum = datetime.strptime(start[:10], '%Y-%m-%d')
+                except ValueError:
+                    continue
+
+            if not _im_monat(datum, jahr, monat):
+                continue
+
+            uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
+
+            location = event.get('location', {})
+            ort = ''
+            if isinstance(location, dict):
+                ort = location.get('name', '')
+                address = location.get('address', {})
+                if isinstance(address, dict):
+                    street = address.get('streetAddress', '')
+                    if street and ort:
+                        ort = f"{ort}, {street}"
+                elif isinstance(address, str):
+                    if address and ort:
+                        ort = f"{ort}, {address}"
+
+            link = event.get('url', '') or url
+            beschreibung = _html_zu_text(event.get('description', ''))[:300]
+
+            termine.append(Termin(
+                name=name[:150], datum=datum, uhrzeit=uhrzeit,
+                ort=ort[:150] or 'Recklinghausen', link=link,
+                beschreibung=beschreibung,
+                quelle=quelle, kategorie=kategorie,
+            ))
+
+    return termine
+
+
+def hole_nlgr(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Neuen Literarischen Gesellschaft Recklinghausen."""
+    return _hole_events_calendar(NLGR_URL, 'nlgr', 'Literatur', jahr, monat)
+
+
+def hole_literaturtage(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Literaturtage Recklinghausen."""
+    return _hole_events_calendar(LITERATURTAGE_URL, 'literaturtage', 'Literatur', jahr, monat)

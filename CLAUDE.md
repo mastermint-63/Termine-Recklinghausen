@@ -22,12 +22,12 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-6 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+9 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
 **scraper.py** — Sechs unabhängige Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie.
 
-**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript.
+**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript. Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
 
 **update.sh** — Tägliche Automation: Scraping → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad.
 
@@ -55,6 +55,9 @@ tail -f launchd.log                        # Live-Log
 | `hole_vesterleben()` | vesterleben.de | Link-Text-Parsing, PLZ-Zeile `NNNNN \| Stadt` für Stadtfilter |
 | `hole_sternwarte()` | sternwarte-recklinghausen.de | `<p><u>Datum</u><strong>Titel</strong>` Struktur |
 | `hole_kunsthalle()` | kunsthalle-recklinghausen.de | Zeilenweise: DD.MM. → Titel → Uhrzeit |
+| `hole_stadtbibliothek()` | recklinghausen.de/stadtbibliothek | GKD-selfdb: `div.selfdb_reportentry` mit Felddivs |
+| `hole_nlgr()` | nlgr.de | JSON-LD `Event` (The Events Calendar Plugin) |
+| `hole_literaturtage()` | literaturtage-recklinghausen.de | JSON-LD `Event` (The Events Calendar Plugin) |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 
