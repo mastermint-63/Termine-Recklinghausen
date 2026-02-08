@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from calendar import monthrange
 from html import unescape
+from zoneinfo import ZoneInfo
 from bs4 import BeautifulSoup
 
 
@@ -30,6 +31,9 @@ GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
 GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
 RUHRFESTSPIELE_URL = "https://www.ruhrfestspiele.de/programm"
 BACKYARD_URL = "https://backyard-club.de/events"
+CINEWORLD_API = "https://api.cineamo.com/showings"
+CINEWORLD_CINEMA_ID = 877
+CINEWORLD_URL = "https://www.cineworld-recklinghausen.de/de/programm"
 STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
 
 
@@ -1419,3 +1423,102 @@ def hole_backyard(jahr: int, monat: int) -> list[Termin]:
             gesehen.add(key)
             unique.append(t)
     return unique
+
+
+# ---------------------------------------------------------------------------
+# 17. Cineworld Recklinghausen — Cineamo API
+# ---------------------------------------------------------------------------
+
+def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
+    """Holt Kinovorstellungen vom Cineworld Recklinghausen via Cineamo API.
+
+    Die API liefert nur Daten pro Tag (kein Datumsbereich), daher wird
+    jeder Tag des Monats einzeln abgefragt. Pro Film und Tag wird ein
+    Termin erzeugt, alle Vorstellungszeiten stehen im Uhrzeit-Feld.
+    """
+    tage_im_monat = monthrange(jahr, monat)[1]
+    # Film-Key (name|datum) → Liste der Uhrzeiten + Metadaten
+    filme: dict[str, dict] = {}
+
+    for tag in range(1, tage_im_monat + 1):
+        datum_str = f"{jahr}-{monat:02d}-{tag:02d}"
+        seite = 1
+
+        while True:
+            try:
+                response = requests.get(
+                    CINEWORLD_API,
+                    params={'cinemaId': CINEWORLD_CINEMA_ID, 'date': datum_str, 'page': seite},
+                    headers=HEADERS,
+                    timeout=15,
+                )
+                if response.status_code != 200:
+                    break
+                data = response.json()
+            except (requests.RequestException, ValueError):
+                break
+
+            items = data.get('_embedded', {}).get('showings', [])
+            if not items:
+                break
+
+            for s in items:
+                name = s.get('name', '').strip()
+                start = s.get('startDatetime', '')
+                if not name or not start:
+                    continue
+
+                try:
+                    dt_utc = datetime.fromisoformat(start.replace('Z', '+00:00'))
+                    dt = dt_utc.astimezone(ZoneInfo('Europe/Berlin')).replace(tzinfo=None)
+                except ValueError:
+                    continue
+
+                if not _im_monat(dt, jahr, monat):
+                    continue
+
+                zeit_str = dt.strftime('%H:%M')
+                key = f"{name}|{dt.strftime('%Y-%m-%d')}"
+                ticket_url = s.get('bookingUrlExternal', '') or s.get('onlineTicketUrl', '')
+
+                if key not in filme:
+                    beschreibung = ''
+                    embedded = s.get('_embedded', {})
+                    content = embedded.get('content', {})
+                    if isinstance(content, dict):
+                        beschreibung = content.get('description', '') or ''
+                        beschreibung = _html_zu_text(beschreibung)[:200]
+
+                    filme[key] = {
+                        'name': name,
+                        'datum': dt.replace(hour=0, minute=0),
+                        'zeiten': [],
+                        'link': ticket_url or CINEWORLD_URL,
+                        'beschreibung': beschreibung,
+                    }
+
+                filme[key]['zeiten'].append(zeit_str)
+
+            # Nächste Seite?
+            if seite < data.get('_page_count', 1):
+                seite += 1
+            else:
+                break
+
+    termine = []
+    for info in filme.values():
+        zeiten = sorted(set(info['zeiten']))
+        uhrzeit = ' / '.join(zeiten) + ' Uhr'
+
+        termine.append(Termin(
+            name=info['name'][:150],
+            datum=info['datum'],
+            uhrzeit=uhrzeit,
+            ort='Cineworld, Kemnastr. 3',
+            link=info['link'],
+            beschreibung=info['beschreibung'],
+            quelle='cineworld',
+            kategorie='Kino',
+        ))
+
+    return termine

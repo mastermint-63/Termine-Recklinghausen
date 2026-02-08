@@ -318,6 +318,11 @@
             color: white;
         }
 
+        .badge-cineworld {
+            background: linear-gradient(135deg, #d4391c 0%, #b02010 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -482,7 +487,7 @@
             <div class="nav">
                 <a href="#" class="nav-btn disabled">&larr; Januar</a>
                 <span class="monat-titel">Februar 2026</span>
-                <a href="termine_re_2026_03.html" class="nav-btn">März &rarr;</a>
+                <a href="#" class="nav-btn disabled">März &rarr;</a>
             </div>
         </header>
 
@@ -497,11 +502,12 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
+            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
             <div class="stats">
-                <span id="termine-count">192</span> Termine
+                <span id="termine-count">359</span> Termine
             </div>
         </div>
 
@@ -523,6 +529,102 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/40665" target="_blank">Lauras Stern</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Laura sees a shooting star falling to earth and finds it in a park, down on the floor and with a broken point. The star is a living being, and Laura takes her home to reattach its point with a band-ai</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/41355" target="_blank">Miroirs No. 3</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">On a weekend trip to the countryside, Laura miraculously survives a car crash. Physically unhurt but deeply shaken, she is taken in by a local woman who witnessed the accident and now cares for Laura </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:15 / 15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44161" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:30 / 13:15 / 14:15 / 17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44158" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:45 / 14:45 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44162" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">12:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44086" target="_blank">SpongeBob Schwammkopf: Piraten Ahoi!</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Desperate to be a big guy, SpongeBob sets out to prove his bravery to Mr. Krabs by following The Flying Dutchman – a mysterious swashbuckling ghost pirate – on a seafaring adventure that takes him to </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">13:00 / 14:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44160" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:30 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44167" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="gastkirche">
                     <div class="termin-zeit">15:00 Uhr</div>
                     <div class="termin-info">
@@ -532,6 +634,102 @@
                         </div>
                         <div class="termin-ort">Gastkirche</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:00 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44106" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44146" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">16:45 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44019" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:30 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44068" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44135" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/41859" target="_blank">Harry Potter und die Heiligtümer des Todes Teil 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Harry, Ron and Hermione continue their quest to vanquish the evil Voldemort once and for all. Just as things begin to look hopeless for the young wizards, Harry discovers a trio of magical objects tha</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44153" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44093" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
                     </div>
                 </div>
             
@@ -603,6 +801,90 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44080" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44059" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44109" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44126" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44168" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44035" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44147" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">16:00–19:00 Uhr</div>
                     <div class="termin-info">
@@ -624,6 +906,42 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">16:50 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44021" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44070" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44136" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
                     </div>
                 </div>
             
@@ -723,6 +1041,42 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/41356" target="_blank">Miroirs No. 3</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">On a weekend trip to the countryside, Laura miraculously survives a car crash. Physically unhurt but deeply shaken, she is taken in by a local woman who witnessed the accident and now cares for Laura </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44154" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44094" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -779,6 +1133,54 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44081" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44060" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44128" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44169" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">15:00–16:30 Uhr</div>
                     <div class="termin-info">
@@ -788,6 +1190,42 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44112" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44037" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44148" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
                     </div>
                 </div>
             
@@ -827,6 +1265,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">16:50 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44023" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44072" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">17:15–18:45 Uhr</div>
                     <div class="termin-info">
@@ -863,6 +1325,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44137" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">18:30–20:00 Uhr</div>
                     <div class="termin-info">
@@ -896,6 +1370,42 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.07</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44141" target="_blank">28 Years later: The Bone Temple</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Dr. Kelson finds himself in a shocking new relationship - with consequences that could change the world as they know it - and Spike's encounter with Jimmy Crystal becomes a nightmare he can't escape.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44155" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44095" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
                     </div>
                 </div>
             
@@ -979,6 +1489,78 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44082" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44061" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44115" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44130" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44170" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44149" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">15:00–15:45 Uhr</div>
                     <div class="termin-info">
@@ -988,6 +1570,18 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44039" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
                     </div>
                 </div>
             
@@ -1027,6 +1621,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">16:50 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44025" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -1036,6 +1642,30 @@
                         </div>
                         <div class="termin-ort">Planetarium</div>
                         <div class="termin-beschreibung">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44074" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/41357" target="_blank">Miroirs No. 3</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">On a weekend trip to the countryside, Laura miraculously survives a car crash. Physically unhurt but deeply shaken, she is taken in by a local woman who witnessed the accident and now cares for Laura </div>
                     </div>
                 </div>
             
@@ -1159,6 +1789,42 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44142" target="_blank">28 Years later: The Bone Temple</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Dr. Kelson finds himself in a shocking new relationship - with consequences that could change the world as they know it - and Spike's encounter with Jimmy Crystal becomes a nightmare he can't escape.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44163" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44096" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -1227,6 +1893,90 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44326" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44227" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44287" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44206" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44266" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44192" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44234" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">16:30–17:45 Uhr</div>
                     <div class="termin-info">
@@ -1239,6 +1989,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44178" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44241" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">17:30–19:00 Uhr</div>
                     <div class="termin-info">
@@ -1248,6 +2022,18 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44255" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
                     </div>
                 </div>
             
@@ -1299,6 +2085,42 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43812" target="_blank">Stray Kids: The Dominate Experience</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Featuring the global K-Pop sensation Stray Kids and a live performance from their record-breaking world tour, alongside exclusive behind-the-scenes footage and intimate interviews with the band, Stray</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44315" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44302" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="akademie">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -1343,6 +2165,90 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44327" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44228" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44289" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44209" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44269" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44194" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44235" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -1367,6 +2273,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44180" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">17:00–19:30 Uhr</div>
                     <div class="termin-info">
@@ -1376,6 +2294,30 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44243" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44256" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
                     </div>
                 </div>
             
@@ -1403,6 +2345,42 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44316" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44304" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44261" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -1423,6 +2401,174 @@
             <div class="datum-header">Sa 07.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43647" target="_blank">Disney Channel Mitmachkino</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43813" target="_blank">Stray Kids: The Dominate Experience</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Featuring the global K-Pop sensation Stray Kids and a live performance from their record-breaking world tour, alongside exclusive behind-the-scenes footage and intimate interviews with the band, Stray</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:30 / 17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44291" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:30 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44212" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:45 / 18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44196" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44272" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44229" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44236" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44182" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:45 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44245" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44332" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44317" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44306" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44262" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -1479,6 +2625,90 @@
             <div class="datum-header">So 08.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 13:00 / 14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43648" target="_blank">Disney Channel Mitmachkino</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42878" target="_blank">Leibniz - Chronik eines verschollenen Bildes</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Out of her love for the great thinker Leibniz, Queen Charlotte commissions a portrait of him. During the portrait sessions, the philosopher and the young painter engage in a passionate struggle for tr</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:15 / 15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44322" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:30 / 14:45 / 18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44321" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:45 / 13:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44323" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:45 / 15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44325" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">12:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44324" target="_blank">SpongeBob Schwammkopf: Piraten Ahoi!</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Desperate to be a big guy, SpongeBob sets out to prove his bravery to Mr. Krabs by following The Flying Dutchman – a mysterious swashbuckling ghost pirate – on a seafaring adventure that takes him to </div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="kunsthalle">
                     <div class="termin-zeit">12:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -1488,6 +2718,18 @@
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
                         <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:00 / 17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44275" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
                     </div>
                 </div>
             
@@ -1503,6 +2745,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:30 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44215" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44237" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="nlgr">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -1512,6 +2778,90 @@
                         </div>
                         <div class="termin-ort">ge-ni-al, Limperstr. 11</div>
                         <div class="termin-beschreibung">&lt;p&gt;Jina Khayyer: Im Herzen der Katze Literaturgespräch: Lesung in Ausschnitten und Gespräch Es ist Nacht in Südfrankreich. Jina sitzt an ihrem Schreibtisch, das Telefon in der Hand. Im Sekundent</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/38053" target="_blank">Royal Ballet & Opera 2025/26: La Traviata</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At one of her lavish parties, celebrated Parisan courtesan Violetta is introduced to Alfredo Germont. The two fall madly in love, and though hesitant to leave behind her life of luxury and freedom, Vi</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44184" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:45 / 20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44333" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/41858" target="_blank">Bridget Jones - Schokolade zum Frühstück</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Bridget Jones is an average woman struggling against expectations. As a New Year's resolution, Bridget decides to take control of her life, starting by keeping a diary in which she will always tell th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44318" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44308" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44263" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
                     </div>
                 </div>
             
@@ -1535,6 +2885,66 @@
             <div class="datum-header">Mo 09.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44329" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44231" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44278" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44295" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44218" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="gastkirche">
                     <div class="termin-zeit">15:00 Uhr</div>
                     <div class="termin-info">
@@ -1544,6 +2954,66 @@
                         </div>
                         <div class="termin-ort">Gasthaus-Forum</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44200" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44238" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44186" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44249" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44258" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
                     </div>
                 </div>
             
@@ -1568,6 +3038,42 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42879" target="_blank">Leibniz - Chronik eines verschollenen Bildes</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Out of her love for the great thinker Leibniz, Queen Charlotte commissions a portrait of him. During the portrait sessions, the philosopher and the young painter engage in a passionate struggle for tr</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44310" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44264" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
                     </div>
                 </div>
             
@@ -1627,6 +3133,102 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44330" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44232" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44281" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44297" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44221" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44202" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44239" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:00 / 19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44188" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">17:00–20:00 Uhr</div>
                     <div class="termin-info">
@@ -1636,6 +3238,30 @@
                         </div>
                         <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44251" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44259" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
                     </div>
                 </div>
             
@@ -1699,6 +3325,42 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44319" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44312" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44265" target="_blank">Primate</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Lucy, a college student, along with her friends, spend their vacation at her family's home in Hawaii, which includes her pet chimpanzee, Ben. However, when Ben contracts rabies after being bitten by a</div>
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -1716,6 +3378,138 @@
                         </div>
                         <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:50 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44233" target="_blank">Zoomania 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery when Gary De'Snake arrives and turns the animal me</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44284" target="_blank">Ach, diese Lücke, diese entsetzliche Lücke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Twenty-year-old Joachim is unexpectedly accepted at drama school in Munich and moves into his grandparents' upper-class villa. From then on, he tries to find his identity as a young man between the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44299" target="_blank">Woodwalkers 2</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 / 17:30 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44224" target="_blank">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">At a tennis club in rural Germany, preparations for the summer party are led by Heribert. When a separate grill is suggested for Erol, the club's only Muslim member, tensions flare. What begins as a s</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44240" target="_blank">Checker Tobi 3 - Die heimliche Herrscherin der Erde</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tobi revisits an old childhood riddle: Who leaves the deepest traces in the earth? His search takes him to places like Madagascar, Spitsbergen, and Mexico, where he uncovers what connects them and fin</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 / 17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44204" target="_blank">Die drei ??? - Toteninsel</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">The three investigators want to go on a road trip during their vacation, but just as they are about to set off, the phone rings and an unknown caller hands the trio of detectives their latest case: th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">15:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44331" target="_blank">Charlie der Superhund</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44253" target="_blank">The Housemaid - Wenn sie wüsste</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Trying to escape her past, Millie Calloway accepts a job as a live-in housemaid for the wealthy Nina and Andrew Winchester. But what begins as a dream job quickly unravels into something far more dang</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42880" target="_blank">Leibniz - Chronik eines verschollenen Bildes</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Out of her love for the great thinker Leibniz, Queen Charlotte commissions a portrait of him. During the portrait sessions, the philosopher and the young painter engage in a passionate struggle for tr</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44335" target="_blank">Mercy</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the near future, a detective stands on trial accused of murdering his wife. He has ninety minutes to prove his innocence to the advanced AI Judge he once championed, before it determines his fate.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44191" target="_blank">Avatar: Fire And Ash</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
                     </div>
                 </div>
             
@@ -1740,6 +3534,42 @@
                         </div>
                         <div class="termin-ort">Altstadtschmiede, Kellerstraße 10</div>
                         <div class="termin-beschreibung">Wer Bock auf akustische Rock- und Popmusik hat, ist hier genau richtig. Der Abend startet immer mit einer Opener-Band, die den Einstieg macht. Anschließend ist die Bühne offen für alle, die akustisch </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44174" target="_blank">Wuthering Heights  - Sturmhöhe</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Tragedy strikes when Heathcliff falls in love with Catherine Earnshaw, a woman from a wealthy family in 18th-century England.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44320" target="_blank">Send Help</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Two colleagues become stranded on a deserted island, the only survivors of a plane crash. On the island, they must overcome past grievances and work together to survive, but ultimately, it's a battle </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44314" target="_blank">Return to Silent Hill</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and u</div>
                     </div>
                 </div>
             
@@ -1859,6 +3689,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43814" target="_blank">Prinzessin Mononoke</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Ashitaka, a prince of the disappearing Emishi people, is cursed by a demonized boar god and must journey to the west to find a cure. Along the way, he encounters San, a young human woman fighting to p</div>
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -1943,6 +3785,18 @@
                             <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43651" target="_blank">Disney Channel Mitmachkino</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         
                     </div>
                 </div>
@@ -2075,6 +3929,30 @@
             <div class="datum-header">So 15.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 13:00 / 14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43652" target="_blank">Disney Channel Mitmachkino</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42881" target="_blank">Jane Austen und das Chaos in meinem Leben</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">An aspiring author looking to get more out of life takes up a writing residency and finds herself in the sort of romantic entanglements that could come from the pages of a Jane Austen novel.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="kunsthalle">
                     <div class="termin-zeit">12:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -2084,6 +3962,30 @@
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
                         <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">14:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44175" target="_blank">G.O.A.T. - Bock auf große Sprünge</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Will, a small goat with big dreams, gets a once-in-a-lifetime shot to join the pros and play roarball – a high-intensity, co-ed, full-contact sport dominated by the fastest, fiercest animals in the wo</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43800" target="_blank">Léon - Der Profi</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Léon, the top hit man in New York, has earned a rep as an effective &quot;cleaner&quot;. But when his next-door neighbors are wiped out by a loose-cannon DEA agent, he becomes the unwilling custodian </div>
                     </div>
                 </div>
             
@@ -2104,6 +4006,18 @@
                         </div>
                         <div class="termin-ort">Suberg's bei Boente - die Hausbrauerei, Augustinessenstraße 4</div>
                         <div class="termin-beschreibung">Da simmer dabei! Dat is prima! VIVA COLONIA! Rosenmontag in Köln? Das gibt's auch bei uns im Vest. Boente die Karnevalshochburg der Region lädt zum absoluten Party-Highlight am Rosenmontag ein. Es wir</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42882" target="_blank">Jane Austen und das Chaos in meinem Leben</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">An aspiring author looking to get more out of life takes up a writing residency and finds herself in the sort of romantic entanglements that could come from the pages of a Jane Austen novel.</div>
                     </div>
                 </div>
             
@@ -2147,6 +4061,30 @@
             <div class="datum-header">Mi 18.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42914" target="_blank">No Hit Wonder</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Daniel is a singer who became famous overnight thanks to one song. But for the aspiring artist, the dream of fame was short-lived: his song turned out to be a one-hit wonder, and Daniel fell into a de</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42915" target="_blank">Wicked: Teil 2 (Songs auf Deutsch gesungen)</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">As an angry mob rises against the Wicked Witch, Glinda and Elphaba will need to come together one final time. With their singular friendship now the fulcrum of their futures, they will need to truly s</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="gastkirche">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -2168,6 +4106,18 @@
                         </div>
                         <div class="termin-ort">Hörsaal</div>
                         <div class="termin-beschreibung">Stell dir vor, wir könnten riesige Bauwerke im Weltraum errichten! Wie wäre es mit einer Alderson-Scheibe, so groß, dass Millionen Planeten darauf Platz hätten? Oder einer Dyson-Sphäre, die einen ganz</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42883" target="_blank">Jane Austen und das Chaos in meinem Leben</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">An aspiring author looking to get more out of life takes up a writing residency and finds herself in the sort of romantic entanglements that could come from the pages of a Jane Austen novel.</div>
                     </div>
                 </div>
             
@@ -2503,6 +4453,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42884" target="_blank">Lolita lesen in Teheran</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">As Islamic morality squads stage arbitrary raids in Tehran and as fundamentalists seize hold of the universities, Azar Nafisi, an inspired teacher, secretly gathers six of her most committed female st</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="kunsthalle">
                     <div class="termin-zeit">12:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -2512,6 +4474,30 @@
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
                         <div class="termin-beschreibung">Tour through the current exhibition</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/43801" target="_blank">Billy Elliot - I Will Dance</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">County Durham, England, 1984. The miners' strike has started and the police have started coming up from Bethnal Green, starting a class war with the lower classes suffering. Caught in the middle of th</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44176" target="_blank">Marty Supreme</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Marty Mauser, a young man with a dream no one respects, goes to hell and back in pursuit of greatness.</div>
                     </div>
                 </div>
             
@@ -2607,6 +4593,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42885" target="_blank">Lolita lesen in Teheran</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">As Islamic morality squads stage arbitrary raids in Tehran and as fundamentalists seize hold of the universities, Azar Nafisi, an inspired teacher, secretly gathers six of her most committed female st</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -2683,6 +4681,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/42886" target="_blank">Lolita lesen in Teheran</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">As Islamic morality squads stage arbitrary raids in Tehran and as fundamentalists seize hold of the universities, Azar Nafisi, an inspired teacher, secretly gathers six of her most committed female st</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="geschichte-re">
                     <div class="termin-zeit">18:00 Uhr</div>
                     <div class="termin-info">
@@ -2755,15 +4765,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
+                <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">19:45 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/kirche-und-kino-father-mother-sister-brother" target="_blank">Kirche und Kino - FATHER MOTHER SISTER BROTHER</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/44171" target="_blank">Father Mother Sister Brother</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung">Three stories concerning the relationships between adult children, their somewhat distant parent (or parents), and each other: a reclusive father visited by his grown children in the US, sisters visit</div>
                     </div>
                 </div>
             
@@ -3038,7 +5048,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 20:32 Uhr<br>
+            Generiert am 08.02.2026 um 20:53 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -3055,18 +5065,28 @@
             <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
             <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
-            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a>
+            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a>
         </footer>
     </div>
 
     <script>
         let vhsAusgeblendet = false;
+        let kinoAusgeblendet = false;
 
         function toggleVHS() {
             vhsAusgeblendet = !vhsAusgeblendet;
             const btn = document.getElementById('vhs-toggle');
             btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
             btn.classList.toggle('active', vhsAusgeblendet);
+            filterTermine();
+        }
+
+        function toggleKino() {
+            kinoAusgeblendet = !kinoAusgeblendet;
+            const btn = document.getElementById('kino-toggle');
+            btn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
+            btn.classList.toggle('active', kinoAusgeblendet);
             filterTermine();
         }
 
@@ -3078,8 +5098,9 @@
             termine.forEach(t => {
                 const quelleMatch = !quelleFilter || t.dataset.quelle === quelleFilter;
                 const vhsMatch = !vhsAusgeblendet || t.dataset.quelle !== 'vhs';
+                const kinoMatch = !kinoAusgeblendet || t.dataset.quelle !== 'cineworld';
 
-                if (quelleMatch && vhsMatch) {
+                if (quelleMatch && vhsMatch && kinoMatch) {
                     t.classList.remove('hidden');
                     sichtbar++;
                 } else {

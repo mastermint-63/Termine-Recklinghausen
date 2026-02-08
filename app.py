@@ -21,7 +21,7 @@ from scraper import (
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
-    hole_gastkirche, hole_ruhrfestspiele, hole_backyard, Termin,
+    hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld, Termin,
 )
 
 
@@ -42,6 +42,7 @@ QUELLEN = {
     'gastkirche': 'Gastkirche',
     'ruhrfestspiele': 'Ruhrfestspiele',
     'backyard': 'Backyard-Club',
+    'cineworld': 'Cineworld',
 }
 
 
@@ -177,6 +178,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'gastkirche': 'badge-gastkirche',
                 'ruhrfestspiele': 'badge-ruhrfestspiele',
                 'backyard': 'badge-backyard',
+                'cineworld': 'badge-cineworld',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -557,6 +559,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-cineworld {{
+            background: linear-gradient(135deg, #d4391c 0%, #b02010 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -732,6 +739,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 {quellen_filter}
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
+            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
             <div class="stats">
                 <span id="termine-count">{len(termine)}</span> Termine
             </div>
@@ -759,18 +767,28 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
             <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
-            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a>
+            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a>
         </footer>
     </div>
 
     <script>
         let vhsAusgeblendet = false;
+        let kinoAusgeblendet = false;
 
         function toggleVHS() {{
             vhsAusgeblendet = !vhsAusgeblendet;
             const btn = document.getElementById('vhs-toggle');
             btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
             btn.classList.toggle('active', vhsAusgeblendet);
+            filterTermine();
+        }}
+
+        function toggleKino() {{
+            kinoAusgeblendet = !kinoAusgeblendet;
+            const btn = document.getElementById('kino-toggle');
+            btn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
+            btn.classList.toggle('active', kinoAusgeblendet);
             filterTermine();
         }}
 
@@ -782,8 +800,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             termine.forEach(t => {{
                 const quelleMatch = !quelleFilter || t.dataset.quelle === quelleFilter;
                 const vhsMatch = !vhsAusgeblendet || t.dataset.quelle !== 'vhs';
+                const kinoMatch = !kinoAusgeblendet || t.dataset.quelle !== 'cineworld';
 
-                if (quelleMatch && vhsMatch) {{
+                if (quelleMatch && vhsMatch && kinoMatch) {{
                     t.classList.remove('hidden');
                     sichtbar++;
                 }} else {{
@@ -921,6 +940,11 @@ def main():
         # 16. Backyard-Club
         events = hole_backyard(j, m)
         print(f"  -> {len(events)} Backyard-Club")
+        alle_termine.extend(events)
+
+        # 17. Cineworld
+        events = hole_cineworld(j, m)
+        print(f"  -> {len(events)} Cineworld")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)

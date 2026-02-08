@@ -18,16 +18,17 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 
 - **Repository:** https://github.com/mastermint-63/Termine-Recklinghausen
 - **Live URL:** https://mastermint-63.github.io/Termine-Recklinghausen/
+- **Deploy:** GitHub Actions (`deploy.yml`) triggert bei Push von `termine_re_*.html` oder `index.html`
 
 ## Architektur
 
 ```
-16 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+17 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
-**scraper.py** — 16 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. VHS-Scraper iteriert über 7 Kategorieseiten mit Paginierung und Schleifen-Erkennung; NLGR/Literaturtage teilen sich einen JSON-LD-Helper (`_hole_events_calendar`).
+**scraper.py** — 17 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. VHS-Scraper iteriert über 7 Kategorieseiten mit Paginierung und Schleifen-Erkennung; NLGR/Literaturtage/Backyard nutzen den JSON-LD-Helper (`_hole_events_calendar`); Cineworld nutzt die Cineamo-REST-API (pro Tag abgefragt, Vorstellungen pro Film gruppiert).
 
-**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript, VHS-Toggle-Button zum Ein-/Ausblenden der dominanten VHS-Termine. Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
+**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript, VHS- und Kino-Toggle-Buttons zum Ein-/Ausblenden dominanter Quellen. Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
 
 **update.sh** — Tägliche Automation: Scraping → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad.
 
@@ -43,6 +44,12 @@ Lokales Scraping via launchd (Cloud-IPs werden von regionalen Websites blockiert
 launchctl list | grep termine-re           # Status prüfen
 launchctl start de.termine-re.update       # Manuell auslösen
 tail -f launchd.log                        # Live-Log
+```
+
+## Abhängigkeiten
+
+```bash
+pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), für Stadtarchiv-PDF
 ```
 
 ## Quellen und Parsing-Details
@@ -65,6 +72,7 @@ tail -f launchd.log                        # Live-Log
 | `hole_gastkirche()` | gastkirche.de | JEvents (Joomla): Wochenansicht, Kat. 68+70, `li.ev_td_li` mit `a.ev_link_row` |
 | `hole_ruhrfestspiele()` | ruhrfestspiele.de | Zweistufig: /programm → Produktions-Links → Detailseiten, `article.production-schedule-item` |
 | `hole_backyard()` | backyard-club.de | TEC JSON-LD (doppelt auf Seite → interne Deduplizierung + HTML-Entity-Bereinigung) |
+| `hole_cineworld()` | cineworld-recklinghausen.de | Cineamo API (`api.cineamo.com`), Cinema-ID 877, pro Tag abgefragt, Vorstellungen pro Film gruppiert |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 
@@ -75,3 +83,6 @@ tail -f launchd.log                        # Live-Log
 3. `quelle`-String für Filterung setzen
 4. Label in `QUELLEN`-Dict in `app.py` eintragen
 5. Badge-CSS-Klasse `.badge-neuequelle` mit Farbgradient in `generiere_html()` ergänzen
+6. Badge-Zuordnung in `badge_classes`-Dict in `generiere_html()` eintragen
+7. Footer-Link in `generiere_html()` ergänzen
+8. Quellentabelle in dieser CLAUDE.md aktualisieren
