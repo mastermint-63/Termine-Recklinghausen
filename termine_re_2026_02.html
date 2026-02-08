@@ -129,6 +129,26 @@
             gap: 10px;
         }
 
+        .vhs-toggle {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .vhs-toggle:hover {
+            background: var(--hover-color);
+        }
+
+        .vhs-toggle.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
         .filter-bar select {
             padding: 8px 12px;
             border: 1px solid var(--border-color);
@@ -260,6 +280,11 @@
 
         .badge-literaturtage {
             background: linear-gradient(135deg, #a06050 0%, #905040 100%);
+            color: white;
+        }
+
+        .badge-vhs {
+            background: linear-gradient(135deg, #4a8a6a 0%, #3a7a5a 100%);
             color: white;
         }
 
@@ -436,16 +461,17 @@
 <tr><td></td><td></td><td></td><td></td><td></td><td></td><td><a href="#datum-2026-02-01" class="kal-link">1</a></td></tr>
 <tr><td><a href="#datum-2026-02-02" class="kal-link">2</a></td><td><a href="#datum-2026-02-03" class="kal-link">3</a></td><td><a href="#datum-2026-02-04" class="kal-link">4</a></td><td><a href="#datum-2026-02-05" class="kal-link">5</a></td><td><a href="#datum-2026-02-06" class="kal-link">6</a></td><td><a href="#datum-2026-02-07" class="kal-link">7</a></td><td><a href="#datum-2026-02-08" class="kal-link">8</a></td></tr>
 <tr><td><a href="#datum-2026-02-09" class="kal-link">9</a></td><td><a href="#datum-2026-02-10" class="kal-link">10</a></td><td><a href="#datum-2026-02-11" class="kal-link">11</a></td><td><a href="#datum-2026-02-12" class="kal-link">12</a></td><td><a href="#datum-2026-02-13" class="kal-link">13</a></td><td><a href="#datum-2026-02-14" class="kal-link">14</a></td><td><a href="#datum-2026-02-15" class="kal-link">15</a></td></tr>
-<tr><td><a href="#datum-2026-02-16" class="kal-link">16</a></td><td class="kal-leer">17</td><td><a href="#datum-2026-02-18" class="kal-link">18</a></td><td><a href="#datum-2026-02-19" class="kal-link">19</a></td><td><a href="#datum-2026-02-20" class="kal-link">20</a></td><td><a href="#datum-2026-02-21" class="kal-link">21</a></td><td><a href="#datum-2026-02-22" class="kal-link">22</a></td></tr>
-<tr><td><a href="#datum-2026-02-23" class="kal-link">23</a></td><td class="kal-leer">24</td><td><a href="#datum-2026-02-25" class="kal-link">25</a></td><td><a href="#datum-2026-02-26" class="kal-link">26</a></td><td><a href="#datum-2026-02-27" class="kal-link">27</a></td><td><a href="#datum-2026-02-28" class="kal-link">28</a></td><td></td></tr>
+<tr><td><a href="#datum-2026-02-16" class="kal-link">16</a></td><td><a href="#datum-2026-02-17" class="kal-link">17</a></td><td><a href="#datum-2026-02-18" class="kal-link">18</a></td><td><a href="#datum-2026-02-19" class="kal-link">19</a></td><td><a href="#datum-2026-02-20" class="kal-link">20</a></td><td><a href="#datum-2026-02-21" class="kal-link">21</a></td><td><a href="#datum-2026-02-22" class="kal-link">22</a></td></tr>
+<tr><td><a href="#datum-2026-02-23" class="kal-link">23</a></td><td><a href="#datum-2026-02-24" class="kal-link">24</a></td><td><a href="#datum-2026-02-25" class="kal-link">25</a></td><td><a href="#datum-2026-02-26" class="kal-link">26</a></td><td><a href="#datum-2026-02-27" class="kal-link">27</a></td><td><a href="#datum-2026-02-28" class="kal-link">28</a></td><td></td></tr>
 </table>
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option>
+                <option value="">Alle Quellen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <div class="stats">
-                <span id="termine-count">86</span> Termine
+                <span id="termine-count">180</span> Termine
             </div>
         </div>
 
@@ -499,6 +525,114 @@
             <div class="datum-header">Mo 02.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">08:30–15:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5235/kursname/Word Excel Outlook Anerkannt als Bildungsurlaub/kategorie-id/62" target="_blank">Word, Excel, Outlook.</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 01.03</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:30–12:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4323/kursname/Spanisch B13/kategorie-id/26" target="_blank">Spanisch B1.3</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.12</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">12:00–12:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3250/kursname/Aqua-Fitness/kategorie-id/21" target="_blank">Aqua-Fitness</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Hallenbad, Herner Straße 160</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:00–19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5015/kursname/Einfuehrung in die Prowise-Tafeln/kategorie-id/62" target="_blank">Einführung in die Prowise-Tafeln.</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Städtisches Gymnasium Herten, Gartenstr. 40, 45699 Herten</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:15–17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3114/kursname/Hatha-Yoga zur Unterstuetzung des Immunsystems/kategorie-id/21" target="_blank">Hatha-Yoga zur Unterstützung des Immunsystems für Anfänger*innen und Fortgeschrittene</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:45–19:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4522/kursname/Polnisch A22/kategorie-id/26" target="_blank">Polnisch A2.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:45–19:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4310/kursname/Spanisch A24/kategorie-id/26" target="_blank">Spanisch A2.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4112/kursname/Englisch A2 Conversation/kategorie-id/26" target="_blank">Englisch A2 Conversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4304/kursname/Spanisch A12/kategorie-id/26" target="_blank">Spanisch A1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">19:30 Uhr</div>
                     <div class="termin-info">
@@ -507,6 +641,42 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Virtueller Raum</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:30–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4521/kursname/Polnisch A 12/kategorie-id/26" target="_blank">Polnisch A 1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:30–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4306/kursname/Spanisch A14/kategorie-id/26" target="_blank">Spanisch A1.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:30–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1050D/kursname/Zwischen Superorganismus und Polizeistaat Konflikte und Konfliktloesung Online/kategorie-id/4" target="_blank">Zwischen Superorganismus und Polizeistaat: Konflikte und Konfliktlösung in den Staaten sozialer Insekten (Online-Vortrag)</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">online</div>
                         
                     </div>
                 </div>
@@ -531,6 +701,162 @@
             <div class="datum-header">Di 03.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:00–11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4118/kursname/Englisch B 1 Conversation/kategorie-id/26" target="_blank">Englisch B 1 Conversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Raum 1</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:45–11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3112/kursname/Vini-Yoga am Vormittag/kategorie-id/21" target="_blank">Vini-Yoga am Vormittag</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">12:00–12:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3252/kursname/Aqua-Fitness/kategorie-id/21" target="_blank">Aqua-Fitness</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Hallenbad, Herner Straße 160</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">15:00–16:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4404/kursname/Italienisch A23/kategorie-id/26" target="_blank">Italienisch A2.3</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:00–17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4101/kursname/Englisch A12/kategorie-id/26" target="_blank">Englisch A1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:30–17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3123/kursname/Vini-Yoga fuer Frauen/kategorie-id/21" target="_blank">Vini-Yoga für Frauen</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:45–18:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4402/kursname/Italienisch A13/kategorie-id/26" target="_blank">Italienisch A1.3</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:15–18:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4317/kursname/Spanisch B12/kategorie-id/26" target="_blank">Spanisch B1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.12</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:30–18:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3210/kursname/Smovey/kategorie-id/21" target="_blank">Smovey®</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Gymnastikraum der Anne-Frank-Grundschule</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:45–19:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4109/kursname/Englisch A24/kategorie-id/26" target="_blank">Englisch A2.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:30–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4403/kursname/Italienisch A14/kategorie-id/26" target="_blank">Italienisch A1.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:30–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4308/kursname/Spanisch A21/kategorie-id/26" target="_blank">Spanisch  A2.1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 2.01</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–21:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4325/kursname/Spanisch B 2 Konversation/kategorie-id/26" target="_blank">Spanisch B2 Konversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.07</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -563,6 +889,102 @@
             <div class="datum-header">Mi 04.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:30–11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4116/kursname/Englisch B 1/kategorie-id/26" target="_blank">Englisch B 1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.06</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3118/kursname/Mit Yoga in die Balance - Innere Ruhe und Gelassenheit finden/kategorie-id/21" target="_blank">Mit Yoga in die Balance - Innere Ruhe und Gelassenheit finden</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5001/kursname/Smartphone ganz einfach Grundkurs fuer Anfaengerinnen/kategorie-id/62" target="_blank">Smartphone ganz einfach: Grundkurs für Anfänger*innen</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.12</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">14:30–16:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5000/kursname/Digital-Treff/kategorie-id/62" target="_blank">Digital-Treff</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">15:00–15:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3202/kursname/Pilates/kategorie-id/21" target="_blank">Pilates</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:00–17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3109/kursname/Faszientraining/kategorie-id/21" target="_blank">Faszientraining</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:00–17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4102/kursname/Englisch A14/kategorie-id/26" target="_blank">Englisch A1.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:45–18:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4314/kursname/Spanisch A2B1/kategorie-id/26" target="_blank">Spanisch A2/B1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -575,6 +997,90 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4204/kursname/Franzoesisch A13/kategorie-id/26" target="_blank">Französisch A1.3</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4532/kursname/Griechisch A12/kategorie-id/26" target="_blank">Griechisch A1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4543/kursname/Russisch A13/kategorie-id/26" target="_blank">Russisch A1.3</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:15–19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3217/kursname/Fitfight Fitness/kategorie-id/21" target="_blank">Fitfight Fitness</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:45–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4213/kursname/Franzoesisch B2 Konversation am Abend/kategorie-id/26" target="_blank">Französisch B2 Konversation am Abend</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 2.01</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4113/kursname/Englisch A2 Conversation/kategorie-id/26" target="_blank">Englisch A 2 Conversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Raum 1</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:15–20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4322/kursname/Spanisch B12/kategorie-id/26" target="_blank">Spanisch B1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.12</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">19:30 Uhr</div>
                     <div class="termin-info">
@@ -584,6 +1090,18 @@
                         </div>
                         <div class="termin-ort">Hörsaal</div>
                         <div class="termin-beschreibung">Wir können nicht hinfliegen, wir können nur hinsehen. Wir sind auf rein beobachtende Analysen angewiesen, nicht auf experimentelle. Unser Labor ist das Weltall, das Größte überhaupt, aber deshalb könn</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">20:00–21:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1600/kursname/Konflikthafte Demokratie/kategorie-id/4" target="_blank">Konflikthafte Demokratie</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
                     </div>
                 </div>
             
@@ -607,6 +1125,126 @@
             <div class="datum-header">Do 05.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:00–11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4326/kursname/Spanisch B2 Konversation/kategorie-id/26" target="_blank">Spanisch B2 Konversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3122/kursname/Yoga fuer mehr Beweglichkeit Kraeftigung und Stabilitaet/kategorie-id/21" target="_blank">Yoga für mehr Beweglichkeit, Kräftigung und Stabilität</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:30–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4212/kursname/Franzoesisch B1 B2 Konversation/kategorie-id/26" target="_blank">Französisch B1+ / B2 Konversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Raum 2</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">12:15–13:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3124/kursname/Yoga am Mittag - silence flow/kategorie-id/21" target="_blank">Yoga am Mittag - silence & flow</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:30–17:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3107/kursname/Feldenkrais - Bewusstheit durch Bewegung/kategorie-id/21" target="_blank">Feldenkrais - Bewusstheit durch Bewegung</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:30–19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4319/kursname/Spanisch B12/kategorie-id/26" target="_blank">Spanisch B1.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4531/kursname/Einstieg ins Griechische Anmeldungen nur ueber die VHS Marl/kategorie-id/26" target="_blank">Einstieg ins Griechische</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">die insel Hauptstelle, EG, Raum S2</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4541/kursname/Russisch fuer Anfaengerinnen A11/kategorie-id/26" target="_blank">Russisch für Anfänger*innen A1.1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:30–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4211/kursname/Franzoesisch B1 Lesen und Sprechen/kategorie-id/26" target="_blank">Französisch B1 Lesen und Sprechen</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:15–20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4309/kursname/Spanisch A24/kategorie-id/26" target="_blank">Spanisch A2.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -627,6 +1265,18 @@
             <div class="datum-header">Fr 06.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:30–11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4121/kursname/Englisch C 1/kategorie-id/26" target="_blank">Englisch C 1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -636,6 +1286,42 @@
                         </div>
                         <div class="termin-ort">Planetarium</div>
                         <div class="termin-beschreibung">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:00–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/junge-vhs/kw/bereich/kursdetails/kurs/26A-2002/kursname/Stranger Things 2/kategorie-id/104" target="_blank">Stranger Things 2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4305/kursname/Spanisch A14/kategorie-id/26" target="_blank">Spanisch A1.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–18:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3256/kursname/Aqua-Fitness/kategorie-id/21" target="_blank">Aqua-Fitness</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Südbad</div>
+                        
                     </div>
                 </div>
             
@@ -795,6 +1481,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3117/kursname/Mit Yoga in die Balance - Innere Ruhe und Gelassenheit finden/kategorie-id/21" target="_blank">Mit Yoga in die Balance - Innere Ruhe und Gelassenheit finden</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -807,6 +1505,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/grundbildung/kw/bereich/kursdetails/kurs/26A-6102/kursname/Lesen und Schreiben Erweiterungskurs/kategorie-id/53" target="_blank">Lesen und Schreiben (Erweiterungskurs)</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 2.01</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/grundbildung/kw/bereich/kursdetails/kurs/26A-6101/kursname/Lesen und Schreiben Grundkurs/kategorie-id/53" target="_blank">Lesen und Schreiben (Grundkurs)</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 2.01</div>
+                        
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -815,6 +1537,42 @@
             <div class="datum-header">Di 10.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">11:00–12:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2120/kursname/Kunstbetrachtungen am Vormittag Kunst und Religion/kategorie-id/13" target="_blank">Kunstbetrachtungen am Vormittag: Kunst und Religion</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:00–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2205/kursname/Acrylmalerei im Buergerhaus/kategorie-id/13" target="_blank">Acrylmalerei im Bürgerhaus</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-5900/kursname/Dynamische Stromtarife - eine lohnende Sache/kategorie-id/4" target="_blank">Dynamische Stromtarife - eine lohnende Sache?</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
@@ -823,6 +1581,30 @@
                             <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1101/kursname/E Schaffer Zwischen Fussball und Geschichtspolitik - juedische Trainerkarriere/kategorie-id/4" target="_blank">Emanuel Schaffer: Zwischen Fußball und Geschichtspolitik - eine jüdische Trainerkarriere</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.01</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1500/kursname/Zauberhaftes Schottland/kategorie-id/4" target="_blank">Zauberhaftes Schottland</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Weinhandlung Molitor, Hertener Str. 59, RE</div>
                         
                     </div>
                 </div>
@@ -847,6 +1629,18 @@
             <div class="datum-header">Mi 11.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:30–11:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2409/kursname/Einfuehrung in Tonkeramik und Aufbauarbeit/kategorie-id/13" target="_blank">Einführung in Tonkeramik und Aufbauarbeit</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="regioactive">
                     <div class="termin-zeit">20:00 Uhr</div>
                     <div class="termin-info">
@@ -891,6 +1685,42 @@
             <div class="datum-header">Do 12.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">09:00–11:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4110/kursname/Englisch Stufe A24/kategorie-id/26" target="_blank">Englisch Stufe A2.4</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">11:30–13:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4105/kursname/Englisch A21/kategorie-id/26" target="_blank">Englisch A2.1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">14:00–16:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4107/kursname/Englisch A23 mit Schwerpunkt einfache Konversation/kategorie-id/26" target="_blank">Englisch A2.3 mit Schwerpunkt einfache Konversation</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">15:00 Uhr</div>
                     <div class="termin-info">
@@ -1179,6 +2009,38 @@
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
         
+        <div class="datum-gruppe" id="datum-2026-02-17">
+            <div class="datum-header">Di 17.02.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1200/kursname/Mobil mit dem Deutschlandticket/kategorie-id/4" target="_blank">Mobil mit dem Deutschlandticket</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Treffpunkt Willy-Brandt-Haus R. 0.20</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:15–19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2130/kursname/Literatursalon im Fruehling/kategorie-id/13" target="_blank">Literatursalon im Frühling</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
         <div class="datum-gruppe" id="datum-2026-02-18">
             <div class="datum-header">Mi 18.02.2026</div>
             <div class="termine-liste">
@@ -1207,6 +2069,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3200/kursname/Rueckhalt - Ganzheitliches Rueckentraining/kategorie-id/21" target="_blank">Rückhalt - Ganzheitliches Rückentraining</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Prosper-Hospital</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1501/kursname/Taiwan Vortrag/kategorie-id/4" target="_blank">Taiwan</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.01</div>
+                        
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -1215,6 +2101,42 @@
             <div class="datum-header">Do 19.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:30–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1707/kursname/Selbsthilfegruppe f pflegende Angehoerige/kategorie-id/4" target="_blank">Pflegegrad beantragen für Kinder und Jugendliche - Eltern helfen Eltern</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.13</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3300/kursname/Bridge ist ein Tor zur Welt - Teil 1/kategorie-id/21" target="_blank">Bridge ist ein Tor zur Welt - Teil 1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bridgeclub Recklinghausen, Tiroler Str. 1</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2206/kursname/Landschaftsmalerei mit Gouache-Farben/kategorie-id/13" target="_blank">Einführung in die Landschaftsmalerei mit Gouache-Farben</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 01.05</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
@@ -1283,6 +2205,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1001/kursname/KI und politische Meinungsbildung Vortrag/kategorie-id/4" target="_blank">KI und Demokratie: Wie Künstliche Intelligenz die politische Meinungsbildung unterstützen kann.</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="nlgr">
                     <div class="termin-zeit">19:30 Uhr</div>
                     <div class="termin-info">
@@ -1315,6 +2249,18 @@
             <div class="datum-header">Sa 21.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-3102/kursname/Buddhistische Meditation - Tagesseminar/kategorie-id/13" target="_blank">Buddhistische Meditation: Eine Einführung in den inneren Raum</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
@@ -1427,6 +2373,54 @@
             <div class="datum-header">Mo 23.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">16:15–18:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2204/kursname/Acrylmalerei im Buergerhaus/kategorie-id/13" target="_blank">Acrylmalerei im Bürgerhaus</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:00–18:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4207/kursname/Franzoesisch A21/kategorie-id/26" target="_blank">Französisch A2.1</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:45–20:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-4208/kursname/Franzoesisch A22/kategorie-id/26" target="_blank">Französisch A2.2</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Marie-Curie-Gymnasium</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–21:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2410/kursname/Einfuehrung in Tonarbeiten und Aufbaukeramik/kategorie-id/13" target="_blank">Einführung in Tonarbeiten und Aufbaukeramik</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Bürgerhaus Süd; Werkraum</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">19:30 Uhr</div>
                     <div class="termin-info">
@@ -1451,6 +2445,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:30–21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1051D/kursname/Im Wettlauf mit dem Gehirn Ist kuenstliche Intelligenz schon intelligent Online/kategorie-id/4" target="_blank">Im Wettlauf mit dem Gehirn: Ist künstliche Intelligenz schon intelligent? (Online-Vortrag)</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">online</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -1467,10 +2473,114 @@
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
         
+        <div class="datum-gruppe" id="datum-2026-02-24">
+            <div class="datum-header">Di 24.02.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3115/kursname/Hatha-Yoga am Abend/kategorie-id/21" target="_blank">Hatha-Yoga am Abend</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-4125/kursname/English Book Club/kategorie-id/13" target="_blank">English Book Club</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1052D/kursname/Fehlerhafte Menschen und Maschinenfehler Warum wir eine Error Literacy brauchen/kategorie-id/4" target="_blank">Fehlerhafte Menschen und Maschinenfehler. Warum wir eine Error Literacy brauchen“ (Online-Vortrag)</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">online</div>
+                        
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
         <div class="datum-gruppe" id="datum-2026-02-25">
             <div class="datum-header">Mi 25.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5706/kursname/Debattiertraining Fair streiten im Alltag/kategorie-id/62" target="_blank">Debattiertraining: Fair streiten im Alltag</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-7007/kursname/Einbuergerungstest/kategorie-id/26" target="_blank">Einbürgerungstest</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.01</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-5903D/kursname/Vom Keller bis zum Dach - Wie saniere ich mein Gebaeude richtig/kategorie-id/4" target="_blank">Vom Keller bis zum Dach - Wie saniere ich mein Gebäude richtig?</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Online</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:30–20:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/kultur-gestalten/kw/bereich/kursdetails/kurs/26A-2210/kursname/Aquarellieren fuer Fortgeschrittene/kategorie-id/13" target="_blank">Aquarellieren für Fortgeschrittene</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 01.05</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">19:00–20:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3005/kursname/Die Bedeutung des inneren Dialogs Wie reden Sie mit sich selbst und tut Ihnen/kategorie-id/21" target="_blank">Die Bedeutung des inneren Dialogs – Wie reden Sie mit sich selbst und tut Ihnen das gut?</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">19:30 Uhr</div>
                     <div class="termin-info">
@@ -1527,6 +2637,30 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">17:00–18:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1002/kursname/Sicherheitspolitik Vortrag/kategorie-id/4" target="_blank">Sicherheitspolitik</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3110/kursname/Autogenes Training/kategorie-id/21" target="_blank">Autogenes Training</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">18:30 Uhr</div>
                     <div class="termin-info">
@@ -1571,6 +2705,18 @@
             <div class="datum-header">Fr 27.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:45–12:15 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3113/kursname/Wohl fuehlen und entspannen mit Hatha-Yoga/kategorie-id/21" target="_blank">Wohl fühlen und entspannen mit Hatha-Yoga</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">13:08 Uhr</div>
                     <div class="termin-info">
@@ -1651,6 +2797,30 @@
             <div class="datum-header">Sa 28.02.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1601/kursname/Wochenendseminar Von der Ungleichheit zum guten Leben/kategorie-id/4" target="_blank">Von der Ungleichheit zum guten Leben</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 1.02</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">10:00–14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/junge-vhs/kw/bereich/kursdetails/kurs/26A-3100J/kursname/Chill mal - Entspannung und Yoga fuer junge Menschen/kategorie-id/104" target="_blank">Chill mal - Entspannung und Yoga für junge Menschen</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vesterleben">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
@@ -1694,7 +2864,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 19:17 Uhr<br>
+            Generiert am 08.02.2026 um 19:40 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -1704,11 +2874,22 @@
             <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank">Stadtbibliothek</a> &middot;
             <a href="https://nlgr.de/veranstaltungen/" target="_blank">NLGR</a> &middot;
-            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a>
+            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
+            <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a>
         </footer>
     </div>
 
     <script>
+        let vhsAusgeblendet = false;
+
+        function toggleVHS() {
+            vhsAusgeblendet = !vhsAusgeblendet;
+            const btn = document.getElementById('vhs-toggle');
+            btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
+            btn.classList.toggle('active', vhsAusgeblendet);
+            filterTermine();
+        }
+
         function filterTermine() {
             const quelleFilter = document.getElementById('quelle-filter').value;
             const termine = document.querySelectorAll('.termin');
@@ -1716,8 +2897,9 @@
 
             termine.forEach(t => {
                 const quelleMatch = !quelleFilter || t.dataset.quelle === quelleFilter;
+                const vhsMatch = !vhsAusgeblendet || t.dataset.quelle !== 'vhs';
 
-                if (quelleMatch) {
+                if (quelleMatch && vhsMatch) {
                     t.classList.remove('hidden');
                     sichtbar++;
                 } else {

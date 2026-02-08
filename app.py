@@ -19,7 +19,7 @@ from datetime import datetime
 from scraper import (
     hole_regioactive, hole_stadt_re, hole_altstadtschmiede,
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
-    hole_stadtbibliothek, hole_nlgr, hole_literaturtage, Termin,
+    hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs, Termin,
 )
 
 
@@ -33,6 +33,7 @@ QUELLEN = {
     'stadtbibliothek': 'Stadtbibliothek',
     'nlgr': 'Neue Lit. Gesellschaft',
     'literaturtage': 'Literaturtage',
+    'vhs': 'VHS',
 }
 
 
@@ -161,6 +162,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'stadtbibliothek': 'badge-stadtbibliothek',
                 'nlgr': 'badge-nlgr',
                 'literaturtage': 'badge-literaturtage',
+                'vhs': 'badge-vhs',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -352,6 +354,26 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             gap: 10px;
         }}
 
+        .vhs-toggle {{
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+        }}
+
+        .vhs-toggle:hover {{
+            background: var(--hover-color);
+        }}
+
+        .vhs-toggle.active {{
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }}
+
         .filter-bar select {{
             padding: 8px 12px;
             border: 1px solid var(--border-color);
@@ -483,6 +505,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .badge-literaturtage {{
             background: linear-gradient(135deg, #a06050 0%, #905040 100%);
+            color: white;
+        }}
+
+        .badge-vhs {{
+            background: linear-gradient(135deg, #4a8a6a 0%, #3a7a5a 100%);
             color: white;
         }}
 
@@ -660,6 +687,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <select id="quelle-filter" onchange="filterTermine()">
                 {quellen_filter}
             </select>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <div class="stats">
                 <span id="termine-count">{len(termine)}</span> Termine
             </div>
@@ -680,11 +708,22 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank">Stadtbibliothek</a> &middot;
             <a href="https://nlgr.de/veranstaltungen/" target="_blank">NLGR</a> &middot;
-            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a>
+            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
+            <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a>
         </footer>
     </div>
 
     <script>
+        let vhsAusgeblendet = false;
+
+        function toggleVHS() {{
+            vhsAusgeblendet = !vhsAusgeblendet;
+            const btn = document.getElementById('vhs-toggle');
+            btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
+            btn.classList.toggle('active', vhsAusgeblendet);
+            filterTermine();
+        }}
+
         function filterTermine() {{
             const quelleFilter = document.getElementById('quelle-filter').value;
             const termine = document.querySelectorAll('.termin');
@@ -692,8 +731,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
             termine.forEach(t => {{
                 const quelleMatch = !quelleFilter || t.dataset.quelle === quelleFilter;
+                const vhsMatch = !vhsAusgeblendet || t.dataset.quelle !== 'vhs';
 
-                if (quelleMatch) {{
+                if (quelleMatch && vhsMatch) {{
                     t.classList.remove('hidden');
                     sichtbar++;
                 }} else {{
@@ -796,6 +836,11 @@ def main():
         # 9. Literaturtage
         events = hole_literaturtage(j, m)
         print(f"  -> {len(events)} Literaturtage")
+        alle_termine.extend(events)
+
+        # 10. VHS
+        events = hole_vhs(j, m)
+        print(f"  -> {len(events)} VHS")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)

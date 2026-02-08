@@ -22,7 +22,7 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-9 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+10 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
 **scraper.py** — Sechs unabhängige Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie.
@@ -58,6 +58,7 @@ tail -f launchd.log                        # Live-Log
 | `hole_stadtbibliothek()` | recklinghausen.de/stadtbibliothek | GKD-selfdb: `div.selfdb_reportentry` mit Felddivs |
 | `hole_nlgr()` | nlgr.de | JSON-LD `Event` (The Events Calendar Plugin) |
 | `hole_literaturtage()` | literaturtage-recklinghausen.de | JSON-LD `Event` (The Events Calendar Plugin) |
+| `hole_vhs()` | vhs-recklinghausen.de | KuferWeb: `h4.kw-ue-title` + `div.row` Beginn/Kursort |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 

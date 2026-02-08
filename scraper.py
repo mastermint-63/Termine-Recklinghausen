@@ -24,6 +24,7 @@ KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/en/program/calendar"
 STADTBIBLIOTHEK_URL = "https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp"
 NLGR_URL = "https://nlgr.de/veranstaltungen/"
 LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
+VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
 
 
 @dataclass
@@ -736,3 +737,125 @@ def hole_nlgr(jahr: int, monat: int) -> list[Termin]:
 def hole_literaturtage(jahr: int, monat: int) -> list[Termin]:
     """Holt Events der Literaturtage Recklinghausen."""
     return _hole_events_calendar(LITERATURTAGE_URL, 'literaturtage', 'Literatur', jahr, monat)
+
+
+# ---------------------------------------------------------------------------
+# 10. VHS Recklinghausen — KuferWeb (h4.kw-ue-title)
+# ---------------------------------------------------------------------------
+
+_VHS_KATEGORIEN = [
+    'politik-und-gesellschaft',
+    'kultur-gestalten',
+    'gesundheit',
+    'sprachen',
+    'digitales-und-beruf',
+    'grundbildung',
+    'junge-vhs',
+]
+
+
+def _parse_vhs_seite(soup: BeautifulSoup, jahr: int, monat: int,
+                     gesehen: set[str]) -> list[Termin]:
+    """Parst VHS-Kurseinträge aus einer BeautifulSoup-Seite."""
+    termine = []
+
+    for h4 in soup.find_all('h4', class_='kw-ue-title'):
+        a_tag = h4.find('a')
+        if not a_tag:
+            continue
+
+        b_tag = a_tag.find('b')
+        name = b_tag.get_text(strip=True) if b_tag else a_tag.get_text(strip=True)
+        if not name:
+            continue
+
+        link = a_tag.get('href', '')
+
+        # Metadaten aus den row-Divs des Eltern-Containers
+        parent = h4.parent
+        beginn = ''
+        ort = ''
+        for row in parent.find_all('div', class_='row'):
+            cols = row.find_all('div')
+            if len(cols) < 2:
+                continue
+            label = cols[0].get_text(strip=True)
+            value = cols[1].get_text(strip=True)
+            if label == 'Beginn':
+                beginn = value
+            elif label == 'Kursort':
+                ort = value
+
+        if not beginn:
+            continue
+
+        # "Di., 10.02.2026, 19:00 - 20:30 Uhr"
+        datum_match = re.search(r'(\d{1,2})\.(\d{2})\.(\d{4})', beginn)
+        if not datum_match:
+            continue
+
+        try:
+            datum = datetime(int(datum_match.group(3)), int(datum_match.group(2)),
+                             int(datum_match.group(1)))
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        # Duplikate über Kategorien hinweg vermeiden (gleicher Name + Tag)
+        dedup_key = f"{name}|{datum.strftime('%Y-%m-%d')}"
+        if dedup_key in gesehen:
+            continue
+        gesehen.add(dedup_key)
+
+        # Uhrzeit: "19:00 - 20:30 Uhr"
+        uhrzeit = 'siehe Website'
+        zeit_match = re.search(r'(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})\s*Uhr', beginn)
+        if zeit_match:
+            uhrzeit = f"{zeit_match.group(1)}–{zeit_match.group(2)} Uhr"
+            try:
+                h, m = map(int, zeit_match.group(1).split(':'))
+                datum = datum.replace(hour=h, minute=m)
+            except ValueError:
+                pass
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150] or 'VHS Recklinghausen', link=link,
+            quelle='vhs', kategorie='Bildung',
+        ))
+
+    return termine
+
+
+def hole_vhs(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der VHS Recklinghausen.
+
+    Iteriert über alle 7 Kategorie-Seiten mit Paginierung.
+    KuferWeb zeigt max. 50 Einträge pro Seite; browse/forward-Links für Folgeseiten.
+    Schleifen-Erkennung über bereits besuchte URLs.
+    Duplikate (gleicher Kurs in mehreren Kategorien) werden intern entfernt.
+    """
+    termine = []
+    gesehen: set[str] = set()
+
+    for kategorie in _VHS_KATEGORIEN:
+        url = f"{VHS_BASE_URL}/{kategorie}/"
+        besuchte_urls: set[str] = set()
+
+        while url and url not in besuchte_urls and len(besuchte_urls) < 5:
+            besuchte_urls.add(url)
+            try:
+                response = requests.get(url, headers=HEADERS, timeout=30)
+                response.raise_for_status()
+            except requests.RequestException:
+                break
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+            termine.extend(_parse_vhs_seite(soup, jahr, monat, gesehen))
+
+            next_link = soup.find('a', href=lambda h: h and 'browse/forward' in h)
+            url = next_link['href'] if next_link else None
+
+    return termine
