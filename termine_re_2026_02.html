@@ -288,6 +288,16 @@
             color: white;
         }
 
+        .badge-akademie {
+            background: linear-gradient(135deg, #6a6a9a 0%, #5a5a8a 100%);
+            color: white;
+        }
+
+        .badge-stadtarchiv {
+            background: linear-gradient(135deg, #7a7060 0%, #6a6050 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -467,11 +477,11 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <div class="stats">
-                <span id="termine-count">180</span> Termine
+                <span id="termine-count">183</span> Termine
             </div>
         </div>
 
@@ -1242,6 +1252,18 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="akademie">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.ahademie.com/veranstaltungen/details/?tx_ahademie_eventdetails%5Bevent%5D=116&tx_ahademie_eventdetails%5Baction%5D=show&tx_ahademie_eventdetails%5Bcontroller%5D=Event&cHash=be9f30294b3356de8ba581e0d4612238" target="_blank">Doppelte Solidarität mit Israel und Palästina Hoffnung oder Utopie?</a>
+                            <span class="badge badge-akademie">Ev. Akademie</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Ev. Akademie Recklinghausen</div>
+                        <div class="termin-beschreibung">Dr. Markus Dröge</div>
                     </div>
                 </div>
             
@@ -2161,6 +2183,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="akademie">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.ahademie.com/veranstaltungen/details/?tx_ahademie_eventdetails%5Bevent%5D=117&tx_ahademie_eventdetails%5Baction%5D=show&tx_ahademie_eventdetails%5Bcontroller%5D=Event&cHash=d49174c06e60310e0e1975abc968e798" target="_blank">Wie schützt das Recht die Demokratie – in Deutschland und in Europa?</a>
+                            <span class="badge badge-akademie">Ev. Akademie</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Ev. Akademie Recklinghausen</div>
+                        <div class="termin-beschreibung">Frank Schwabe</div>
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -2617,6 +2651,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="akademie">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.ahademie.com/veranstaltungen/details/?tx_ahademie_eventdetails%5Bevent%5D=111&tx_ahademie_eventdetails%5Baction%5D=show&tx_ahademie_eventdetails%5Bcontroller%5D=Event&cHash=1e7e7928e63d56ce68577d95a3b4f6a7" target="_blank">Kunst sehen! Wie die moderne Kunst in Europa begann</a>
+                            <span class="badge badge-akademie">Ev. Akademie</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Ev. Akademie Recklinghausen</div>
+                        <div class="termin-beschreibung">Andreas Mertin</div>
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -2864,7 +2910,7 @@
         </main>
 
         <footer>
-            Generiert am 08.02.2026 um 19:44 Uhr<br>
+            Generiert am 08.02.2026 um 20:00 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -2875,7 +2921,9 @@
             <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank">Stadtbibliothek</a> &middot;
             <a href="https://nlgr.de/veranstaltungen/" target="_blank">NLGR</a> &middot;
             <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
-            <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a>
+            <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a> &middot;
+            <a href="https://www.ahademie.com/veranstaltungen/" target="_blank">Ev. Akademie</a> &middot;
+            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a>
         </footer>
     </div>
 

@@ -25,6 +25,8 @@ STADTBIBLIOTHEK_URL = "https://www.recklinghausen.de/inhalte/startseite/familie_
 NLGR_URL = "https://nlgr.de/veranstaltungen/"
 LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
 VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
+AKADEMIE_URL = "https://www.ahademie.com/veranstaltungen/"
+STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
 
 
 @dataclass
@@ -737,6 +739,218 @@ def hole_nlgr(jahr: int, monat: int) -> list[Termin]:
 def hole_literaturtage(jahr: int, monat: int) -> list[Termin]:
     """Holt Events der Literaturtage Recklinghausen."""
     return _hole_events_calendar(LITERATURTAGE_URL, 'literaturtage', 'Literatur', jahr, monat)
+
+
+# ---------------------------------------------------------------------------
+# 11. Evangelische Akademie Recklinghausen (ahademie.com) — TYPO3
+# ---------------------------------------------------------------------------
+
+def hole_akademie(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Evangelischen Akademie Recklinghausen.
+
+    TYPO3-basiert: div.col-md-4 mit a.box-hov (Link+Datum in p.eventdate-big),
+    p.subheadline (Titel) und optionalem <p> (Referent).
+    Alle Events auf einer Seite, keine Paginierung.
+    """
+    try:
+        response = requests.get(AKADEMIE_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (akademie): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for card in soup.find_all('div', class_='col-md-4'):
+        a_tag = card.find('a', class_='box-hov')
+        if not a_tag:
+            continue
+
+        datum_p = a_tag.find('p', class_='eventdate-big')
+        if not datum_p:
+            continue
+
+        datum_text = datum_p.get_text(strip=True)
+        try:
+            datum = datetime.strptime(datum_text, '%d.%m.%Y')
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        titel_p = card.find('p', class_='subheadline')
+        name = titel_p.get_text(strip=True) if titel_p else ''
+        if not name:
+            continue
+
+        # Referent/Beschreibung: nächstes <p> nach dem Titel
+        beschreibung = ''
+        if titel_p:
+            next_p = titel_p.find_next_sibling('p')
+            if next_p:
+                beschreibung = next_p.get_text(strip=True)
+
+        href = a_tag.get('href', '')
+        link = f"https://www.ahademie.com{href}" if href and not href.startswith('http') else href
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit='siehe Website',
+            ort='Ev. Akademie Recklinghausen', link=link,
+            beschreibung=beschreibung[:200],
+            quelle='akademie', kategorie='Bildung',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 12. Institut für Stadtgeschichte — Halbjahres-PDF
+# ---------------------------------------------------------------------------
+
+_WOCHENTAGE = r'Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag'
+
+
+def _parse_stadtarchiv_text(text: str, jahr: int, monat: int, pdf_url: str) -> list[Termin]:
+    """Parst Events aus dem Stadtarchiv-PDF-Text."""
+    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    termine = []
+    gesehen: set[str] = set()
+
+    monate_pattern = '|'.join(_MONATE.keys())
+
+    # "Donnerstag, 18. Juni 2026, 18 Uhr" / "Sonntag, 17. Mai 2026, 10 und 15 Uhr"
+    re_monatname = re.compile(
+        rf'({_WOCHENTAGE}),\s*(\d{{1,2}})\.\s*({monate_pattern})\s+(\d{{4}}),\s*(\d{{1,2}})\s*(?:und\s*\d+\s*)?Uhr',
+        re.IGNORECASE,
+    )
+    # "Mittwoch, 14.01.2026, 18 Uhr"
+    re_numerisch = re.compile(
+        rf'({_WOCHENTAGE}),\s*(\d{{1,2}})\.(\d{{2}})\.(\d{{4}}),\s*(\d{{1,2}})\s*Uhr',
+    )
+    # "13. Mai bis 17. Juli 2026" (Ausstellungs-Zeitraum)
+    re_zeitraum = re.compile(
+        rf'(\d{{1,2}})\.\s*({monate_pattern})\s+bis\s+\d{{1,2}}\.\s*(?:{monate_pattern})\s+(\d{{4}})',
+        re.IGNORECASE,
+    )
+
+    def _ist_datumzeile(line: str) -> bool:
+        return bool(re_monatname.search(line) or re_numerisch.search(line) or re_zeitraum.search(line))
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        datum = None
+        uhrzeit = 'siehe Website'
+
+        m = re_monatname.search(line)
+        if m:
+            tag, monat_name, event_jahr, stunde = int(m.group(2)), m.group(3).lower(), int(m.group(4)), int(m.group(5))
+            event_monat = _MONATE.get(monat_name, 0)
+            try:
+                datum = datetime(event_jahr, event_monat, tag, stunde, 0)
+                uhrzeit = f"{stunde:02d}:00 Uhr"
+            except ValueError:
+                pass
+
+        if not datum:
+            m = re_numerisch.search(line)
+            if m:
+                tag, event_monat, event_jahr, stunde = int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5))
+                try:
+                    datum = datetime(event_jahr, event_monat, tag, stunde, 0)
+                    uhrzeit = f"{stunde:02d}:00 Uhr"
+                except ValueError:
+                    pass
+
+        if not datum:
+            m = re_zeitraum.search(line)
+            if m:
+                tag, monat_name, event_jahr = int(m.group(1)), m.group(2).lower(), int(m.group(3))
+                event_monat = _MONATE.get(monat_name, 0)
+                try:
+                    datum = datetime(event_jahr, event_monat, tag)
+                except ValueError:
+                    pass
+
+        if not datum or not _im_monat(datum, jahr, monat):
+            i += 1
+            continue
+
+        # Titel: nächste 1–3 kurze Zeilen nach dem Datum
+        # PDF-Spaltensatz: Fließtext ≥50 Zeichen, Überschriften kürzer
+        title_parts = []
+        j = i + 1
+        while j < len(lines) and len(title_parts) < 3:
+            next_line = lines[j]
+            if _ist_datumzeile(next_line):
+                break
+            if next_line.startswith(('Institut für', 'Exkursion/', 'Sonderausstellung', 'Start am')):
+                break
+            if len(next_line) >= 50 and len(title_parts) > 0:
+                break
+            title_parts.append(next_line)
+            j += 1
+
+        name = ' '.join(title_parts).strip()
+        # PDF-Zeilenumbrüche in Wörtern reparieren ("Land- gemeinde" → "Landgemeinde")
+        # Aber nicht bei "Stadt- und", "Bus- und" etc. (echte Bindestriche vor und/oder/bzw)
+        name = re.sub(r'(\w)- (?!und |oder |bzw )(\w)', r'\1\2', name)
+        if not name:
+            i += 1
+            continue
+
+        dedup_key = f"{name}|{datum.strftime('%Y-%m-%d')}"
+        if dedup_key in gesehen:
+            i += 1
+            continue
+        gesehen.add(dedup_key)
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort='Institut für Stadtgeschichte', link=pdf_url,
+            quelle='stadtarchiv', kategorie='Geschichte',
+        ))
+        i = j
+        continue
+
+    return termine
+
+
+def hole_stadtarchiv(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events vom Institut für Stadtgeschichte aus dem Halbjahres-PDF.
+
+    Probiert beide Halbjahres-PDFs (1. und 2. Halbjahr) für das gegebene Jahr.
+    PyMuPDF extrahiert den Text, Regex parst die Datumsformate.
+    """
+    try:
+        import fitz  # PyMuPDF
+    except ImportError:
+        print("  PyMuPDF nicht installiert (pip install pymupdf)")
+        return []
+
+    termine = []
+    urls = [
+        f"{STADTARCHIV_PDF_BASE}/Programm_1-Halbjahr_{jahr}_Stadtarchiv.pdf",
+        f"{STADTARCHIV_PDF_BASE}/Programm_2-Halbjahr_{jahr}_Stadtarchiv.pdf",
+    ]
+
+    for pdf_url in urls:
+        try:
+            response = requests.get(pdf_url, headers=HEADERS, timeout=30)
+            if response.status_code != 200:
+                continue
+        except requests.RequestException:
+            continue
+
+        doc = fitz.open(stream=response.content, filetype="pdf")
+        text = "\n".join(page.get_text() for page in doc)
+        doc.close()
+
+        termine.extend(_parse_stadtarchiv_text(text, jahr, monat, pdf_url))
+
+    return termine
 
 
 # ---------------------------------------------------------------------------
