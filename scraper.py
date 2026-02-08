@@ -28,6 +28,7 @@ VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
 AKADEMIE_URL = "https://www.ahademie.com/veranstaltungen/"
 GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
 GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
+RUHRFESTSPIELE_URL = "https://www.ruhrfestspiele.de/programm"
 STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
 
 
@@ -1297,5 +1298,97 @@ def hole_gastkirche(jahr: int, monat: int) -> list[Termin]:
 
             soup = BeautifulSoup(response.text, 'html.parser')
             termine.extend(_parse_gastkirche_woche(soup, jahr, monat, kat_name))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 15. Ruhrfestspiele Recklinghausen — Programm-Seite + Detailseiten
+# ---------------------------------------------------------------------------
+
+def hole_ruhrfestspiele(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Ruhrfestspiele Recklinghausen.
+
+    Zweistufig: Hauptseite /programm → Produktions-Links sammeln,
+    dann jede Detailseite → article.production-schedule-item parsen.
+    ID-Attribut = YYYY-MM-DD, time-Element für Uhrzeit, Spielstätten-Link für Ort.
+    Festival läuft ca. Mai–Juni; außerhalb 0 Termine.
+    """
+    # Hauptseite: alle Produktions-Links sammeln
+    try:
+        response = requests.get(RUHRFESTSPIELE_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (ruhrfestspiele): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    produktion_urls = []
+    for a in soup.find_all('a', href=lambda h: h and f'/programm/{jahr}/' in h):
+        href = a['href']
+        if href not in produktion_urls:
+            produktion_urls.append(href)
+
+    if not produktion_urls:
+        return []
+
+    termine = []
+    ziel_prefix = f"{jahr}-{monat:02d}-"
+
+    for prod_url in produktion_urls:
+        try:
+            response = requests.get(prod_url, headers=HEADERS, timeout=30)
+            response.raise_for_status()
+        except requests.RequestException:
+            continue
+
+        prod_soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Produktionsname + Untertitel
+        h1 = prod_soup.find('h1')
+        prod_name = h1.get_text(strip=True) if h1 else ''
+        if not prod_name:
+            continue
+
+        subtitle = prod_soup.find('p', class_='titles__subtitle')
+        beschreibung = subtitle.get_text(strip=True) if subtitle else ''
+
+        # Schedule-Items durchgehen
+        for item in prod_soup.find_all('article', class_='production-schedule-item'):
+            item_id = item.get('id', '')  # "2026-05-08"
+            if not item_id.startswith(ziel_prefix):
+                continue
+
+            try:
+                datum = datetime.strptime(item_id, '%Y-%m-%d')
+            except ValueError:
+                continue
+
+            # Uhrzeit aus time-Element: "19:00 Uhr" oder "20:00 –21:00 Uhr"
+            uhrzeit = 'siehe Website'
+            time_el = item.find('time')
+            if time_el:
+                zeit_text = time_el.get_text(strip=True)
+                zeit_match = re.search(r'(\d{1,2}:\d{2})', zeit_text)
+                if zeit_match:
+                    start_zeit = zeit_match.group(1)
+                    uhrzeit = f"{start_zeit} Uhr"
+                    try:
+                        h, m = map(int, start_zeit.split(':'))
+                        datum = datum.replace(hour=h, minute=m)
+                    except ValueError:
+                        pass
+
+            # Spielstätte
+            venue_a = item.find('a', href=lambda h: h and '/spielstaetten/' in h)
+            ort = venue_a.get_text(strip=True) if venue_a else 'Ruhrfestspielhaus'
+
+            termine.append(Termin(
+                name=prod_name[:150], datum=datum, uhrzeit=uhrzeit,
+                ort=ort[:150], link=prod_url,
+                beschreibung=beschreibung[:200],
+                quelle='ruhrfestspiele', kategorie='Theater/Festival',
+            ))
 
     return termine

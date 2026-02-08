@@ -21,7 +21,7 @@ from scraper import (
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
-    hole_gastkirche, Termin,
+    hole_gastkirche, hole_ruhrfestspiele, Termin,
 )
 
 
@@ -40,6 +40,7 @@ QUELLEN = {
     'stadtarchiv': 'Stadtarchiv',
     'geschichte-re': 'Heimatkunde',
     'gastkirche': 'Gastkirche',
+    'ruhrfestspiele': 'Ruhrfestspiele',
 }
 
 
@@ -173,6 +174,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'stadtarchiv': 'badge-stadtarchiv',
                 'geschichte-re': 'badge-geschichte-re',
                 'gastkirche': 'badge-gastkirche',
+                'ruhrfestspiele': 'badge-ruhrfestspiele',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -543,6 +545,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-ruhrfestspiele {{
+            background: linear-gradient(135deg, #c03030 0%, #a02020 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -743,7 +750,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.ahademie.com/veranstaltungen/" target="_blank">Ev. Akademie</a> &middot;
             <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a> &middot;
             <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
-            <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a>
+            <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
+            <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a>
         </footer>
     </div>
 
@@ -895,6 +903,11 @@ def main():
         # 14. Gastkirche
         events = hole_gastkirche(j, m)
         print(f"  -> {len(events)} Gastkirche")
+        alle_termine.extend(events)
+
+        # 15. Ruhrfestspiele
+        events = hole_ruhrfestspiele(j, m)
+        print(f"  -> {len(events)} Ruhrfestspiele")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)
