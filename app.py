@@ -11,6 +11,7 @@ Verwendung:
 """
 
 import os
+import re
 import webbrowser
 import calendar
 from datetime import datetime
@@ -29,6 +30,60 @@ QUELLEN = {
     'sternwarte': 'Sternwarte',
     'kunsthalle': 'Kunsthalle',
 }
+
+
+def _normalisiere(name: str) -> str:
+    """Normalisiert einen Eventnamen für Vergleiche."""
+    name = name.lower().strip()
+    name = re.sub(r'[^\w\s]', '', name)  # Sonderzeichen entfernen
+    name = re.sub(r'\s+', ' ', name)     # Mehrfach-Leerzeichen
+    return name
+
+
+def _termin_score(t: Termin) -> int:
+    """Bewertet die Informationsqualität eines Termins (höher = besser)."""
+    score = 0
+    if t.link:
+        score += 2
+    if t.uhrzeit and t.uhrzeit not in ('ganztägig', 'siehe Website'):
+        score += 2
+    if t.beschreibung:
+        score += 1
+    if t.ort:
+        score += 1
+    return score
+
+
+def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
+    """Entfernt Duplikate: gleiches Datum + identischer oder enthaltener Name."""
+    # Nach Datum gruppieren
+    nach_datum: dict[str, list[Termin]] = {}
+    for t in termine:
+        key = t.datum.strftime('%Y-%m-%d')
+        nach_datum.setdefault(key, []).append(t)
+
+    ergebnis = []
+    for datum_key in sorted(nach_datum):
+        gruppe = nach_datum[datum_key]
+        # Nach Score absteigend sortieren (bester zuerst)
+        gruppe.sort(key=lambda t: -_termin_score(t))
+
+        behalten: list[Termin] = []
+        for kandidat in gruppe:
+            norm_k = _normalisiere(kandidat.name)
+            ist_duplikat = False
+            for vorhandener in behalten:
+                norm_v = _normalisiere(vorhandener.name)
+                # Exakt gleich oder einer ist Teilstring des anderen
+                if norm_k == norm_v or norm_k in norm_v or norm_v in norm_k:
+                    ist_duplikat = True
+                    break
+            if not ist_duplikat:
+                behalten.append(kandidat)
+
+        ergebnis.extend(behalten)
+
+    return ergebnis
 
 
 def dateiname_fuer_monat(jahr: int, monat: int) -> str:
@@ -703,8 +758,11 @@ def main():
         print(f"  -> {len(events)} Kunsthalle")
         alle_termine.extend(events)
 
+        vor_dedup = len(alle_termine)
+        alle_termine = entferne_duplikate(alle_termine)
         alle_termine.sort()
-        print(f"  => Gesamt: {len(alle_termine)} Termine")
+        entfernt = vor_dedup - len(alle_termine)
+        print(f"  => Gesamt: {len(alle_termine)} Termine ({entfernt} Duplikate entfernt)")
 
         html = generiere_html(alle_termine, j, m, monate_liste)
 
