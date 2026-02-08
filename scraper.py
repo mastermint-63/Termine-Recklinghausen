@@ -29,6 +29,7 @@ AKADEMIE_URL = "https://www.ahademie.com/veranstaltungen/"
 GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
 GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
 RUHRFESTSPIELE_URL = "https://www.ruhrfestspiele.de/programm"
+BACKYARD_URL = "https://backyard-club.de/events"
 STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
 
 
@@ -1392,3 +1393,29 @@ def hole_ruhrfestspiele(jahr: int, monat: int) -> list[Termin]:
             ))
 
     return termine
+
+
+# ---------------------------------------------------------------------------
+# 16. Backyard-Club e.V. — The Events Calendar (JSON-LD)
+# ---------------------------------------------------------------------------
+
+def hole_backyard(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events vom Backyard-Club Recklinghausen.
+
+    The Events Calendar mit JSON-LD. Seite enthält JSON-LD doppelt
+    (Hauptliste + Sidebar-Widget), daher interne Deduplizierung.
+    """
+    termine = _hole_events_calendar(
+        BACKYARD_URL, 'backyard', 'Musik', jahr, monat
+    )
+
+    # HTML-Entities in Namen auflösen und Duplikate entfernen
+    gesehen: set[str] = set()
+    unique = []
+    for t in termine:
+        t.name = unescape(t.name)
+        key = f"{t.name}|{t.datum.strftime('%Y-%m-%d %H:%M')}"
+        if key not in gesehen:
+            gesehen.add(key)
+            unique.append(t)
+    return unique

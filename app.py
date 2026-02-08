@@ -21,7 +21,7 @@ from scraper import (
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
-    hole_gastkirche, hole_ruhrfestspiele, Termin,
+    hole_gastkirche, hole_ruhrfestspiele, hole_backyard, Termin,
 )
 
 
@@ -41,6 +41,7 @@ QUELLEN = {
     'geschichte-re': 'Heimatkunde',
     'gastkirche': 'Gastkirche',
     'ruhrfestspiele': 'Ruhrfestspiele',
+    'backyard': 'Backyard-Club',
 }
 
 
@@ -175,6 +176,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'geschichte-re': 'badge-geschichte-re',
                 'gastkirche': 'badge-gastkirche',
                 'ruhrfestspiele': 'badge-ruhrfestspiele',
+                'backyard': 'badge-backyard',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -550,6 +552,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-backyard {{
+            background: linear-gradient(135deg, #4a4a4a 0%, #333333 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -751,7 +758,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a> &middot;
             <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
-            <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a>
+            <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
+            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a>
         </footer>
     </div>
 
@@ -908,6 +916,11 @@ def main():
         # 15. Ruhrfestspiele
         events = hole_ruhrfestspiele(j, m)
         print(f"  -> {len(events)} Ruhrfestspiele")
+        alle_termine.extend(events)
+
+        # 16. Backyard-Club
+        events = hole_backyard(j, m)
+        print(f"  -> {len(events)} Backyard-Club")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)
