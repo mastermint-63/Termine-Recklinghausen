@@ -167,26 +167,26 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     <title>Termine Recklinghausen — {monatsnamen[monat]} {jahr}</title>
     <style>
         :root {{
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-color: #1a1a2e;
+            --bg-color: #e8e0d8;
+            --card-bg: #fcfcfc;
+            --text-color: #3b3b3b;
             --text-secondary: #666;
-            --border-color: #e0e0e0;
-            --accent-color: #0f3460;
-            --accent-light: #16213e;
-            --hover-color: #f8f9ff;
+            --border-color: #d8ccbd;
+            --accent-color: #d88a2b;
+            --accent-light: #343538;
+            --hover-color: #f5f0ea;
         }}
 
         @media (prefers-color-scheme: dark) {{
             :root {{
-                --bg-color: #1a1a2e;
-                --card-bg: #16213e;
-                --text-color: #e0e0e0;
-                --text-secondary: #a0a0b0;
-                --border-color: #2a2a4e;
-                --accent-color: #4a8cc7;
-                --accent-light: #0f3460;
-                --hover-color: #1e2a4a;
+                --bg-color: #2a2520;
+                --card-bg: #3a3530;
+                --text-color: #e8e0d8;
+                --text-secondary: #a09080;
+                --border-color: #4a4035;
+                --accent-color: #e8a040;
+                --accent-light: #343538;
+                --hover-color: #3a3530;
             }}
         }}
 
@@ -197,7 +197,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: "Lucida Grande", Verdana, -apple-system, sans-serif;
             background: var(--bg-color);
             color: var(--text-color);
             line-height: 1.5;
@@ -205,7 +205,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
 
         .container {{
-            max-width: 900px;
+            max-width: 1080px;
             margin: 0 auto;
         }}
 
@@ -241,6 +241,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .nav-btn:hover {{
             background: var(--hover-color);
+            color: #00bcff;
         }}
 
         .nav-btn.disabled {{
@@ -356,32 +357,32 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
 
         .badge-regioactive {{
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            background: linear-gradient(135deg, #d88a2b 0%, #c67a1b 100%);
             color: white;
         }}
 
         .badge-altstadtschmiede {{
-            background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+            background: linear-gradient(135deg, #8B6914 0%, #705210 100%);
             color: white;
         }}
 
         .badge-sternwarte {{
-            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            background: linear-gradient(135deg, #343538 0%, #2f3033 100%);
             color: white;
         }}
 
         .badge-kunsthalle {{
-            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            background: linear-gradient(135deg, #b05030 0%, #903820 100%);
             color: white;
         }}
 
         .badge-vesterleben {{
-            background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+            background: linear-gradient(135deg, #5a8a3a 0%, #4a7a2a 100%);
             color: white;
         }}
 
         .badge-stadt {{
-            background: linear-gradient(135deg, #2980b9 0%, #1a5276 100%);
+            background: linear-gradient(135deg, #2a7ab5 0%, #1a6a9a 100%);
             color: white;
         }}
 
@@ -467,12 +468,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             text-align: center;
             margin-top: 30px;
             padding: 20px;
-            color: var(--text-secondary);
+            background: #2f3033;
+            border-radius: 10px;
+            color: #aaa;
             font-size: 12px;
         }}
 
         footer a {{
-            color: var(--text-secondary);
+            color: #aaa;
         }}
 
         .kalender {{
