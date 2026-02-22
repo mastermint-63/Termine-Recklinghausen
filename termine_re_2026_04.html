@@ -122,7 +122,9 @@
             align-items: center;
             margin-bottom: 20px;
             padding: 10px 15px;
-            background: var(--card-bg);
+            background: rgba(252, 252, 252, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-radius: 10px;
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
@@ -131,6 +133,12 @@
             top: 8px;
             z-index: 100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .filter-bar {
+                background: rgba(58, 53, 48, 0.7);
+            }
         }
 
         .vhs-toggle {
@@ -2706,7 +2714,7 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
         </main>
 
         <footer>
-            Generiert am 22.02.2026 um 17:16 Uhr<br>
+            Generiert am 22.02.2026 um 17:38 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
