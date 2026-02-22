@@ -323,6 +323,26 @@
             color: white;
         }
 
+        .badge-neue-philharmonie {
+            background: linear-gradient(135deg, #1a5276 0%, #154360 100%);
+            color: white;
+        }
+
+        .badge-ikonen-museum {
+            background: linear-gradient(135deg, #7d6608 0%, #6d5600 100%);
+            color: white;
+        }
+
+        .badge-debut-um-11 {
+            background: linear-gradient(135deg, #6c3483 0%, #5b2c6f 100%);
+            color: white;
+        }
+
+        .badge-adfc {
+            background: linear-gradient(135deg, #e2001a 0%, #c0001a 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -511,12 +531,12 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="kunsthalle">Kunsthalle</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
             <div class="stats">
-                <span id="termine-count">532</span> Termine
+                <span id="termine-count">531</span> Termine
             </div>
         </div>
 
@@ -1618,6 +1638,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Auszeit mit dem Fahrrad – Teil 1 (Wiederholung)</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC Infoladen, Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Ein Jahr lang nahmen sich Aurelia und Carsten Lindner eine berufliche Auszeit, um gemeinsam mit den Trekkingrädern Länder zu erkunden, von denen sie bislang nur geträumt hatten.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">17:15 / 20:15 Uhr</div>
                     <div class="termin-info">
@@ -2138,6 +2170,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Fahrradcodierung im Infoladen Börster Weg 38a</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC Infoladen - Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">14:50 Uhr</div>
                     <div class="termin-info">
@@ -2243,6 +2287,19 @@
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         <div class="termin-beschreibung">In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Radtourenplanung mit dem Programm Komoot</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC-Infoladen, Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Eins der am weitesten verbreiteten Planungs- und Navigations-Apps ist das Programm Komoot.
+Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                     </div>
                 </div>
             
@@ -3339,6 +3396,18 @@
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         <div class="termin-beschreibung">Timid nine year old Danny teams up with his beloved family dog Charlie, who gets abducted by aliens and returns with superpowers, to thwart a plan by the neighbor's sinister cat Puddy to destroy human</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Auszeit mit dem Fahrrad – Teil 2 (Wiederholiung)</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC Infoladen, Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Ein Jahr lang nahmen sich Aurelia und Carsten Lindner eine Auszeit, um gemeinsam mit den Trekkingrädern Länder zu erkunden, von denen sie bislang nur geträumt hatten.</div>
                     </div>
                 </div>
             
@@ -5062,6 +5131,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">17:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Speichengeflüster</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">Infoladen des ADFC, Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Unter dem Motto &quot;Speichengeflüster&quot; lädt der ADFC Recklinghausen an jedem 3. Donnerstag im Monat um 18.30 Uhr zu einem zwanglosen Treffen ein.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">17:30–19:30 Uhr</div>
                     <div class="termin-info">
@@ -5322,18 +5403,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:30 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/line-dance-die-oldies-und-evergreens-2" target="_blank">LINE DANCE: Die Oldies und Evergreens</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">19:00–20:30 Uhr</div>
                     <div class="termin-info">
@@ -5343,18 +5412,6 @@
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
                         
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="nlgr">
-                    <div class="termin-zeit">19:30 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://nlgr.de/veranstaltung/bertolt-brecht-furcht-und-elend-des-iii-reiches/" target="_blank">Bertolt Brecht: Furcht und Elend des III. Reiches</a>
-                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
-                        </div>
-                        <div class="termin-ort">Ruhrfestspielhaus, Otto-Burrmeister-Allee 1</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Bertolt Brecht: Furcht und Elend des III. Reiches Bertolt Brecht schrieb die insgesamt 30 Szenen über den Alltag im nationalsozialistischen Deutschland 1934 – 1938 im dänischen Exil. Uraufgef</div>
                     </div>
                 </div>
             
@@ -5430,6 +5487,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400605" target="_blank">LINE DANCE: Die Oldies und Evergreens</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -5438,18 +5507,6 @@
             <div class="datum-header">Sa 21.02.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">11:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/vater-kind-treff-12" target="_blank">Vater-Kind-Treff</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">14:15 Uhr</div>
                     <div class="termin-info">
@@ -5510,18 +5567,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">15:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/familienmusical-emil-und-die-dedektive" target="_blank">Familienmusical: Emil und die Dedektive</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">15:15 Uhr</div>
                     <div class="termin-info">
@@ -5546,15 +5591,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="nlgr">
+                <div class="termin" data-quelle="stadtbibliothek">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://nlgr.de/veranstaltung/literaturtreff-am-samstag-37/" target="_blank">Literaturtreff am Samstag</a>
-                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401045" target="_blank">Literaturtreff am Samstag</a>
+                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
                         </div>
-                        <div class="termin-ort">Stadtbibliothek, Augustinessenstr. 3</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich</div>
+                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
+                        
                     </div>
                 </div>
             
@@ -5630,30 +5675,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="regioactive">
-                    <div class="termin-zeit">20:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.regioactive.de/konzert/kaozzz-konzzzept-new-spacewave-exp-auf-eriments-tour-2026-recklinghausen-backyard-club-e-v-2026-02-21-j5z4BZknSG" target="_blank">Kaozzz Konzzzept &amp; New Spacewave EXP. auf EXP.eriments-Tour 2026</a>
-                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
-                        </div>
-                        <div class="termin-ort">Backyard Club e.V., Alte Grenzstraße 153e</div>
-                        <div class="termin-beschreibung">Kaozzz Konzzzept, eine instrumentale Progressive-Rock-Band aus Hamm, hat sich in der regionalen Progressive- und Stoner-Rock-Szene einen Namen gemacht. Mit ihrem klaren musikalischen Profil und hohem </div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="backyard">
-                    <div class="termin-zeit">20:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://backyard-club.de/veranstaltung/kaozzz-konzzzept-exp-spacewave/" target="_blank">Kaozzz Konzzzept, New Spacewave EXP</a>
-                            <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
-                        </div>
-                        <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Kaozzz Konzzzept, eine instrumentale Progressive-Rock-Band aus Hamm, hat sich in der regionalen Progressive- und Stoner-Rock-Szene einen Namen gemacht.  Mit ihrem klaren musikalischen Profil </div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">20:15 Uhr</div>
                     <div class="termin-info">
@@ -5678,15 +5699,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="regioactive">
-                    <div class="termin-zeit">21:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.regioactive.de/party/flexi-daddy-revivial-party-im-moondock-recklinghausen-2026-02-21-Mx4jB8F6Xz" target="_blank">FLEXI &amp; DADDY REVIVIAL Party im mOOndock</a>
-                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Party</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400574" target="_blank">Familienmusical: Emil und die Dedektive</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Moondock, Alte Grenzstrasse 153 e</div>
-                        <div class="termin-beschreibung">— FLEXI- & DADDY-Revival — Die Revival Party im mOOndock Recklinghausen Best of Rock, Pop, Indie & Alternativmusik Es ist wieder so weit, alle einsteigen, es geht zurück in die Vergangenheit! Wir brin</div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
                     </div>
                 </div>
             
@@ -5714,6 +5735,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400903" target="_blank">Vater-Kind-Treff</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -5734,15 +5767,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
+                <div class="termin" data-quelle="debut-um-11">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/konzertreihe-debut-um-11-e-v-26" target="_blank">Konzertreihe - DEBUT um 11 e. V.</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://debut-um-11.de/2026/01/13/22-februar-2026-1100-uhr-726/" target="_blank">Debut um 11</a>
+                            <span class="badge badge-debut-um-11">Debut um 11</span> <span class="badge badge-kategorie">Konzert</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Ruhrfestspielhaus</div>
+                        <div class="termin-beschreibung">Unsere Gesangssolistin Kim Holtappels aus Düsseldorf spannt mit ihrer aus Lied und Arie gemischten Vortragsfolge einen großangelegten Bogen von Mozart über Bellini bis zu Schumann und Tschaikowsky, un</div>
                     </div>
                 </div>
             
@@ -5803,18 +5836,6 @@
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         <div class="termin-beschreibung">For shapeshifter Carag and his friends Brandon, Holly, and Lou, a new school year begins at Clearwater High. But first, the Woodwalker Council must decide whether Carag's mentor and patron of the scho</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="kunsthalle">
-                    <div class="termin-zeit">12:00–13:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Guided public tour</a>
-                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
-                        </div>
-                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Tour through the current exhibition</div>
                     </div>
                 </div>
             
@@ -6502,18 +6523,6 @@
             <div class="datum-header">Mi 25.02.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="vhs">
-                    <div class="termin-zeit">10:00–13:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.vhs-recklinghausen.de/digitales-und-beruf/kw/bereich/kursdetails/kurs/26A-5706/kursname/Debattiertraining Fair streiten im Alltag/kategorie-id/62" target="_blank">Debattiertraining: Fair streiten im Alltag</a>
-                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
-                        </div>
-                        <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">14:50 Uhr</div>
                     <div class="termin-info">
@@ -6725,7 +6734,7 @@
                             <a href="https://www.vhs-recklinghausen.de/gesundheit/kw/bereich/kursdetails/kurs/26A-3005/kursname/Die Bedeutung des inneren Dialogs Wie reden Sie mit sich selbst und tut Ihnen/kategorie-id/21" target="_blank">Die Bedeutung des inneren Dialogs – Wie reden Sie mit sich selbst und tut Ihnen das gut?</a>
                             <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
-                        <div class="termin-ort">Willy-Brandt-Haus R. 0.02</div>
+                        <div class="termin-ort">Willy-Brandt-Haus R. 0.20</div>
                         
                     </div>
                 </div>
@@ -7133,7 +7142,7 @@
         </main>
 
         <footer>
-            Generiert am 20.02.2026 um 06:31 Uhr<br>
+            Generiert am 22.02.2026 um 16:56 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -7151,7 +7160,11 @@
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
             <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
             <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
-            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a>
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a> &middot;
+            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
+            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
+            <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
+            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a>
         </footer>
     </div>
 

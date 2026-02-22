@@ -323,6 +323,26 @@
             color: white;
         }
 
+        .badge-neue-philharmonie {
+            background: linear-gradient(135deg, #1a5276 0%, #154360 100%);
+            color: white;
+        }
+
+        .badge-ikonen-museum {
+            background: linear-gradient(135deg, #7d6608 0%, #6d5600 100%);
+            color: white;
+        }
+
+        .badge-debut-um-11 {
+            background: linear-gradient(135deg, #6c3483 0%, #5b2c6f 100%);
+            color: white;
+        }
+
+        .badge-adfc {
+            background: linear-gradient(135deg, #e2001a 0%, #c0001a 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -502,8 +522,8 @@
 
         <table class="kalender" id="kalender">
 <tr><th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th></tr>
-<tr><td></td><td></td><td data-datum="2026-04-01"><a href="#datum-2026-04-01" class="kal-link">1</a></td><td data-datum="2026-04-02"><a href="#datum-2026-04-02" class="kal-link">2</a></td><td class="kal-leer" data-datum="2026-04-03">3</td><td class="kal-leer" data-datum="2026-04-04">4</td><td data-datum="2026-04-05"><a href="#datum-2026-04-05" class="kal-link">5</a></td></tr>
-<tr><td data-datum="2026-04-06"><a href="#datum-2026-04-06" class="kal-link">6</a></td><td data-datum="2026-04-07"><a href="#datum-2026-04-07" class="kal-link">7</a></td><td data-datum="2026-04-08"><a href="#datum-2026-04-08" class="kal-link">8</a></td><td class="kal-leer" data-datum="2026-04-09">9</td><td class="kal-leer" data-datum="2026-04-10">10</td><td data-datum="2026-04-11"><a href="#datum-2026-04-11" class="kal-link">11</a></td><td data-datum="2026-04-12"><a href="#datum-2026-04-12" class="kal-link">12</a></td></tr>
+<tr><td></td><td></td><td data-datum="2026-04-01"><a href="#datum-2026-04-01" class="kal-link">1</a></td><td data-datum="2026-04-02"><a href="#datum-2026-04-02" class="kal-link">2</a></td><td data-datum="2026-04-03"><a href="#datum-2026-04-03" class="kal-link">3</a></td><td class="kal-leer" data-datum="2026-04-04">4</td><td data-datum="2026-04-05"><a href="#datum-2026-04-05" class="kal-link">5</a></td></tr>
+<tr><td data-datum="2026-04-06"><a href="#datum-2026-04-06" class="kal-link">6</a></td><td data-datum="2026-04-07"><a href="#datum-2026-04-07" class="kal-link">7</a></td><td data-datum="2026-04-08"><a href="#datum-2026-04-08" class="kal-link">8</a></td><td class="kal-leer" data-datum="2026-04-09">9</td><td data-datum="2026-04-10"><a href="#datum-2026-04-10" class="kal-link">10</a></td><td data-datum="2026-04-11"><a href="#datum-2026-04-11" class="kal-link">11</a></td><td data-datum="2026-04-12"><a href="#datum-2026-04-12" class="kal-link">12</a></td></tr>
 <tr><td data-datum="2026-04-13"><a href="#datum-2026-04-13" class="kal-link">13</a></td><td data-datum="2026-04-14"><a href="#datum-2026-04-14" class="kal-link">14</a></td><td data-datum="2026-04-15"><a href="#datum-2026-04-15" class="kal-link">15</a></td><td data-datum="2026-04-16"><a href="#datum-2026-04-16" class="kal-link">16</a></td><td data-datum="2026-04-17"><a href="#datum-2026-04-17" class="kal-link">17</a></td><td data-datum="2026-04-18"><a href="#datum-2026-04-18" class="kal-link">18</a></td><td data-datum="2026-04-19"><a href="#datum-2026-04-19" class="kal-link">19</a></td></tr>
 <tr><td data-datum="2026-04-20"><a href="#datum-2026-04-20" class="kal-link">20</a></td><td data-datum="2026-04-21"><a href="#datum-2026-04-21" class="kal-link">21</a></td><td data-datum="2026-04-22"><a href="#datum-2026-04-22" class="kal-link">22</a></td><td data-datum="2026-04-23"><a href="#datum-2026-04-23" class="kal-link">23</a></td><td data-datum="2026-04-24"><a href="#datum-2026-04-24" class="kal-link">24</a></td><td data-datum="2026-04-25"><a href="#datum-2026-04-25" class="kal-link">25</a></td><td data-datum="2026-04-26"><a href="#datum-2026-04-26" class="kal-link">26</a></td></tr>
 <tr><td data-datum="2026-04-27"><a href="#datum-2026-04-27" class="kal-link">27</a></td><td data-datum="2026-04-28"><a href="#datum-2026-04-28" class="kal-link">28</a></td><td data-datum="2026-04-29"><a href="#datum-2026-04-29" class="kal-link">29</a></td><td data-datum="2026-04-30"><a href="#datum-2026-04-30" class="kal-link">30</a></td><td></td><td></td><td></td></tr>
@@ -511,12 +531,12 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="cineworld">Cineworld</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="regioactive">regioactive.de</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
             <div class="stats">
-                <span id="termine-count">146</span> Termine
+                <span id="termine-count">161</span> Termine
             </div>
         </div>
 
@@ -526,6 +546,18 @@
             <div class="datum-header">Mi 01.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Feierabend Tour - Fahrt in's Blaue</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">17:15 Uhr</div>
                     <div class="termin-info">
@@ -586,10 +618,43 @@
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
         
+        <div class="datum-gruppe" id="datum-2026-04-03">
+            <div class="datum-header">Fr 03.04.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">12:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Fahrradcodierung im Infoladen Börster Weg 38a</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC Infoladen - Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
         <div class="datum-gruppe" id="datum-2026-04-05">
             <div class="datum-header">So 05.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">09:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Offene Ostertour</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Familien Radtour. 
+Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonderes Angebot.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
@@ -611,6 +676,18 @@
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         <div class="termin-beschreibung">A magical meteor crash lands in Adventure City and gives the PAW Patrol pups superpowers, transforming them into The Mighty Pups.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="ikonen-museum">
+                    <div class="termin-zeit">15:00–16:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Öffentliche Führung</a>
+                            <span class="badge badge-ikonen-museum">Ikonen-Museum</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Ikonen-Museum Recklinghausen</div>
+                        
                     </div>
                 </div>
             
@@ -666,6 +743,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Feierabendtour - Fahrt in's Blaue</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
@@ -702,11 +791,23 @@
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.regioactive.de/konzert/boente-s-historische-gastronomie-stadtfuehrung-recklinghausen-suberg-bei-die-hausbrauerei-2026-04-08-1fQ7jpwz0Z" target="_blank">Boente's historische Gastronomie-Stadtführung</a>
-                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                            <a href="https://www.regioactive.de/freizeit/boente-s-historische-gastronomie-stadtfuehrung-recklinghausen-suberg-bei-die-hausbrauerei-2026-04-08-1fQ7jpwz0Z" target="_blank">Boente's historische Gastronomie-Stadtführung</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Freizeit</span>
                         </div>
                         <div class="termin-ort">Suberg's bei Boente - die Hausbrauerei, Augustinessenstraße 4</div>
                         <div class="termin-beschreibung">Recklinghausen begeistert mit seiner historischen Altstadt, dem Wallring und Teilen der alten Stadtmauer – Spuren, die noch heute an die mittelalterlichen Strukturen erinnern. Die Kreisstadt mit rund </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Fahrsicherheitstrainimng mit dem Pedelec</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">Kurt-Oster-Straße 45659 Recklinghausen</div>
+                        <div class="termin-beschreibung">Am 08.April führt der ADFC &gt;Recklinghausen wieder ein Fahrsicherheitstraining mit dem Pedelec durch</div>
                     </div>
                 </div>
             
@@ -743,6 +844,26 @@
                         </div>
                         <div class="termin-ort">Recklinghausen</div>
                         
+                    </div>
+                </div>
+            
+            </div>
+            <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
+        </div>
+        
+        <div class="datum-gruppe" id="datum-2026-04-10">
+            <div class="datum-header">Fr 10.04.2026</div>
+            <div class="termine-liste">
+        
+                <div class="termin" data-quelle="backyard">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://backyard-club.de/veranstaltung/velvet/" target="_blank">Velvet</a>
+                            <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
+                        </div>
+                        <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
+                        <div class="termin-beschreibung">&lt;p&gt;Wenn Musiker nicht nur spielen, sondern ihre Leidenschaft auf der Bühne leben, entsteht eine harmonische Klangvielfalt, in die man eintauchen kann. Velvet bietet euch die Chance, diese vielfä</div>
                     </div>
                 </div>
             
@@ -798,6 +919,18 @@
             <div class="datum-header">So 12.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">08:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Brauhaus Rütershoff und Kaiser-Wilhelm-Turm/Herne</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">40 - 59 km · 15-18 km/h — Entlang der Halde Hopoenbruch nach Herne zum Kaiser-Wilhem-Turm und weiter zum Brauhaus Rütershoff.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
@@ -1107,6 +1240,18 @@
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         <div class="termin-beschreibung">About twenty years ago, Germany got to know Bernd Stromberg and his team from the claims department at CAPITOL Insurance. Back then, there was nothing vegan in the cafeteria, and bullying and sexism w</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Feierabend Tour - Fahrt in's Blaue</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1438,6 +1583,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">13:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC TourGuide-Seminar G1+G2+G3</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
+                        </div>
+                        <div class="termin-ort">ADFC Infoladen, Börster Weg 38a 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Die geführten Fahrradtouren des ADFC erfreuen sich großer Beliebtheit. Entscheidenden Anteil daran haben die Radtourenleiter und Radtouren- leiterinnen der ADFC-Gruppen.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -1562,6 +1719,18 @@
             <div class="datum-header">So 19.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">08:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Wir erkunden Lünen: Altstadt und Sesekemündung</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Wir erkunden Lünen: Altstadt und Sesekemündung in die Lippe</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
@@ -1731,6 +1900,18 @@
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Feierabendtour - Fahrt in's Blaue</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1942,15 +2123,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadtbibliothek">
+                <div class="termin" data-quelle="nlgr">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401118" target="_blank">Zur Literatur bei den Ruhrfestspielen - Gespräch zum Welttag des Buches</a>
-                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
+                            <a href="https://nlgr.de/veranstaltung/welttag-des-buches-4/" target="_blank">Welttag des Buches</a>
+                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
-                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        
+                        <div class="termin-ort">Recklinghausen</div>
+                        <div class="termin-beschreibung">&lt;p&gt;Welttag des Buches Literatur bei den Ruhrfestspielen 2026 mit Jan Hein Seit 2022 begehen wir ihn, indem wir Ihnen die literarischen Highlights der Ruhrfestspiele näher bringen. Wer sich schon</div>
                     </div>
                 </div>
             
@@ -2114,6 +2295,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="ikonen-museum">
+                    <div class="termin-zeit">11:30–13:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Workshop für Seniorinnen und Senioren</a>
+                            <span class="badge badge-ikonen-museum">Ikonen-Museum</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Ikonen-Museum Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadtbibliothek">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -2134,7 +2327,7 @@
                             <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstr. 3</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Jane Austen Gemälde von Cassandra Austen Ines Habich-Milović  (Texte) und Monika Wischnowski (Harfe) Die vor 250 Jahren geborene englische Schriftstellerin Jane Austen ist durch die vielen Ve</div>
+                        <div class="termin-beschreibung">&lt;p&gt;Ines Habich-Milović  (Texte) und Monika Wischnowski (Harfe) Die vor 250 Jahren geborene englische Schriftstellerin Jane Austen ist durch die vielen Verfilmungen ihrer Werke auch bei uns sehr </div>
                     </div>
                 </div>
             
@@ -2182,6 +2375,18 @@
             <div class="datum-header">So 26.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">08:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Biologische Vielfalt im Hestermann Gebiet</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">40 - 59 km · 15-18 km/h — Besuch des Hestermann Gebietes inkl. Führung.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">10:00–17:00 Uhr</div>
                     <div class="termin-info">
@@ -2310,8 +2515,8 @@
                     <div class="termin-zeit">15:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.regioactive.de/konzert/boente-s-bergbautour-recklinghausen-suberg-bei-die-hausbrauerei-2026-04-28-V4ldvh6WC3" target="_blank">Boente's Bergbautour</a>
-                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Konzert</span>
+                            <a href="https://www.regioactive.de/freizeit/boente-s-bergbautour-recklinghausen-suberg-bei-die-hausbrauerei-2026-04-28-V4ldvh6WC3" target="_blank">Boente's Bergbautour</a>
+                            <span class="badge badge-regioactive">regioactive.de</span> <span class="badge badge-kategorie">Freizeit</span>
                         </div>
                         <div class="termin-ort">Suberg's bei Boente - die Hausbrauerei, Augustinessenstraße 4</div>
                         <div class="termin-beschreibung">Schicht im Schacht! Im Jahr 2018 endet nach 200 Jahren der Steinkohle-Bergbau im Ruhrgebiet. Der „Pott“ gründet auf Kohle; sie hat die Region zu einer Millionenmetropole gemacht. Zu Hochzeiten haben b</div>
@@ -2338,6 +2543,18 @@
             <div class="datum-header">Mi 29.04.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="adfc">
+                    <div class="termin-zeit">16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://recklinghausen.adfc.de/" target="_blank">Feierabend Tour - Fahrt in's Blaue</a>
+                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
+                        </div>
+                        <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">16:45–18:15 Uhr</div>
                     <div class="termin-info">
@@ -2485,7 +2702,7 @@
         </main>
 
         <footer>
-            Generiert am 20.02.2026 um 06:32 Uhr<br>
+            Generiert am 22.02.2026 um 16:59 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -2503,7 +2720,11 @@
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
             <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
             <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
-            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a>
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a> &middot;
+            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
+            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
+            <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
+            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a>
         </footer>
     </div>
 
