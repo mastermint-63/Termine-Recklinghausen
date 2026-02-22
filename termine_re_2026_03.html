@@ -3093,7 +3093,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 22.02.2026 um 16:58 Uhr<br>
+            Generiert am 22.02.2026 um 17:04 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -3120,14 +3120,28 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
     </div>
 
     <script>
-        // Heutigen Tag im Kalender markieren
+        // Heutigen Tag im Kalender markieren + zum ersten heutigen/zukünftigen Termin springen
         (function() {
             const heute = new Date();
-            const key = heute.getFullYear() + '-' +
-                String(heute.getMonth() + 1).padStart(2, '0') + '-' +
-                String(heute.getDate()).padStart(2, '0');
+            const pad = n => String(n).padStart(2, '0');
+            const key = heute.getFullYear() + '-' + pad(heute.getMonth() + 1) + '-' + pad(heute.getDate());
+
+            // Kalender-Markierung
             const td = document.querySelector('td[data-datum="' + key + '"]');
             if (td) td.classList.add('kal-heute');
+
+            // Nur springen wenn kein Anker in der URL gesetzt ist
+            if (window.location.hash) return;
+
+            // Alle Datumsgruppen durchsuchen: heute oder danach
+            const gruppen = document.querySelectorAll('.datum-gruppe[id^="datum-"]');
+            for (const gruppe of gruppen) {
+                const datum = gruppe.id.replace('datum-', '');
+                if (datum >= key) {
+                    gruppe.scrollIntoView({behavior: 'instant', block: 'start'});
+                    break;
+                }
+            }
         })();
 
         let vhsAusgeblendet = false;
