@@ -127,6 +127,10 @@
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
             gap: 10px;
+            position: sticky;
+            top: 8px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .vhs-toggle {
@@ -7142,7 +7146,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 22.02.2026 um 17:03 Uhr<br>
+            Generiert am 22.02.2026 um 17:14 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -7193,24 +7197,35 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
             }
         })();
 
-        let vhsAusgeblendet = false;
-        let kinoAusgeblendet = false;
+        // Zustand aus localStorage laden (Standard: ausgeblendet)
+        let vhsAusgeblendet = localStorage.getItem('vhs') !== 'ein';
+        let kinoAusgeblendet = localStorage.getItem('kino') !== 'ein';
+
+        function _aktualisiereBtns() {
+            const vBtn = document.getElementById('vhs-toggle');
+            const kBtn = document.getElementById('kino-toggle');
+            vBtn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
+            vBtn.classList.toggle('active', vhsAusgeblendet);
+            kBtn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
+            kBtn.classList.toggle('active', kinoAusgeblendet);
+        }
 
         function toggleVHS() {
             vhsAusgeblendet = !vhsAusgeblendet;
-            const btn = document.getElementById('vhs-toggle');
-            btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
-            btn.classList.toggle('active', vhsAusgeblendet);
+            localStorage.setItem('vhs', vhsAusgeblendet ? 'aus' : 'ein');
+            _aktualisiereBtns();
             filterTermine();
         }
 
         function toggleKino() {
             kinoAusgeblendet = !kinoAusgeblendet;
-            const btn = document.getElementById('kino-toggle');
-            btn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
-            btn.classList.toggle('active', kinoAusgeblendet);
+            localStorage.setItem('kino', kinoAusgeblendet ? 'aus' : 'ein');
+            _aktualisiereBtns();
             filterTermine();
         }
+
+        // Buttons beim Laden sofort korrekt beschriften
+        _aktualisiereBtns();
 
         function filterTermine() {
             const quelleFilter = document.getElementById('quelle-filter').value;
