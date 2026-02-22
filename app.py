@@ -21,7 +21,8 @@ from scraper import (
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
-    hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld, Termin,
+    hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld,
+    hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc, Termin,
 )
 
 
@@ -43,6 +44,10 @@ QUELLEN = {
     'ruhrfestspiele': 'Ruhrfestspiele',
     'backyard': 'Backyard-Club',
     'cineworld': 'Cineworld',
+    'neue-philharmonie': 'Neue Philharmonie',
+    'ikonen-museum': 'Ikonen-Museum',
+    'debut-um-11': 'Debut um 11',
+    'adfc': 'ADFC Recklinghausen',
 }
 
 
@@ -180,6 +185,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'ruhrfestspiele': 'badge-ruhrfestspiele',
                 'backyard': 'badge-backyard',
                 'cineworld': 'badge-cineworld',
+                'neue-philharmonie': 'badge-neue-philharmonie',
+                'ikonen-museum': 'badge-ikonen-museum',
+                'debut-um-11': 'badge-debut-um-11',
+                'adfc': 'badge-adfc',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -364,11 +373,23 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             align-items: center;
             margin-bottom: 20px;
             padding: 10px 15px;
-            background: var(--card-bg);
+            background: rgba(252, 252, 252, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-radius: 10px;
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
             gap: 10px;
+            position: sticky;
+            top: 8px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }}
+
+        @media (prefers-color-scheme: dark) {{
+            .filter-bar {{
+                background: rgba(58, 53, 48, 0.5);
+            }}
         }}
 
         .vhs-toggle {{
@@ -562,6 +583,26 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .badge-cineworld {{
             background: linear-gradient(135deg, #d4391c 0%, #b02010 100%);
+            color: white;
+        }}
+
+        .badge-neue-philharmonie {{
+            background: linear-gradient(135deg, #1a5276 0%, #154360 100%);
+            color: white;
+        }}
+
+        .badge-ikonen-museum {{
+            background: linear-gradient(135deg, #7d6608 0%, #6d5600 100%);
+            color: white;
+        }}
+
+        .badge-debut-um-11 {{
+            background: linear-gradient(135deg, #6c3483 0%, #5b2c6f 100%);
+            color: white;
+        }}
+
+        .badge-adfc {{
+            background: linear-gradient(135deg, #e2001a 0%, #c0001a 100%);
             color: white;
         }}
 
@@ -778,39 +819,68 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
             <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
             <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
-            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a>
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a> &middot;
+            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
+            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
+            <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
+            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a>
         </footer>
     </div>
 
     <script>
-        // Heutigen Tag im Kalender markieren
+        // Heutigen Tag im Kalender markieren + zum ersten heutigen/zukünftigen Termin springen
         (function() {{
             const heute = new Date();
-            const key = heute.getFullYear() + '-' +
-                String(heute.getMonth() + 1).padStart(2, '0') + '-' +
-                String(heute.getDate()).padStart(2, '0');
+            const pad = n => String(n).padStart(2, '0');
+            const key = heute.getFullYear() + '-' + pad(heute.getMonth() + 1) + '-' + pad(heute.getDate());
+
+            // Kalender-Markierung
             const td = document.querySelector('td[data-datum="' + key + '"]');
             if (td) td.classList.add('kal-heute');
+
+            // Nur springen wenn kein Anker in der URL gesetzt ist
+            if (window.location.hash) return;
+
+            // Alle Datumsgruppen durchsuchen: heute oder danach
+            const gruppen = document.querySelectorAll('.datum-gruppe[id^="datum-"]');
+            for (const gruppe of gruppen) {{
+                const datum = gruppe.id.replace('datum-', '');
+                if (datum >= key) {{
+                    gruppe.scrollIntoView({{behavior: 'instant', block: 'start'}});
+                    break;
+                }}
+            }}
         }})();
 
-        let vhsAusgeblendet = false;
-        let kinoAusgeblendet = false;
+        // Zustand aus localStorage laden (Standard: ausgeblendet)
+        let vhsAusgeblendet = localStorage.getItem('vhs') !== 'ein';
+        let kinoAusgeblendet = localStorage.getItem('kino') !== 'ein';
+
+        function _aktualisiereBtns() {{
+            const vBtn = document.getElementById('vhs-toggle');
+            const kBtn = document.getElementById('kino-toggle');
+            vBtn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
+            vBtn.classList.toggle('active', vhsAusgeblendet);
+            kBtn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
+            kBtn.classList.toggle('active', kinoAusgeblendet);
+        }}
 
         function toggleVHS() {{
             vhsAusgeblendet = !vhsAusgeblendet;
-            const btn = document.getElementById('vhs-toggle');
-            btn.textContent = vhsAusgeblendet ? 'VHS einblenden' : 'VHS ausblenden';
-            btn.classList.toggle('active', vhsAusgeblendet);
+            localStorage.setItem('vhs', vhsAusgeblendet ? 'aus' : 'ein');
+            _aktualisiereBtns();
             filterTermine();
         }}
 
         function toggleKino() {{
             kinoAusgeblendet = !kinoAusgeblendet;
-            const btn = document.getElementById('kino-toggle');
-            btn.textContent = kinoAusgeblendet ? 'Kino einblenden' : 'Kino ausblenden';
-            btn.classList.toggle('active', kinoAusgeblendet);
+            localStorage.setItem('kino', kinoAusgeblendet ? 'aus' : 'ein');
+            _aktualisiereBtns();
             filterTermine();
         }}
+
+        // Buttons beim Laden sofort korrekt beschriften
+        _aktualisiereBtns();
 
         function filterTermine() {{
             const quelleFilter = document.getElementById('quelle-filter').value;
@@ -965,6 +1035,26 @@ def main():
         # 17. Cineworld
         events = hole_cineworld(j, m)
         print(f"  -> {len(events)} Cineworld")
+        alle_termine.extend(events)
+
+        # 18. Neue Philharmonie Westfalen
+        events = hole_neue_philharmonie(j, m)
+        print(f"  -> {len(events)} Neue Philharmonie")
+        alle_termine.extend(events)
+
+        # 19. Ikonen-Museum
+        events = hole_ikonen_museum(j, m)
+        print(f"  -> {len(events)} Ikonen-Museum")
+        alle_termine.extend(events)
+
+        # 20. Debut um 11
+        events = hole_debut_um_11(j, m)
+        print(f"  -> {len(events)} Debut um 11")
+        alle_termine.extend(events)
+
+        # 21. ADFC Recklinghausen
+        events = hole_adfc(j, m)
+        print(f"  -> {len(events)} ADFC Recklinghausen")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)
