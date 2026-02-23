@@ -852,9 +852,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             }}
         }})();
 
-        // Zustand aus localStorage laden (Standard: ausgeblendet)
-        let vhsAusgeblendet = localStorage.getItem('vhs') !== 'ein';
-        let kinoAusgeblendet = localStorage.getItem('kino') !== 'ein';
+        // Zustand aus localStorage laden (Standard: eingeblendet)
+        let vhsAusgeblendet = localStorage.getItem('vhs') === 'aus';
+        let kinoAusgeblendet = localStorage.getItem('kino') === 'aus';
 
         function _aktualisiereBtns() {{
             const vBtn = document.getElementById('vhs-toggle');
@@ -879,8 +879,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             filterTermine();
         }}
 
-        // Buttons beim Laden sofort korrekt beschriften
+        // Buttons beschriften und Filter sofort anwenden (z.B. wenn localStorage gesetzt)
         _aktualisiereBtns();
+        filterTermine();
 
         function filterTermine() {{
             const quelleFilter = document.getElementById('quelle-filter').value;
