@@ -37,6 +37,12 @@ done <<< "$OUTPUT"
 # Differenz berechnen
 DIFF=$((NEUE_ANZAHL - ALTE_ANZAHL))
 
+# CNAME sicherstellen (Custom Domain)
+if [ ! -f "CNAME" ] || [ "$(cat CNAME)" != "termine.holzwurm-recklinghausen.de" ]; then
+    echo "CNAME fehlt oder falsch – wird wiederhergestellt"
+    echo -n "termine.holzwurm-recklinghausen.de" > CNAME
+fi
+
 # Zu GitHub pushen (nur wenn Änderungen vorhanden)
 PUSH_STATUS=""
 if git diff --quiet termine_re_*.html 2>/dev/null && [ -z "$(git ls-files -o --exclude-standard termine_re_*.html 2>/dev/null)" ]; then
@@ -44,7 +50,7 @@ if git diff --quiet termine_re_*.html 2>/dev/null && [ -z "$(git ls-files -o --e
     PUSH_STATUS="Keine Änderungen"
 else
     echo "Änderungen gefunden - pushe zu GitHub..."
-    git add termine_re_*.html index.html 2>/dev/null
+    git add termine_re_*.html index.html CNAME 2>/dev/null
     git commit -m "Termine RE aktualisiert $DATUM" 2>&1
 
     if git push 2>&1; then
