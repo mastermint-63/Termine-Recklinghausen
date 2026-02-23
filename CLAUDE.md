@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Ausführung
 
 ```bash
-python3 app.py                    # 3 Monate ab heute, öffnet Browser
-python3 app.py 2026 2             # 3 Monate ab Februar 2026
+python3 app.py                    # 5 Monate ab heute, öffnet Browser
+python3 app.py 2026 2             # 5 Monate ab Februar 2026
 python3 app.py 2026 2 6           # 6 Monate ab Februar 2026
 python3 app.py --no-browser       # Ohne Browser öffnen
 
@@ -17,18 +17,18 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## GitHub Pages
 
 - **Repository:** https://github.com/mastermint-63/Termine-Recklinghausen
-- **Live URL:** https://mastermint-63.github.io/Termine-Recklinghausen/
+- **Live URL:** https://mastermint-63.github.io/Termine-Recklinghausen/ (keine Custom Domain)
 - **Deploy:** GitHub Actions (`deploy.yml`) triggert bei Push von `termine_re_*.html` oder `index.html`
 
 ## Architektur
 
 ```
-17 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+21 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
-**scraper.py** — 17 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. VHS-Scraper iteriert über 7 Kategorieseiten mit Paginierung und Schleifen-Erkennung; NLGR/Literaturtage/Backyard nutzen den JSON-LD-Helper (`_hole_events_calendar`); Cineworld nutzt die Cineamo-REST-API (pro Tag abgefragt, Vorstellungen pro Film gruppiert).
+**scraper.py** — 21 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API.
 
-**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`, Quellen-Filter per JavaScript, VHS- und Kino-Toggle-Buttons zum Ein-/Ausblenden dominanter Quellen. Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
+**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind standardmäßig ausgeblendet; Zustand wird per `localStorage` gespeichert. Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Seitenaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL). Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
 
 **update.sh** — Tägliche Automation: Scraping → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad.
 
@@ -50,6 +50,7 @@ tail -f launchd.log                        # Live-Log
 
 ```bash
 pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), für Stadtarchiv-PDF
+# requirements.txt enthält nur requests/beautifulsoup4/lxml — pymupdf bewusst ausgelassen (optional)
 ```
 
 ## Quellen und Parsing-Details
@@ -73,6 +74,10 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 | `hole_ruhrfestspiele()` | ruhrfestspiele.de | Zweistufig: /programm → Produktions-Links → Detailseiten, `article.production-schedule-item` |
 | `hole_backyard()` | backyard-club.de | TEC JSON-LD (doppelt auf Seite → interne Deduplizierung + HTML-Entity-Bereinigung) |
 | `hole_cineworld()` | cineworld-recklinghausen.de | Cineamo API (`api.cineamo.com`), Cinema-ID 877, pro Tag abgefragt, Vorstellungen pro Film gruppiert |
+| `hole_neue_philharmonie()` | neue-philharmonie-westfalen.de | HTML `div.c-event`, Datum `span.c-event__date-date` ("10. März" ohne Jahr), Stadtfilter auf "Recklinghausen" |
+| `hole_ikonen_museum()` | ikonen-museum.com | HTML `div.event-list-item`, Datum `div.event-startdate` ("01.03." ohne Jahr), Uhrzeit aus `div.info` |
+| `hole_debut_um_11()` | debut-um-11.de | WordPress `article.post-item`, Termin aus `h2.entry-title a` Link-Text ("15. März 2026, 11:00 Uhr") |
+| `hole_adfc()` | recklinghausen.adfc.de | JSON-API `api-touren-termine.adfc.de`, unitKey 164420 (Termine) + 16442006 (Radtouren), Stadtfilter "Recklinghausen", ein Request für alle Events |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 
@@ -85,4 +90,5 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 5. Badge-CSS-Klasse `.badge-neuequelle` mit Farbgradient in `generiere_html()` ergänzen
 6. Badge-Zuordnung in `badge_classes`-Dict in `generiere_html()` eintragen
 7. Footer-Link in `generiere_html()` ergänzen
-8. Quellentabelle in dieser CLAUDE.md aktualisieren
+8. Optional: Toggle-Button falls Quelle viele Termine liefert — `toggleXyz()`-Funktion + `xyzAusgeblendet`-Variable + `xyzMatch`-Check in `filterTermine()` (Muster: siehe VHS/Kino-Toggle)
+9. Quellentabelle in dieser CLAUDE.md aktualisieren
