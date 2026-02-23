@@ -4,8 +4,8 @@ Termine in Recklinghausen — Dashboard
 Sammelt Veranstaltungen aus mehreren Quellen und generiert ein HTML-Dashboard.
 
 Verwendung:
-    python3 app.py              # Generiert aktuellen + 2 weitere Monate
-    python3 app.py 2026 2       # Generiert ab Februar 2026 (3 Monate)
+    python3 app.py              # Generiert aktuellen + 4 weitere Monate
+    python3 app.py 2026 2       # Generiert ab Februar 2026 (5 Monate)
     python3 app.py 2026 2 6     # Generiert 6 Monate ab Februar 2026
     python3 app.py --no-browser # Ohne Browser öffnen
 """
@@ -936,7 +936,7 @@ def main():
     jetzt = datetime.now()
     jahr = int(args[0]) if len(args) > 0 else jetzt.year
     monat = int(args[1]) if len(args) > 1 else jetzt.month
-    anzahl_monate = int(args[2]) if len(args) > 2 else 3
+    anzahl_monate = int(args[2]) if len(args) > 2 else 5
 
     monate_liste = berechne_monate(jahr, monat, anzahl_monate)
 
