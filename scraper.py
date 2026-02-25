@@ -12,7 +12,8 @@ from bs4 import BeautifulSoup
 
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+    'Accept-Language': 'de-DE, de;q=0.9',
 }
 
 # URLs
@@ -21,7 +22,7 @@ STADT_RE_URL = "https://www.recklinghausen.de/inhalte/startseite/_veranstaltungs
 ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/aktuelle-veranstaltungen"
 VESTERLEBEN_URL = "https://vesterleben.de/termine-alle"
 STERNWARTE_URL = "https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/"
-KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/en/program/calendar"
+KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/programm/kalender"
 STADTBIBLIOTHEK_URL = "https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp"
 NLGR_URL = "https://nlgr.de/veranstaltungen/"
 LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
@@ -35,6 +36,13 @@ CINEWORLD_API = "https://api.cineamo.com/showings"
 CINEWORLD_CINEMA_ID = 877
 CINEWORLD_URL = "https://www.cineworld-recklinghausen.de/de/programm"
 STADTARCHIV_PDF_BASE = "https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente"
+NEUE_PHILHARMONIE_URL = "https://www.neue-philharmonie-westfalen.de/termine"
+IKONEN_MUSEUM_URL = "https://ikonen-museum.com/veranstaltungen/termine"
+DEBUT_UM_11_URL = "https://debut-um-11.de/konzerte-102/"
+ADFC_API_URL = "https://api-touren-termine.adfc.de/api/eventItems/search"
+ADFC_UNIT_TERMINE = "164420"
+ADFC_UNIT_RADTOUREN = "16442006"
+ADFC_RE_URL = "https://recklinghausen.adfc.de/"
 
 
 @dataclass
@@ -551,7 +559,7 @@ def hole_kunsthalle(jahr: int, monat: int) -> list[Termin]:
                     pass
             elif not beschreibung and uhrzeit != 'siehe Website':
                 # Erste Zeile nach Uhrzeit = Beschreibung
-                if not re.match(r'^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)', lines[i]):
+                if not re.match(r'^(Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag)', lines[i]):
                     beschreibung = lines[i]
             i += 1
 
@@ -1519,6 +1527,333 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
             beschreibung=info['beschreibung'],
             quelle='cineworld',
             kategorie='Kino',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 18. Neue Philharmonie Westfalen — c-event-Struktur
+# ---------------------------------------------------------------------------
+
+def hole_neue_philharmonie(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events der Neuen Philharmonie Westfalen in Recklinghausen.
+
+    HTML: div.c-event, Datum aus span.c-event__date-date ("10. März" ohne Jahr),
+    Uhrzeit aus span.c-event__date-time, Titel aus h3.c-event__title,
+    Ort aus div.c-event__venue + div.c-event__city.
+    Stadtfilter: nur Events mit c-event__city = "Recklinghausen".
+    """
+    try:
+        response = requests.get(NEUE_PHILHARMONIE_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (neue-philharmonie): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for event in soup.find_all('div', class_='c-event'):
+        # Stadtfilter: nur Recklinghausen
+        city_div = event.find('div', class_='c-event__city')
+        if not city_div or 'recklinghausen' not in city_div.get_text(strip=True).lower():
+            continue
+
+        # Datum: "10. März" (kein Jahr im HTML)
+        date_span = event.find('span', class_='c-event__date-date')
+        if not date_span:
+            continue
+        date_text = date_span.get_text(strip=True)
+
+        date_match = re.match(r'(\d{1,2})\.\s*(\w+)', date_text)
+        if not date_match:
+            continue
+
+        tag = int(date_match.group(1))
+        monat_name = date_match.group(2).lower()
+        event_monat = _MONATE.get(monat_name, 0)
+        if not event_monat or event_monat != monat:
+            continue
+
+        # Uhrzeit: "19:30 Uhr"
+        time_span = event.find('span', class_='c-event__date-time')
+        uhrzeit = 'siehe Website'
+        stunde, minute = 0, 0
+        if time_span:
+            zeit_match = re.search(r'(\d{1,2}):(\d{2})', time_span.get_text(strip=True))
+            if zeit_match:
+                stunde = int(zeit_match.group(1))
+                minute = int(zeit_match.group(2))
+                uhrzeit = f"{stunde:02d}:{minute:02d} Uhr"
+
+        try:
+            datum = datetime(jahr, event_monat, tag, stunde, minute)
+        except ValueError:
+            continue
+
+        # Titel
+        title_h3 = event.find('h3', class_='c-event__title')
+        if not title_h3:
+            continue
+        name = title_h3.get_text(strip=True)
+        if not name:
+            continue
+
+        # Ort: "Venue, Stadt"
+        venue_div = event.find('div', class_='c-event__venue')
+        venue = venue_div.get_text(strip=True) if venue_div else ''
+        city = city_div.get_text(strip=True)
+        ort = f"{venue}, {city}" if venue else city
+
+        # Link
+        link_a = event.find('a', class_='c-event__link')
+        link = link_a.get('href', NEUE_PHILHARMONIE_URL) if link_a else NEUE_PHILHARMONIE_URL
+        if link and not link.startswith('http'):
+            link = f"https://www.neue-philharmonie-westfalen.de{link}"
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link,
+            quelle='neue-philharmonie', kategorie='Konzert',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 19. Ikonen-Museum Recklinghausen — event-list-item-Struktur
+# ---------------------------------------------------------------------------
+
+def hole_ikonen_museum(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events des Ikonen-Museums Recklinghausen.
+
+    HTML: div.event-list-item, Datum aus div.event-list-value.event-startdate
+    ("01.03." ohne Jahr), Titel aus div.title h4,
+    Uhrzeit aus div.info ("Sonntag, 15:00 - 16:30 Uhr"),
+    Beschreibung aus div.teaser.
+    """
+    try:
+        response = requests.get(IKONEN_MUSEUM_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (ikonen-museum): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    for item in soup.find_all('div', class_='event-list-item'):
+        # Datum: "01.03." (kein Jahr)
+        datum_div = item.find('div', class_='event-startdate')
+        if not datum_div:
+            continue
+        datum_text = datum_div.get_text(strip=True)
+        datum_match = re.match(r'(\d{1,2})\.(\d{2})\.', datum_text)
+        if not datum_match:
+            continue
+
+        tag = int(datum_match.group(1))
+        event_monat = int(datum_match.group(2))
+        if event_monat != monat:
+            continue
+
+        try:
+            datum = datetime(jahr, event_monat, tag)
+        except ValueError:
+            continue
+
+        # Titel
+        title_div = item.find('div', class_='title')
+        if not title_div:
+            continue
+        h4 = title_div.find('h4')
+        name = h4.get_text(strip=True) if h4 else title_div.get_text(strip=True)
+        if not name:
+            continue
+
+        # Uhrzeit aus div.info: "Sonntag, 15:00 - 16:30 Uhr"
+        uhrzeit = 'siehe Website'
+        info_div = item.find('div', class_='info')
+        if info_div:
+            info_text = info_div.get_text(strip=True)
+            end_match = re.search(r'(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\s*Uhr', info_text)
+            start_match = re.search(r'(\d{1,2}:\d{2})', info_text)
+            if end_match:
+                uhrzeit = f"{end_match.group(1)}–{end_match.group(2)} Uhr"
+            elif start_match:
+                uhrzeit = f"{start_match.group(1)} Uhr"
+            if start_match:
+                try:
+                    h, m = map(int, start_match.group(1).split(':'))
+                    datum = datum.replace(hour=h, minute=m)
+                except ValueError:
+                    pass
+
+        # Beschreibung
+        teaser_div = item.find('div', class_='teaser')
+        beschreibung = teaser_div.get_text(strip=True)[:200] if teaser_div else ''
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort='Ikonen-Museum Recklinghausen', link=IKONEN_MUSEUM_URL,
+            beschreibung=beschreibung,
+            quelle='ikonen-museum', kategorie='Kunst',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 20. Debut um 11 (Ruhrfestspielhaus) — WordPress-Posts
+# ---------------------------------------------------------------------------
+
+def hole_debut_um_11(jahr: int, monat: int) -> list[Termin]:
+    """Holt Konzerttermine der Reihe Debut um 11 im Ruhrfestspielhaus.
+
+    WordPress: article.post-item, Konzerttermin aus h2.entry-title a Link-Text
+    (Format: "15. März 2026, 11:00 Uhr" — enthält Jahr direkt).
+    Beschreibung aus div.post-excerpt.
+    """
+    try:
+        response = requests.get(DEBUT_UM_11_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (debut-um-11): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    monate_pattern = '|'.join(_MONATE.keys())
+    datum_re = re.compile(
+        rf'(\d{{1,2}})\.\s*({monate_pattern})\s+(\d{{4}}),?\s*(\d{{1,2}}):(\d{{2}})\s*Uhr',
+        re.IGNORECASE,
+    )
+
+    for article in soup.find_all('article', class_='post-item'):
+        title_h2 = article.find('h2', class_='entry-title')
+        if not title_h2:
+            continue
+        a_tag = title_h2.find('a')
+        if not a_tag:
+            continue
+
+        title_text = a_tag.get_text(strip=True)
+        match = datum_re.search(title_text)
+        if not match:
+            continue
+
+        tag = int(match.group(1))
+        monat_name = match.group(2).lower()
+        event_jahr = int(match.group(3))
+        stunde = int(match.group(4))
+        minute = int(match.group(5))
+
+        event_monat = _MONATE.get(monat_name, 0)
+        if not event_monat or event_monat != monat or event_jahr != jahr:
+            continue
+
+        try:
+            datum = datetime(event_jahr, event_monat, tag, stunde, minute)
+        except ValueError:
+            continue
+
+        link = a_tag.get('href', DEBUT_UM_11_URL)
+
+        # Beschreibung / Programm aus dem Excerpt
+        excerpt_div = article.find('div', class_='post-excerpt')
+        beschreibung = excerpt_div.get_text(strip=True)[:200] if excerpt_div else ''
+
+        termine.append(Termin(
+            name='Debut um 11', datum=datum,
+            uhrzeit=f"{stunde:02d}:{minute:02d} Uhr",
+            ort='Ruhrfestspielhaus', link=link,
+            beschreibung=beschreibung,
+            quelle='debut-um-11', kategorie='Konzert',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 21. ADFC Recklinghausen — Termine + Radtouren via JSON-API
+# ---------------------------------------------------------------------------
+
+def _adfc_fetch(unit_key: str, event_type: str) -> list[dict]:
+    """Holt alle Events einer ADFC-Unit aus der JSON-API (ein Request, kein Paging)."""
+    params = {
+        'unitKeys[]': unit_key,
+        'eventType': event_type,
+        'includeSubsidiary': 'true',
+        'limit': '500',
+    }
+    try:
+        response = requests.get(ADFC_API_URL, params=params, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+        return response.json().get('items', [])
+    except (requests.RequestException, ValueError) as e:
+        print(f"  Fehler beim Abrufen (adfc/{event_type}): {e}")
+        return []
+
+
+def hole_adfc(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events und Radtouren des ADFC Recklinghausen.
+
+    JSON-API: api-touren-termine.adfc.de/api/eventItems/search
+    Termine: unitKey=164420, Radtouren: unitKey=16442006.
+    Felder: title, beginning, end, cShortDescription, city, startLocation,
+    tourLength, tourSpeed, cSlug.
+    Stadtfilter: city == "Recklinghausen".
+    Kein Detail-Link verfügbar — Link zeigt auf ADFC-RE-Hauptseite.
+    """
+    alle_items = (
+        [(item, 'Radtour') for item in _adfc_fetch(ADFC_UNIT_RADTOUREN, 'Radtour')]
+        + [(item, 'Veranstaltung') for item in _adfc_fetch(ADFC_UNIT_TERMINE, 'Termin')]
+    )
+
+    termine = []
+    for item, kategorie in alle_items:
+        # Stadtfilter
+        if item.get('city', '').lower() != 'recklinghausen':
+            continue
+
+        beginning = item.get('beginning', '')
+        if not beginning:
+            continue
+
+        try:
+            dt = datetime.fromisoformat(beginning).replace(tzinfo=None)
+        except ValueError:
+            continue
+
+        if not _im_monat(dt, jahr, monat):
+            continue
+
+        name = item.get('title', '').strip()
+        if not name:
+            continue
+
+        uhrzeit = dt.strftime('%H:%M Uhr') if dt.hour or dt.minute else 'siehe Website'
+
+        # Ort: startLocation enthält "Straße PLZ Stadt"
+        ort = item.get('startLocation', '').strip() or 'Recklinghausen'
+
+        # Beschreibung: Kurztext + ggf. Tourangaben
+        beschreibung = item.get('cShortDescription', '').strip()
+        if kategorie == 'Radtour':
+            tour_info = ' · '.join(filter(None, [
+                item.get('tourLength', ''),
+                item.get('tourSpeed', ''),
+            ]))
+            if tour_info:
+                beschreibung = f"{tour_info}" + (f" — {beschreibung}" if beschreibung else '')
+
+        termine.append(Termin(
+            name=name[:150], datum=dt, uhrzeit=uhrzeit,
+            ort=ort[:150], link=ADFC_RE_URL,
+            beschreibung=beschreibung[:200],
+            quelle='adfc', kategorie=kategorie,
         ))
 
     return termine
