@@ -81,6 +81,14 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 
+## Bekannte Probleme / offene Punkte
+
+### regioactive.de — Cloudflare-Block seit 26.02.2026
+- Seit 26.02.2026 liefert regioactive.de 403 (Cloudflare Bot-Schutz)
+- `curl` und Playwright headless werden geblockt ("Just a moment..."-Challenge)
+- Letzter erfolgreicher Abruf: 25.02.2026 (3 Termine)
+- **TODO:** Prüfen ob Cloudflare-Sperre temporär oder dauerhaft; ggf. API-Endpunkt suchen oder Quelle ersetzen
+
 ## Neue Quelle hinzufügen
 
 1. Funktion in `scraper.py`: `hole_neue_quelle(jahr, monat) -> list[Termin]`

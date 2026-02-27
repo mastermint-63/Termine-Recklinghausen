@@ -1490,19 +1490,12 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
                 ticket_url = s.get('bookingUrlExternal', '') or s.get('onlineTicketUrl', '')
 
                 if key not in filme:
-                    beschreibung = ''
-                    embedded = s.get('_embedded', {})
-                    content = embedded.get('content', {})
-                    if isinstance(content, dict):
-                        beschreibung = content.get('description', '') or ''
-                        beschreibung = _html_zu_text(beschreibung)[:200]
-
                     filme[key] = {
                         'name': name,
                         'datum': dt.replace(hour=0, minute=0),
                         'zeiten': [],
                         'link': ticket_url or CINEWORLD_URL,
-                        'beschreibung': beschreibung,
+                        'beschreibung': '',  # API-Beschreibung ist immer auf Englisch
                     }
 
                 filme[key]['zeiten'].append(zeit_str)
