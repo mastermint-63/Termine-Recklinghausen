@@ -23,10 +23,10 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-21 Webquellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+25 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
-**scraper.py** — 21 Scraper-Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API.
+**scraper.py** — 25 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
 
 **app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind standardmäßig ausgeblendet; Zustand wird per `localStorage` gespeichert. Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Seitenaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL). Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()`: gleiches Datum + normalisierter Name (exakt oder Teilstring) → Termin mit besserem Info-Score behalten.
 
@@ -59,7 +59,7 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 |----------|--------|-----------------|
 | `hole_regioactive()` | regioactive.de | JSON-LD `ItemList` — zuverlässigste Quelle |
 | `hole_stadt_re()` | recklinghausen.de | ASP-Tabelle `<tr><td>`, Uhrzeit nur auf Detailseiten |
-| `hole_altstadtschmiede()` | altstadtschmiede.de | JSON-LD `Event` (MEC WordPress Plugin) |
+| `hole_altstadtschmiede()` | altstadtschmiede.de/events/ | JSON-LD `Event` (MEC WordPress Plugin); URL auf `/events/` (zeigt auch Fremdveranstaltungen) |
 | `hole_vesterleben()` | vesterleben.de | Link-Text-Parsing, PLZ-Zeile `NNNNN \| Stadt` für Stadtfilter |
 | `hole_sternwarte()` | sternwarte-recklinghausen.de | `<p><u>Datum</u><strong>Titel</strong>` Struktur |
 | `hole_kunsthalle()` | kunsthalle-recklinghausen.de | Zeilenweise: DD.MM. → Titel → Uhrzeit |
@@ -78,6 +78,10 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 | `hole_ikonen_museum()` | ikonen-museum.com | HTML `div.event-list-item`, Datum `div.event-startdate` ("01.03." ohne Jahr), Uhrzeit aus `div.info` |
 | `hole_debut_um_11()` | debut-um-11.de | WordPress `article.post-item`, Termin aus `h2.entry-title a` Link-Text ("15. März 2026, 11:00 Uhr") |
 | `hole_adfc()` | recklinghausen.adfc.de | JSON-API `api-touren-termine.adfc.de`, unitKey 164420 (Termine) + 16442006 (Radtouren), Stadtfilter "Recklinghausen", ein Request für alle Events |
+| `hole_atelierhaus()` | atelierhaus-recklinghausen.de | ICS-Feed (ai1ec Plugin); mehrtägige Ausstellungen erscheinen in jedem überlappenden Monat mit `kategorie='Ausstellung'`; iCal DTEND bei Ganztages-Events = exklusiver Folgetag (−1 Tag korrigieren) |
+| `hole_zu_gast_in_re()` | zu-gast-in-re.de/programm | Text-Parsing: Website-Builder (DM), Datum-Spans per Regex, ein Termin pro Festival-Tag; Seite enthält nur Vorjahresprogramm bis neues veröffentlicht wird |
+| `hole_re_leuchtet()` | re-leuchtet.de/programm | TEC REST-API (`wp-json/tribe/events/v1/events`); Jahresfestival, meist nur wenige Termine |
+| `hole_frauenforum()` | — (kein Scraping) | Programmatisch: 3. Dienstag/Monat, 17 Uhr, Familienbüro Große Geldstraße 19; Pause Juli + Dezember |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 
