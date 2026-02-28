@@ -1506,19 +1506,23 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
                     continue
 
                 zeit_str = dt.strftime('%H:%M')
-                key = f"{name}|{dt.strftime('%Y-%m-%d')}"
+                key = name  # Ein Eintrag pro Film pro Monat
                 ticket_url = s.get('bookingUrlExternal', '') or s.get('onlineTicketUrl', '')
 
                 if key not in filme:
                     filme[key] = {
                         'name': name,
-                        'datum': dt.replace(hour=0, minute=0),
-                        'zeiten': [],
+                        'datum': dt.replace(hour=0, minute=0),  # Erste Vorstellung
+                        'zeiten': set(),
                         'link': ticket_url or CINEWORLD_URL,
-                        'beschreibung': '',  # API-Beschreibung ist immer auf Englisch
+                        'beschreibung': '',
                     }
+                else:
+                    # Frühestes Datum merken
+                    if dt.replace(hour=0, minute=0) < filme[key]['datum']:
+                        filme[key]['datum'] = dt.replace(hour=0, minute=0)
 
-                filme[key]['zeiten'].append(zeit_str)
+                filme[key]['zeiten'].add(zeit_str)
 
             # Nächste Seite?
             if seite < data.get('_page_count', 1):
@@ -1528,8 +1532,11 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
 
     termine = []
     for info in filme.values():
-        zeiten = sorted(set(info['zeiten']))
-        uhrzeit = ' / '.join(zeiten) + ' Uhr'
+        zeiten = sorted(info['zeiten'])
+        if len(zeiten) <= 4:
+            uhrzeit = ' / '.join(zeiten) + ' Uhr'
+        else:
+            uhrzeit = 'täglich mehrere Zeiten'
 
         termine.append(Termin(
             name=info['name'][:150],
