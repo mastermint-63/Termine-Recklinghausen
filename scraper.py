@@ -19,7 +19,7 @@ HEADERS = {
 # URLs
 REGIOACTIVE_URL = "https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte"
 STADT_RE_URL = "https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/"
-ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/aktuelle-veranstaltungen"
+ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/events/"
 VESTERLEBEN_URL = "https://vesterleben.de/termine-alle"
 STERNWARTE_URL = "https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/"
 KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/programm/kalender"
@@ -43,6 +43,11 @@ ADFC_API_URL = "https://api-touren-termine.adfc.de/api/eventItems/search"
 ADFC_UNIT_TERMINE = "164420"
 ADFC_UNIT_RADTOUREN = "16442006"
 ADFC_RE_URL = "https://recklinghausen.adfc.de/"
+RE_LEUCHTET_API = "https://re-leuchtet.de/wp-json/tribe/events/v1/events"
+RE_LEUCHTET_URL = "https://re-leuchtet.de/programm"
+ZU_GAST_URL = "https://www.zu-gast-in-re.de/programm"
+ATELIERHAUS_ICS = "https://atelierhaus-recklinghausen.de/?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events"
+ATELIERHAUS_URL = "https://atelierhaus-recklinghausen.de/kalendar/"
 
 
 @dataclass
@@ -234,15 +239,30 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
     termine = []
 
     for script in soup.find_all('script', type='application/ld+json'):
+        raw = script.string or ''
         try:
-            data = json.loads(script.string)
+            data = json.loads(raw)
         except (json.JSONDecodeError, TypeError):
-            continue
+            # Fallback: unescapte HTML-Anführungszeichen in der Beschreibung → Regex
+            if '"@type": "Event"' not in raw:
+                continue
+            names = re.findall(r'"name":\s*"([^"]+)"', raw)
+            date_m = re.search(r'"startDate":\s*"(\d{4}-\d{2}-\d{2})', raw)
+            url_m = re.search(r'"url":\s*"(https://[^"]+)"', raw)
+            if not names or not date_m:
+                continue
+            data = {
+                '@type': 'Event',
+                'name': names[-1],  # letztes name-Feld = Event-Titel
+                'startDate': date_m.group(1),
+                'url': url_m.group(1) if url_m else ALTSTADTSCHMIEDE_URL,
+                'description': raw,  # Rohdaten für Uhrzeit-Regex
+            }
 
         if data.get('@type') != 'Event':
             continue
 
-        name = data.get('name', '').strip()
+        name = unescape(data.get('name', '').strip())
         if not name:
             continue
 
@@ -1850,3 +1870,261 @@ def hole_adfc(jahr: int, monat: int) -> list[Termin]:
         ))
 
     return termine
+
+
+# ---------------------------------------------------------------------------
+# 22. Atelierhaus Recklinghausen — ICS-Feed (ai1ec Plugin)
+# ---------------------------------------------------------------------------
+
+def _ics_unfold(text: str) -> str:
+    """Entfaltet ICS-Zeilenfortsetzungen (CRLF + Leerzeichen/Tab)."""
+    return re.sub(r'\r?\n[ \t]', '', text)
+
+
+def _ics_wert(block: str, feld: str) -> str:
+    """Liest einen Feldwert aus einem VEVENT-Block (mit Unfolding)."""
+    m = re.search(rf'^{feld}(?:;[^:]+)?:(.+)$', block, re.MULTILINE)
+    return _ics_unfold(m.group(1).strip()) if m else ''
+
+
+def _ics_datum(dtstr: str) -> datetime | None:
+    """Parst ein ICS-Datum (DATE oder DATETIME, mit/ohne Zeitzone)."""
+    s = dtstr[:15].replace('Z', '')
+    try:
+        return datetime.strptime(s, '%Y%m%dT%H%M%S')
+    except ValueError:
+        try:
+            return datetime.strptime(s[:8], '%Y%m%d')
+        except ValueError:
+            return None
+
+
+def hole_atelierhaus(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events des Atelierhauses via ICS-Feed.
+
+    Mehrtägige Ausstellungen erscheinen in jedem Monat, den sie abdecken.
+    """
+    try:
+        response = requests.get(ATELIERHAUS_ICS, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (atelierhaus): {e}")
+        return []
+
+    erste = datetime(jahr, monat, 1)
+    letzte = datetime(jahr, monat, monthrange(jahr, monat)[1])
+
+    termine = []
+    for block in re.findall(r'BEGIN:VEVENT(.*?)END:VEVENT', response.text, re.DOTALL):
+        name = unescape(_ics_wert(block, 'SUMMARY'))
+        if not name:
+            continue
+
+        dtstart_raw = _ics_wert(block, 'DTSTART')
+        dtend_raw = _ics_wert(block, 'DTEND')
+        if not dtstart_raw:
+            continue
+
+        datum_start = _ics_datum(dtstart_raw)
+        datum_end = _ics_datum(dtend_raw) if dtend_raw else datum_start
+        if not datum_start or not datum_end:
+            continue
+
+        all_day = 'T' not in dtstart_raw
+        # iCal: DTEND bei Ganztages-Events = exklusiver Folgetag → einen Tag zurück
+        if all_day and datum_end > datum_start:
+            datum_end -= timedelta(days=1)
+
+        mehrtaegig = (datum_end - datum_start).days >= 1
+        link = _ics_wert(block, 'URL') or ATELIERHAUS_URL
+        ort = _ics_wert(block, 'LOCATION') or 'Atelierhaus Recklinghausen'
+
+        if mehrtaegig:
+            # Ausstellung: erscheint wenn Zeitraum den Zielmonat überlappt
+            if not (datum_start <= letzte and datum_end >= erste):
+                continue
+            datum = max(datum_start, erste)
+            uhrzeit = 'ganztägig'
+            bis = datum_end.strftime('%d.%m.%Y') if datum_end.year != jahr else datum_end.strftime('%d.%m.')
+            beschreibung = f'Ausstellung bis {bis}'
+            kategorie = 'Ausstellung'
+        else:
+            if not _im_monat(datum_start, jahr, monat):
+                continue
+            datum = datum_start
+            uhrzeit = datum.strftime('%H:%M Uhr') if not all_day else 'ganztägig'
+            beschreibung = ''
+            kategorie = 'Kultur'
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link, beschreibung=beschreibung,
+            quelle='atelierhaus', kategorie=kategorie,
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 23. Zu Gast in RE — Text-Parsing (Website-Builder, keine strukturierten Daten)
+# ---------------------------------------------------------------------------
+
+_MONATE_DE = {
+    'Januar': 1, 'Februar': 2, 'März': 3, 'April': 4,
+    'Mai': 5, 'Juni': 6, 'Juli': 7, 'August': 8,
+    'September': 9, 'Oktober': 10, 'November': 11, 'Dezember': 12,
+}
+_DATUM_RE_ZG = re.compile(
+    r'(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag),\s+'
+    r'(\d{1,2})\.\s+(\w+)\s+(\d{4})'
+)
+_ZEIT_RE_ZG = re.compile(r'(?:ab\s+)?(\d{1,2})(?:[.,:]\s*(\d{2}))?\s*Uhr')
+
+
+def hole_zu_gast_in_re(jahr: int, monat: int) -> list[Termin]:
+    """Holt Festival-Tage von zu-gast-in-re.de via Text-Parsing.
+
+    Das Festival findet jährlich Anfang August statt. Die Seite enthält nur
+    das Programm des jeweils letzten oder aktuellen Jahres — gibt [] zurück,
+    wenn noch kein Programm für das gewünschte Jahr/Monat veröffentlicht ist.
+    """
+    try:
+        response = requests.get(ZU_GAST_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (zu-gast-in-re): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Alle Spans dedupliziert (Website-Builder dupliziert viele Elemente)
+    spans = []
+    prev = None
+    for s in soup.find_all('span'):
+        t = s.get_text(strip=True).replace('\xa0', ' ')
+        if t and t != prev:
+            spans.append(t)
+            prev = t
+
+    termine = []
+    current_date = None
+    current_program: list[str] = []
+
+    def _abschluss():
+        if current_date and _im_monat(current_date, jahr, monat) and current_program:
+            program_text = ' '.join(current_program)
+            m = _ZEIT_RE_ZG.search(program_text)
+            if m:
+                h, mi = int(m.group(1)), int(m.group(2) or 0)
+                uhrzeit = f'{h:02d}:{mi:02d} Uhr'
+                datum = current_date.replace(hour=h, minute=mi)
+            else:
+                uhrzeit = 'ganztägig'
+                datum = current_date
+            termine.append(Termin(
+                name='Zu Gast in RE',
+                datum=datum,
+                uhrzeit=uhrzeit,
+                ort='Rathausplatz, Recklinghausen',
+                link=ZU_GAST_URL,
+                beschreibung=program_text[:200],
+                quelle='zu-gast-in-re',
+                kategorie='Festival',
+            ))
+
+    for span_text in spans:
+        m = _DATUM_RE_ZG.search(span_text)
+        if m:
+            _abschluss()
+            tag = int(m.group(1))
+            mo = _MONATE_DE.get(m.group(2), 0)
+            j = int(m.group(3))
+            current_date = datetime(j, mo, tag) if mo else None
+            current_program = []
+        elif current_date:
+            current_program.append(span_text)
+
+    _abschluss()
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 23. RE-leuchtet — TEC REST-API
+# ---------------------------------------------------------------------------
+
+def hole_re_leuchtet(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von RE-leuchtet via The Events Calendar REST-API."""
+    letzter_tag = monthrange(jahr, monat)[1]
+    params = {
+        'start_date': f'{jahr}-{monat:02d}-01',
+        'end_date': f'{jahr}-{monat:02d}-{letzter_tag}',
+        'per_page': 50,
+    }
+    try:
+        response = requests.get(RE_LEUCHTET_API, params=params, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"  Fehler beim Abrufen (re-leuchtet): {e}")
+        return []
+
+    termine = []
+    for event in data.get('events', []):
+        name = unescape(event.get('title', '').strip())
+        if not name:
+            continue
+
+        start = event.get('start_date', '')
+        try:
+            datum = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            continue
+
+        uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
+        venue = event.get('venue', {})
+        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        link = event.get('url', '') or RE_LEUCHTET_URL
+        beschreibung = _html_zu_text(event.get('description', ''))[:200]
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link, beschreibung=beschreibung,
+            quelle='re-leuchtet', kategorie='Kultur',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 23. Frauenforum Recklinghausen — Wiederkehrender Termin (kein Scraping)
+# ---------------------------------------------------------------------------
+
+def hole_frauenforum(jahr: int, monat: int) -> list[Termin]:
+    """Berechnet den monatlichen Frauenforum-Termin (3. Dienstag, 17 Uhr).
+
+    Kein Scraping — Termin wird aus Monatsregel berechnet.
+    Pause im Juli und Dezember.
+    Änderungen werden nur über Presse oder Facebook bekannt gegeben.
+    """
+    if monat in (7, 12):
+        return []
+
+    erster = datetime(jahr, monat, 1)
+    tage_bis_dienstag = (1 - erster.weekday()) % 7
+    dritter_dienstag = erster + timedelta(days=tage_bis_dienstag + 14)
+
+    if dritter_dienstag.month != monat:
+        return []
+
+    datum = dritter_dienstag.replace(hour=17, minute=0)
+
+    return [Termin(
+        name='Frauenforum Recklinghausen',
+        datum=datum,
+        uhrzeit='17:00 Uhr',
+        ort='Familienbüro, Große Geldstraße 19, Recklinghausen',
+        link='',
+        beschreibung='Treffen für alle Frauen des Frauenforums. Pause im Juli und Dezember. Änderungen nur über Presse oder Facebook.',
+        quelle='frauenforum',
+        kategorie='',
+    )]

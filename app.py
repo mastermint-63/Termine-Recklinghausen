@@ -22,7 +22,8 @@ from scraper import (
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
     hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld,
-    hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc, Termin,
+    hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
+    hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum, Termin,
 )
 
 
@@ -48,6 +49,10 @@ QUELLEN = {
     'ikonen-museum': 'Ikonen-Museum',
     'debut-um-11': 'Debut um 11',
     'adfc': 'ADFC Recklinghausen',
+    'atelierhaus': 'Atelierhaus',
+    'zu-gast-in-re': 'Zu Gast in RE',
+    're-leuchtet': 'RE-leuchtet',
+    'frauenforum': 'Frauenforum',
 }
 
 
@@ -189,6 +194,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'ikonen-museum': 'badge-ikonen-museum',
                 'debut-um-11': 'badge-debut-um-11',
                 'adfc': 'badge-adfc',
+                'atelierhaus': 'badge-atelierhaus',
+                'zu-gast-in-re': 'badge-zu-gast-in-re',
+                're-leuchtet': 'badge-re-leuchtet',
+                'frauenforum': 'badge-frauenforum',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -606,6 +615,26 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
+        .badge-atelierhaus {{
+            background: linear-gradient(135deg, #7b5ea7 0%, #5e4080 100%);
+            color: white;
+        }}
+
+        .badge-zu-gast-in-re {{
+            background: linear-gradient(135deg, #1a7a4a 0%, #155f3a 100%);
+            color: white;
+        }}
+
+        .badge-re-leuchtet {{
+            background: linear-gradient(135deg, #f4a00a 0%, #d4880a 100%);
+            color: white;
+        }}
+
+        .badge-frauenforum {{
+            background: linear-gradient(135deg, #c0387a 0%, #a02060 100%);
+            color: white;
+        }}
+
         .badge-default {{
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -823,7 +852,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
             <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
             <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
-            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a>
+            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a> &middot;
+            <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank">Atelierhaus</a> &middot;
+            <a href="https://www.zu-gast-in-re.de/programm" target="_blank">Zu Gast in RE</a> &middot;
+            <a href="https://re-leuchtet.de/programm" target="_blank">RE-leuchtet</a>
         </footer>
     </div>
 
@@ -1056,6 +1088,26 @@ def main():
         # 21. ADFC Recklinghausen
         events = hole_adfc(j, m)
         print(f"  -> {len(events)} ADFC Recklinghausen")
+        alle_termine.extend(events)
+
+        # 22. Atelierhaus Recklinghausen
+        events = hole_atelierhaus(j, m)
+        print(f"  -> {len(events)} Atelierhaus")
+        alle_termine.extend(events)
+
+        # 23. Zu Gast in RE
+        events = hole_zu_gast_in_re(j, m)
+        print(f"  -> {len(events)} Zu Gast in RE")
+        alle_termine.extend(events)
+
+        # 23. RE-leuchtet
+        events = hole_re_leuchtet(j, m)
+        print(f"  -> {len(events)} RE-leuchtet")
+        alle_termine.extend(events)
+
+        # 23. Frauenforum Recklinghausen (wiederkehrender Termin)
+        events = hole_frauenforum(j, m)
+        print(f"  -> {len(events)} Frauenforum")
         alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)
