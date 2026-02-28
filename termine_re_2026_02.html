@@ -355,6 +355,26 @@
             color: white;
         }
 
+        .badge-atelierhaus {
+            background: linear-gradient(135deg, #7b5ea7 0%, #5e4080 100%);
+            color: white;
+        }
+
+        .badge-zu-gast-in-re {
+            background: linear-gradient(135deg, #1a7a4a 0%, #155f3a 100%);
+            color: white;
+        }
+
+        .badge-re-leuchtet {
+            background: linear-gradient(135deg, #f4a00a 0%, #d4880a 100%);
+            color: white;
+        }
+
+        .badge-frauenforum {
+            background: linear-gradient(135deg, #c0387a 0%, #a02060 100%);
+            color: white;
+        }
+
         .badge-default {
             background: var(--hover-color);
             color: var(--text-secondary);
@@ -543,7 +563,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
@@ -4695,6 +4715,18 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="frauenforum">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <span class="termin-toggle" onclick="this.closest('.termin').classList.toggle('expanded')">Frauenforum Recklinghausen</span>
+                            <span class="badge badge-frauenforum">Frauenforum</span>
+                        </div>
+                        <div class="termin-ort">Familienbüro, Große Geldstraße 19, Recklinghausen</div>
+                        <div class="termin-beschreibung">Treffen für alle Frauen des Frauenforums. Pause im Juli und Dezember. Änderungen nur über Presse oder Facebook.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">17:15 / 20:00 Uhr</div>
                     <div class="termin-info">
@@ -7483,21 +7515,6 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="altstadtschmiede">
-                    <div class="termin-zeit">20:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.altstadtschmiede.de/events/ukrnext" target="_blank">UKR:NEXT</a>
-                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">{
-            &quot;@context&quot;: &quot;http://schema.org&quot;,
-            &quot;@type&quot;: &quot;Event&quot;,
-            &quot;eventStatus&quot;: &quot;https://schema.org/EventScheduled&quo</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">20:30 Uhr</div>
                     <div class="termin-info">
@@ -7529,7 +7546,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 28.02.2026 um 19:47 Uhr<br>
+            Generiert am 28.02.2026 um 21:40 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -7551,7 +7568,10 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
             <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
             <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
             <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
-            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a>
+            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a> &middot;
+            <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank">Atelierhaus</a> &middot;
+            <a href="https://www.zu-gast-in-re.de/programm" target="_blank">Zu Gast in RE</a> &middot;
+            <a href="https://re-leuchtet.de/programm" target="_blank">RE-leuchtet</a>
         </footer>
     </div>
 
