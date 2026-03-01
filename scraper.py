@@ -2167,3 +2167,54 @@ def hole_frauenforum(jahr: int, monat: int) -> list[Termin]:
         quelle='frauenforum',
         kategorie='',
     )]
+
+
+# ---------------------------------------------------------------------------
+# 26. Manuelle Termine — JSON-Datei
+# ---------------------------------------------------------------------------
+
+def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
+    """Liest manuell eingetragene Termine aus manuelle_termine.json."""
+    import os
+    json_pfad = os.path.join(os.path.dirname(__file__), 'manuelle_termine.json')
+
+    try:
+        with open(json_pfad, 'r', encoding='utf-8') as f:
+            eintraege = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+    termine = []
+    for e in eintraege:
+        if not e.get('freigegeben'):
+            continue
+
+        try:
+            datum = datetime.strptime(e['datum'], '%Y-%m-%d')
+        except (ValueError, KeyError):
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        uhrzeit = 'siehe Website'
+        if e.get('uhrzeit'):
+            try:
+                h, m = map(int, e['uhrzeit'].split(':'))
+                datum = datum.replace(hour=h, minute=m)
+                uhrzeit = f"{h:02d}:{m:02d} Uhr"
+            except ValueError:
+                uhrzeit = e['uhrzeit']
+
+        termine.append(Termin(
+            name=e.get('name', '')[:150],
+            datum=datum,
+            uhrzeit=uhrzeit,
+            ort=e.get('ort', '')[:150],
+            link=e.get('link', ''),
+            beschreibung=e.get('beschreibung', '')[:800],
+            quelle='manuell',
+            kategorie=e.get('kategorie', ''),
+        ))
+
+    return termine

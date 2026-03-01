@@ -24,7 +24,8 @@ from scraper import (
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
     hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld,
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
-    hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum, Termin,
+    hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
+    hole_manuelle_termine, Termin,
 )
 
 
@@ -54,6 +55,7 @@ QUELLEN = {
     'zu-gast-in-re': 'Zu Gast in RE',
     're-leuchtet': 'RE-leuchtet',
     'frauenforum': 'Frauenforum',
+    'manuell': 'Redaktion',
 }
 
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
@@ -83,6 +85,7 @@ SCRAPER = [
     (hole_zu_gast_in_re, 'Zu Gast in RE'),
     (hole_re_leuchtet, 'RE-leuchtet'),
     (hole_frauenforum, 'Frauenforum'),
+    (hole_manuelle_termine, 'Redaktion'),
 ]
 
 
@@ -241,6 +244,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'zu-gast-in-re': 'badge-zu-gast-in-re',
                 're-leuchtet': 'badge-re-leuchtet',
                 'frauenforum': 'badge-frauenforum',
+                'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -683,6 +687,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .badge-frauenforum {{
             background: linear-gradient(135deg, #c0387a 0%, #a02060 100%);
+            color: white;
+        }}
+        .badge-manuell {{
+            background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
         }}
 
