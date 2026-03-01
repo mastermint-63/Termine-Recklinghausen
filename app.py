@@ -10,7 +10,7 @@ Verwendung:
     python3 app.py --no-browser # Ohne Browser öffnen
 """
 
-import html
+import html as _html
 import os
 import re
 import webbrowser
@@ -178,11 +178,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         '''
 
         for t in sorted(tage, key=lambda x: (x.uhrzeit == 'ganztägig', x.uhrzeit == 'siehe Website', x.uhrzeit, x.name)):
-            beschreibung_escaped = html.escape(t.beschreibung)[:800]
+            beschreibung_escaped = _html.escape(t.beschreibung)[:800]
 
-            name_esc = html.escape(t.name)
-            uhrzeit_esc = html.escape(t.uhrzeit)
-            ort_esc = html.escape(t.ort) if t.ort else ''
+            name_esc = _html.escape(t.name)
+            uhrzeit_esc = _html.escape(t.uhrzeit)
+            ort_esc = _html.escape(t.ort) if t.ort else ''
             link_safe = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''
 
             # Badge für Quelle
@@ -218,7 +218,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             badge_html = f'<span class="badge {badge_class}">{quelle_label}</span>'
 
             if t.kategorie:
-                badge_html += f' <span class="badge badge-kategorie">{html.escape(t.kategorie)}</span>'
+                badge_html += f' <span class="badge badge-kategorie">{_html.escape(t.kategorie)}</span>'
 
             # Name als Link oder aufklappbar
             if link_safe:
