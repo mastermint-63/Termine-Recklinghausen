@@ -56,6 +56,35 @@ QUELLEN = {
     'frauenforum': 'Frauenforum',
 }
 
+# Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
+SCRAPER = [
+    (hole_regioactive, 'regioactive.de'),
+    (hole_stadt_re, 'Stadt RE'),
+    (hole_altstadtschmiede, 'Altstadtschmiede'),
+    (hole_vesterleben, 'Vesterleben.de'),
+    (hole_sternwarte, 'Sternwarte'),
+    (hole_kunsthalle, 'Kunsthalle'),
+    (hole_stadtbibliothek, 'Stadtbibliothek'),
+    (hole_nlgr, 'NLGR'),
+    (hole_literaturtage, 'Literaturtage'),
+    (hole_vhs, 'VHS'),
+    (hole_akademie, 'Ev. Akademie'),
+    (hole_stadtarchiv, 'Stadtarchiv'),
+    (hole_geschichte_re, 'Heimatkunde'),
+    (hole_gastkirche, 'Gastkirche'),
+    (hole_ruhrfestspiele, 'Ruhrfestspiele'),
+    (hole_backyard, 'Backyard-Club'),
+    (hole_cineworld, 'Cineworld'),
+    (hole_neue_philharmonie, 'Neue Philharmonie'),
+    (hole_ikonen_museum, 'Ikonen-Museum'),
+    (hole_debut_um_11, 'Debut um 11'),
+    (hole_adfc, 'ADFC Recklinghausen'),
+    (hole_atelierhaus, 'Atelierhaus'),
+    (hole_zu_gast_in_re, 'Zu Gast in RE'),
+    (hole_re_leuchtet, 'RE-leuchtet'),
+    (hole_frauenforum, 'Frauenforum'),
+]
+
 
 def _normalisiere(name: str) -> str:
     """Normalisiert einen Eventnamen für Vergleiche."""
@@ -891,6 +920,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank" rel="noopener noreferrer">Atelierhaus</a> &middot;
             <a href="https://www.zu-gast-in-re.de/programm" target="_blank" rel="noopener noreferrer">Zu Gast in RE</a> &middot;
             <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a>
+            <br><br>
+            <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
+            <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
         </footer>
     </div>
 
@@ -1019,130 +1051,10 @@ def main():
 
         alle_termine = []
 
-        # 1. RegioActive
-        events = hole_regioactive(j, m)
-        print(f"  -> {len(events)} regioactive.de")
-        alle_termine.extend(events)
-
-        # 2. Stadt RE
-        events = hole_stadt_re(j, m)
-        print(f"  -> {len(events)} Stadt RE")
-        alle_termine.extend(events)
-
-        # 3. Altstadtschmiede
-        events = hole_altstadtschmiede(j, m)
-        print(f"  -> {len(events)} Altstadtschmiede")
-        alle_termine.extend(events)
-
-        # 4. Vesterleben
-        events = hole_vesterleben(j, m)
-        print(f"  -> {len(events)} Vesterleben.de")
-        alle_termine.extend(events)
-
-        # 5. Sternwarte
-        events = hole_sternwarte(j, m)
-        print(f"  -> {len(events)} Sternwarte")
-        alle_termine.extend(events)
-
-        # 6. Kunsthalle
-        events = hole_kunsthalle(j, m)
-        print(f"  -> {len(events)} Kunsthalle")
-        alle_termine.extend(events)
-
-        # 7. Stadtbibliothek
-        events = hole_stadtbibliothek(j, m)
-        print(f"  -> {len(events)} Stadtbibliothek")
-        alle_termine.extend(events)
-
-        # 8. NLGR
-        events = hole_nlgr(j, m)
-        print(f"  -> {len(events)} NLGR")
-        alle_termine.extend(events)
-
-        # 9. Literaturtage
-        events = hole_literaturtage(j, m)
-        print(f"  -> {len(events)} Literaturtage")
-        alle_termine.extend(events)
-
-        # 10. VHS
-        events = hole_vhs(j, m)
-        print(f"  -> {len(events)} VHS")
-        alle_termine.extend(events)
-
-        # 11. Ev. Akademie
-        events = hole_akademie(j, m)
-        print(f"  -> {len(events)} Ev. Akademie")
-        alle_termine.extend(events)
-
-        # 12. Stadtarchiv (PDF)
-        events = hole_stadtarchiv(j, m)
-        print(f"  -> {len(events)} Stadtarchiv")
-        alle_termine.extend(events)
-
-        # 13. Verein für Orts- und Heimatkunde
-        events = hole_geschichte_re(j, m)
-        print(f"  -> {len(events)} Heimatkunde")
-        alle_termine.extend(events)
-
-        # 14. Gastkirche
-        events = hole_gastkirche(j, m)
-        print(f"  -> {len(events)} Gastkirche")
-        alle_termine.extend(events)
-
-        # 15. Ruhrfestspiele
-        events = hole_ruhrfestspiele(j, m)
-        print(f"  -> {len(events)} Ruhrfestspiele")
-        alle_termine.extend(events)
-
-        # 16. Backyard-Club
-        events = hole_backyard(j, m)
-        print(f"  -> {len(events)} Backyard-Club")
-        alle_termine.extend(events)
-
-        # 17. Cineworld
-        events = hole_cineworld(j, m)
-        print(f"  -> {len(events)} Cineworld")
-        alle_termine.extend(events)
-
-        # 18. Neue Philharmonie Westfalen
-        events = hole_neue_philharmonie(j, m)
-        print(f"  -> {len(events)} Neue Philharmonie")
-        alle_termine.extend(events)
-
-        # 19. Ikonen-Museum
-        events = hole_ikonen_museum(j, m)
-        print(f"  -> {len(events)} Ikonen-Museum")
-        alle_termine.extend(events)
-
-        # 20. Debut um 11
-        events = hole_debut_um_11(j, m)
-        print(f"  -> {len(events)} Debut um 11")
-        alle_termine.extend(events)
-
-        # 21. ADFC Recklinghausen
-        events = hole_adfc(j, m)
-        print(f"  -> {len(events)} ADFC Recklinghausen")
-        alle_termine.extend(events)
-
-        # 22. Atelierhaus Recklinghausen
-        events = hole_atelierhaus(j, m)
-        print(f"  -> {len(events)} Atelierhaus")
-        alle_termine.extend(events)
-
-        # 23. Zu Gast in RE
-        events = hole_zu_gast_in_re(j, m)
-        print(f"  -> {len(events)} Zu Gast in RE")
-        alle_termine.extend(events)
-
-        # 23. RE-leuchtet
-        events = hole_re_leuchtet(j, m)
-        print(f"  -> {len(events)} RE-leuchtet")
-        alle_termine.extend(events)
-
-        # 23. Frauenforum Recklinghausen (wiederkehrender Termin)
-        events = hole_frauenforum(j, m)
-        print(f"  -> {len(events)} Frauenforum")
-        alle_termine.extend(events)
+        for scraper_fn, label in SCRAPER:
+            events = scraper_fn(j, m)
+            print(f"  -> {len(events)} {label}")
+            alle_termine.extend(events)
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)
