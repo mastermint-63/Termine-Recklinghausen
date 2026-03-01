@@ -564,7 +564,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="neue-philharmonie">Neue Philharmonie</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="neue-philharmonie">Neue Philharmonie</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
@@ -699,6 +699,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">16.00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401053" target="_blank">Frühjahrskonzert des Städtischen Chores</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Christuskirche</div>
+                        <div class="termin-beschreibung">Programm: Benjamin Britten: Cantata Misericordium, op.69  (20min) Joseph Haydn: Stabat Mater, Hob.XXbis  (60min) Mitwirkende: Solisten Städtischer Chor Recklinghausen Neue Philharmonie Westfalen Leitu</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="neue-philharmonie">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -771,6 +783,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18.00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401077" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Fritz-Husemann-Haus</div>
+                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">18:00 Uhr</div>
                     <div class="termin-info">
@@ -831,30 +855,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401053" target="_blank">Frühjahrskonzert des Städtischen Chores</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401077" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -900,14 +900,14 @@
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">von 9:30 bis 11 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400927" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkomme</div>
                     </div>
                 </div>
             
@@ -1043,15 +1043,39 @@
             <div class="datum-header">Do 05.03.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">14.00-17.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/vergessene-stimmen" target="_blank">Vergessene Stimmen</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401130" target="_blank">InfoTalk Mobilität - lasst uns drüber REden!</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro (Große Geldstraße 19)</div>
+                        <div class="termin-beschreibung">Zu folgenden Themen können sich die Bürger*innen der Stadt Recklinghausen informieren: Aktuelle Straßenplanungen Radverkehr und Mikromobilität Verkehrswende Fußverkehr und Barrierefreiheit Ampelanlage</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401116" target="_blank">Ergebnisse der Kommunalen Wärmeplanung in Recklinghausen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Umspannwerk RecklinghausenMuseum Strom & Leben</div>
+                        <div class="termin-beschreibung">Einladung zur Abschlussveranstaltung der Kommunalen Wärmeplanung der Stadt Recklinghausen Wie könnte Recklinghausen künftig mit Wärme versorgt werden? Diese zentrale Frage hat die Stadt Recklinghausen</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400606" target="_blank">Vergessene Stimmen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Friedhofskapelle</div>
+                        <div class="termin-beschreibung">Die Blockflötistin Susanne Hochscheid und der Pianist Niclas Floer widmen sich den Werken von Frauen, deren Musik zur Lebzeiten kaum Anerkennung fand. Zwischen Werken aus alten Zeiten, Improvisationen</div>
                     </div>
                 </div>
             
@@ -1064,30 +1088,6 @@
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
                         <div class="termin-beschreibung">&lt;p&gt;Die in Rom beheimateten L’IRA DEL BACCANO verschmelzen Doom- und Stoner-Rock-Einflüsse à la Black Sabbath, Kyuss und Monster Magnet mit der Psychedelia von Pink Floyd und Hawkwind, den Heavy-</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401116" target="_blank">Ergebnisse der Kommunalen Wärmeplanung in Recklinghausen</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401130" target="_blank">InfoTalk Mobilität - lasst uns drüber REden!</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -1135,27 +1135,27 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/prima-facie" target="_blank">Prima facie</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400556" target="_blank">Prima facie</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Zeitgenössisches Solostück Westfälisches Landestheater Wann ist Sex einvernehmlich, wann ist es eine Vergewaltigung? Tessa ist ein Star in der Welt der Juristen, Richter, Staatsanwälte. Immer wieder g</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/theater-hochlarmark-love-and-peace-im-landratsamt-4" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401078" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Fritz-Husemann-Haus</div>
+                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt.</div>
                     </div>
                 </div>
             
@@ -1215,39 +1215,51 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">11:30 bis 13 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/theater-hochlarmark-love-and-peace-im-landratsamt-5" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401011" target="_blank">Veranstaltungsreihe "Pubertät" (Teil 1)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Pubertät-Herzlich Willkommen! – für Jugendliche eine spannendet Zeit voller Veränderungen, für Eltern oft eine echte Herausforderung. Keine Sorge – Das geht nicht nur Ihnen so! Bei der Veranstaltungsr</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/jazzy-maerz-frauen-im-jazz" target="_blank">Jazzy März: Frauen im Jazz</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401079" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Fritz-Husemann-Haus</div>
+                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt.</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/jochen-malmsheimer-dogensuppe-herzogin-ein-austopf-mit-einlage" target="_blank">Jochen Malmsheimer: Dogensuppe Herzogin – ein Austopf mit Einlage</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400607" target="_blank">Jazzy März: Frauen im Jazz</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Musikschule</div>
+                        <div class="termin-beschreibung">Anlässlich des Weltfrauentages steht die Jazzmusik im Kulturquartier ganz im Zeichen der Frauen der Szene. Annika Ernst (Saxophon), Genevieve O`Driscoll (Bass) und Carlotta Ribbe (Vibraphon) präsentie</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400567" target="_blank">Jochen Malmsheimer: Dogensuppe Herzogin – ein Austopf mit Einlage</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Jochen Malmsheimer Dogensuppe Herzogin – ein Austopf mit Einlage Machen wir uns doch nichts vor: Kabarett ist dieser Tage wichtiger denn je! Die gefühlte Arschlochdichte und Idiotenkonzentration die S</div>
                     </div>
                 </div>
             
@@ -1260,18 +1272,6 @@
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
                         <div class="termin-beschreibung">&lt;p&gt;Erdiger Südstaatenrock, ursprünglicher Blues und anspruchsvolles Songwriting - dieses Mischung wird von Smoking Wolf heiss serviert. Der Sänger und Ausnahmegitarrist aus dem Ruhrgebiet, seit </div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401011" target="_blank">Veranstaltungsreihe "Pubertät" (Teil 1)</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -1319,15 +1319,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">15:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">15.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/mitmach-musiktheater-pia-nino-retten-das-schlossfest" target="_blank">Mitmach-Musiktheater: Pia & Nino retten das Schlossfest</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400575" target="_blank">Mitmach-Musiktheater: Pia & Nino retten das Schlossfest</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Bürgerhaus Süd</div>
+                        <div class="termin-beschreibung">Mitmach-Musiktheater-Hörspiel ab 5 Jahren Deine Kinderband Pia & Nino, die Stars der Pia-Nino-Band sind wie immer in ihrem Proberaum und basteln an neuen Songs. Das Telefon klingelt und Simon ruft an.</div>
                     </div>
                 </div>
             
@@ -1367,27 +1367,27 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/lesebuehne-extra-wer-redet-saet-wer-zuhoert-erntet" target="_blank">Lesebühne extra: Wer redet, sät, wer zuhört, erntet</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400665" target="_blank">Lesebühne extra: Wer redet, sät, wer zuhört, erntet</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Eine szenische Lesung mit Musik zum Weltfrauentag Im Mittelpunkt des Abends steht Isabel Allende, die ihr Leben und die Geschichte starker Frauen erzählt. Während sie ein Jahr am Bett ihrer schwer erk</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/theater-hochlarmark-love-and-peace-im-landratsamt" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401080" target="_blank">Theater Hochlarmark: Love and Peace im Landratsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Fritz-Husemann-Haus</div>
+                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt.</div>
                     </div>
                 </div>
             
@@ -1460,14 +1460,14 @@
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">von 9:30 bis 11 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400928" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkomme</div>
                     </div>
                 </div>
             
@@ -1491,15 +1491,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/7-sinfoniekonzert-filmmusik" target="_blank">7. Sinfoniekonzert - Filmmusik</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400533" target="_blank">7. Sinfoniekonzert - Filmmusik</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Bilder und Töne verschmelzen zu einem Gesamtkunstwerk. „Die rote Violine“ mit der Oscar-preisgekrönten Musik von John Corigliano wird von Linus Roths Stradivari zum Leben erweckt. Als „bestes Stück ec</div>
                     </div>
                 </div>
             
@@ -1602,8 +1602,8 @@
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401103" target="_blank">KIRCHLICHES FILMFESTIVAL</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Cineworld Kino</div>
+                        <div class="termin-beschreibung">Das Kirchliche Filmfestival Recklinghausen wird vom ökumenischen Arbeitskreis Kirche & Kino des Evangelischen Kirchenkreises Recklinghausen und des Katholischen Kreisdekanats Recklinghausen veranstalt</div>
                     </div>
                 </div>
             
@@ -1639,6 +1639,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18.30 - 19.30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401058" target="_blank">Mantra: Mitsingkonzert in der Friedhofskapelle Recklinghausen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Friedhofskapelle</div>
+                        <div class="termin-beschreibung">mit Udo Homeyer Künstler Udo Homeyer verwendet das Mantra als singende Kunstform, die es auch Ungeübten ermöglicht spontan mitzusingen. Ein Mantra hat wenige Worte und eine einfache Melodie. Durch die</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">18:00–20:15 Uhr</div>
                     <div class="termin-info">
@@ -1647,18 +1659,6 @@
                             <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 0.15</div>
-                        
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:30 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/mantra-mitsingkonzert-in-der-friedhofskapelle-recklinghausen-12" target="_blank">Mantra: Mitsingkonzert in der Friedhofskapelle Recklinghausen</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
                         
                     </div>
                 </div>
@@ -1675,6 +1675,18 @@
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400568" target="_blank">Wildes Holz: Block Party</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Wildes Holz Block Party Wildes Holz lädt zur Block Party! Ihr neues Programm feiert die Musik, das Leben, die Vielfalt, die Eigenheiten, die seltsamen Angewohnheiten, die schrulligen Ticks, den Holzro</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="nlgr">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
@@ -1684,18 +1696,6 @@
                         </div>
                         <div class="termin-ort">Westfälische Volkssternwarte, Stadtgarten 9</div>
                         <div class="termin-beschreibung">&lt;p&gt;Julia Wolf liest &quot;Umlaufbahnen&quot; von Samantha Harvey Ausgezeichnet mit dem Booker Prize 2024, und nominiert für den Übersetzerpreis in Leipzig, hören wir die Lesung der Übersetzerin </div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/wildes-holz-block-party" target="_blank">Wildes Holz: Block Party</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -1740,6 +1740,18 @@
                         </div>
                         <div class="termin-ort">Planetarium</div>
                         <div class="termin-beschreibung">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">17 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401099" target="_blank">Klassenkonzert Schlagzeug</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Musikschule Recklinghausen</div>
+                        <div class="termin-beschreibung">Öffentliches Klassenkonzert Schlagzeug – Leitung: Kai Putzke.</div>
                     </div>
                 </div>
             
@@ -1878,18 +1890,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401099" target="_blank">Klassenkonzert Schlagzeug</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -1898,6 +1898,18 @@
             <div class="datum-header">Sa 14.03.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">10:00-12:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401100" target="_blank">Workshop Drum Circle</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Musikschule Recklinghausen</div>
+                        <div class="termin-beschreibung">· gemeinsames Trommeln · Leitung: Christian Schneider.</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">10:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -1970,15 +1982,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">11:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">11:30 bis 13:30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/familienfragen-leicht-gemacht-thema-babygeleitete-beikost-blw-2" target="_blank">Familienfragen - leicht gemacht! Thema: Babygeleitete Beikost (BLW)</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400958" target="_blank">Familienfragen - leicht gemacht! Thema: Babygeleitete Beikost (BLW)</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalt: Das Angebot richtet sich an (werdende) Mütter, Väter und interessierte Großeltern von kleinen und großen Kindern. Es können alle Fragen zur Säuglingspflege, Entwicklung, Ernährung oder zu den </div>
                     </div>
                 </div>
             
@@ -2018,15 +2030,15 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">16:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">16.00  Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/passionskonzert-2" target="_blank">Passionskonzert</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401085" target="_blank">Passionskonzert</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Probsteikirche St. Peter</div>
+                        <div class="termin-beschreibung">des Kammerchores</div>
                     </div>
                 </div>
             
@@ -2075,18 +2087,6 @@
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
                         <div class="termin-beschreibung">&lt;p&gt;Sechs Musiker, die das Erbe von Tom Petty fortführen. Eine Tom Petty Tribute Band, die sich mal sehr nah am Original orientiert, sich aber auch Freiheiten für eigene Interpretationen nimmt. Z</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401100" target="_blank">Workshop Drum Circle</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -2251,15 +2251,15 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/vierzig-karat" target="_blank">Vierzig Karat</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400546" target="_blank">Vierzig Karat</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Bürgerhaus Süd</div>
+                        <div class="termin-beschreibung">Komödie von Pierre Barillet und Jean-Pierre Grédy Theatergastspiele Fürth Wir befinden uns in Griechenland, in einer kleinen Bucht abseits der großen Welt. Lisa hat eine Autopanne, bei der ihr ein am </div>
                     </div>
                 </div>
             
@@ -2300,14 +2300,14 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">von 9:30 bis 11 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401101" target="_blank">"Bläserwoche"</a>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400929" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkomme</div>
                     </div>
                 </div>
             
@@ -2315,11 +2315,11 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     <div class="termin-zeit">siehe Website</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400929" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401101" target="_blank">"Bläserwoche"</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Musikschule Recklinghausen</div>
+                        <div class="termin-beschreibung">Bläserwoche · Proben und gemeinsames Musizieren · Leitung Johannes Pieper.</div>
                     </div>
                 </div>
             
@@ -2343,15 +2343,15 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18:00 - 21:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/lange-lernnacht-in-der-stadtbibliothek-7" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401088" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
+                        <div class="termin-beschreibung">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. </div>
                     </div>
                 </div>
             
@@ -2414,6 +2414,18 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">16:00 - 17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400485" target="_blank">Tonie-Tauschbörse</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Stadtbibliothek Augustinessenstraße 3</div>
+                        <div class="termin-beschreibung">Foto: Pixabay In der Stadtbibliothek in der Augustinessenstraße findet eine Tonie-Tauschbörse statt. Wer die eigenen Geschichten der beliebten Tonie-Figuren bereits auswendig kennt und diese gegen ein</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="adfc">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -2423,18 +2435,6 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
                         <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/tonie-tauschboerse" target="_blank">Tonie-Tauschbörse</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -2494,15 +2494,15 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
             <div class="datum-header">Do 19.03.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">15:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">15 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/fuer-hinz-und-kunz-redewendungen-am-objekt-erklaert-3" target="_blank">„Für Hinz und Kunz“ – Redewendungen am Objekt erklärt</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401028" target="_blank">„Für Hinz und Kunz“ – Redewendungen am Objekt erklärt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">RETRO STATION</div>
+                        <div class="termin-beschreibung">Was hat die RETRO STATION mit bekannten Redewendungen zu tun? Ganz einfach: Beim Rundgang durch das stadtgeschichtliche Museum werden bekannte Redewendungen direkt am historischen Objekt erklärt und d</div>
                     </div>
                 </div>
             
@@ -2518,15 +2518,15 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadtbibliothek">
-                    <div class="termin-zeit">16:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">16:00</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401123" target="_blank">Bilderbuchkino in Süd</a>
-                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401123" target="_blank">Bilderbuchkino in Süd</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Am Neumarkt 19</div>
-                        
+                        <div class="termin-beschreibung">Das Team der Stadtbibliothek im Haus der Bildung, Am Neumarkt 19, die Geschiche &quot;Dr. Brumm und der Megasaurus&quot; vonDaniel Napp als Bilderbuchkino. Es wird in gemütlicher Atmosphäre vorgelesen</div>
                     </div>
                 </div>
             
@@ -2654,15 +2654,27 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">11:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">11 bis 13 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/vater-kind-treff-11" target="_blank">Vater-Kind-Treff</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400904" target="_blank">Vater-Kind-Treff</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fra</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">12:00-15:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401102" target="_blank">Tag der offenen Tür</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Musikschule Recklinghausen</div>
+                        <div class="termin-beschreibung">: Alle Interessierten sind willkommen.</div>
                     </div>
                 </div>
             
@@ -2678,27 +2690,27 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">15:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">15.00 - 17.00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/sitztanz-3" target="_blank">Sitztanz</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400600" target="_blank">Sitztanz</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Musikschule</div>
+                        <div class="termin-beschreibung">In  Kooperation mit dem Tanzahaus „La Danza“ Wir laden Sie zu einem geselligen Tanznachmittag im Sitzen ein. Tanzen im Sitzen ist eine wunderbare Möglichkeit für alle, auch wenn die Mobilität eingesch</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="nlgr">
-                    <div class="termin-zeit">16:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">16:00-18:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://nlgr.de/veranstaltung/literaturtreff-am-samstag-38/" target="_blank">Literaturtreff am Samstag</a>
-                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401046" target="_blank">Literaturtreff am Samstag</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Stadtbibliothek, Augustinessenstr. 3</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich</div>
+                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
+                        <div class="termin-beschreibung">Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich unter de</div>
                     </div>
                 </div>
             
@@ -2724,18 +2736,6 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                         <div class="termin-ort">Altstadtschmiede</div>
                         <div class="termin-beschreibung">21..03. / 20 Uhr / AK 15€    Die Frauenparty in der Altstadtschmiede ist wieder zurück! 
 Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sind willkommen.    Die Altstadtsch</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401102" target="_blank">Tag der offenen Tür</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -2816,14 +2816,14 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">von 9:30 bis 11 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400930" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkomme</div>
                     </div>
                 </div>
             
@@ -2847,15 +2847,15 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18:00 - 21:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/lange-lernnacht-in-der-stadtbibliothek-8" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401089" target="_blank">Lange Lernnacht in der Stadtbibliothek</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
+                        <div class="termin-beschreibung">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. </div>
                     </div>
                 </div>
             
@@ -2879,6 +2879,18 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
             <div class="datum-header">Mi 25.03.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">10 bis 11:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401016" target="_blank">Mütter-/Väterberatung durch das Gesundheitsamt</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Mütter-/Väterberatung des Kinder- und Jugendgesundheitsdienstes Die Gesundheit ihres Kindes ist wichtig - informieren, vorbeugen, schützen In Kooperation mit dem Gesundheitsamt Kreis Recklinghausen fi</div>
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">10:00–12:15 Uhr</div>
                     <div class="termin-info">
@@ -2891,15 +2903,39 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadtbibliothek">
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">11.00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400629" target="_blank">Konzertreihe - DEBUT um 11 e. V.</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
+                        <div class="termin-beschreibung">Konzertreihe zur Förderung junger Musiker seit 1992 Künstlerische Beratung: Rainer Maria Klaas</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401119" target="_blank">Bilderbuchkino in der Augustinessenstraße</a>
-                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401119" target="_blank">Bilderbuchkino in der Augustinessenstraße</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        
+                        <div class="termin-beschreibung">In der Recklinghäuser Stadtbibliothek, Augustinessenstraße 3, findet immer am letzten Mittwoch im Monat ein Bilderbuchkino statt. Geschichtenfans können hier Bilderbücher auf der großen Leinwand erleb</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">18 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401043" target="_blank">Untertage-Übertage: 25 Jahre Geschichtskreis Blumenthal</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Institut für Stadtgeschichte</div>
+                        <div class="termin-beschreibung">Die Stilllegung des Bergwerks Blumenthal/Haard im Jahre 2001 war auch Anlass für die Gründung des Geschichtskreises. Ehemalige Bergleute taten sich zusammen und führten Interviews mit früheren Kumpels</div>
                     </div>
                 </div>
             
@@ -2912,18 +2948,6 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
                         <div class="termin-beschreibung">Im Jahr 2000 endete die Geschichte des Bergbaus in Recklinghausen</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">18:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/untertage-uebertage-25-jahre-geschichtskreis-blumenthal" target="_blank">Untertage-Übertage: 25 Jahre Geschichtskreis Blumenthal</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -2991,26 +3015,14 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">9 bis 13 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400893" target="_blank">Beratung zu Kindertagespflege</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400629" target="_blank">Konzertreihe - DEBUT um 11 e. V.</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Das städtische Team der Kindertagespflege informiert interessierte Eltern über die Betreuung durch eine Kindertagespflegeperson. Mögliche Fragen: Was ist Kindertagespflege? Welche Formate gibt</div>
                     </div>
                 </div>
             
@@ -3026,18 +3038,6 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401016" target="_blank">Mütter-/Väterberatung durch das Gesundheitsamt</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -3046,15 +3046,15 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
             <div class="datum-header">Do 26.03.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">15:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">15 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/oeffentliche-fuehrung-durch-die-retro-station-2" target="_blank">Öffentliche Führung durch die RETRO STATION</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401029" target="_blank">Öffentliche Führung durch die RETRO STATION</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">RETRO STATION</div>
+                        <div class="termin-beschreibung">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werd</div>
                     </div>
                 </div>
             
@@ -3070,27 +3070,39 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="nlgr">
-                    <div class="termin-zeit">19:00 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19 bis 20:30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://nlgr.de/veranstaltung/annett-groeschner-schwebende-lasten/" target="_blank">Annett Gröschner: Schwebende Lasten</a>
-                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401012" target="_blank">Elternabend: Übergang Kita-Schule</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Stadtbibliothek, Augustinessenstr. 3</div>
-                        <div class="termin-beschreibung">&lt;p&gt;„Dies ist die Geschichte der Blumenbindnerin und Kranfahrerin Hanna Krause, die zwei Revolutionen, zwei Diktaturen, einen Aufstand, zwei Weltkriege und zwei Niederlagen, zwei Demokratien, den</div>
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Ist mein Kind reif für die Schule? Der Übergang steht an – und jetzt wird es ernst? Nach den Jahren im Kindergarten folgt nun die Einschulung: „Schafft unser Kind das? Wird es mit dem neuen Alltag fer</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">19.30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401081" target="_blank">Kleinkunst-Festival: Olaf Bossi: Generation XY</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
+                        </div>
+                        <div class="termin-ort">Willy-Brandt-Haus</div>
+                        <div class="termin-beschreibung">Olaf Bossi: „Generation XY: Die 80er, die 90er und das Leben heute – Die Comedy-Show von Olaf Bossi“ Nostalgie trifft Lachen – und die ganz normale Lebenskrise ab 40! Olaf Bossi nimmt dich mit auf ein</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">19:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/kleinkunst-festival-olaf-bossi-generation-xy" target="_blank">Kleinkunst-Festival: Olaf Bossi: Generation XY</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401066" target="_blank">Lesung mit Annett Gröschner: "Schwebende Lasten"</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
+                        <div class="termin-beschreibung">„Dies ist die Geschichte der Blumenbindnerin und Kranfahrerin Hanna Krause, die zwei Revolutionen, zwei Diktaturen, einen Aufstand, zwei Weltkriege und zwei Niederlagen, zwei Demokratien, den Kaiser u</div>
                     </div>
                 </div>
             
@@ -3103,18 +3115,6 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                         </div>
                         <div class="termin-ort">Erweiterungsbau der Sternwarte, Eintritt: 15 €, ermäßigt 11 €Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
                         <div class="termin-beschreibung">Mit „Jetzt Piekst Es Kurz!“, betreten Keim & Welke den mit Wunderlichem überreich gefüllten Kosmos Medizin... Dauer ca. 90 Minuten, keine Pause. Eine Produktion des teatro affetto ©2025</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401012" target="_blank">Elternabend: Übergang Kita-Schule</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
                     </div>
                 </div>
             
@@ -3379,15 +3379,15 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadtbibliothek">
-                    <div class="termin-zeit">16:30 Uhr</div>
+                <div class="termin" data-quelle="stadt-re">
+                    <div class="termin-zeit">11-16:30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401019" target="_blank">Mikro an! Hörspiel-Workshop für Nachwuchs-Sprecher*innen</a>
-                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401019" target="_blank">Mikro an! Hörspiel-Workshop für Nachwuchs-Sprecher*innen</a>
+                            <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek</div>
-                        
+                        <div class="termin-beschreibung">Bist du ein Hörspiel-Fan? Und hast du dich schon immer gefragt, wie Hörspiele entstehen oder wie deine eigene Stimme an einem Profi-Mikrofon klingt? In diesem Workshop hast du die Chance, selbst in di</div>
                     </div>
                 </div>
             
@@ -3404,14 +3404,14 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                 </div>
             
                 <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-zeit">von 9:30 bis 11 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=400931" target="_blank">Babytreff im Familienbüro (jeden Montag)</a>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
+                        <div class="termin-ort">Familienbüro</div>
+                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkomme</div>
                     </div>
                 </div>
             
@@ -3422,7 +3422,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 06:35 Uhr<br>
+            Generiert am 01.03.2026 um 13:28 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
