@@ -177,15 +177,14 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
         return []
 
     soup = BeautifulSoup(response.text, 'html.parser')
-    termine = []
+    kandidaten = []
 
-    # Tabelle mit Events finden
+    # Übersicht: Name, Datum und Detaillink sammeln
     for row in soup.find_all('tr'):
         cells = row.find_all('td')
         if len(cells) < 2:
             continue
 
-        # Erste Zelle: Link mit Titel
         link_tag = cells[0].find('a')
         if not link_tag:
             continue
@@ -200,7 +199,6 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
         else:
             link = href
 
-        # Zweite Zelle: Datum
         datum_text = cells[1].get_text(strip=True)
         if not datum_text:
             continue
@@ -213,9 +211,43 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
         if not _im_monat(datum, jahr, monat):
             continue
 
+        kandidaten.append((name, datum, link))
+
+    # Detailseiten abrufen: Uhrzeit, Beschreibung, Veranstaltungsstätte
+    termine = []
+    for name, datum, link in kandidaten:
+        uhrzeit = 'siehe Website'
+        beschreibung = ''
+        ort = 'Recklinghausen'
+
+        try:
+            detail = requests.get(link, headers=HEADERS, timeout=15)
+            detail.raise_for_status()
+            ds = BeautifulSoup(detail.text, 'html.parser')
+
+            def _sf(cls):
+                d = ds.find(class_=cls)
+                if d:
+                    val = d.find(class_='selfdb_columnvalue')
+                    if val:
+                        return val.get_text(separator=' ', strip=True)
+                return ''
+
+            if z := _sf('selfdb_fieldZeiten'):
+                uhrzeit = z
+            if i := _sf('selfdb_fieldInhalt'):
+                if i.startswith(name):
+                    i = i[len(name):].strip()
+                beschreibung = i[:800]
+            if s := _sf('selfdb_fieldVeranstaltungssttte'):
+                ort = s
+
+        except requests.RequestException:
+            pass
+
         termine.append(Termin(
-            name=name[:150], datum=datum, uhrzeit='siehe Website',
-            ort='Recklinghausen', link=link, beschreibung='',
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort, link=link, beschreibung=beschreibung,
             quelle='stadt-re', kategorie='',
         ))
 
