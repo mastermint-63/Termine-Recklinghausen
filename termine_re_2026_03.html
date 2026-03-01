@@ -425,6 +425,20 @@
             display: none;
         }
 
+        .termin-beschreibung-mehr {
+            cursor: pointer;
+        }
+
+        .termin-beschreibung-mehr::after {
+            content: ' \25B8';
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .termin.expanded .termin-beschreibung-mehr::after {
+            content: ' \25BE';
+        }
+
         .termin.expanded .termin-beschreibung {
             display: block;
             -webkit-line-clamp: unset;
@@ -647,7 +661,7 @@
                             <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
                     </div>
                 </div>
             
@@ -707,7 +721,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Christuskirche</div>
-                        <div class="termin-beschreibung">Programm: Benjamin Britten: Cantata Misericordium, op.69  (20min) Joseph Haydn: Stabat Mater, Hob.XXbis  (60min) Mitwirkende: Solisten Städtischer Chor Recklinghausen Neue Philharmonie Westfalen Leitung: Mateo Peñaloza Cecconi</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Programm: Benjamin Britten: Cantata Misericordium, op.69  (20min) Joseph Haydn: Stabat Mater, Hob.XXbis  (60min) Mitwirkende: Solisten Städtischer Chor Recklinghausen Neue Philharmonie Westfalen Leitung: Mateo Peñaloza Cecconi</div>
                     </div>
                 </div>
             
@@ -791,7 +805,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Fritz-Husemann-Haus</div>
-                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
                     </div>
                 </div>
             
@@ -883,7 +897,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Ist es bald möglich, den Urlaub im All zu verbringen? Nachdem einige Superreiche bereits zu privaten Flügen in den Erdorbit aufgebrochen sind, ist Weltraumtourismus ein großes Thema geworden. Der Vort</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Ist es bald möglich, den Urlaub im All zu verbringen? Nachdem einige Superreiche bereits zu privaten Flügen in den Erdorbit aufgebrochen sind, ist Weltraumtourismus ein großes Thema geworden. Der Vort</div>
                     </div>
                 </div>
             
@@ -907,7 +921,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -959,7 +973,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
                     </div>
                 </div>
             
@@ -995,7 +1009,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Was sind die Sterne, wie leuchten sie, was unter-scheidet sie? Wie weit sind sie entfernt und wie groß sind sie? Kann man die Entfernung und Größe der Sterne überhaupt sicher bestimmen? Und wie verhäl</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Was sind die Sterne, wie leuchten sie, was unter-scheidet sie? Wie weit sind sie entfernt und wie groß sind sie? Kann man die Entfernung und Größe der Sterne überhaupt sicher bestimmen? Und wie verhäl</div>
                     </div>
                 </div>
             
@@ -1007,7 +1021,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">04. 03. / 20 Uhr / VVK 10€ über die Seite der Comedy-Werkstatt    Nach dem erfolgreichen Auftakt geht die Comedy Werkstatt in der Altstadtschmiede in die zweite Runde. An diesem Abend testen Comedians</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">04. 03. / 20 Uhr / VVK 10€ über die Seite der Comedy-Werkstatt    Nach dem erfolgreichen Auftakt geht die Comedy Werkstatt in der Altstadtschmiede in die zweite Runde. An diesem Abend testen Comedians</div>
                     </div>
                 </div>
             
@@ -1051,7 +1065,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro (Große Geldstraße 19)</div>
-                        <div class="termin-beschreibung">Zu folgenden Themen können sich die Bürger*innen der Stadt Recklinghausen informieren: Aktuelle Straßenplanungen Radverkehr und Mikromobilität Verkehrswende Fußverkehr und Barrierefreiheit Ampelanlagen Hinweise auf Schäden/ Verbesserungsvorschläge uvm.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Zu folgenden Themen können sich die Bürger*innen der Stadt Recklinghausen informieren: Aktuelle Straßenplanungen Radverkehr und Mikromobilität Verkehrswende Fußverkehr und Barrierefreiheit Ampelanlagen Hinweise auf Schäden/ Verbesserungsvorschläge uvm.</div>
                     </div>
                 </div>
             
@@ -1063,7 +1077,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Umspannwerk RecklinghausenMuseum Strom & Leben</div>
-                        <div class="termin-beschreibung">Einladung zur Abschlussveranstaltung der Kommunalen Wärmeplanung der Stadt Recklinghausen Wie könnte Recklinghausen künftig mit Wärme versorgt werden? Diese zentrale Frage hat die Stadt Recklinghausen in den vergangenen Monaten im Rahmen der Kommunalen Wärmeplanung intensiv untersucht. Nun liegen die Ergebnisse vor. Im Rahmen einer öffentlichen Abschlussveranstaltung stellt die Stadt Recklinghausen die wesentlichen Erkenntnisse der Kommunalen Wärmeplanung vor, gibt einen Ausblick auf nächste Schritte und zeigt auf, was die Ergebnisse konkret für Bürgerinnen und Bürger bedeuten. Alle Interessierten sind herzlich eingeladen, sich zu informieren, Fragen zu stellen und mit Vertreterinnen und Vertretern aus Verwaltung und Fachplanung ins Gespräch zu kommen. Die Veranstaltung findet am 5. März u</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Einladung zur Abschlussveranstaltung der Kommunalen Wärmeplanung der Stadt Recklinghausen Wie könnte Recklinghausen künftig mit Wärme versorgt werden? Diese zentrale Frage hat die Stadt Recklinghausen in den vergangenen Monaten im Rahmen der Kommunalen Wärmeplanung intensiv untersucht. Nun liegen die Ergebnisse vor. Im Rahmen einer öffentlichen Abschlussveranstaltung stellt die Stadt Recklinghausen die wesentlichen Erkenntnisse der Kommunalen Wärmeplanung vor, gibt einen Ausblick auf nächste Schritte und zeigt auf, was die Ergebnisse konkret für Bürgerinnen und Bürger bedeuten. Alle Interessierten sind herzlich eingeladen, sich zu informieren, Fragen zu stellen und mit Vertreterinnen und Vertretern aus Verwaltung und Fachplanung ins Gespräch zu kommen. Die Veranstaltung findet am 5. März u</div>
                     </div>
                 </div>
             
@@ -1075,7 +1089,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Friedhofskapelle</div>
-                        <div class="termin-beschreibung">Die Blockflötistin Susanne Hochscheid und der Pianist Niclas Floer widmen sich den Werken von Frauen, deren Musik zur Lebzeiten kaum Anerkennung fand. Zwischen Werken aus alten Zeiten, Improvisationen und modernen Klängen entsteht ein lebendiger Dialog. Foto: Christina Feldhoff</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die Blockflötistin Susanne Hochscheid und der Pianist Niclas Floer widmen sich den Werken von Frauen, deren Musik zur Lebzeiten kaum Anerkennung fand. Zwischen Werken aus alten Zeiten, Improvisationen und modernen Klängen entsteht ein lebendiger Dialog. Foto: Christina Feldhoff</div>
                     </div>
                 </div>
             
@@ -1087,7 +1101,7 @@
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Die in Rom beheimateten L’IRA DEL BACCANO verschmelzen Doom- und Stoner-Rock-Einflüsse à la Black Sabbath, Kyuss und Monster Magnet mit der Psychedelia von Pink Floyd und Hawkwind, den Heavy-Prog-Vibes früher Rush-Jahre, modernen Bands wie...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Die in Rom beheimateten L’IRA DEL BACCANO verschmelzen Doom- und Stoner-Rock-Einflüsse à la Black Sabbath, Kyuss und Monster Magnet mit der Psychedelia von Pink Floyd und Hawkwind, den Heavy-Prog-Vibes früher Rush-Jahre, modernen Bands wie...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -1107,7 +1121,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
                         </div>
                         <div class="termin-ort">ADFC Infoladen - Börster Weg 38a 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
                     </div>
                 </div>
             
@@ -1131,7 +1145,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
                     </div>
                 </div>
             
@@ -1143,7 +1157,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Zeitgenössisches Solostück Westfälisches Landestheater Wann ist Sex einvernehmlich, wann ist es eine Vergewaltigung? Tessa ist ein Star in der Welt der Juristen, Richter, Staatsanwälte. Immer wieder gelingt es ihr, Männer, die wegen sexueller Übergriffe angeklagt sind, freizuboxen. Sie findet die Lücken in den Anklagen und verstrickt in Kreuzverhören die anklagenden Frauen so lange in Widersprüche, bis alles zusammenbricht. Sie wird gefeiert, alles läuft super. Bis sie selbst zum Opfer wird. Nach einer ausgelassenen Party mit viel Alkohol schläft sie mit ihrem Kollegen Julian. Es ist schön, sie mag ihn. Noch ist alles unverbindlich und leicht. Sie treffen sich wieder, haben erneut Sex. Doch später in dieser Nacht zwingt er sich ihr auf, ignoriert ihre Abwehrversuche, setzt sich durch. War </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Zeitgenössisches Solostück Westfälisches Landestheater Wann ist Sex einvernehmlich, wann ist es eine Vergewaltigung? Tessa ist ein Star in der Welt der Juristen, Richter, Staatsanwälte. Immer wieder gelingt es ihr, Männer, die wegen sexueller Übergriffe angeklagt sind, freizuboxen. Sie findet die Lücken in den Anklagen und verstrickt in Kreuzverhören die anklagenden Frauen so lange in Widersprüche, bis alles zusammenbricht. Sie wird gefeiert, alles läuft super. Bis sie selbst zum Opfer wird. Nach einer ausgelassenen Party mit viel Alkohol schläft sie mit ihrem Kollegen Julian. Es ist schön, sie mag ihn. Noch ist alles unverbindlich und leicht. Sie treffen sich wieder, haben erneut Sex. Doch später in dieser Nacht zwingt er sich ihr auf, ignoriert ihre Abwehrversuche, setzt sich durch. War </div>
                     </div>
                 </div>
             
@@ -1155,7 +1169,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Fritz-Husemann-Haus</div>
-                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
                     </div>
                 </div>
             
@@ -1167,7 +1181,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Entdecken Sie mit uns den aktuellen Sternenhimmel. Lernen Sie die Sternbilder und ihre Geschichten kennen. Erfahren Sie wo und wie die hellen Planeten zu finden sind und welche interessanten Objekte e</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Entdecken Sie mit uns den aktuellen Sternenhimmel. Lernen Sie die Sternbilder und ihre Geschichten kennen. Erfahren Sie wo und wie die hellen Planeten zu finden sind und welche interessanten Objekte e</div>
                     </div>
                 </div>
             
@@ -1179,7 +1193,7 @@
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;WHY AMNESIA, ein fesselnden Fünfteiler aus Nordrhein-Westfalen, Deutschland. Diese Band verkörpert den Geist des schmutzigen Rock’n’Roll mit ihrer energiegeladenen Haltung, groovigen Riffs, kraftvollen Basslinien und eingängigen Texten. Mit ihren schwarzen Lederjacken und dunklen Retro-Sonnenbril</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;WHY AMNESIA, ein fesselnden Fünfteiler aus Nordrhein-Westfalen, Deutschland. Diese Band verkörpert den Geist des schmutzigen Rock’n’Roll mit ihrer energiegeladenen Haltung, groovigen Riffs, kraftvollen Basslinien und eingängigen Texten. Mit ihren schwarzen Lederjacken und dunklen Retro-Sonnenbril</div>
                     </div>
                 </div>
             
@@ -1223,7 +1237,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Pubertät-Herzlich Willkommen! – für Jugendliche eine spannendet Zeit voller Veränderungen, für Eltern oft eine echte Herausforderung. Keine Sorge – Das geht nicht nur Ihnen so! Bei der Veranstaltungsreihe wird darüber informiert, wie Sie auf diese spannenden Veränderungen gelassen reagieren können, auch wenn mal die Türen knallen oder aus „Ja Mama“ ein Augenrollen wird. Heutiges Schwerpunktthema mit der Ärztin Andrea Mais: Die körperlichen Veränderungen Wachstum und körperliche Entwicklung Hormone und ihre Auswirkungen Umgang mit körperlichen Unsicherheiten und Selbstbewusstsein Weitere Termine: Teil 2: Samstag, 27.06.2026, Themenschwerpunkt: Emotionale und psychologische Herausforderungen Teil 3: Samstag, 10.10.2026, Themenschwerpunkt: Soziale und kulturelle Aspekte Teil 4: Samstag, 05.12</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Pubertät-Herzlich Willkommen! – für Jugendliche eine spannendet Zeit voller Veränderungen, für Eltern oft eine echte Herausforderung. Keine Sorge – Das geht nicht nur Ihnen so! Bei der Veranstaltungsreihe wird darüber informiert, wie Sie auf diese spannenden Veränderungen gelassen reagieren können, auch wenn mal die Türen knallen oder aus „Ja Mama“ ein Augenrollen wird. Heutiges Schwerpunktthema mit der Ärztin Andrea Mais: Die körperlichen Veränderungen Wachstum und körperliche Entwicklung Hormone und ihre Auswirkungen Umgang mit körperlichen Unsicherheiten und Selbstbewusstsein Weitere Termine: Teil 2: Samstag, 27.06.2026, Themenschwerpunkt: Emotionale und psychologische Herausforderungen Teil 3: Samstag, 10.10.2026, Themenschwerpunkt: Soziale und kulturelle Aspekte Teil 4: Samstag, 05.12</div>
                     </div>
                 </div>
             
@@ -1235,7 +1249,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Fritz-Husemann-Haus</div>
-                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
                     </div>
                 </div>
             
@@ -1247,7 +1261,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule</div>
-                        <div class="termin-beschreibung">Anlässlich des Weltfrauentages steht die Jazzmusik im Kulturquartier ganz im Zeichen der Frauen der Szene. Annika Ernst (Saxophon), Genevieve O`Driscoll (Bass) und Carlotta Ribbe (Vibraphon) präsentieren dem Publikum ausgewählte Kompositionen von bekannten Jazzmusikerinnen und Eigenkompositionen. Foto: Lee Santiago</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Anlässlich des Weltfrauentages steht die Jazzmusik im Kulturquartier ganz im Zeichen der Frauen der Szene. Annika Ernst (Saxophon), Genevieve O`Driscoll (Bass) und Carlotta Ribbe (Vibraphon) präsentieren dem Publikum ausgewählte Kompositionen von bekannten Jazzmusikerinnen und Eigenkompositionen. Foto: Lee Santiago</div>
                     </div>
                 </div>
             
@@ -1259,7 +1273,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Jochen Malmsheimer Dogensuppe Herzogin – ein Austopf mit Einlage Machen wir uns doch nichts vor: Kabarett ist dieser Tage wichtiger denn je! Die gefühlte Arschlochdichte und Idiotenkonzentration die Sackgesichtsüberfülle und Kackbratzendurchseuchung, die allgemeine, bimssteinerne Generalverblödung und präsenile Allgemeinabstumpfung, kurz: die cerebrale Fäulnis in diesem Land war, subjektiv gefühlt, immer schon hoch, aber nun lässt sich dieses trübe Faktum nicht mehr nur im Experiment nachweisen, sondern ist für uns alle, die wir über ein entwickeltes humanoides Sensorium, über Geist, Witz, Verstand und Geschmack verfügen, fühlbar im Freiland angekommen. Und so begibt sich Malmsheimer auf eine Reise nach Venedig, in die Urstätte der Renaissance und des Humanismus, bereit, sich diesem gerade</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jochen Malmsheimer Dogensuppe Herzogin – ein Austopf mit Einlage Machen wir uns doch nichts vor: Kabarett ist dieser Tage wichtiger denn je! Die gefühlte Arschlochdichte und Idiotenkonzentration die Sackgesichtsüberfülle und Kackbratzendurchseuchung, die allgemeine, bimssteinerne Generalverblödung und präsenile Allgemeinabstumpfung, kurz: die cerebrale Fäulnis in diesem Land war, subjektiv gefühlt, immer schon hoch, aber nun lässt sich dieses trübe Faktum nicht mehr nur im Experiment nachweisen, sondern ist für uns alle, die wir über ein entwickeltes humanoides Sensorium, über Geist, Witz, Verstand und Geschmack verfügen, fühlbar im Freiland angekommen. Und so begibt sich Malmsheimer auf eine Reise nach Venedig, in die Urstätte der Renaissance und des Humanismus, bereit, sich diesem gerade</div>
                     </div>
                 </div>
             
@@ -1271,7 +1285,7 @@
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Erdiger Südstaatenrock, ursprünglicher Blues und anspruchsvolles Songwriting - dieses Mischung wird von Smoking Wolf heiss serviert. Der Sänger und Ausnahmegitarrist aus dem Ruhrgebiet, seit Jahren auf vielen Bühnen, auch als Sideman von Blues- und...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Erdiger Südstaatenrock, ursprünglicher Blues und anspruchsvolles Songwriting - dieses Mischung wird von Smoking Wolf heiss serviert. Der Sänger und Ausnahmegitarrist aus dem Ruhrgebiet, seit Jahren auf vielen Bühnen, auch als Sideman von Blues- und...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -1315,7 +1329,7 @@
                             <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
                     </div>
                 </div>
             
@@ -1327,7 +1341,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Bürgerhaus Süd</div>
-                        <div class="termin-beschreibung">Mitmach-Musiktheater-Hörspiel ab 5 Jahren Deine Kinderband Pia & Nino, die Stars der Pia-Nino-Band sind wie immer in ihrem Proberaum und basteln an neuen Songs. Das Telefon klingelt und Simon ruft an. Simon ist 9 Jahre alt und lebt mit seinen Eltern auf einem echten Schloss. Simon lädt Pia & Nino zu dem alljährlich anstehenden Schlossfest ein, denn da gibt es einen Fall zu lösen - der Silberpokal ist gestohlen worden. Die Kinder sind von Anfang bis Ende des Mitmach-Hörspiels durch Bewegung, Geräusche machen, Tanz und Mitsingen immer voll dabei. Die Eltern werden auf charmante Art und Weise mit eingebunden und Teil des Falls.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Mitmach-Musiktheater-Hörspiel ab 5 Jahren Deine Kinderband Pia & Nino, die Stars der Pia-Nino-Band sind wie immer in ihrem Proberaum und basteln an neuen Songs. Das Telefon klingelt und Simon ruft an. Simon ist 9 Jahre alt und lebt mit seinen Eltern auf einem echten Schloss. Simon lädt Pia & Nino zu dem alljährlich anstehenden Schlossfest ein, denn da gibt es einen Fall zu lösen - der Silberpokal ist gestohlen worden. Die Kinder sind von Anfang bis Ende des Mitmach-Hörspiels durch Bewegung, Geräusche machen, Tanz und Mitsingen immer voll dabei. Die Eltern werden auf charmante Art und Weise mit eingebunden und Teil des Falls.</div>
                     </div>
                 </div>
             
@@ -1351,7 +1365,7 @@
                             <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
                         <div class="termin-ort">ge-ni-al, Limperstr. 11</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Gaea Schoeters: Trophäe Literaturgespräch: Lesung in Ausschnitten und Gespräch Gaea Schoeters\' Roman ist ein &quot;ethischer Mindfuck&quot; (Dimitri Verhulst) - provokant, radikal und eine erzählerische Ausnahmeerscheinung. Am Ende bleibt die Frage: Was ist ein Menschenleben wert? Gaea Schoeters\' preisge</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Gaea Schoeters: Trophäe Literaturgespräch: Lesung in Ausschnitten und Gespräch Gaea Schoeters\' Roman ist ein &quot;ethischer Mindfuck&quot; (Dimitri Verhulst) - provokant, radikal und eine erzählerische Ausnahmeerscheinung. Am Ende bleibt die Frage: Was ist ein Menschenleben wert? Gaea Schoeters\' preisge</div>
                     </div>
                 </div>
             
@@ -1375,7 +1389,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Eine szenische Lesung mit Musik zum Weltfrauentag Im Mittelpunkt des Abends steht Isabel Allende, die ihr Leben und die Geschichte starker Frauen erzählt. Während sie ein Jahr am Bett ihrer schwer erkrankten Tochter Paula verbringt, schreibt sie ihren gleichnamigen Lebensroman. Allende kämpft mit unerschütterlichem Mut um ihre Tochter, erzählt ihr Geschichten von ihrer chilenischen Herkunft und den farbigen Gestalten ihrer Familie, um ihr Halt zu geben. In „Das Geisterhaus“ wird die Geschichte einer chilenischen Familie in Konfrontation mit den gesellschaftlichen und politischen Veränderungen ihrer Zeit erzählt. Über vier Generationen hinweg skizziert Allende mit Witz, Fantasie und Zärtlichkeit die Empfindungen und Ambitionen verschiedener Familienmitglieder, aber auch den Weg Chiles in di</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Eine szenische Lesung mit Musik zum Weltfrauentag Im Mittelpunkt des Abends steht Isabel Allende, die ihr Leben und die Geschichte starker Frauen erzählt. Während sie ein Jahr am Bett ihrer schwer erkrankten Tochter Paula verbringt, schreibt sie ihren gleichnamigen Lebensroman. Allende kämpft mit unerschütterlichem Mut um ihre Tochter, erzählt ihr Geschichten von ihrer chilenischen Herkunft und den farbigen Gestalten ihrer Familie, um ihr Halt zu geben. In „Das Geisterhaus“ wird die Geschichte einer chilenischen Familie in Konfrontation mit den gesellschaftlichen und politischen Veränderungen ihrer Zeit erzählt. Über vier Generationen hinweg skizziert Allende mit Witz, Fantasie und Zärtlichkeit die Empfindungen und Ambitionen verschiedener Familienmitglieder, aber auch den Weg Chiles in di</div>
                     </div>
                 </div>
             
@@ -1387,7 +1401,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Fritz-Husemann-Haus</div>
-                        <div class="termin-beschreibung">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Turbulente Komödie nach Andreas Wening Landrat Oppenau ist mitten im Wahlkampf, als seine EX Tamara Bloomberg aus gemeinsamen Hippie-Zeiten auftaucht und das Landratsamt kräftig durcheinander wirbelt. Regie: Sibylle Stahle</div>
                     </div>
                 </div>
             
@@ -1399,7 +1413,7 @@
                             <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Otto-Burrmeister-Allee 1</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Wer redet, sät, wer zuhört, erntet Szenische Lesung zum Weltfrauentag Im Mittelpunkt des Abends steht Isabel Allende, die ihr Leben und die Geschichte starker Frauen erzählt. Während sie ein Jahr am Bett ihrer schwer erkrankten Tochter Paula verbringt, schreibt sie ihren gleichnamigen Lebensroman</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Wer redet, sät, wer zuhört, erntet Szenische Lesung zum Weltfrauentag Im Mittelpunkt des Abends steht Isabel Allende, die ihr Leben und die Geschichte starker Frauen erzählt. Während sie ein Jahr am Bett ihrer schwer erkrankten Tochter Paula verbringt, schreibt sie ihren gleichnamigen Lebensroman</div>
                     </div>
                 </div>
             
@@ -1431,7 +1445,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">18 Uhr / Eintritt frei    Am Montag öffnet die Altstadtschmiede wieder ihre Türen für einen bunten Treffpunkt in Recklinghausen: den queeren Stammtisch. In lockerer Atmosphäre können sich hier queere </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">18 Uhr / Eintritt frei    Am Montag öffnet die Altstadtschmiede wieder ihre Türen für einen bunten Treffpunkt in Recklinghausen: den queeren Stammtisch. In lockerer Atmosphäre können sich hier queere </div>
                     </div>
                 </div>
             
@@ -1467,7 +1481,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -1499,7 +1513,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Bilder und Töne verschmelzen zu einem Gesamtkunstwerk. „Die rote Violine“ mit der Oscar-preisgekrönten Musik von John Corigliano wird von Linus Roths Stradivari zum Leben erweckt. Als „bestes Stück echter Filmmusik, das jemals geschrieben wurde“ lobte Igor Strawinsky die visionäre „Begleitmusik“ von Arnold Schönberg. Ein besonderes Vergnügen ist der legendäre Stummfilm nach Richard Strauss‘ Erfolgsoper „Der Rosenkavalier“. Arnold Schönberg (1874–1951) Begleitmusik zu einer Lichtspielscene op. 34 John Corigliano (*1938 ) Red Violin Concerto Richard Strauss (1864–1949) „Der Rosenkavalier“ Neue Stummfilmfassung für großes Orchester Linus Roth , Violine GMD Rasmus Baumann , Leitung Foto: :Diego Franssens</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Bilder und Töne verschmelzen zu einem Gesamtkunstwerk. „Die rote Violine“ mit der Oscar-preisgekrönten Musik von John Corigliano wird von Linus Roths Stradivari zum Leben erweckt. Als „bestes Stück echter Filmmusik, das jemals geschrieben wurde“ lobte Igor Strawinsky die visionäre „Begleitmusik“ von Arnold Schönberg. Ein besonderes Vergnügen ist der legendäre Stummfilm nach Richard Strauss‘ Erfolgsoper „Der Rosenkavalier“. Arnold Schönberg (1874–1951) Begleitmusik zu einer Lichtspielscene op. 34 John Corigliano (*1938 ) Red Violin Concerto Richard Strauss (1864–1949) „Der Rosenkavalier“ Neue Stummfilmfassung für großes Orchester Linus Roth , Violine GMD Rasmus Baumann , Leitung Foto: :Diego Franssens</div>
                     </div>
                 </div>
             
@@ -1531,7 +1545,7 @@
                             <span class="badge badge-geschichte-re">Heimatkunde</span> <span class="badge badge-kategorie">Geschichte</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Das Stadt- und Vestische Archiv gehört mit seinen umfangreichen und</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das Stadt- und Vestische Archiv gehört mit seinen umfangreichen und</div>
                     </div>
                 </div>
             
@@ -1567,7 +1581,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Neutronensterne sind faszinierende Endstadien von Sternen, die wir den Eigenschaften der Quanten-mechanik verdanken. Die Quantenmechanik beschreibt den Mikrokosmos, also die winzigen Teilchen wie Atom</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Neutronensterne sind faszinierende Endstadien von Sternen, die wir den Eigenschaften der Quanten-mechanik verdanken. Die Quantenmechanik beschreibt den Mikrokosmos, also die winzigen Teilchen wie Atom</div>
                     </div>
                 </div>
             
@@ -1579,7 +1593,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">20 Uhr / Eintritt frei    Wer Bock auf akustische Rock- und Popmusik hat, ist hier genau richtig. Der Abend startet immer mit einer Opener-Band, die den Einstieg macht. Anschließend ist die Bühne offe</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 Uhr / Eintritt frei    Wer Bock auf akustische Rock- und Popmusik hat, ist hier genau richtig. Der Abend startet immer mit einer Opener-Band, die den Einstieg macht. Anschließend ist die Bühne offe</div>
                     </div>
                 </div>
             
@@ -1603,7 +1617,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Cineworld Kino</div>
-                        <div class="termin-beschreibung">Das Kirchliche Filmfestival Recklinghausen wird vom ökumenischen Arbeitskreis Kirche & Kino des Evangelischen Kirchenkreises Recklinghausen und des Katholischen Kreisdekanats Recklinghausen veranstaltet. Der Arbeitskreis bringt mit der Reihe bilderwelten/weltenbilder – Kirche & Kino seit 2002 monatlich Filme auf die Leinwand und ins Gespräch.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das Kirchliche Filmfestival Recklinghausen wird vom ökumenischen Arbeitskreis Kirche & Kino des Evangelischen Kirchenkreises Recklinghausen und des Katholischen Kreisdekanats Recklinghausen veranstaltet. Der Arbeitskreis bringt mit der Reihe bilderwelten/weltenbilder – Kirche & Kino seit 2002 monatlich Filme auf die Leinwand und ins Gespräch.</div>
                     </div>
                 </div>
             
@@ -1615,7 +1629,7 @@
                             <span class="badge badge-akademie">Ev. Akademie</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
                         <div class="termin-ort">Ev. Akademie Recklinghausen</div>
-                        <div class="termin-beschreibung">Andreas Mertin</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Andreas Mertin</div>
                     </div>
                 </div>
             
@@ -1647,7 +1661,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Friedhofskapelle</div>
-                        <div class="termin-beschreibung">mit Udo Homeyer Künstler Udo Homeyer verwendet das Mantra als singende Kunstform, die es auch Ungeübten ermöglicht spontan mitzusingen. Ein Mantra hat wenige Worte und eine einfache Melodie. Durch die Wirkung der ständigen Wiederholung bringt uns das Mantra schnell in einen meditativen Zustand. Meditatives Singen ist kraftvoll, heilsam, bewegend und entspannend. Das Mitmachkonzert ist für alle Teilnehmenden kostenlos. Foto: Sybille Ostermann</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">mit Udo Homeyer Künstler Udo Homeyer verwendet das Mantra als singende Kunstform, die es auch Ungeübten ermöglicht spontan mitzusingen. Ein Mantra hat wenige Worte und eine einfache Melodie. Durch die Wirkung der ständigen Wiederholung bringt uns das Mantra schnell in einen meditativen Zustand. Meditatives Singen ist kraftvoll, heilsam, bewegend und entspannend. Das Mitmachkonzert ist für alle Teilnehmenden kostenlos. Foto: Sybille Ostermann</div>
                     </div>
                 </div>
             
@@ -1683,7 +1697,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Wildes Holz Block Party Wildes Holz lädt zur Block Party! Ihr neues Programm feiert die Musik, das Leben, die Vielfalt, die Eigenheiten, die seltsamen Angewohnheiten, die schrulligen Ticks, den Holzrock, die Blockflöte. Ja, die Blockflöte, das Party-Instrument par excellence, ein Muss für jeden Partygänger! Schon seit über 25 Jahren zeigen die drei Wilden, wo der Holz-Hammer hängt. Kraftvolle akustische Musik gepaart mit beiläufigem Witz und Selbstironie ist ihr Markenzeichen. Dabei überrascht immer wieder, was für atemberaubende Klänge sie aus ihren Instrumenten herauszuholen vermögen - und was neben der Blockflöte eine akustische Gitarre und ein Kontrabass so alles aushalten können… Freut euch auf Party-Mucke aus vier Jahrhunderten, dargeboten auf drei einfachen Holzinstrumenten mit dem </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wildes Holz Block Party Wildes Holz lädt zur Block Party! Ihr neues Programm feiert die Musik, das Leben, die Vielfalt, die Eigenheiten, die seltsamen Angewohnheiten, die schrulligen Ticks, den Holzrock, die Blockflöte. Ja, die Blockflöte, das Party-Instrument par excellence, ein Muss für jeden Partygänger! Schon seit über 25 Jahren zeigen die drei Wilden, wo der Holz-Hammer hängt. Kraftvolle akustische Musik gepaart mit beiläufigem Witz und Selbstironie ist ihr Markenzeichen. Dabei überrascht immer wieder, was für atemberaubende Klänge sie aus ihren Instrumenten herauszuholen vermögen - und was neben der Blockflöte eine akustische Gitarre und ein Kontrabass so alles aushalten können… Freut euch auf Party-Mucke aus vier Jahrhunderten, dargeboten auf drei einfachen Holzinstrumenten mit dem </div>
                     </div>
                 </div>
             
@@ -1695,7 +1709,7 @@
                             <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
                         <div class="termin-ort">Westfälische Volkssternwarte, Stadtgarten 9</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Julia Wolf liest &quot;Umlaufbahnen&quot; von Samantha Harvey Ausgezeichnet mit dem Booker Prize 2024, und nominiert für den Übersetzerpreis in Leipzig, hören wir die Lesung der Übersetzerin Julia Wolf aus dem Buch „Umlaufbahnen“ von Samantha Harvey. Die britische Autorin schrieb einen der originellsten Ro</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Julia Wolf liest &quot;Umlaufbahnen&quot; von Samantha Harvey Ausgezeichnet mit dem Booker Prize 2024, und nominiert für den Übersetzerpreis in Leipzig, hören wir die Lesung der Übersetzerin Julia Wolf aus dem Buch „Umlaufbahnen“ von Samantha Harvey. Die britische Autorin schrieb einen der originellsten Ro</div>
                     </div>
                 </div>
             
@@ -1719,7 +1733,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">12.03. / 20:30 Uhr / Eintritt frei    Die Jazz Session öffnet mal wieder die Türen und eröffnet wird sie dieses Mal von Anna-Karina Barthel & Carlotta Ribbe.     Mit Stimme und Vibraphon erschaffen An</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">12.03. / 20:30 Uhr / Eintritt frei    Die Jazz Session öffnet mal wieder die Türen und eröffnet wird sie dieses Mal von Anna-Karina Barthel & Carlotta Ribbe.     Mit Stimme und Vibraphon erschaffen An</div>
                     </div>
                 </div>
             
@@ -1739,7 +1753,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
                     </div>
                 </div>
             
@@ -1751,7 +1765,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung">Öffentliches Klassenkonzert Schlagzeug – Leitung: Kai Putzke.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Öffentliches Klassenkonzert Schlagzeug – Leitung: Kai Putzke.</div>
                     </div>
                 </div>
             
@@ -1835,7 +1849,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium, Eintritt: 15 €, ermäßigt 13 €, Kartenreservierungen unter 02361- 23134</div>
-                        <div class="termin-beschreibung">Tauche ein in eine besondere Klangreise mit unserem Handpan-Duo unter dem weiten Sternenhimmel. Die sphärischen Töne verweben sich mit der Stille der Nacht und öffnen Raum für innere Weite. Jeder Ansc</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Tauche ein in eine besondere Klangreise mit unserem Handpan-Duo unter dem weiten Sternenhimmel. Die sphärischen Töne verweben sich mit der Stille der Nacht und öffnen Raum für innere Weite. Jeder Ansc</div>
                     </div>
                 </div>
             
@@ -1859,7 +1873,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">{
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">{
             &quot;@context&quot;: &quot;http://schema.org&quot;,
             &quot;@type&quot;: &quot;Event&quot;,
             &quot;eventStatus&quot;: &quot;https://schema.org/EventScheduled&quot;,
@@ -1888,7 +1902,7 @@
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;RADIOSLAVE - Audioslave Tribute Band ist eine Band aus Düsseldorf, die einer der legendärsten Bands der 2000er Jahre, AUDIOSLAVE, und insbesondere ihrem verstorbenen Frontmann CHRIS CORNELL huldigt.  AUDIOSLAVE, gegründet von Mitgliedern von Rage Against...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;RADIOSLAVE - Audioslave Tribute Band ist eine Band aus Düsseldorf, die einer der legendärsten Bands der 2000er Jahre, AUDIOSLAVE, und insbesondere ihrem verstorbenen Frontmann CHRIS CORNELL huldigt.  AUDIOSLAVE, gegründet von Mitgliedern von Rage Against...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -1908,7 +1922,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung">· gemeinsames Trommeln · Leitung: Christian Schneider.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">· gemeinsames Trommeln · Leitung: Christian Schneider.</div>
                     </div>
                 </div>
             
@@ -1992,7 +2006,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalt: Das Angebot richtet sich an (werdende) Mütter, Väter und interessierte Großeltern von kleinen und großen Kindern. Es können alle Fragen zur Säuglingspflege, Entwicklung, Ernährung oder zu den Herausforderungen des Lebens als Familie gestellt werden. Thema heute: Babygeleitete Beikost Der Beginn der Beikostzeit ist ein spannender neuer Abschnitt für Eltern und Baby – und bringt oft viele Fragen mit sich. Bei unserem offenen Informationsnachmittag rund um das Thema babygeleitete Beikost erhaltet ihr wertvolle Anregungen, Ideen und praktische Tipps, damit ihr diesen Schritt entspannt und gut vorbereitet gehen könnt. Gemeinsam möchten wir über folgende Themen ins Gespräch kommen: Wann ist der richtige Zeitpunkt, um mit Beikost zu starten? Welche Lebensmittel eignen sich für den Anfang </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalt: Das Angebot richtet sich an (werdende) Mütter, Väter und interessierte Großeltern von kleinen und großen Kindern. Es können alle Fragen zur Säuglingspflege, Entwicklung, Ernährung oder zu den Herausforderungen des Lebens als Familie gestellt werden. Thema heute: Babygeleitete Beikost Der Beginn der Beikostzeit ist ein spannender neuer Abschnitt für Eltern und Baby – und bringt oft viele Fragen mit sich. Bei unserem offenen Informationsnachmittag rund um das Thema babygeleitete Beikost erhaltet ihr wertvolle Anregungen, Ideen und praktische Tipps, damit ihr diesen Schritt entspannt und gut vorbereitet gehen könnt. Gemeinsam möchten wir über folgende Themen ins Gespräch kommen: Wann ist der richtige Zeitpunkt, um mit Beikost zu starten? Welche Lebensmittel eignen sich für den Anfang </div>
                     </div>
                 </div>
             
@@ -2040,7 +2054,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Probsteikirche St. Peter</div>
-                        <div class="termin-beschreibung">des Kammerchores</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">des Kammerchores</div>
                     </div>
                 </div>
             
@@ -2052,7 +2066,7 @@
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">14.03. / 14-16 Uhr / kostenfreies Angebot    Am Samstag lädt die Altstadtschmiede Recklinghausen wieder zum Repair Café ein. Von 14:00 bis 16:00 Uhr können Besucher*innen defekte Alltagsgegenstände mi</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">14.03. / 14-16 Uhr / kostenfreies Angebot    Am Samstag lädt die Altstadtschmiede Recklinghausen wieder zum Repair Café ein. Von 14:00 bis 16:00 Uhr können Besucher*innen defekte Alltagsgegenstände mi</div>
                     </div>
                 </div>
             
@@ -2088,7 +2102,7 @@
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Sechs Musiker, die das Erbe von Tom Petty fortführen. Eine Tom Petty Tribute Band, die sich mal sehr nah am Original orientiert, sich aber auch Freiheiten für eigene Interpretationen nimmt. Zudem gilt es, dem...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Sechs Musiker, die das Erbe von Tom Petty fortführen. Eine Tom Petty Tribute Band, die sich mal sehr nah am Original orientiert, sich aber auch Freiheiten für eigene Interpretationen nimmt. Zudem gilt es, dem...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -2108,7 +2122,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Der ADFC Recklinghausen startet mit dieser Tour in die Saison 2026</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Der ADFC Recklinghausen startet mit dieser Tour in die Saison 2026</div>
                     </div>
                 </div>
             
@@ -2132,7 +2146,7 @@
                             <span class="badge badge-debut-um-11">Debut um 11</span> <span class="badge badge-kategorie">Konzert</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus</div>
-                        <div class="termin-beschreibung">Diesmal wird Sie vor allem das Alter der jungen und schon höchst konzertreifen Solisten verblüffen. Das
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Diesmal wird Sie vor allem das Alter der jungen und schon höchst konzertreifen Solisten verblüffen. Das
 Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende Pianist Vincent</div>
                     </div>
                 </div>
@@ -2157,7 +2171,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
                     </div>
                 </div>
             
@@ -2193,7 +2207,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Habt ihr schon einmal zum Himmel geschaut und euch gefragt, wie man sich bei den ganzen Sternen zurecht-finden soll? Ausgehend vom aktuellen Sternenhimmel geben wir eine kleine Anleitung, wie das ganz</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Habt ihr schon einmal zum Himmel geschaut und euch gefragt, wie man sich bei den ganzen Sternen zurecht-finden soll? Ausgehend vom aktuellen Sternenhimmel geben wir eine kleine Anleitung, wie das ganz</div>
                     </div>
                 </div>
             
@@ -2261,7 +2275,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Bürgerhaus Süd</div>
-                        <div class="termin-beschreibung">Komödie von Pierre Barillet und Jean-Pierre Grédy Theatergastspiele Fürth Wir befinden uns in Griechenland, in einer kleinen Bucht abseits der großen Welt. Lisa hat eine Autopanne, bei der ihr ein am Strand campierender und per Autostopp reisender Student, Guillaume, zur Hilfe kommt. Eigentlich sollte Lisa pünktlich am Flughafen sein… Die attraktive Frau verliebt sich in den 20 Jahre jüngeren Mann. Die beiden verbringen die Nacht miteinander, doch sie verlässt ihn, während er noch schläft. Dass nun zurück in New York ausgerechnet dieser junge Mann plötzlich vor der Tür steht, um Lisas 17jährige Tochter zu einem Date abzuholen, sorgt für unterhaltsame Verstrickungen.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Komödie von Pierre Barillet und Jean-Pierre Grédy Theatergastspiele Fürth Wir befinden uns in Griechenland, in einer kleinen Bucht abseits der großen Welt. Lisa hat eine Autopanne, bei der ihr ein am Strand campierender und per Autostopp reisender Student, Guillaume, zur Hilfe kommt. Eigentlich sollte Lisa pünktlich am Flughafen sein… Die attraktive Frau verliebt sich in den 20 Jahre jüngeren Mann. Die beiden verbringen die Nacht miteinander, doch sie verlässt ihn, während er noch schläft. Dass nun zurück in New York ausgerechnet dieser junge Mann plötzlich vor der Tür steht, um Lisas 17jährige Tochter zu einem Date abzuholen, sorgt für unterhaltsame Verstrickungen.</div>
                     </div>
                 </div>
             
@@ -2273,7 +2287,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wie entsteht der Sternenhimmel über uns? Warum wandern Sonne, Mond und Planeten Nacht für Nacht über die Himmelskuppel? Ein Planetarium macht diese Bewegungen sichtbar – unabhängig von Wetter oder Lic</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wie entsteht der Sternenhimmel über uns? Warum wandern Sonne, Mond und Planeten Nacht für Nacht über die Himmelskuppel? Ein Planetarium macht diese Bewegungen sichtbar – unabhängig von Wetter oder Lic</div>
                     </div>
                 </div>
             
@@ -2309,7 +2323,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -2321,7 +2335,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung">Bläserwoche · Proben und gemeinsames Musizieren · Leitung Johannes Pieper.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Bläserwoche · Proben und gemeinsames Musizieren · Leitung Johannes Pieper.</div>
                     </div>
                 </div>
             
@@ -2353,7 +2367,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. Weitere Termine: Dienstag, 24.03.2026 Dienstag, 14.04.2026 Dienstag, 21.04.2026</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. Weitere Termine: Dienstag, 24.03.2026 Dienstag, 14.04.2026 Dienstag, 21.04.2026</div>
                     </div>
                 </div>
             
@@ -2365,7 +2379,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">{
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">{
             &quot;@context&quot;: &quot;http://schema.org&quot;,
             &quot;@type&quot;: &quot;Event&quot;,
             &quot;eventStatus&quot;: &quot;https://schema.org/EventScheduled&quot;,
@@ -2426,7 +2440,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">Foto: Pixabay In der Stadtbibliothek in der Augustinessenstraße findet eine Tonie-Tauschbörse statt. Wer die eigenen Geschichten der beliebten Tonie-Figuren bereits auswendig kennt und diese gegen eine andere Figur tauschen möchte, ist hier richtig. Voraussetzung ist, dass die Figuren einwandfrei funktionieren und optisch in einem guten Zustand sind. Auch ohne einen Tausch können kleine Hörer und Hörerinnen neue Geschichten entdecken: Die Stadtbibliothek hat über 500 Toniefiguren im Bestand, die ausgeliehen werden können.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Foto: Pixabay In der Stadtbibliothek in der Augustinessenstraße findet eine Tonie-Tauschbörse statt. Wer die eigenen Geschichten der beliebten Tonie-Figuren bereits auswendig kennt und diese gegen eine andere Figur tauschen möchte, ist hier richtig. Voraussetzung ist, dass die Figuren einwandfrei funktionieren und optisch in einem guten Zustand sind. Auch ohne einen Tausch können kleine Hörer und Hörerinnen neue Geschichten entdecken: Die Stadtbibliothek hat über 500 Toniefiguren im Bestand, die ausgeliehen werden können.</div>
                     </div>
                 </div>
             
@@ -2438,7 +2452,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -2450,7 +2464,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Existiert irgendwo im Weltall fremdes Leben? – Diese Frage ist besonders faszinierend und deshalb wird auch intensiv nach neuen Planeten und nach Spuren und Signalen fremden Lebens geforscht. Wie find</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Existiert irgendwo im Weltall fremdes Leben? – Diese Frage ist besonders faszinierend und deshalb wird auch intensiv nach neuen Planeten und nach Spuren und Signalen fremden Lebens geforscht. Wie find</div>
                     </div>
                 </div>
             
@@ -2474,7 +2488,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-geschichte-re">Heimatkunde</span> <span class="badge badge-kategorie">Geschichte</span>
                         </div>
                         <div class="termin-ort">Volkshochschule</div>
-                        <div class="termin-beschreibung">Unter den Kanzlern der Bundesrepublik Deutschland ragt Konrad Adenauer heraus.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Unter den Kanzlern der Bundesrepublik Deutschland ragt Konrad Adenauer heraus.</div>
                     </div>
                 </div>
             
@@ -2506,7 +2520,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">RETRO STATION</div>
-                        <div class="termin-beschreibung">Was hat die RETRO STATION mit bekannten Redewendungen zu tun? Ganz einfach: Beim Rundgang durch das stadtgeschichtliche Museum werden bekannte Redewendungen direkt am historischen Objekt erklärt und deren ursprüngliche Bedeutung offengelegt. Viele uns heute vertraute Redewendungen stammen aus dem Mittelalter und einige davon aus dem Rittertum: Das Tragen einer Waffe war das Privileg der Adeligen, die das „Heft in der Hand hatten“. Auch anhand der Ausstattung einer Ackerbürgerstube lassen sich gleich mehrere Redewendungen nachvollziehen.  So erfahren die Teilnehmenden u.a., wo und wie man „einen Zahn zulegen konnte“. Im Verlauf des Rundgangs lassen sich die wichtigsten Stationen von der frühen Besiedelung der Region bis zur Gegenwart erschließen. Es gibt zudem anschauliche Informationen zum</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Was hat die RETRO STATION mit bekannten Redewendungen zu tun? Ganz einfach: Beim Rundgang durch das stadtgeschichtliche Museum werden bekannte Redewendungen direkt am historischen Objekt erklärt und deren ursprüngliche Bedeutung offengelegt. Viele uns heute vertraute Redewendungen stammen aus dem Mittelalter und einige davon aus dem Rittertum: Das Tragen einer Waffe war das Privileg der Adeligen, die das „Heft in der Hand hatten“. Auch anhand der Ausstattung einer Ackerbürgerstube lassen sich gleich mehrere Redewendungen nachvollziehen.  So erfahren die Teilnehmenden u.a., wo und wie man „einen Zahn zulegen konnte“. Im Verlauf des Rundgangs lassen sich die wichtigsten Stationen von der frühen Besiedelung der Region bis zur Gegenwart erschließen. Es gibt zudem anschauliche Informationen zum</div>
                     </div>
                 </div>
             
@@ -2530,7 +2544,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Am Neumarkt 19</div>
-                        <div class="termin-beschreibung">Das Team der Stadtbibliothek im Haus der Bildung, Am Neumarkt 19, die Geschiche &quot;Dr. Brumm und der Megasaurus&quot; vonDaniel Napp als Bilderbuchkino. Es wird in gemütlicher Atmosphäre vorgelesen und die Bilder auf der großen Leinwand gezeigt. Zum Inhalt des Buches: Dr. Brumm macht das, was er jeden Freitag macht: Gartenarbeit. Als er sein Gemüsebeet umgräbt, stößt er auf etwas sehr Ungewöhnliches ... einen waschechten Dinoknochen! Mit Hilfe von Dachs und Pottwal gräbt Dr. Brumm auch noch den Rest des Dinos aus und in Nullkommanix steht ein gigantisches Megasaurus-Skelett in seinem Garten. Nur der Kopf des Urtiers ist nicht zu finden. Die Spur führt zu Bauer Hackenpieps Grundstück. Ausgerechnet, denn hier ist Graben absolut unmöglich! Aber Dr. Brumm, Dachs und Pottwal finden natürlich</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das Team der Stadtbibliothek im Haus der Bildung, Am Neumarkt 19, die Geschiche &quot;Dr. Brumm und der Megasaurus&quot; vonDaniel Napp als Bilderbuchkino. Es wird in gemütlicher Atmosphäre vorgelesen und die Bilder auf der großen Leinwand gezeigt. Zum Inhalt des Buches: Dr. Brumm macht das, was er jeden Freitag macht: Gartenarbeit. Als er sein Gemüsebeet umgräbt, stößt er auf etwas sehr Ungewöhnliches ... einen waschechten Dinoknochen! Mit Hilfe von Dachs und Pottwal gräbt Dr. Brumm auch noch den Rest des Dinos aus und in Nullkommanix steht ein gigantisches Megasaurus-Skelett in seinem Garten. Nur der Kopf des Urtiers ist nicht zu finden. Die Spur führt zu Bauer Hackenpieps Grundstück. Ausgerechnet, denn hier ist Graben absolut unmöglich! Aber Dr. Brumm, Dachs und Pottwal finden natürlich</div>
                     </div>
                 </div>
             
@@ -2554,7 +2568,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus, Herzogswall</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Nadia Pantel: Das Camembert-Diagramm „Kaum ein anderes Land zieht uns so sehr an wie Frankreich – aber wie genau kennen wir unseren wichtigsten Nachbarn eigentlich? Nadia Pantel wirft einen ganz neuen Blick auf Leben, Kultur und Gesellschaft des Landes – und zwar anhand des populärsten französisc</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Nadia Pantel: Das Camembert-Diagramm „Kaum ein anderes Land zieht uns so sehr an wie Frankreich – aber wie genau kennen wir unseren wichtigsten Nachbarn eigentlich? Nadia Pantel wirft einen ganz neuen Blick auf Leben, Kultur und Gesellschaft des Landes – und zwar anhand des populärsten französisc</div>
                     </div>
                 </div>
             
@@ -2586,7 +2600,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Jede Nacht leuchten uns tausende Sterne vom Himmel herab. Im Planetarium können wir den Sternenhimmel auch tagsüber beobachten und erleben. Zu unseren himmlischen Ausflugszielen gehören die Sonne, der</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jede Nacht leuchten uns tausende Sterne vom Himmel herab. Im Planetarium können wir den Sternenhimmel auch tagsüber beobachten und erleben. Zu unseren himmlischen Ausflugszielen gehören die Sonne, der</div>
                     </div>
                 </div>
             
@@ -2610,7 +2624,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium, Eintritt: 10 €, ermäßigt 8 €, Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
-                        <div class="termin-beschreibung">An diesem Abend besucht uns Nick, Gastronom und dabei schon fast vergessen, leidenschaftlicher Musiker aus Haltern am See. Mit dabei hat er sein Herz auf der Zunge, eine frisch produzierte EP mit neue</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">An diesem Abend besucht uns Nick, Gastronom und dabei schon fast vergessen, leidenschaftlicher Musiker aus Haltern am See. Mit dabei hat er sein Herz auf der Zunge, eine frisch produzierte EP mit neue</div>
                     </div>
                 </div>
             
@@ -2622,7 +2636,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;DEUTSCHLANDS LANGLEBIGSTE UND ERFOLGREICHSTE BLUESBAND „Heut´ Nacht will ich den Blues. N´ Sechserpack Bier und den Blues.“ Was eignet sich dazu besser als eine der besten Rhythm & Blues Bands Europas? Was eignet sich...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;DEUTSCHLANDS LANGLEBIGSTE UND ERFOLGREICHSTE BLUESBAND „Heut´ Nacht will ich den Blues. N´ Sechserpack Bier und den Blues.“ Was eignet sich dazu besser als eine der besten Rhythm & Blues Bands Europas? Was eignet sich...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -2666,7 +2680,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fragen, Anregungen, Wünsche</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fragen, Anregungen, Wünsche</div>
                     </div>
                 </div>
             
@@ -2678,7 +2692,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung">: Alle Interessierten sind willkommen.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">: Alle Interessierten sind willkommen.</div>
                     </div>
                 </div>
             
@@ -2702,7 +2716,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule</div>
-                        <div class="termin-beschreibung">In  Kooperation mit dem Tanzahaus „La Danza“ Wir laden Sie zu einem geselligen Tanznachmittag im Sitzen ein. Tanzen im Sitzen ist eine wunderbare Möglichkeit für alle, auch wenn die Mobilität eingeschränkt ist. Die leichten Bewegungen zu liebgewonnener Musik sind ein aktives Erlebnis für Körper, Geist und Seele. In der bunten Atmosphäre von „Recklinghausen leuchtet” möchten wir in der Musikschule einen fröhlichen und bewegten Nachmittag mit allen Tanzbegeisterten verbringen. Nehmen Sie sich eine Auszeit von der dunklen Jahreszeit! Wir freuen uns auf Sie! Foto:KI</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">In  Kooperation mit dem Tanzahaus „La Danza“ Wir laden Sie zu einem geselligen Tanznachmittag im Sitzen ein. Tanzen im Sitzen ist eine wunderbare Möglichkeit für alle, auch wenn die Mobilität eingeschränkt ist. Die leichten Bewegungen zu liebgewonnener Musik sind ein aktives Erlebnis für Körper, Geist und Seele. In der bunten Atmosphäre von „Recklinghausen leuchtet” möchten wir in der Musikschule einen fröhlichen und bewegten Nachmittag mit allen Tanzbegeisterten verbringen. Nehmen Sie sich eine Auszeit von der dunklen Jahreszeit! Wir freuen uns auf Sie! Foto:KI</div>
                     </div>
                 </div>
             
@@ -2714,7 +2728,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich unter der Leitung von Monika Wischnowski über neue Lesetipps, gelesene Bücher und Autoren aus. Inhalte und Themenschwerpunkte werden zusammen mit den Teilnehmenden festgelegt. Mitmachen können alle, die sich für Literatur begeistern und dies mit anderen Menschen teilen möchten. Die Treffen in der Stadtbibliothek, Augustinessenstraße 3, finden immer am dritten Samstag im Monat von 16 bis 18 Uhr statt. Einsteigen können Sie, wann Sie möchten. Auch wenn Sie es zu einem Termin nicht schaffen sollten, können Sie jederzeit wieder mit einsteigen. Der Einlass findet am Seiteneingang der Bibliothek statt (Heil</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich unter der Leitung von Monika Wischnowski über neue Lesetipps, gelesene Bücher und Autoren aus. Inhalte und Themenschwerpunkte werden zusammen mit den Teilnehmenden festgelegt. Mitmachen können alle, die sich für Literatur begeistern und dies mit anderen Menschen teilen möchten. Die Treffen in der Stadtbibliothek, Augustinessenstraße 3, finden immer am dritten Samstag im Monat von 16 bis 18 Uhr statt. Einsteigen können Sie, wann Sie möchten. Auch wenn Sie es zu einem Termin nicht schaffen sollten, können Sie jederzeit wieder mit einsteigen. Der Einlass findet am Seiteneingang der Bibliothek statt (Heil</div>
                     </div>
                 </div>
             
@@ -2726,7 +2740,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Impala Spring aus dem Raum Münster haben sich dem handgemachten, ehrlichen Sound verschrieben hat. Verwurzelt im Classic Rock, aber mit dem nötigen Gespür für eingängige Melodien und zeitgemäße Arrangements, verbindet die Band kraftvolle Gitarrenriffs, treibende...&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Impala Spring aus dem Raum Münster haben sich dem handgemachten, ehrlichen Sound verschrieben hat. Verwurzelt im Classic Rock, aber mit dem nötigen Gespür für eingängige Melodien und zeitgemäße Arrangements, verbindet die Band kraftvolle Gitarrenriffs, treibende...&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -2738,7 +2752,7 @@ Duo Heine-Litsoukov steht jeweils im 21. Lebensjahr, und der aus Herne stammende
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">21..03. / 20 Uhr / AK 15€    Die Frauenparty in der Altstadtschmiede ist wieder zurück! 
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">21..03. / 20 Uhr / AK 15€    Die Frauenparty in der Altstadtschmiede ist wieder zurück! 
 Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sind willkommen.    Die Altstadtsch</div>
                     </div>
                 </div>
@@ -2759,7 +2773,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Die Rieselfelder waren einst ein riesiges Abwasserklärungsgebiet und sind heute ein ökologisch bedeutender Lebensraum</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Die Rieselfelder waren einst ein riesiges Abwasserklärungsgebiet und sind heute ein ökologisch bedeutender Lebensraum</div>
                     </div>
                 </div>
             
@@ -2783,7 +2797,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
                     </div>
                 </div>
             
@@ -2815,7 +2829,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Genießen Sie zu den unverwechselbaren Klängen der britischen New Wave Band Depeche Mode den sternenreichen Himmel unseres Planetariums.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Genießen Sie zu den unverwechselbaren Klängen der britischen New Wave Band Depeche Mode den sternenreichen Himmel unseres Planetariums.</div>
                     </div>
                 </div>
             
@@ -2827,7 +2841,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -2847,7 +2861,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -2859,7 +2873,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. Weitere Termine: Dienstag, 14.04.2026 Dienstag, 21.04.2026</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Foto: Stadt Recklinghausen Wir lassen die Türen für Euch bis 21 Uhr geöffnet, damit ihr Euch in Ruhe auf Prüfungen vorbereiten oder bei einem leckeren Heißgetränk Extra-Zeit zum Lesen genießen könnt. Weitere Termine: Dienstag, 14.04.2026 Dienstag, 21.04.2026</div>
                     </div>
                 </div>
             
@@ -2891,7 +2905,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Mütter-/Väterberatung des Kinder- und Jugendgesundheitsdienstes Die Gesundheit ihres Kindes ist wichtig - informieren, vorbeugen, schützen In Kooperation mit dem Gesundheitsamt Kreis Recklinghausen findet jeden 2. und 4. Mittwoch eine offene und vertrauliche Sprechstunde im Familienbüro statt. In gemütlicher Runde beantwortet eine Kinderkrankenschwester alle Fragen rund um die Gesundheit ihres Kindes. Neu: Ihr Kind kann vor Ort gewogen werden! Mögliche Themen: Wie schaffe ich es, dass mein Kind durchschläft? Wie ernähre ich mein Kind gesund? Mein Kind verliert plötzlich an Gewicht. Was kann ich tun? Entwickelt sich mein Kind in die richtige Richtung? Wie unterstütze ich mein Kind in seiner Entwicklung? Welche Impfungen benötigt mein Kind und warum sind diese wichtig? Warum sind die U-Unter</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Mütter-/Väterberatung des Kinder- und Jugendgesundheitsdienstes Die Gesundheit ihres Kindes ist wichtig - informieren, vorbeugen, schützen In Kooperation mit dem Gesundheitsamt Kreis Recklinghausen findet jeden 2. und 4. Mittwoch eine offene und vertrauliche Sprechstunde im Familienbüro statt. In gemütlicher Runde beantwortet eine Kinderkrankenschwester alle Fragen rund um die Gesundheit ihres Kindes. Neu: Ihr Kind kann vor Ort gewogen werden! Mögliche Themen: Wie schaffe ich es, dass mein Kind durchschläft? Wie ernähre ich mein Kind gesund? Mein Kind verliert plötzlich an Gewicht. Was kann ich tun? Entwickelt sich mein Kind in die richtige Richtung? Wie unterstütze ich mein Kind in seiner Entwicklung? Welche Impfungen benötigt mein Kind und warum sind diese wichtig? Warum sind die U-Unter</div>
                     </div>
                 </div>
             
@@ -2915,7 +2929,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Konzertreihe zur Förderung junger Musiker seit 1992 Künstlerische Beratung: Rainer Maria Klaas</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Konzertreihe zur Förderung junger Musiker seit 1992 Künstlerische Beratung: Rainer Maria Klaas</div>
                     </div>
                 </div>
             
@@ -2927,7 +2941,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">In der Recklinghäuser Stadtbibliothek, Augustinessenstraße 3, findet immer am letzten Mittwoch im Monat ein Bilderbuchkino statt. Geschichtenfans können hier Bilderbücher auf der großen Leinwand erleben. Dieses Mal wird folgende Geschichte vorgelesen: &quot;Die allerbeste Prinzessin&quot; von Ursula Poznanski, Bianca, Violetta und Rosalind sind drei bezaubernde Prinzessinnen. Sie haben nur einen klitzekleinen Fehler: Sie streiten für ihr Leben gern! Eines Tages meldet sich Besuch an, Prinz Waldomir hat keine Lust mehr auf die Drachenjagd und möchte lieber heiraten. Natürlich hält sich jede der Prinzessinnen für die Beste – und damit für die zukünftige Frau des Prinzen. Ein turbulenter Wettkampf entspinnt sich, noch bevor sie den mickrigen Waldomir überhaupt zu Gesicht bekommen haben … Ursu</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">In der Recklinghäuser Stadtbibliothek, Augustinessenstraße 3, findet immer am letzten Mittwoch im Monat ein Bilderbuchkino statt. Geschichtenfans können hier Bilderbücher auf der großen Leinwand erleben. Dieses Mal wird folgende Geschichte vorgelesen: &quot;Die allerbeste Prinzessin&quot; von Ursula Poznanski, Bianca, Violetta und Rosalind sind drei bezaubernde Prinzessinnen. Sie haben nur einen klitzekleinen Fehler: Sie streiten für ihr Leben gern! Eines Tages meldet sich Besuch an, Prinz Waldomir hat keine Lust mehr auf die Drachenjagd und möchte lieber heiraten. Natürlich hält sich jede der Prinzessinnen für die Beste – und damit für die zukünftige Frau des Prinzen. Ein turbulenter Wettkampf entspinnt sich, noch bevor sie den mickrigen Waldomir überhaupt zu Gesicht bekommen haben … Ursu</div>
                     </div>
                 </div>
             
@@ -2939,7 +2953,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Die Stilllegung des Bergwerks Blumenthal/Haard im Jahre 2001 war auch Anlass für die Gründung des Geschichtskreises. Ehemalige Bergleute taten sich zusammen und führten Interviews mit früheren Kumpels, sammelten Fotos und Pläne, erstellten Ausstellungen und Broschüren. Bei dieser „Geburtstags“-Veranstaltung soll mit Bildern und Zitaten der Arbeit der Bergleute und der Geschichte des Bergwerks gedacht werden. 25 Jahre Geschichtskreis sind auch Anlass für einen Blick zurück auf die Bedeutung des Bergbaus für Recklinghausen. Die Vielzahl der Tätigkeiten unter und über Tage, die es heute nicht mehr gibt, aber auch die Nachwirkungen des Bergbaus bis in die heutige Zeit sind Thema. Der Geschichtskreis lädt alle Interessierten herzlich ein, auch „Bütterken“ und „Bergmannsgetränk“ sind vorgesehen.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die Stilllegung des Bergwerks Blumenthal/Haard im Jahre 2001 war auch Anlass für die Gründung des Geschichtskreises. Ehemalige Bergleute taten sich zusammen und führten Interviews mit früheren Kumpels, sammelten Fotos und Pläne, erstellten Ausstellungen und Broschüren. Bei dieser „Geburtstags“-Veranstaltung soll mit Bildern und Zitaten der Arbeit der Bergleute und der Geschichte des Bergwerks gedacht werden. 25 Jahre Geschichtskreis sind auch Anlass für einen Blick zurück auf die Bedeutung des Bergbaus für Recklinghausen. Die Vielzahl der Tätigkeiten unter und über Tage, die es heute nicht mehr gibt, aber auch die Nachwirkungen des Bergbaus bis in die heutige Zeit sind Thema. Der Geschichtskreis lädt alle Interessierten herzlich ein, auch „Bütterken“ und „Bergmannsgetränk“ sind vorgesehen.</div>
                     </div>
                 </div>
             
@@ -2951,7 +2965,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-geschichte-re">Heimatkunde</span> <span class="badge badge-kategorie">Geschichte</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Im Jahr 2000 endete die Geschichte des Bergbaus in Recklinghausen</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Im Jahr 2000 endete die Geschichte des Bergbaus in Recklinghausen</div>
                     </div>
                 </div>
             
@@ -2975,7 +2989,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">{
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">{
             &quot;@context&quot;: &quot;http://schema.org&quot;,
             &quot;@type&quot;: &quot;Event&quot;,
             &quot;eventStatus&quot;: &quot;https://schema.org/EventScheduled&quot;,
@@ -2992,7 +3006,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Schwarze Löcher gehören zu den faszinierendsten Objekten des Universums. In den vergangenen Jahren hat die Forschung einige – zum Teil Nobelpreis-gekrönte – Durchbrüche erzielt, man denke an den exper</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Schwarze Löcher gehören zu den faszinierendsten Objekten des Universums. In den vergangenen Jahren hat die Forschung einige – zum Teil Nobelpreis-gekrönte – Durchbrüche erzielt, man denke an den exper</div>
                     </div>
                 </div>
             
@@ -3028,7 +3042,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Das städtische Team der Kindertagespflege informiert interessierte Eltern über die Betreuung durch eine Kindertagespflegeperson. Mögliche Fragen: Was ist Kindertagespflege? Welche Formate gibt es? An wen richtet sich das Angebot? Was kostet die Kindertagespflege? Über welche Qualifikation verfügt eine Kindertagespflegeperson? Was muss ich tun, wenn ich einen Betreuungsplatz suche? Worauf muss ich bei der Auswahl einer geeigneten Kindertagespflegestelle achten?</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Das städtische Team der Kindertagespflege informiert interessierte Eltern über die Betreuung durch eine Kindertagespflegeperson. Mögliche Fragen: Was ist Kindertagespflege? Welche Formate gibt es? An wen richtet sich das Angebot? Was kostet die Kindertagespflege? Über welche Qualifikation verfügt eine Kindertagespflegeperson? Was muss ich tun, wenn ich einen Betreuungsplatz suche? Worauf muss ich bei der Auswahl einer geeigneten Kindertagespflegestelle achten?</div>
                     </div>
                 </div>
             
@@ -3040,7 +3054,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-akademie">Ev. Akademie</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
                         <div class="termin-ort">Ev. Akademie Recklinghausen</div>
-                        <div class="termin-beschreibung">Andreas Mertin</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Andreas Mertin</div>
                     </div>
                 </div>
             
@@ -3060,7 +3074,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">RETRO STATION</div>
-                        <div class="termin-beschreibung">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werden zentrale Ereignisse der Vergangenheit ebenso anschaulich erläutert wie das Alltagsleben der Menschen in früheren Zeiten. In drei modern gestalteten Ausstellungsbereichen zeigen zahlreiche Exponate die frühe Entwicklung der Stadt, die Bergbaugeschichte der Region und prägende Ereignisse des 20. Jahrhunderts. Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]recklinghausen.de ist erforderlich.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werden zentrale Ereignisse der Vergangenheit ebenso anschaulich erläutert wie das Alltagsleben der Menschen in früheren Zeiten. In drei modern gestalteten Ausstellungsbereichen zeigen zahlreiche Exponate die frühe Entwicklung der Stadt, die Bergbaugeschichte der Region und prägende Ereignisse des 20. Jahrhunderts. Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]recklinghausen.de ist erforderlich.</div>
                     </div>
                 </div>
             
@@ -3084,7 +3098,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Ist mein Kind reif für die Schule? Der Übergang steht an – und jetzt wird es ernst? Nach den Jahren im Kindergarten folgt nun die Einschulung: „Schafft unser Kind das? Wird es mit dem neuen Alltag fertig werden und Spaß beim Lernen haben? Kann es sich gut in die neue Klassengemeinschaft einfügen und Freundschaften schließen?“ Solche oder ähnliche Fragen beschäftigen Eltern, wenn die Einschulung des eigenen Kindes ansteht. Zu diesen Themen wird Herr Norbert Dickhöver, Diplom-Psychologe und Leiter der Erziehungsberatung Vest des Kreises Recklinghausen, Stellung beziehen. Während eines Impulsreferates werden folgende Themen angesprochen: kognitive Voraussetzungen emotionales und soziales und motorisches Lernen Persönlichkeitsweiterentwicklung Schulreife Lernstrategien und einiges mehr Jederze</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Ist mein Kind reif für die Schule? Der Übergang steht an – und jetzt wird es ernst? Nach den Jahren im Kindergarten folgt nun die Einschulung: „Schafft unser Kind das? Wird es mit dem neuen Alltag fertig werden und Spaß beim Lernen haben? Kann es sich gut in die neue Klassengemeinschaft einfügen und Freundschaften schließen?“ Solche oder ähnliche Fragen beschäftigen Eltern, wenn die Einschulung des eigenen Kindes ansteht. Zu diesen Themen wird Herr Norbert Dickhöver, Diplom-Psychologe und Leiter der Erziehungsberatung Vest des Kreises Recklinghausen, Stellung beziehen. Während eines Impulsreferates werden folgende Themen angesprochen: kognitive Voraussetzungen emotionales und soziales und motorisches Lernen Persönlichkeitsweiterentwicklung Schulreife Lernstrategien und einiges mehr Jederze</div>
                     </div>
                 </div>
             
@@ -3096,7 +3110,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus</div>
-                        <div class="termin-beschreibung">Olaf Bossi: „Generation XY: Die 80er, die 90er und das Leben heute – Die Comedy-Show von Olaf Bossi“ Nostalgie trifft Lachen – und die ganz normale Lebenskrise ab 40! Olaf Bossi nimmt dich mit auf eine Zeitreise von Telefonzelle über VHS bis WhatsApp, von Buffalos bis Bandscheibenvorfall. Erinnerst du dich noch an Dia-Abende, Bravo-Starschnitt und Viva TV? Klar! Aber heute geht’s auch um Schlafstörungen, Arzttermine, EMS-Training und das Gefühl, irgendwie nicht alt zu sein – obwohl der Hometrainer keine Pulsanzeige mehr hat. Mit Humor, Musik und Selbstironie zeigt Olaf: Unser Leben ist ein Greatest-Hits-Album mit Bonus-Tracks – manchmal laut, manchmal schräg, aber immer zum Lachen. Foto: Ramiro Simone</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Olaf Bossi: „Generation XY: Die 80er, die 90er und das Leben heute – Die Comedy-Show von Olaf Bossi“ Nostalgie trifft Lachen – und die ganz normale Lebenskrise ab 40! Olaf Bossi nimmt dich mit auf eine Zeitreise von Telefonzelle über VHS bis WhatsApp, von Buffalos bis Bandscheibenvorfall. Erinnerst du dich noch an Dia-Abende, Bravo-Starschnitt und Viva TV? Klar! Aber heute geht’s auch um Schlafstörungen, Arzttermine, EMS-Training und das Gefühl, irgendwie nicht alt zu sein – obwohl der Hometrainer keine Pulsanzeige mehr hat. Mit Humor, Musik und Selbstironie zeigt Olaf: Unser Leben ist ein Greatest-Hits-Album mit Bonus-Tracks – manchmal laut, manchmal schräg, aber immer zum Lachen. Foto: Ramiro Simone</div>
                     </div>
                 </div>
             
@@ -3108,7 +3122,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">„Dies ist die Geschichte der Blumenbindnerin und Kranfahrerin Hanna Krause, die zwei Revolutionen, zwei Diktaturen, einen Aufstand, zwei Weltkriege und zwei Niederlagen, zwei Demokratien, den Kaiser und andere Führer, gute und schlechte Zeiten erlebt hat, die bis auf ein paar Monate im Berlin der frühen 1930er Jahre nie aus Magdeburg herauskam, sechs Kinder geboren hat und zwei davon nicht begraben konnte, was ihr nahe ging bis zum Lebensende. (…) Die später, nachdem ihr Blumenladen im Knattergebirge genannten Armenviertel der Stadt längst Geschichte war, von einem Kran in der Halle eines Schwermaschinenbaubetriebs einen guten Überblick auf die Beziehungen der Menschen unter ihr hatte und die rechtzeitig starb, bevor sie die Welt nicht mehr verstand.“ Das ist, kurz gefasst, der Inhalt dies</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">„Dies ist die Geschichte der Blumenbindnerin und Kranfahrerin Hanna Krause, die zwei Revolutionen, zwei Diktaturen, einen Aufstand, zwei Weltkriege und zwei Niederlagen, zwei Demokratien, den Kaiser und andere Führer, gute und schlechte Zeiten erlebt hat, die bis auf ein paar Monate im Berlin der frühen 1930er Jahre nie aus Magdeburg herauskam, sechs Kinder geboren hat und zwei davon nicht begraben konnte, was ihr nahe ging bis zum Lebensende. (…) Die später, nachdem ihr Blumenladen im Knattergebirge genannten Armenviertel der Stadt längst Geschichte war, von einem Kran in der Halle eines Schwermaschinenbaubetriebs einen guten Überblick auf die Beziehungen der Menschen unter ihr hatte und die rechtzeitig starb, bevor sie die Welt nicht mehr verstand.“ Das ist, kurz gefasst, der Inhalt dies</div>
                     </div>
                 </div>
             
@@ -3120,7 +3134,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Erweiterungsbau der Sternwarte, Eintritt: 15 €, ermäßigt 11 €Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
-                        <div class="termin-beschreibung">Mit „Jetzt Piekst Es Kurz!“, betreten Keim & Welke den mit Wunderlichem überreich gefüllten Kosmos Medizin... Dauer ca. 90 Minuten, keine Pause. Eine Produktion des teatro affetto ©2025</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Mit „Jetzt Piekst Es Kurz!“, betreten Keim & Welke den mit Wunderlichem überreich gefüllten Kosmos Medizin... Dauer ca. 90 Minuten, keine Pause. Eine Produktion des teatro affetto ©2025</div>
                     </div>
                 </div>
             
@@ -3132,7 +3146,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
                         </div>
                         <div class="termin-ort">Altstadtschmiede</div>
-                        <div class="termin-beschreibung">26.03. / 20:30 / Eintritt frei    Es ist mal wieder Zeit für die Jazz Session und dieses Mal eröffnet das ERD-Quintett.     Die Band um den Saxophonisten Michael Erdmenger und dem Pianisten Martin The</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">26.03. / 20:30 / Eintritt frei    Es ist mal wieder Zeit für die Jazz Session und dieses Mal eröffnet das ERD-Quintett.     Die Band um den Saxophonisten Michael Erdmenger und dem Pianisten Martin The</div>
                     </div>
                 </div>
             
@@ -3152,7 +3166,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wer möchte in einer Stunde quer durchs Universum reisen und dabei allerhand Interessantes sehen? Wie entstehen die Mondphasen und warum wandern die Sterne über den Himmel? Was sind die Besonderheiten </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wer möchte in einer Stunde quer durchs Universum reisen und dabei allerhand Interessantes sehen? Wie entstehen die Mondphasen und warum wandern die Sterne über den Himmel? Was sind die Besonderheiten </div>
                     </div>
                 </div>
             
@@ -3176,7 +3190,7 @@ Queer, nicht queer, laut, leise, tanzwütig oder einfach nur da, alle Frauen sin
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
                         </div>
                         <div class="termin-ort">ADFC-Infoladen, Börster Weg 38a 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">Eins der am weitesten verbreiteten Planungs- und Navigations-Apps ist das Programm Komoot.
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Eins der am weitesten verbreiteten Planungs- und Navigations-Apps ist das Programm Komoot.
 Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                     </div>
                 </div>
@@ -3189,7 +3203,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium, Eintritt: 15 €, ermäßigt 13 €, Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
-                        <div class="termin-beschreibung">Gustav Holsts Die Planeten (1916–1919) zählen zu den ikonischen Orchesterwerken des 20. Jahrhunderts – mächtig, archaisch, geheimnisvoll. In dieser Aufführung erklingen sie in der Fassung für zwei Kla</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Gustav Holsts Die Planeten (1916–1919) zählen zu den ikonischen Orchesterwerken des 20. Jahrhunderts – mächtig, archaisch, geheimnisvoll. In dieser Aufführung erklingen sie in der Fassung für zwei Kla</div>
                     </div>
                 </div>
             
@@ -3201,7 +3215,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;Modular-, Electronic-, Krautrocking-, Psychedelic-, Space Ambient Soundscapes Das Clockwork Reorranged Duo kreiert elektronische Klangteppiche und apnoeartige Soundcollagen.Clockwork Reorranged sind:Karsten Reuter und Jan Cecatka  VirusstellarVirusstellar bezeichnen sich selbst als Session Konglo</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Modular-, Electronic-, Krautrocking-, Psychedelic-, Space Ambient Soundscapes Das Clockwork Reorranged Duo kreiert elektronische Klangteppiche und apnoeartige Soundcollagen.Clockwork Reorranged sind:Karsten Reuter und Jan Cecatka  VirusstellarVirusstellar bezeichnen sich selbst als Session Konglo</div>
                     </div>
                 </div>
             
@@ -3265,7 +3279,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Wasserbüffel, Heckrinder und Weißstörche fühlen sich in dem Naturschutzgebiet Hervester Bruch bei Dorsten pudelwohl.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Wasserbüffel, Heckrinder und Weißstörche fühlen sich in dem Naturschutzgebiet Hervester Bruch bei Dorsten pudelwohl.</div>
                     </div>
                 </div>
             
@@ -3289,7 +3303,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Rundgang durch die aktuelle Ausstellung &quot;Affinities&quot;</div>
                     </div>
                 </div>
             
@@ -3301,7 +3315,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-ikonen-museum">Ikonen-Museum</span> <span class="badge badge-kategorie">Kunst</span>
                         </div>
                         <div class="termin-ort">Ikonen-Museum Recklinghausen</div>
-                        <div class="termin-beschreibung">Alles rund um die Fastenzeit und Ostern</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Alles rund um die Fastenzeit und Ostern</div>
                     </div>
                 </div>
             
@@ -3325,7 +3339,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
                         </div>
                         <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
-                        <div class="termin-beschreibung">&lt;p&gt;„Muddy What?“ trotzt allen Klischees einer Blues-Band: jung, mit einer Leadgitarristin, modern klingend und eine perfekte Balance zwischen Wildheit und Gefühl, Raffinesse und Robustheit.  Dieses Trio hat sich an die Spitze der New-Blues-Bewegung katapultiert....&lt;/p&gt;\n</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;„Muddy What?“ trotzt allen Klischees einer Blues-Band: jung, mit einer Leadgitarristin, modern klingend und eine perfekte Balance zwischen Wildheit und Gefühl, Raffinesse und Robustheit.  Dieses Trio hat sich an die Spitze der New-Blues-Bewegung katapultiert....&lt;/p&gt;\n</div>
                     </div>
                 </div>
             
@@ -3393,7 +3407,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek</div>
-                        <div class="termin-beschreibung">Bist du ein Hörspiel-Fan? Und hast du dich schon immer gefragt, wie Hörspiele entstehen oder wie deine eigene Stimme an einem Profi-Mikrofon klingt? In diesem Workshop hast du die Chance, selbst in die Rolle eines Hörspielsprechers zu schlüpfen. Gemeinsam in kleinen Gruppen entwickelst du mit den anderen Teilnehmer*innen kurze Szenen oder ein eigenes Mini-Hörspiel, welches du nach einem intensiven Stimm-Warm-up in verteilten Rollen aufnimmst. Fehlen nur noch die passenden Geräusche und coole Musik – die wählst du natürlich selbst aus oder kreierst sie direkt vor Ort. Der Workshop richtet sich an Kinder und Jugendliche zwischen zehn und 14 Jahren. Die Veranstaltung ist Teil des Förderprogramms &quot;Kulturrucksack NRW&quot; und wir gefördert vom Ministerium für Kultur und Wissenschaft (MKW)</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Bist du ein Hörspiel-Fan? Und hast du dich schon immer gefragt, wie Hörspiele entstehen oder wie deine eigene Stimme an einem Profi-Mikrofon klingt? In diesem Workshop hast du die Chance, selbst in die Rolle eines Hörspielsprechers zu schlüpfen. Gemeinsam in kleinen Gruppen entwickelst du mit den anderen Teilnehmer*innen kurze Szenen oder ein eigenes Mini-Hörspiel, welches du nach einem intensiven Stimm-Warm-up in verteilten Rollen aufnimmst. Fehlen nur noch die passenden Geräusche und coole Musik – die wählst du natürlich selbst aus oder kreierst sie direkt vor Ort. Der Workshop richtet sich an Kinder und Jugendliche zwischen zehn und 14 Jahren. Die Veranstaltung ist Teil des Förderprogramms &quot;Kulturrucksack NRW&quot; und wir gefördert vom Ministerium für Kultur und Wissenschaft (MKW)</div>
                     </div>
                 </div>
             
@@ -3417,7 +3431,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -3428,7 +3442,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 14:13 Uhr<br>
+            Generiert am 01.03.2026 um 14:22 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;

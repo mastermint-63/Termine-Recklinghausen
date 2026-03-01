@@ -425,6 +425,20 @@
             display: none;
         }
 
+        .termin-beschreibung-mehr {
+            cursor: pointer;
+        }
+
+        .termin-beschreibung-mehr::after {
+            content: ' \25B8';
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .termin.expanded .termin-beschreibung-mehr::after {
+            content: ' \25BE';
+        }
+
         .termin.expanded .termin-beschreibung {
             display: block;
             -webkit-line-clamp: unset;
@@ -586,7 +600,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4, vor dem Stadthaus A 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Ziel und besonderes Highlight der Tour ist der Botanische Garten der Ruhr-Universität Bochum</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Ziel und besonderes Highlight der Tour ist der Botanische Garten der Ruhr-Universität Bochum</div>
                     </div>
                 </div>
             
@@ -598,7 +612,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Stadtbibliothek, Augustinessenstraße 3</div>
-                        <div class="termin-beschreibung">Foto: Sabrina Eickhoff Im Rahmen des verkaufsoffenen Sonntags lädt das Team der Stadtbibliothek zu einem magischen Familientag ein. Von 14 bis17 U hr eröffnet Künstlerin Sabrina Eickhoff ihre Zauberstab-Akademie. Kinder und Jugendliche zwischen zehn und 14 Jahren können das thermoplastische Material Worbla kennenlernen und sich ihren eigenen Zauberstab basteln. Teilnehmende können der Kursleiterin allerlei Fragen zu ihrer Arbeit stellen, erfahren eine Menge über das Arbeiten mit verschiedenen Materialien und gewinnen ein fundiertes technisches Know-how. Am Ende dürfen sie nicht nur ihr Wissen, sondern auch ihr Werk behalten. Der Workshop wird gefördert mit Mitteln des Programms Kulturrucksack NRW. Für die kleinen Gäste finden um 15, 16 und 17 Uhr Bilderbuchkino-Aufführungen statt, in denen</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Foto: Sabrina Eickhoff Im Rahmen des verkaufsoffenen Sonntags lädt das Team der Stadtbibliothek zu einem magischen Familientag ein. Von 14 bis17 U hr eröffnet Künstlerin Sabrina Eickhoff ihre Zauberstab-Akademie. Kinder und Jugendliche zwischen zehn und 14 Jahren können das thermoplastische Material Worbla kennenlernen und sich ihren eigenen Zauberstab basteln. Teilnehmende können der Kursleiterin allerlei Fragen zu ihrer Arbeit stellen, erfahren eine Menge über das Arbeiten mit verschiedenen Materialien und gewinnen ein fundiertes technisches Know-how. Am Ende dürfen sie nicht nur ihr Wissen, sondern auch ihr Werk behalten. Der Workshop wird gefördert mit Mitteln des Programms Kulturrucksack NRW. Für die kleinen Gäste finden um 15, 16 und 17 Uhr Bilderbuchkino-Aufführungen statt, in denen</div>
                     </div>
                 </div>
             
@@ -642,7 +656,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Geschwisterliebe-Geschwisterstreit?!?! Wieviel Streit ist noch „normal“? Oder besser gefragt: Ist es gut, Geschwister zu haben? Vielen Eltern stellt sich die Frage, wie sie dazu beitragen können, dass ihre Kinder eine gute Geschwisterbeziehung führen können. Wie können Streitereien und Rivalität reduziert werden? Was kann dazu führen, dass Kinder ein gutes Verhältnis zu ihren Geschwistern entwickeln? An diesem Abend laden wir Sie ein, sich dem Erziehungsthema „Geschwister“ mit all seinen Facetten zuzuwenden und in einen spannenden Austausch mit zwei Expertinnen aus der Erziehungsberatung Vest des Kreises RE zu kommen.. Zu diesen Themen werden Psychologin M.SC. Frau von Glasow und Diplom-Psychologin Frau Zimdars von der Erziehungsberatung Vest des Kreises Recklinghausen Stellung beziehen. J</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Geschwisterliebe-Geschwisterstreit?!?! Wieviel Streit ist noch „normal“? Oder besser gefragt: Ist es gut, Geschwister zu haben? Vielen Eltern stellt sich die Frage, wie sie dazu beitragen können, dass ihre Kinder eine gute Geschwisterbeziehung führen können. Wie können Streitereien und Rivalität reduziert werden? Was kann dazu führen, dass Kinder ein gutes Verhältnis zu ihren Geschwistern entwickeln? An diesem Abend laden wir Sie ein, sich dem Erziehungsthema „Geschwister“ mit all seinen Facetten zuzuwenden und in einen spannenden Austausch mit zwei Expertinnen aus der Erziehungsberatung Vest des Kreises RE zu kommen.. Zu diesen Themen werden Psychologin M.SC. Frau von Glasow und Diplom-Psychologin Frau Zimdars von der Erziehungsberatung Vest des Kreises Recklinghausen Stellung beziehen. J</div>
                     </div>
                 </div>
             
@@ -666,7 +680,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -686,7 +700,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -778,7 +792,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">RETRO STATION</div>
-                        <div class="termin-beschreibung">Die RETRO STATION ist die Nachfolgerin des Vestischen Museums. Die 2015 nach einer Umgestaltung wiedereröffnete Ausstellung zeigt die Entwicklung der Stadt von der ersten Besiedelung bis in die Gegenwart. Die Sammlung selbst blickt auf eine mehr als hundertjährige Geschichte zurück. Nicht allein, dass die Ausstellungsstücke zu sehr unterschiedlichen Zeiten in die Sammlung kamen, häufig sorgten auch besondere Schenkungen oder Ereignisse für Zuwachs. Der Kuratorinnenrundgang mit Dr. Angelika Böttcher lädt zur Erkundung der verschiedenen Sammlungsgeschichten ein. Unter anderem geht es um folgende Fragen: Unter welchen Umständen kamen 1927 Mobiliar und Gemälde aus dem Besitz des Herzogs Engelbert-Maria von Arenberg in die Sammlung? Warum besitzt Recklinghausen heute eine der größten Sammlungen</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die RETRO STATION ist die Nachfolgerin des Vestischen Museums. Die 2015 nach einer Umgestaltung wiedereröffnete Ausstellung zeigt die Entwicklung der Stadt von der ersten Besiedelung bis in die Gegenwart. Die Sammlung selbst blickt auf eine mehr als hundertjährige Geschichte zurück. Nicht allein, dass die Ausstellungsstücke zu sehr unterschiedlichen Zeiten in die Sammlung kamen, häufig sorgten auch besondere Schenkungen oder Ereignisse für Zuwachs. Der Kuratorinnenrundgang mit Dr. Angelika Böttcher lädt zur Erkundung der verschiedenen Sammlungsgeschichten ein. Unter anderem geht es um folgende Fragen: Unter welchen Umständen kamen 1927 Mobiliar und Gemälde aus dem Besitz des Herzogs Engelbert-Maria von Arenberg in die Sammlung? Warum besitzt Recklinghausen heute eine der größten Sammlungen</div>
                     </div>
                 </div>
             
@@ -854,7 +868,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
                         </div>
                         <div class="termin-ort">ADFC Infoladen - Börster Weg 38a 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
                     </div>
                 </div>
             
@@ -866,7 +880,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">In dieser Vorstellung nimmt uns unser Pilot Major Tom mit auf eine Reise in die Nacht, durch das Jahr, zu den Sternbildern und Planeten. Himmelsneulinge von 8 bis 88 Jahren können hier ganz gemütlich </div>
                     </div>
                 </div>
             
@@ -890,7 +904,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Theater Marl</div>
-                        <div class="termin-beschreibung">von Charles Dickens</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Charles Dickens</div>
                     </div>
                 </div>
             
@@ -902,7 +916,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Entdecken Sie mit uns den aktuellen Sternenhimmel. Lernen Sie die Sternbilder und ihre Geschichten kennen. Erfahren Sie wo und wie die hellen Planeten zu finden sind und welche interessanten Objekte e</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Entdecken Sie mit uns den aktuellen Sternenhimmel. Lernen Sie die Sternbilder und ihre Geschichten kennen. Erfahren Sie wo und wie die hellen Planeten zu finden sind und welche interessanten Objekte e</div>
                     </div>
                 </div>
             
@@ -934,7 +948,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Die Tour führt zum Ternscher See</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Die Tour führt zum Ternscher See</div>
                     </div>
                 </div>
             
@@ -958,7 +972,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung">unter der Leitung von Maria Loreck.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">unter der Leitung von Maria Loreck.</div>
                     </div>
                 </div>
             
@@ -970,7 +984,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalt: Das Angebot richtet sich an (werdende) Mütter, Väter und interessierte Großeltern von kleinen und großen Kindern. Es können alle Fragen zur Säuglingspflege, Entwicklung, Ernährung oder zu den Herausforderungen des Lebens als Familie gestellt werden. Heute: Babymassage-Workshop &quot;Berührung, die verbindet&quot; (11:30-12:30 Uhr für Babys/ 12:30-13:30 für Kleinkinder) Erlebe, wie du mit einfachen Massagegriffen deinem Baby Liebe, Geborgenheit und Entspannung schenken kannst. In unserem kostenlosen Workshop erhältst du einen ersten Einblick in wohltuende Babymassage-Techniken sowie entspannende Methoden für Kleinkinder. Lerne, wie du: - deinem Kind im hektischen Alltag kleine Ruheinseln schenkst - mit sanften Berührungen das Wohlbefinden und die Bindung stärkst - eine liebevolle Ro</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalt: Das Angebot richtet sich an (werdende) Mütter, Väter und interessierte Großeltern von kleinen und großen Kindern. Es können alle Fragen zur Säuglingspflege, Entwicklung, Ernährung oder zu den Herausforderungen des Lebens als Familie gestellt werden. Heute: Babymassage-Workshop &quot;Berührung, die verbindet&quot; (11:30-12:30 Uhr für Babys/ 12:30-13:30 für Kleinkinder) Erlebe, wie du mit einfachen Massagegriffen deinem Baby Liebe, Geborgenheit und Entspannung schenken kannst. In unserem kostenlosen Workshop erhältst du einen ersten Einblick in wohltuende Babymassage-Techniken sowie entspannende Methoden für Kleinkinder. Lerne, wie du: - deinem Kind im hektischen Alltag kleine Ruheinseln schenkst - mit sanften Berührungen das Wohlbefinden und die Bindung stärkst - eine liebevolle Ro</div>
                     </div>
                 </div>
             
@@ -994,7 +1008,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Theater Marl</div>
-                        <div class="termin-beschreibung">von Charles Dickens</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Charles Dickens</div>
                     </div>
                 </div>
             
@@ -1038,7 +1052,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Theater Marl</div>
-                        <div class="termin-beschreibung">von Charles Dickens</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Charles Dickens</div>
                     </div>
                 </div>
             
@@ -1070,7 +1084,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Theater Marl</div>
-                        <div class="termin-beschreibung">von Charles Dickens</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Charles Dickens</div>
                     </div>
                 </div>
             
@@ -1082,7 +1096,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wie bewegt sich das Himmelsgewölbe, welche Sternbilder sind momentan gut sichtbar und wo stehen die Planeten? - Diese Vorführung richtet sich an Einsteiger, die sich eine anschauliche Erläuterung der </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wie bewegt sich das Himmelsgewölbe, welche Sternbilder sind momentan gut sichtbar und wo stehen die Planeten? - Diese Vorführung richtet sich an Einsteiger, die sich eine anschauliche Erläuterung der </div>
                     </div>
                 </div>
             
@@ -1094,7 +1108,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -1114,7 +1128,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1126,7 +1140,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wir entdecken die Planeten am nächtlichen Sternenhimmel, fliegen danach durch unser Sonnensystem zu den Planeten und erkunden ihre Besonderheiten. Auf der Reise begegnen uns Monde, Planetenringe, Klei</div>
                     </div>
                 </div>
             
@@ -1138,7 +1152,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Religion wie Philosophie sind immer Teil menschlicher Weltraumfahrt gewesen; sei es als religiöse Rituale während oder in Vorbereitung von Raumfahrtmissionen, religiöse Objekte im oder aus dem Weltrau</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Religion wie Philosophie sind immer Teil menschlicher Weltraumfahrt gewesen; sei es als religiöse Rituale während oder in Vorbereitung von Raumfahrtmissionen, religiöse Objekte im oder aus dem Weltrau</div>
                     </div>
                 </div>
             
@@ -1150,7 +1164,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Die Ausstellung bietet einen umfassenden Einblick in die bewegte Geschichte der Vestischen Straßenbahnen GmbH im Vest Recklinghausen. Einst gehörte das Unternehmen zu den Betreibern eines der größten Straßenbahnnetze Deutschlands: Die Linien erstreckten sich von Oberhausen bis Brambauer und von Marl bis Gelsenkirchen. Ziel war es, Recklinghausen mit allen Städten und Gemeinden des Kreises zu verbinden – ein ambitioniertes Vorhaben, das in einem Streckennetz von über 195 Kilometern Länge mündete. Bis in die 1950er-Jahre war die Straßenbahn ein selbstverständlicher Teil des Alltags vieler Menschen. Mit dem Einzug des automobilen Zeitalters geriet sie jedoch zunehmend ins Abseits. Die Ausstellung lädt ein zu einem Blick zurück in glanzvolle Zeiten der „Vestischen“, bis hin zum schleichenden A</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die Ausstellung bietet einen umfassenden Einblick in die bewegte Geschichte der Vestischen Straßenbahnen GmbH im Vest Recklinghausen. Einst gehörte das Unternehmen zu den Betreibern eines der größten Straßenbahnnetze Deutschlands: Die Linien erstreckten sich von Oberhausen bis Brambauer und von Marl bis Gelsenkirchen. Ziel war es, Recklinghausen mit allen Städten und Gemeinden des Kreises zu verbinden – ein ambitioniertes Vorhaben, das in einem Streckennetz von über 195 Kilometern Länge mündete. Bis in die 1950er-Jahre war die Straßenbahn ein selbstverständlicher Teil des Alltags vieler Menschen. Mit dem Einzug des automobilen Zeitalters geriet sie jedoch zunehmend ins Abseits. Die Ausstellung lädt ein zu einem Blick zurück in glanzvolle Zeiten der „Vestischen“, bis hin zum schleichenden A</div>
                     </div>
                 </div>
             
@@ -1170,7 +1184,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">40 - 59 km · 15-18 km/h — Das Ruhrgebiet erleben</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">40 - 59 km · 15-18 km/h — Das Ruhrgebiet erleben</div>
                     </div>
                 </div>
             
@@ -1190,7 +1204,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Der Mond und die funkelnden Sterne leuchten uns in der Nacht. Wie der Himmel sich über uns bewegt und was Planeten sind, wird im Planetarium anschaulich erklärt. von Christian Pokall</div>
                     </div>
                 </div>
             
@@ -1202,7 +1216,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Der Mond begleitet uns durch Tag, Nacht und Jahr. Er ist neben der Sonne das prominenteste Objekt am Himmel, dass auch bei widrigen Bedingungen zu beobachten und ohne besondere Kenntnisse leicht zu fi</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Der Mond begleitet uns durch Tag, Nacht und Jahr. Er ist neben der Sonne das prominenteste Objekt am Himmel, dass auch bei widrigen Bedingungen zu beobachten und ohne besondere Kenntnisse leicht zu fi</div>
                     </div>
                 </div>
             
@@ -1214,7 +1228,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Halle König Ludwig 1/2</div>
-                        <div class="termin-beschreibung">von Inbal Ben Haim</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Inbal Ben Haim</div>
                     </div>
                 </div>
             
@@ -1234,7 +1248,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fragen, Anregungen, Wünsche</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fragen, Anregungen, Wünsche</div>
                     </div>
                 </div>
             
@@ -1246,7 +1260,7 @@
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Halle König Ludwig 1/2</div>
-                        <div class="termin-beschreibung">von Inbal Ben Haim</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Inbal Ben Haim</div>
                     </div>
                 </div>
             
@@ -1266,7 +1280,7 @@
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">60 - 79 km · 15-18 km/h — Diese abwechslungsreiche Rundtour führt durch durch reizvolle Landschaften und verläuft auf dem Rückweg entlang der idyllischen Werse.
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Diese abwechslungsreiche Rundtour führt durch durch reizvolle Landschaften und verläuft auf dem Rückweg entlang der idyllischen Werse.
 Die Tour ist bereits ausgebucht!</div>
                     </div>
                 </div>
@@ -1279,7 +1293,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Exkursion/Start am Institut für Stadtgeschichte Oldtimer-Bus- und Straßenbahnfahrt: Auf den Spuren der Vestischen Kleinbahn Die Fahrt mit dem Oldtimer-Bus beginnt am Steintor, der Endstation der Straßenbahn von 1901. Von dort geht es über die Hertener Straße nach Hochlar und Herten. Nächstes Ziel ist das Rathaus in Buer, wo die Tour der 1908 eröffneten Straßenbahnlinie nach Gelsenkirchen-Erle folgt. Um 11.30 Uhr startet ab dem Rathaus in Buer die Weiterfahrt mit dem Triebwagen 144, dem letzten betriebsfähigen Zweiachser der Vestischen Kleinbahn. Die Fahrt führt Richtung Gelsenkirchen-Horst und endet um 13.00 Uhr an der Essener Straße in Horst. Anschließend besteigen die Teilnehmer den Oldtimer-Bus und fahren direkt zum Bahnhof Wanne-Eickel, wo sich der dritte noch erhaltene Gleisabschnitt </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Exkursion/Start am Institut für Stadtgeschichte Oldtimer-Bus- und Straßenbahnfahrt: Auf den Spuren der Vestischen Kleinbahn Die Fahrt mit dem Oldtimer-Bus beginnt am Steintor, der Endstation der Straßenbahn von 1901. Von dort geht es über die Hertener Straße nach Hochlar und Herten. Nächstes Ziel ist das Rathaus in Buer, wo die Tour der 1908 eröffneten Straßenbahnlinie nach Gelsenkirchen-Erle folgt. Um 11.30 Uhr startet ab dem Rathaus in Buer die Weiterfahrt mit dem Triebwagen 144, dem letzten betriebsfähigen Zweiachser der Vestischen Kleinbahn. Die Fahrt führt Richtung Gelsenkirchen-Horst und endet um 13.00 Uhr an der Essener Straße in Horst. Anschließend besteigen die Teilnehmer den Oldtimer-Bus und fahren direkt zum Bahnhof Wanne-Eickel, wo sich der dritte noch erhaltene Gleisabschnitt </div>
                     </div>
                 </div>
             
@@ -1291,7 +1305,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Habt ihr schon einmal zum Himmel geschaut und euch gefragt, wie man sich bei den ganzen Sternen zurecht-finden soll? Ausgehend vom aktuellen Sternenhimmel geben wir eine kleine Anleitung, wie das ganz</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Habt ihr schon einmal zum Himmel geschaut und euch gefragt, wie man sich bei den ganzen Sternen zurecht-finden soll? Ausgehend vom aktuellen Sternenhimmel geben wir eine kleine Anleitung, wie das ganz</div>
                     </div>
                 </div>
             
@@ -1315,7 +1329,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-ruhrfestspiele">Ruhrfestspiele</span> <span class="badge badge-kategorie">Theater/Festival</span>
                         </div>
                         <div class="termin-ort">Halle König Ludwig 1/2</div>
-                        <div class="termin-beschreibung">von Inbal Ben Haim</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Inbal Ben Haim</div>
                     </div>
                 </div>
             
@@ -1335,7 +1349,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Programmbeschreibung: siehe</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Programmbeschreibung: siehe</div>
                     </div>
                 </div>
             
@@ -1347,7 +1361,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Liebe Eltern, kaum eine Entwicklungsaufgabe in der frühen Kindheit ist mit so viele Mythen und Halbwahrheiten belastet wie das „Trocken werden“. Verbreitete Vorstellungen über den richtigen Zeitpunkt für das „Töpfchentraining“ und das optimale Vorgehen in der „Sauberkeitserziehung“ verunsichern Eltern und in der Folge auch die Kinder. In Konsequenz ist das „Trocken werden“ für alle Beteiligten nicht selten mit Sorge und großem Stress verbunden. Dieser Elternabend räumt mit verbreiteten Ratschlägen, Gerüchten und Halbwahrheiten zum Thema auf und erklärt den dahinterliegenden Entwicklungsprozess verständlich und nachvollziehbar. Gemeinsam besprechen wir, wie Kindern bei diesem Entwicklungsschritt positiv und liebevoll begleitet und wirksam gestärkt werden können. Eigenen Fragen und individue</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Liebe Eltern, kaum eine Entwicklungsaufgabe in der frühen Kindheit ist mit so viele Mythen und Halbwahrheiten belastet wie das „Trocken werden“. Verbreitete Vorstellungen über den richtigen Zeitpunkt für das „Töpfchentraining“ und das optimale Vorgehen in der „Sauberkeitserziehung“ verunsichern Eltern und in der Folge auch die Kinder. In Konsequenz ist das „Trocken werden“ für alle Beteiligten nicht selten mit Sorge und großem Stress verbunden. Dieser Elternabend räumt mit verbreiteten Ratschlägen, Gerüchten und Halbwahrheiten zum Thema auf und erklärt den dahinterliegenden Entwicklungsprozess verständlich und nachvollziehbar. Gemeinsam besprechen wir, wie Kindern bei diesem Entwicklungsschritt positiv und liebevoll begleitet und wirksam gestärkt werden können. Eigenen Fragen und individue</div>
                     </div>
                 </div>
             
@@ -1359,7 +1373,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Die Still- und Trageberaterinnen Edith Marks und Lisa Lantermann beantworten Ihre Fragen rund um das Thema Stillen, Tragetuch, Beikost, Entwicklung des Kindes uvm. Alle sind herzlich willkommen – auch Geschwisterkinder dürfen gerne mitgebracht werden. Die Teilnahme ist kostenlos.</div>
                     </div>
                 </div>
             
@@ -1403,7 +1417,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1483,7 +1497,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Das kosmologische Standardmodell postuliert die Existenz von Dunkler Materie, Dunkler Energie und einer enormen Inflation im frühen Universum – Konzepte, die nach 40 Jahren intensiver Forschung immer </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das kosmologische Standardmodell postuliert die Existenz von Dunkler Materie, Dunkler Energie und einer enormen Inflation im frühen Universum – Konzepte, die nach 40 Jahren intensiver Forschung immer </div>
                     </div>
                 </div>
             
@@ -1527,7 +1541,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus, Kassiopeia</div>
-                        <div class="termin-beschreibung">Gewitter und Sturm Ein Ausflug aufs Land mit Beethoven &quot;Pastorale&quot; 2. Grundschulkonzert für Kinder der Klassen 1 - 4 Endlich ist Frühling! Zeit, um gemeinsam einen Ausflug in die Natur zu unternehmen. Und was darf bei uns dazu natürlich nicht fehlen? Richtig, tolle Orchestermusik, gespielt von der Neuen Philharmonie Westfalen. Auch Ludwig van Beethoven unternahm gerne ausgedehnte Spaziergänge im Grünen, weit weg vom Trubel der Stadt. So ließ er sich von der Natur zu seiner 6. Sinfonie mit dem Beinamen „Pastorale“ inspirieren. Erlebt mit offenen Ohren wie wirbelnde Bäche und Vogelgezwitscher im Orchester klingen. Doch was ist das? Plötzlich verfinstert sich der Himmel und ein Gewitter bricht los. Ein Konzert zum Lauschen und Mitmachen! 45 Minuten ohne Pause Antje Wieneke , Konzept</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Gewitter und Sturm Ein Ausflug aufs Land mit Beethoven &quot;Pastorale&quot; 2. Grundschulkonzert für Kinder der Klassen 1 - 4 Endlich ist Frühling! Zeit, um gemeinsam einen Ausflug in die Natur zu unternehmen. Und was darf bei uns dazu natürlich nicht fehlen? Richtig, tolle Orchestermusik, gespielt von der Neuen Philharmonie Westfalen. Auch Ludwig van Beethoven unternahm gerne ausgedehnte Spaziergänge im Grünen, weit weg vom Trubel der Stadt. So ließ er sich von der Natur zu seiner 6. Sinfonie mit dem Beinamen „Pastorale“ inspirieren. Erlebt mit offenen Ohren wie wirbelnde Bäche und Vogelgezwitscher im Orchester klingen. Doch was ist das? Plötzlich verfinstert sich der Himmel und ein Gewitter bricht los. Ein Konzert zum Lauschen und Mitmachen! 45 Minuten ohne Pause Antje Wieneke , Konzept</div>
                     </div>
                 </div>
             
@@ -1595,7 +1609,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Wer möchte in einer Stunde quer durchs Universum reisen und dabei allerhand Interessantes sehen? Wie entstehen die Mondphasen und warum wandern die Sterne über den Himmel? Was sind die Besonderheiten </div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wer möchte in einer Stunde quer durchs Universum reisen und dabei allerhand Interessantes sehen? Wie entstehen die Mondphasen und warum wandern die Sterne über den Himmel? Was sind die Besonderheiten </div>
                     </div>
                 </div>
             
@@ -1607,7 +1621,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium, Eintritt: 15 €, ermäßigt 13 €Kartenreservierungen unter 02361- 23134 oder info@sternwarte-recklinghausen.de</div>
-                        <div class="termin-beschreibung">Zwischen Jazz, klassisch anmutenden Kompositionen und freier Improvisation bewegt sich der Oberhausener Pianist Matthias Dymke in seiner Solomusik. In seinem Album „Strukturen“ beschäftigt er sich mit</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Zwischen Jazz, klassisch anmutenden Kompositionen und freier Improvisation bewegt sich der Oberhausener Pianist Matthias Dymke in seiner Solomusik. In seinem Album „Strukturen“ beschäftigt er sich mit</div>
                     </div>
                 </div>
             
@@ -1627,7 +1641,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">40 - 59 km · 15-18 km/h — Am Pfingstsamstag geht es zum Römermuseum in Haltern; mit Museumsführung.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">40 - 59 km · 15-18 km/h — Am Pfingstsamstag geht es zum Römermuseum in Haltern; mit Museumsführung.</div>
                     </div>
                 </div>
             
@@ -1691,7 +1705,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1703,7 +1717,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Das Weltall ist groß, sehr groß, unvorstellbar groß. Und darin sind unglaublich viele spannende Objekte: bunte, leuchtende Nebel, Galaxien, Planeten und vieles andere mehr ...  vielleicht auch Aliens?</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das Weltall ist groß, sehr groß, unvorstellbar groß. Und darin sind unglaublich viele spannende Objekte: bunte, leuchtende Nebel, Galaxien, Planeten und vieles andere mehr ...  vielleicht auch Aliens?</div>
                     </div>
                 </div>
             
@@ -1715,7 +1729,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung">Der Vortrag handelt von Persönlichkeiten aus der Luft- und Raumfahrt, deren Lebenslauf oder deren Schicksal zwei Seiten hatte. Da gibt es die strahlenden Helden, deren Expeditionen aber ganz anders ve</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Der Vortrag handelt von Persönlichkeiten aus der Luft- und Raumfahrt, deren Lebenslauf oder deren Schicksal zwei Seiten hatte. Da gibt es die strahlenden Helden, deren Expeditionen aber ganz anders ve</div>
                     </div>
                 </div>
             
@@ -1727,7 +1741,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Cineworld Kino</div>
-                        <div class="termin-beschreibung">Mit großer Ruhe und eindringlicher Kraft erzählt Regisseur Uberto Pasolini die Heimkehr des Odysseus neu – befreit vom Glanz heroischer Mythen und ganz nah an den Wunden der Menschen. Was geschieht, wenn jemand nach Jahren des Krieges zurückkehrt – und nichts mehr ist wie zuvor?</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Mit großer Ruhe und eindringlicher Kraft erzählt Regisseur Uberto Pasolini die Heimkehr des Odysseus neu – befreit vom Glanz heroischer Mythen und ganz nah an den Wunden der Menschen. Was geschieht, wenn jemand nach Jahren des Krieges zurückkehrt – und nichts mehr ist wie zuvor?</div>
                     </div>
                 </div>
             
@@ -1739,7 +1753,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Familienbüro</div>
-                        <div class="termin-beschreibung">Inhalte Das städtische Team der Kindertagespflege informiert interessierte Eltern über die Betreuung durch eine Kindertagespflegeperson. Mögliche Fragen: Was ist Kindertagespflege? Welche Formate gibt es? An wen richtet sich das Angebot? Was kostet die Kindertagespflege? Über welche Qualifikation verfügt eine Kindertagespflegeperson? Was muss ich tun, wenn ich einen Betreuungsplatz suche? Worauf muss ich bei der Auswahl einer geeigneten Kindertagespflegestelle achten?</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Inhalte Das städtische Team der Kindertagespflege informiert interessierte Eltern über die Betreuung durch eine Kindertagespflegeperson. Mögliche Fragen: Was ist Kindertagespflege? Welche Formate gibt es? An wen richtet sich das Angebot? Was kostet die Kindertagespflege? Über welche Qualifikation verfügt eine Kindertagespflegeperson? Was muss ich tun, wenn ich einen Betreuungsplatz suche? Worauf muss ich bei der Auswahl einer geeigneten Kindertagespflegestelle achten?</div>
                     </div>
                 </div>
             
@@ -1759,7 +1773,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">RETRO STATION</div>
-                        <div class="termin-beschreibung">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werden zentrale Ereignisse der Vergangenheit ebenso anschaulich erläutert wie das Alltagsleben der Menschen in früheren Zeiten. In drei modern gestalteten Ausstellungsbereichen zeigen zahlreiche Exponate die frühe Entwicklung der Stadt, die Bergbaugeschichte der Region und prägende Ereignisse des 20. Jahrhunderts. Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]recklinghausen.de ist erforderlich.</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werden zentrale Ereignisse der Vergangenheit ebenso anschaulich erläutert wie das Alltagsleben der Menschen in früheren Zeiten. In drei modern gestalteten Ausstellungsbereichen zeigen zahlreiche Exponate die frühe Entwicklung der Stadt, die Bergbaugeschichte der Region und prägende Ereignisse des 20. Jahrhunderts. Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]recklinghausen.de ist erforderlich.</div>
                     </div>
                 </div>
             
@@ -1771,7 +1785,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
-                        <div class="termin-beschreibung">Ralph Bernatz berichtet von den Anfängen der Straßenbahnlinie nach Scherlebeck und Langenbochum – eigentlich war eine Weiterführung bis nach Westerholt geplant. Warum endete die Strecke schließlich in Herten, wo es eigentlich weiter nach Westerholt gehen sollte? Der Vortrag über die Linie 7 führt durch ihre gesamte Geschichte – von der Planung über die Herausforderungen beim Bau bis hin zur feierlichen Eröffnung im Jahr 1915. Bernatz schildert den zuverlässigen Betrieb über fünf Jahrzehnte und beleuchtet die Hintergründe der Stilllegung. Reich bebildert und anschaulich erzählt, dokumentiert der Vortrag die wechselvolle Geschichte einer der typischen Linien der Vestischen Straßenbahnen. Ein Vortrag von Ralph Bernatz Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]reckling</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Ralph Bernatz berichtet von den Anfängen der Straßenbahnlinie nach Scherlebeck und Langenbochum – eigentlich war eine Weiterführung bis nach Westerholt geplant. Warum endete die Strecke schließlich in Herten, wo es eigentlich weiter nach Westerholt gehen sollte? Der Vortrag über die Linie 7 führt durch ihre gesamte Geschichte – von der Planung über die Herausforderungen beim Bau bis hin zur feierlichen Eröffnung im Jahr 1915. Bernatz schildert den zuverlässigen Betrieb über fünf Jahrzehnte und beleuchtet die Hintergründe der Stilllegung. Reich bebildert und anschaulich erzählt, dokumentiert der Vortrag die wechselvolle Geschichte einer der typischen Linien der Vestischen Straßenbahnen. Ein Vortrag von Ralph Bernatz Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]reckling</div>
                     </div>
                 </div>
             
@@ -1791,7 +1805,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Jede Nacht leuchten uns tausende Sterne vom Himmel herab. Im Planetarium können wir den Sternenhimmel auch tagsüber beobachten und erleben. Zu unseren himmlischen Ausflugszielen gehören die Sonne, der</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jede Nacht leuchten uns tausende Sterne vom Himmel herab. Im Planetarium können wir den Sternenhimmel auch tagsüber beobachten und erleben. Zu unseren himmlischen Ausflugszielen gehören die Sonne, der</div>
                     </div>
                 </div>
             
@@ -1803,7 +1817,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Planetarium</div>
-                        <div class="termin-beschreibung">Die Milchstraße ist unsere heimatliche Galaxis und so schauen wir aus ihr heraus in den Himmel - zu jeder Jahreszeit in einen anderen Sektor und mit einer anderen Lage am Firmament, so dass sie sich s</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die Milchstraße ist unsere heimatliche Galaxis und so schauen wir aus ihr heraus in den Himmel - zu jeder Jahreszeit in einen anderen Sektor und mit einer anderen Lage am Firmament, so dass sie sich s</div>
                     </div>
                 </div>
             
@@ -1855,7 +1869,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
                         </div>
                         <div class="termin-ort">Rathausplatz 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">80 - 99 km · 15-18 km/h — Hohe Mark-Tour: Lippe Aue und Dorsten</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">80 - 99 km · 15-18 km/h — Hohe Mark-Tour: Lippe Aue und Dorsten</div>
                     </div>
                 </div>
             
@@ -1867,7 +1881,7 @@ Die Tour ist bereits ausgebucht!</div>
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Rathaus</div>
-                        <div class="termin-beschreibung">Mit Musiker*innen der Neuen Philharmonie Westfalen im Ratssaal des Rathauses Recklinghausen Joseph Haydn (1732-1809) „Londoner Trio“ Nr.1. C-Dur (HOB. IV: 1) W.A. Mozart (1756-1791) Quartett für Flöte, Violine, Viola und Violoncello A-Dur KV 298 Franz Schubert (1797-1828) Streichtrio B-Dur D471 Albert Roussel (1869-1937) Streichtrio op. 40 W.A. Mozart (1756-1791) Quartett für Flöte, Violine, Viola und Violoncello D-Dur KV 285 Sophie Guérin , Flöte Satoko Iwabuchi , Violine Mariya Manasieva, Viola Jieun Kim , Violoncello</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Mit Musiker*innen der Neuen Philharmonie Westfalen im Ratssaal des Rathauses Recklinghausen Joseph Haydn (1732-1809) „Londoner Trio“ Nr.1. C-Dur (HOB. IV: 1) W.A. Mozart (1756-1791) Quartett für Flöte, Violine, Viola und Violoncello A-Dur KV 298 Franz Schubert (1797-1828) Streichtrio B-Dur D471 Albert Roussel (1869-1937) Streichtrio op. 40 W.A. Mozart (1756-1791) Quartett für Flöte, Violine, Viola und Violoncello D-Dur KV 285 Sophie Guérin , Flöte Satoko Iwabuchi , Violine Mariya Manasieva, Viola Jieun Kim , Violoncello</div>
                     </div>
                 </div>
             
@@ -1890,7 +1904,7 @@ Die Tour ist bereits ausgebucht!</div>
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 14:15 Uhr<br>
+            Generiert am 01.03.2026 um 14:25 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
