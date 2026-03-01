@@ -440,8 +440,7 @@
         }
 
         .termin.expanded .termin-beschreibung {
-            display: block;
-            -webkit-line-clamp: unset;
+            -webkit-line-clamp: 50;
             overflow: visible;
         }
 
@@ -600,7 +599,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">· Leitung: Chris Riedel und Benjamin Schlieper · öffentlich.</div>
+                        <div class="termin-beschreibung">· Leitung: Chris Riedel und Benjamin Schlieper · öffentlich.</div>
                     </div>
                 </div>
             
@@ -612,7 +611,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal & Virtueller Raum</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Informationen zum Thema des Abends werden den Teilnehmenden vorab per E-Mail zugesandt. von Marianne Langener, M.Sc.</div>
+                        <div class="termin-beschreibung">Informationen zum Thema des Abends werden den Teilnehmenden vorab per E-Mail zugesandt. von Marianne Langener, M.Sc.</div>
                     </div>
                 </div>
             
@@ -708,7 +707,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">– Musik, Begegnung und Feiern · öffentlich</div>
+                        <div class="termin-beschreibung">– Musik, Begegnung und Feiern · öffentlich</div>
                     </div>
                 </div>
             
@@ -904,7 +903,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Öffentliches Klassenvorspiel Klavier · Leitung: Michael Friedmann.</div>
+                        <div class="termin-beschreibung">Öffentliches Klassenvorspiel Klavier · Leitung: Michael Friedmann.</div>
                     </div>
                 </div>
             
@@ -1000,7 +999,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Programmbeschreibung: siehe</div>
+                        <div class="termin-beschreibung">Programmbeschreibung: siehe</div>
                     </div>
                 </div>
             
@@ -1056,7 +1055,7 @@
                             <span class="badge badge-sternwarte">Sternwarte</span> <span class="badge badge-kategorie">Astronomie</span>
                         </div>
                         <div class="termin-ort">Hörsaal & Virtueller Raum</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Informationen zum Thema des Abends werden den Teilnehmenden vorab per E-Mail zugesandt. von Marianne Langener, M.Sc.</div>
+                        <div class="termin-beschreibung">Informationen zum Thema des Abends werden den Teilnehmenden vorab per E-Mail zugesandt. von Marianne Langener, M.Sc.</div>
                     </div>
                 </div>
             
@@ -1344,7 +1343,7 @@
                             <span class="badge badge-stadt">Stadt RE</span>
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">: Musikalisches Lernen und gemeinsames Musizieren.</div>
+                        <div class="termin-beschreibung">: Musikalisches Lernen und gemeinsames Musizieren.</div>
                     </div>
                 </div>
             
@@ -1543,7 +1542,7 @@
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 14:27 Uhr<br>
+            Generiert am 01.03.2026 um 17:12 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -1625,6 +1624,7 @@
         // Buttons beschriften und Filter sofort anwenden (z.B. wenn localStorage gesetzt)
         _aktualisiereBtns();
         filterTermine();
+
 
         function filterTermine() {
             const quelleFilter = document.getElementById('quelle-filter').value;
