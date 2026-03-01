@@ -20,7 +20,18 @@ done
 
 # Termine abrufen
 OUTPUT=$(/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 app.py --no-browser 2>&1)
+PYTHON_EXIT=$?
 echo "$OUTPUT"
+
+if [ $PYTHON_EXIT -ne 0 ]; then
+    echo "FEHLER: app.py mit Exit-Code $PYTHON_EXIT abgebrochen – kein Push"
+    /opt/homebrew/bin/terminal-notifier \
+        -title "❌ Termine RE – Skriptfehler" \
+        -subtitle "Termine Recklinghausen" \
+        -message "app.py Exit-Code $PYTHON_EXIT – kein Push" \
+        -sound "Basso"
+    exit 1
+fi
 
 # Prüfe auf Fehler (Timeouts, Connection-Errors)
 FEHLER_COUNT=$(echo "$OUTPUT" | grep -c "Fehler beim Abrufen")

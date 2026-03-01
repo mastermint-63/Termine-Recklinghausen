@@ -10,6 +10,7 @@ Verwendung:
     python3 app.py --no-browser # Ohne Browser öffnen
 """
 
+import html
 import os
 import re
 import webbrowser
@@ -101,6 +102,14 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                 # Exakt gleich oder einer ist Teilstring des anderen
                 if norm_k == norm_v or norm_k in norm_v or norm_v in norm_k:
                     ist_duplikat = True
+                    # Fehlende Felder aus dem Duplikat ergänzen
+                    if not vorhandener.beschreibung and kandidat.beschreibung:
+                        vorhandener.beschreibung = kandidat.beschreibung
+                    if vorhandener.uhrzeit in ('', 'siehe Website') and kandidat.uhrzeit not in ('', 'siehe Website'):
+                        vorhandener.uhrzeit = kandidat.uhrzeit
+                    if not vorhandener.ort or vorhandener.ort == 'Recklinghausen':
+                        if kandidat.ort and kandidat.ort != 'Recklinghausen':
+                            vorhandener.ort = kandidat.ort
                     break
             if not ist_duplikat:
                 behalten.append(kandidat)
@@ -169,7 +178,12 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         '''
 
         for t in sorted(tage, key=lambda x: (x.uhrzeit == 'ganztägig', x.uhrzeit == 'siehe Website', x.uhrzeit, x.name)):
-            beschreibung_escaped = t.beschreibung.replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')[:200]
+            beschreibung_escaped = html.escape(t.beschreibung)[:800]
+
+            name_esc = html.escape(t.name)
+            uhrzeit_esc = html.escape(t.uhrzeit)
+            ort_esc = html.escape(t.ort) if t.ort else ''
+            link_safe = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''
 
             # Badge für Quelle
             badge_classes = {
@@ -204,24 +218,32 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             badge_html = f'<span class="badge {badge_class}">{quelle_label}</span>'
 
             if t.kategorie:
-                badge_html += f' <span class="badge badge-kategorie">{t.kategorie}</span>'
+                badge_html += f' <span class="badge badge-kategorie">{html.escape(t.kategorie)}</span>'
 
             # Name als Link oder aufklappbar
-            if t.link:
-                name_html = f'<a href="{t.link}" target="_blank">{t.name}</a>'
+            if link_safe:
+                name_html = f'<a href="{link_safe}" target="_blank" rel="noopener noreferrer">{name_esc}</a>'
             else:
-                name_html = f'<span class="termin-toggle" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{t.name}</span>'
+                name_html = f'<span class="termin-toggle" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{name_esc}</span>'
+
+            # Beschreibung: bei Link-Terminen und langer Beschreibung klickbar aufklappbar
+            if beschreibung_escaped and link_safe and len(beschreibung_escaped) > 120:
+                beschreibung_html = f'<div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{beschreibung_escaped}</div>'
+            elif beschreibung_escaped:
+                beschreibung_html = f'<div class="termin-beschreibung">{beschreibung_escaped}</div>'
+            else:
+                beschreibung_html = ''
 
             termine_html += f'''
                 <div class="termin" data-quelle="{t.quelle}">
-                    <div class="termin-zeit">{t.uhrzeit}</div>
+                    <div class="termin-zeit">{uhrzeit_esc}</div>
                     <div class="termin-info">
                         <div class="termin-name">
                             {name_html}
                             {badge_html}
                         </div>
-                        {f'<div class="termin-ort">{t.ort}</div>' if t.ort else ''}
-                        {f'<div class="termin-beschreibung">{beschreibung_escaped}</div>' if beschreibung_escaped else ''}
+                        {f'<div class="termin-ort">{ort_esc}</div>' if ort_esc else ''}
+                        {beschreibung_html}
                     </div>
                 </div>
             '''
@@ -685,9 +707,22 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             display: none;
         }}
 
+        .termin-beschreibung-mehr {{
+            cursor: pointer;
+        }}
+
+        .termin-beschreibung-mehr::after {{
+            content: ' \\25B8';
+            font-size: 11px;
+            color: var(--text-secondary);
+        }}
+
+        .termin.expanded .termin-beschreibung-mehr::after {{
+            content: ' \\25BE';
+        }}
+
         .termin.expanded .termin-beschreibung {{
-            display: block;
-            -webkit-line-clamp: unset;
+            -webkit-line-clamp: 50;
             overflow: visible;
         }}
 
@@ -818,8 +853,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <select id="quelle-filter" onchange="filterTermine()">
                 {quellen_filter}
             </select>
-            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
-            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
+            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
                 <span id="termine-count">{len(termine)}</span> Termine
             </div>
@@ -832,30 +867,30 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         <footer>
             Generiert am {datetime.now().strftime('%d.%m.%Y um %H:%M Uhr')}<br>
             Quellen:
-            <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
-            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
-            <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank">Altstadtschmiede</a> &middot;
-            <a href="https://vesterleben.de/termine" target="_blank">Vesterleben.de</a> &middot;
-            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank">Sternwarte</a> &middot;
-            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank">Kunsthalle</a> &middot;
-            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank">Stadtbibliothek</a> &middot;
-            <a href="https://nlgr.de/veranstaltungen/" target="_blank">NLGR</a> &middot;
-            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank">Literaturtage</a> &middot;
-            <a href="https://www.vhs-recklinghausen.de" target="_blank">VHS</a> &middot;
-            <a href="https://www.ahademie.com/veranstaltungen/" target="_blank">Ev. Akademie</a> &middot;
-            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank">Stadtarchiv</a> &middot;
-            <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank">Heimatkunde</a> &middot;
-            <a href="https://www.gastkirche.de/index.php/termine" target="_blank">Gastkirche</a> &middot;
-            <a href="https://www.ruhrfestspiele.de/programm" target="_blank">Ruhrfestspiele</a> &middot;
-            <a href="https://backyard-club.de/events" target="_blank">Backyard-Club</a> &middot;
-            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank">Cineworld</a> &middot;
-            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank">Neue Philharmonie</a> &middot;
-            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank">Ikonen-Museum</a> &middot;
-            <a href="https://debut-um-11.de/konzerte-102/" target="_blank">Debut um 11</a> &middot;
-            <a href="https://recklinghausen.adfc.de/" target="_blank">ADFC Recklinghausen</a> &middot;
-            <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank">Atelierhaus</a> &middot;
-            <a href="https://www.zu-gast-in-re.de/programm" target="_blank">Zu Gast in RE</a> &middot;
-            <a href="https://re-leuchtet.de/programm" target="_blank">RE-leuchtet</a>
+            <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
+            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
+            <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;
+            <a href="https://vesterleben.de/termine" target="_blank" rel="noopener noreferrer">Vesterleben.de</a> &middot;
+            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Sternwarte</a> &middot;
+            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank" rel="noopener noreferrer">Kunsthalle</a> &middot;
+            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank" rel="noopener noreferrer">Stadtbibliothek</a> &middot;
+            <a href="https://nlgr.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">NLGR</a> &middot;
+            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">Literaturtage</a> &middot;
+            <a href="https://www.vhs-recklinghausen.de" target="_blank" rel="noopener noreferrer">VHS</a> &middot;
+            <a href="https://www.ahademie.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Ev. Akademie</a> &middot;
+            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank" rel="noopener noreferrer">Stadtarchiv</a> &middot;
+            <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank" rel="noopener noreferrer">Heimatkunde</a> &middot;
+            <a href="https://www.gastkirche.de/index.php/termine" target="_blank" rel="noopener noreferrer">Gastkirche</a> &middot;
+            <a href="https://www.ruhrfestspiele.de/programm" target="_blank" rel="noopener noreferrer">Ruhrfestspiele</a> &middot;
+            <a href="https://backyard-club.de/events" target="_blank" rel="noopener noreferrer">Backyard-Club</a> &middot;
+            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank" rel="noopener noreferrer">Cineworld</a> &middot;
+            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank" rel="noopener noreferrer">Neue Philharmonie</a> &middot;
+            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank" rel="noopener noreferrer">Ikonen-Museum</a> &middot;
+            <a href="https://debut-um-11.de/konzerte-102/" target="_blank" rel="noopener noreferrer">Debut um 11</a> &middot;
+            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
+            <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank" rel="noopener noreferrer">Atelierhaus</a> &middot;
+            <a href="https://www.zu-gast-in-re.de/programm" target="_blank" rel="noopener noreferrer">Zu Gast in RE</a> &middot;
+            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a>
         </footer>
     </div>
 
@@ -884,9 +919,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             }}
         }})();
 
-        // Zustand aus localStorage laden (Standard: eingeblendet)
-        let vhsAusgeblendet = localStorage.getItem('vhs') === 'aus';
-        let kinoAusgeblendet = localStorage.getItem('kino') === 'aus';
+        // VHS und Kino sind beim Seitenaufruf immer ausgeblendet
+        let vhsAusgeblendet = true;
+        let kinoAusgeblendet = true;
 
         function _aktualisiereBtns() {{
             const vBtn = document.getElementById('vhs-toggle');
@@ -899,14 +934,12 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         function toggleVHS() {{
             vhsAusgeblendet = !vhsAusgeblendet;
-            localStorage.setItem('vhs', vhsAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }}
 
         function toggleKino() {{
             kinoAusgeblendet = !kinoAusgeblendet;
-            localStorage.setItem('kino', kinoAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }}
@@ -914,6 +947,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         // Buttons beschriften und Filter sofort anwenden (z.B. wenn localStorage gesetzt)
         _aktualisiereBtns();
         filterTermine();
+
 
         function filterTermine() {{
             const quelleFilter = document.getElementById('quelle-filter').value;
