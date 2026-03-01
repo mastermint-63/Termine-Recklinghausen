@@ -565,8 +565,8 @@
             <select id="quelle-filter" onchange="filterTermine()">
                 <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="ikonen-museum">Ikonen-Museum</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
             </select>
-            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
-            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
+            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
                 <span id="termine-count">85</span> Termine
             </div>
@@ -1829,7 +1829,7 @@
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 13:32 Uhr<br>
+            Generiert am 01.03.2026 um 13:39 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -1883,9 +1883,9 @@
             }
         })();
 
-        // Zustand aus localStorage laden (Standard: eingeblendet)
-        let vhsAusgeblendet = localStorage.getItem('vhs') === 'aus';
-        let kinoAusgeblendet = localStorage.getItem('kino') === 'aus';
+        // VHS und Kino sind beim Seitenaufruf immer ausgeblendet
+        let vhsAusgeblendet = true;
+        let kinoAusgeblendet = true;
 
         function _aktualisiereBtns() {
             const vBtn = document.getElementById('vhs-toggle');
@@ -1898,14 +1898,12 @@
 
         function toggleVHS() {
             vhsAusgeblendet = !vhsAusgeblendet;
-            localStorage.setItem('vhs', vhsAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }
 
         function toggleKino() {
             kinoAusgeblendet = !kinoAusgeblendet;
-            localStorage.setItem('kino', kinoAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }

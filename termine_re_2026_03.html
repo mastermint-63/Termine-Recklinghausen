@@ -566,8 +566,8 @@
             <select id="quelle-filter" onchange="filterTermine()">
                 <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="neue-philharmonie">Neue Philharmonie</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
-            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
-            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino ausblenden</button>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
+            <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
                 <span id="termine-count">216</span> Termine
             </div>
@@ -3422,7 +3422,7 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
         </main>
 
         <footer>
-            Generiert am 01.03.2026 um 13:28 Uhr<br>
+            Generiert am 01.03.2026 um 13:36 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank">Stadt RE</a> &middot;
@@ -3476,9 +3476,9 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
             }
         })();
 
-        // Zustand aus localStorage laden (Standard: eingeblendet)
-        let vhsAusgeblendet = localStorage.getItem('vhs') === 'aus';
-        let kinoAusgeblendet = localStorage.getItem('kino') === 'aus';
+        // VHS und Kino sind beim Seitenaufruf immer ausgeblendet
+        let vhsAusgeblendet = true;
+        let kinoAusgeblendet = true;
 
         function _aktualisiereBtns() {
             const vBtn = document.getElementById('vhs-toggle');
@@ -3491,14 +3491,12 @@ Dieses hat sich gerade in den letzten Monaten stark weiterentwickelt.</div>
 
         function toggleVHS() {
             vhsAusgeblendet = !vhsAusgeblendet;
-            localStorage.setItem('vhs', vhsAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }
 
         function toggleKino() {
             kinoAusgeblendet = !kinoAusgeblendet;
-            localStorage.setItem('kino', kinoAusgeblendet ? 'aus' : 'ein');
             _aktualisiereBtns();
             filterTermine();
         }
