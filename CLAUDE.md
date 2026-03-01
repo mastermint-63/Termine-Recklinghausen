@@ -5,6 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Ausführung
 
 ```bash
+# Python-Pfad (System nutzt 3.14 Framework-Installation)
+/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 app.py --no-browser
+
 python3 app.py                    # 5 Monate ab heute, öffnet Browser
 python3 app.py 2026 2             # 5 Monate ab Februar 2026
 python3 app.py 2026 2 6           # 6 Monate ab Februar 2026
@@ -84,6 +87,12 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 | `hole_frauenforum()` | — (kein Scraping) | Programmatisch: 3. Dienstag/Monat, 17 Uhr, Familienbüro Große Geldstraße 19; Pause Juli + Dezember |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
+
+## Code-Konventionen
+
+- **HTML-Escaping:** `import html as _html` (Alias nötig, weil `generiere_html()` intern eine lokale Variable `html` verwendet — direktes `import html` führt zu `UnboundLocalError`). Alle gescrapten Textfelder werden mit `_html.escape()` escaped.
+- **URL-Validierung:** Externe Links als `link_safe = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''` validieren — nur dann als `<a href>` rendern, sonst `<span>`.
+- **Alle `target="_blank"`-Links** müssen `rel="noopener noreferrer"` tragen.
 
 ## Bekannte Probleme / offene Punkte
 
