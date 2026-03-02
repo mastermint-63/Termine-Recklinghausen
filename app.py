@@ -316,9 +316,26 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     html = f'''<!DOCTYPE html>
 <html lang="de">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RML793W7R2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', 'G-RML793W7R2');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Termine Recklinghausen — {monatsnamen[monat]} {jahr}</title>
+    <title>Holzwurm Recklinghausen - Veranstaltungskalender — {monatsnamen[monat]} {jahr}</title>
+    <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
+    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
+    <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
+    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de" />
+    <meta property="og:site_name" content="Holzwurm Recklinghausen" />
     <style>
         :root {{
             --bg-color: #e8e0d8;
@@ -1085,9 +1102,26 @@ def main():
     index_html = f'''<!DOCTYPE html>
 <html lang="de">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RML793W7R2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+      gtag('config', 'G-RML793W7R2');
+    </script>
     <meta charset="UTF-8">
     <meta http-equiv="refresh" content="0; url={erster_monat_datei}">
-    <title>Termine Recklinghausen</title>
+    <title>Holzwurm Recklinghausen - Veranstaltungskalender</title>
+    <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
+    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
+    <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
+    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de" />
+    <meta property="og:site_name" content="Holzwurm Recklinghausen" />
 </head>
 <body>
     <p>Weiterleitung zu <a href="{erster_monat_datei}">{erster_monat_datei}</a>...</p>
