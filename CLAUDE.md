@@ -20,7 +20,7 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## GitHub Pages
 
 - **Repository:** https://github.com/mastermint-63/Termine-Recklinghausen
-- **Live URL:** https://mastermint-63.github.io/Termine-Recklinghausen/ (keine Custom Domain)
+- **Live URL:** https://termine.holzwurm-recklinghausen.de (Custom Domain via `CNAME`)
 - **Deploy:** GitHub Actions (`deploy.yml`) triggert bei Push von `termine_re_*.html` oder `index.html`
 
 ## Architektur
@@ -31,9 +31,9 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 
 **scraper.py** — 25 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
 
-**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind **beim Seitenaufruf immer ausgeblendet** (kein localStorage). Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Seitenaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL). Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()` (`app.py`): gleiches Datum + normalisierter Name (exakt oder Teilstring) → Eintrag mit besserem Info-Score wird behalten, **fehlende Felder (beschreibung, uhrzeit, ort) werden aus dem Duplikat ergänzt** (z.B. Stadtarchiv-PDF liefert Uhrzeit, stad-re-Kalender liefert Beschreibung). Beschreibungen werden auf 800 Zeichen begrenzt; bei Terminen mit Link und langer Beschreibung (>120 Zeichen) erscheint ein aufklappbarer Text mit `termin-beschreibung-mehr`-Klasse und `onclick`-Toggle.
+**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind **beim Seitenaufruf immer ausgeblendet** (kein localStorage). Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Direktaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL); Monatsnavigation-Links tragen `#top` → Browser scrollt nach oben, Auto-Sprung wird unterdrückt. Canonical-URL und og:url zeigen auf die jeweilige Monatsdatei (`/termine_re_YYYY_MM.html`), nicht auf die Root-URL. `generiere_html()` erwartet `dateiname`-Parameter für die Canonical-URL. Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()` (`app.py`): gleiches Datum + normalisierter Name (exakt oder Teilstring) → Eintrag mit besserem Info-Score wird behalten, **fehlende Felder (beschreibung, uhrzeit, ort) werden aus dem Duplikat ergänzt** (z.B. Stadtarchiv-PDF liefert Uhrzeit, stad-re-Kalender liefert Beschreibung). Beschreibungen werden auf 800 Zeichen begrenzt; bei Terminen mit Link und langer Beschreibung (>120 Zeichen) erscheint ein aufklappbarer Text mit `termin-beschreibung-mehr`-Klasse und `onclick`-Toggle.
 
-**update.sh** — Tägliche Automation: Scraping → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad.
+**update.sh** — Tägliche Automation: Scraping → Löschroutine für alte Dateien → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad. Dateien älter als der Vormonat werden automatisch per `git rm` entfernt und im gleichen Commit mitgepusht (1-Monats-Puffer: Vormonat bleibt erhalten).
 
 ### Automatische Aktualisierung
 
@@ -119,4 +119,6 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 8. Optional: Toggle-Button falls Quelle viele Termine liefert — `toggleXyz()`-Funktion + `xyzAusgeblendet`-Variable + `xyzMatch`-Check in `filterTermine()` (Muster: siehe VHS/Kino-Toggle)
 9. Quellentabelle in dieser CLAUDE.md aktualisieren
 
-**`hebbert/`** — Enthält Maskottchen-Bilder für den Seitenheader (Holzwurm-Figur). Nicht scraping-relevant.
+**`hebbert/`** — Maskottchen-Bilder für den Seitenheader. Aktiv: `1984-01-verkleinert.jpg` (links) und `1985-04-verkleinert.jpg` (rechts). Originals liegen als Fallback daneben, nicht mehr referenziert.
+
+**`favicon.ico` / `favicon-96x96-1.webp`** — Beide Formate nötig: `.ico` als Browser-Fallback (wird automatisch als `/favicon.ico` abgerufen), `.webp` für moderne Browser. Beide sind im HTML-`<head>` eingebunden, `.ico` zuerst.
