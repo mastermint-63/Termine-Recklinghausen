@@ -183,7 +183,8 @@ def generiere_kalender(jahr: int, monat: int, tage_mit_events: set[int]) -> str:
 
 
 def generiere_html(termine: list[Termin], jahr: int, monat: int,
-                   verfuegbare_monate: list[tuple[int, int]]) -> str:
+                   verfuegbare_monate: list[tuple[int, int]],
+                   dateiname: str = "") -> str:
     monatsnamen = [
         '', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
         'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
@@ -303,8 +304,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     prev_verfuegbar = (prev_jahr, prev_monat) in verfuegbare_monate
     next_verfuegbar = (next_jahr, next_monat) in verfuegbare_monate
 
-    prev_link = dateiname_fuer_monat(prev_jahr, prev_monat) if prev_verfuegbar else "#"
-    next_link = dateiname_fuer_monat(next_jahr, next_monat) if next_verfuegbar else "#"
+    prev_link = dateiname_fuer_monat(prev_jahr, prev_monat) + "#top" if prev_verfuegbar else "#"
+    next_link = dateiname_fuer_monat(next_jahr, next_monat) + "#top" if next_verfuegbar else "#"
 
     prev_class = "" if prev_verfuegbar else " disabled"
     next_class = "" if next_verfuegbar else " disabled"
@@ -329,12 +330,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     <title>Holzwurm Recklinghausen - Veranstaltungskalender — {monatsnamen[monat]} {jahr}</title>
     <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
-    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de" />
+    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/{dateiname}" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/webp" href="favicon-96x96-1.webp">
     <meta property="og:locale" content="de_DE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
     <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
-    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de" />
+    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de/{dateiname}" />
     <meta property="og:site_name" content="Holzwurm Recklinghausen" />
     <style>
         :root {{
@@ -888,11 +891,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     <div class="container">
         <header>
             <div class="header-inner">
-                <img src="hebbert/1984-01.jpg" alt="Hebbert" class="hebbert">
+                <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert">
                 <div class="header-text">
                     <h1>Termine in Recklinghausen</h1>
                 </div>
-                <img src="hebbert/1985-04.jpg" alt="Hebbert am Terminplan" class="hebbert">
+                <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert">
             </div>
             <div class="nav">
                 <a href="{prev_link}" class="nav-btn{prev_class}">&larr; {monatsnamen[prev_monat]}</a>
@@ -1087,9 +1090,8 @@ def main():
         entfernt = vor_dedup - len(alle_termine)
         print(f"  => Gesamt: {len(alle_termine)} Termine ({entfernt} Duplikate entfernt)")
 
-        html = generiere_html(alle_termine, j, m, monate_liste)
-
         dateiname = dateiname_fuer_monat(j, m)
+        html = generiere_html(alle_termine, j, m, monate_liste, dateiname)
         ausgabe_pfad = os.path.join(basis_pfad, dateiname)
         with open(ausgabe_pfad, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -1116,6 +1118,8 @@ def main():
     <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
     <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/webp" href="favicon-96x96-1.webp">
     <meta property="og:locale" content="de_DE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
