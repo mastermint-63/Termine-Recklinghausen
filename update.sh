@@ -48,15 +48,42 @@ done <<< "$OUTPUT"
 # Differenz berechnen
 DIFF=$((NEUE_ANZAHL - ALTE_ANZAHL))
 
+# Alte Monatsdateien aufräumen (Puffer: Vormonat bleibt, alles davor wird gelöscht)
+CUTOFF_JAHR=$(date +%Y)
+CUTOFF_MONAT=$(date +%-m)
+if [ "$CUTOFF_MONAT" -eq 1 ]; then
+    CUTOFF_JAHR=$((CUTOFF_JAHR - 1))
+    CUTOFF_MONAT=12
+else
+    CUTOFF_MONAT=$((CUTOFF_MONAT - 1))
+fi
+CUTOFF=$(printf "%04d_%02d" "$CUTOFF_JAHR" "$CUTOFF_MONAT")
+GELOESCHT=()
+for html in termine_re_*.html; do
+    [ -f "$html" ] || continue
+    DATEI_KEY=$(echo "$html" | grep -o '[0-9]\{4\}_[0-9]\{2\}')
+    if [[ "$DATEI_KEY" < "$CUTOFF" ]]; then
+        echo "Lösche veraltete Datei: $html (älter als Vormonat)"
+        git rm "$html" 2>/dev/null && GELOESCHT+=("$html")
+    fi
+done
+
 # Zu GitHub pushen (nur wenn Änderungen vorhanden)
 PUSH_STATUS=""
-if git diff --quiet termine_re_*.html 2>/dev/null && [ -z "$(git ls-files -o --exclude-standard termine_re_*.html 2>/dev/null)" ]; then
+HAT_AENDERUNGEN=false
+git diff --quiet termine_re_*.html 2>/dev/null || HAT_AENDERUNGEN=true
+[ -n "$(git ls-files -o --exclude-standard termine_re_*.html 2>/dev/null)" ] && HAT_AENDERUNGEN=true
+git diff --cached --quiet 2>/dev/null || HAT_AENDERUNGEN=true
+
+if [ "$HAT_AENDERUNGEN" = false ]; then
     echo "Keine Änderungen - kein Push nötig"
     PUSH_STATUS="Keine Änderungen"
 else
     echo "Änderungen gefunden - pushe zu GitHub..."
     git add termine_re_*.html index.html 2>/dev/null
-    git commit -m "Termine RE aktualisiert $DATUM" 2>&1
+    COMMIT_MSG="Termine RE aktualisiert $DATUM"
+    [ ${#GELOESCHT[@]} -gt 0 ] && COMMIT_MSG="$COMMIT_MSG (${#GELOESCHT[@]} alte Datei(en) gelöscht)"
+    git commit -m "$COMMIT_MSG" 2>&1
 
     if git push 2>&1; then
         echo "Push erfolgreich!"
@@ -89,6 +116,11 @@ fi
 # Push-Status anhängen
 if [ -n "$PUSH_STATUS" ]; then
     TEXT="$TEXT | $PUSH_STATUS"
+fi
+
+# Gelöschte Dateien anhängen
+if [ ${#GELOESCHT[@]} -gt 0 ]; then
+    TEXT="$TEXT | 🗑 ${#GELOESCHT[@]} alte Datei(en) gelöscht"
 fi
 
 # Klickbare macOS Benachrichtigung
