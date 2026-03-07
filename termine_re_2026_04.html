@@ -393,6 +393,18 @@
             background: linear-gradient(135deg, #c0387a 0%, #a02060 100%);
             color: white;
         }
+        .badge-josefeich {
+            background: linear-gradient(135deg, #8a7050 0%, #7a6040 100%);
+            color: white;
+        }
+        .badge-recklinghaeuser {
+            background: linear-gradient(135deg, #b08030 0%, #a07020 100%);
+            color: white;
+        }
+        .badge-subergs {
+            background: linear-gradient(135deg, #5a5a7a 0%, #4a4a6a 100%);
+            color: white;
+        }
         .badge-manuell {
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -575,11 +587,11 @@
     <div class="container">
         <header>
             <div class="header-inner">
-                <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert">
+                <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert" width="604" height="280" decoding="async">
                 <div class="header-text">
                     <h1>Termine in Recklinghausen</h1>
                 </div>
-                <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert">
+                <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert" width="351" height="276" decoding="async">
             </div>
             <div class="nav">
                 <a href="termine_re_2026_03.html#top" class="nav-btn">&larr; März</a>
@@ -599,12 +611,12 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="recklinghaeuser">Der Recklinghäuser</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
-                <span id="termine-count">152</span> Termine
+                <span id="termine-count">154</span> Termine
             </div>
         </div>
 
@@ -1709,6 +1721,18 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="backyard">
+                    <div class="termin-zeit">20:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://backyard-club.de/veranstaltung/wasteland-haze/" target="_blank" rel="noopener noreferrer">Wasteland Haze, Desintegrated</a>
+                            <span class="badge badge-backyard">Backyard-Club</span> <span class="badge badge-kategorie">Musik</span>
+                        </div>
+                        <div class="termin-ort">Backyard-Club e.V., Alte Grenzstr. 153e</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Getreu dem Motto „Heavy and apocalyptic riffs tell a story, that doesn’t need words“ mischen Wasteland Haze die Musikgenres Stonerrock, Doom und Postrock um einen eigenen rohen, ungefilterten und instrumentalen Stil zu kreieren. Von...&lt;/p&gt;\n</div>
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -1738,6 +1762,18 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
                         </div>
                         <div class="termin-ort">Musikschule Recklinghausen</div>
                         <div class="termin-beschreibung">Handpan-Workshop · Klang, Rhythmus und gemeinsames Musizieren · Leitung: Joachim Metze.</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="recklinghaeuser">
+                    <div class="termin-zeit">21:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Live-Musik im Recklinghäuser: Wild Years</a>
+                            <span class="badge badge-recklinghaeuser">Der Recklinghäuser</span>
+                        </div>
+                        <div class="termin-ort">Der Recklinghäuser, Königswall 14</div>
+                        
                     </div>
                 </div>
             
@@ -2041,7 +2077,7 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
                     <div class="termin-zeit">18:00–19:30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-7012/kursname/Einbuergerungstest/kategorie-id/26" target="_blank" rel="noopener noreferrer">Einbürgerungstest</a>
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-7012/kursname/Einbuergerungstest Ausgebucht/kategorie-id/26" target="_blank" rel="noopener noreferrer">Einbürgerungstest: Ausgebucht!</a>
                             <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 1.01</div>
@@ -2245,7 +2281,7 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
                     <div class="termin-zeit">08:30–12:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-7013/kursname/Deutsch Pruefung telc A2 B1/kategorie-id/26" target="_blank" rel="noopener noreferrer">Prüfung  telc  Deutsch A2 / B1</a>
+                            <a href="https://www.vhs-recklinghausen.de/sprachen/kw/bereich/kursdetails/kurs/26A-7013/kursname/Deutsch Pruefung telc A2 B1 Ausgebucht/kategorie-id/26" target="_blank" rel="noopener noreferrer">Prüfung  telc  Deutsch A2 / B1 Ausgebucht!</a>
                             <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
                         </div>
                         <div class="termin-ort">Willy-Brandt-Haus R. 1.01</div>
@@ -2672,7 +2708,7 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
         </main>
 
         <footer>
-            Generiert am 06.03.2026 um 07:36 Uhr<br>
+            Generiert am 07.03.2026 um 03:35 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
@@ -2697,7 +2733,10 @@ Für diejenigen, die auch am Ostertag gerne Radfahren, hat der ADFC ein besonder
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank" rel="noopener noreferrer">Atelierhaus</a> &middot;
             <a href="https://www.zu-gast-in-re.de/programm" target="_blank" rel="noopener noreferrer">Zu Gast in RE</a> &middot;
-            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a>
+            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a> &middot;
+            <a href="https://josefeich.de/events/" target="_blank" rel="noopener noreferrer">Josef P. Eich</a> &middot;
+            <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
+            <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
