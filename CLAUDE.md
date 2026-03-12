@@ -26,10 +26,10 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-25 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+28 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
-**scraper.py** — 25 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
+**scraper.py** — 28 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
 
 **app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind **beim Seitenaufruf immer ausgeblendet** (kein localStorage). Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Direktaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL); Monatsnavigation-Links tragen `#top` → Browser scrollt nach oben, Auto-Sprung wird unterdrückt. Canonical-URL und og:url zeigen auf die jeweilige Monatsdatei (`/termine_re_YYYY_MM.html`), nicht auf die Root-URL. `generiere_html()` erwartet `dateiname`-Parameter für die Canonical-URL. Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()` (`app.py`): gleiches Datum + normalisierter Name (exakt oder Teilstring) → Eintrag mit besserem Info-Score wird behalten, **fehlende Felder (beschreibung, uhrzeit, ort) werden aus dem Duplikat ergänzt** (z.B. Stadtarchiv-PDF liefert Uhrzeit, stad-re-Kalender liefert Beschreibung). Beschreibungen werden auf 800 Zeichen begrenzt; bei Terminen mit Link und langer Beschreibung (>120 Zeichen) erscheint ein aufklappbarer Text mit `termin-beschreibung-mehr`-Klasse und `onclick`-Toggle.
 
@@ -85,6 +85,9 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 | `hole_zu_gast_in_re()` | zu-gast-in-re.de/programm | Text-Parsing: Website-Builder (DM), Datum-Spans per Regex, ein Termin pro Festival-Tag; Seite enthält nur Vorjahresprogramm bis neues veröffentlicht wird |
 | `hole_re_leuchtet()` | re-leuchtet.de/programm | TEC REST-API (`wp-json/tribe/events/v1/events`); Jahresfestival, meist nur wenige Termine |
 | `hole_frauenforum()` | — (kein Scraping) | Programmatisch: 3. Dienstag/Monat, 17 Uhr, Familienbüro Große Geldstraße 19; Pause Juli + Dezember |
+| `hole_josefeich()` | josefeich.de | JSON-LD `Event` (The Events Calendar Plugin); Kirchenmusik-Termine |
+| `hole_recklinghaeuser()` | der-recklinghaeuser.de | Fließtext-Parsing: deutsche Datumsformate ("Sa. 14. März 2026"), Titel + Uhrzeit aus Folgezeilen |
+| `hole_subergs()` | subergs.de/events/ | WordPress-Blogposts: Datum im h3-Titel ("DD.MM.YYYY – Titel"), Elementor-Layout |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 

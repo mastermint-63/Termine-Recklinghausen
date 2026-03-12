@@ -48,6 +48,9 @@ RE_LEUCHTET_URL = "https://re-leuchtet.de/programm"
 ZU_GAST_URL = "https://www.zu-gast-in-re.de/programm"
 ATELIERHAUS_ICS = "https://atelierhaus-recklinghausen.de/?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events"
 ATELIERHAUS_URL = "https://atelierhaus-recklinghausen.de/kalendar/"
+JOSEFEICH_URL = "https://josefeich.de/events/"
+RECKLINGHAEUSER_URL = "https://www.der-recklinghaeuser.de/"
+SUBERGS_URL = "https://www.subergs.de/events/"
 
 
 @dataclass
@@ -2170,7 +2173,147 @@ def hole_frauenforum(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 26. Manuelle Termine — JSON-Datei
+# 26. Josef P. Eich — Kirchenmusik (The Events Calendar / JSON-LD)
+# ---------------------------------------------------------------------------
+
+def hole_josefeich(jahr: int, monat: int) -> list[Termin]:
+    """Holt Kirchenmusik-Termine von josefeich.de via JSON-LD."""
+    return _hole_events_calendar(JOSEFEICH_URL, 'josefeich', 'Konzert', jahr, monat)
+
+
+# ---------------------------------------------------------------------------
+# 27. Der Recklinghäuser — Kultkneipe (Text-Parsing)
+# ---------------------------------------------------------------------------
+
+def hole_recklinghaeuser(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von der-recklinghaeuser.de (Fließtext-Parsing)."""
+    try:
+        response = requests.get(RECKLINGHAEUSER_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (Der Recklinghäuser): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    # Events stehen als Fließtext, Datum im Format "Sa. 14. März 2026"
+    text = soup.get_text('\n')
+    monate_de = {
+        'Januar': 1, 'Februar': 2, 'März': 3, 'April': 4,
+        'Mai': 5, 'Juni': 6, 'Juli': 7, 'August': 8,
+        'September': 9, 'Oktober': 10, 'November': 11, 'Dezember': 12,
+    }
+    monate_pattern = '|'.join(monate_de.keys())
+    pattern = re.compile(
+        r'(?:Mo|Di|Mi|Do|Fr|Sa|So)\.\s+(\d{1,2})\.\s+(' + monate_pattern + r')\s+(\d{4})'
+    )
+
+    lines = text.split('\n')
+    for i, line in enumerate(lines):
+        m = pattern.search(line.strip())
+        if not m:
+            continue
+
+        tag, monat_name, jahr_str = int(m.group(1)), m.group(2), int(m.group(3))
+        monat_nr = monate_de[monat_name]
+
+        try:
+            datum = datetime(jahr_str, monat_nr, tag)
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        # Titel und Uhrzeit aus den folgenden Zeilen extrahieren
+        name = ''
+        uhrzeit = 'siehe Website'
+        for j in range(i + 1, min(i + 5, len(lines))):
+            nachfolge = lines[j].strip()
+            if not nachfolge:
+                continue
+            if not name:
+                name = nachfolge
+            # Uhrzeit im Format "ab 20 Uhr", "21 Uhr", "20:30 Uhr"
+            zeit_match = re.search(r'(?:ab\s+)?(\d{1,2})(?::(\d{2}))?\s*Uhr', nachfolge, re.IGNORECASE)
+            if zeit_match:
+                h = int(zeit_match.group(1))
+                mi = int(zeit_match.group(2)) if zeit_match.group(2) else 0
+                datum = datum.replace(hour=h, minute=mi)
+                uhrzeit = f"{h:02d}:{mi:02d} Uhr"
+                break
+
+        if not name:
+            continue
+
+        # Klammerinhalt mit Uhrzeit aus dem Namen entfernen
+        name = re.sub(r'\s*\(.*?Uhr.*?\)', '', name).strip()
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort='Der Recklinghäuser, Königswall 14',
+            link=RECKLINGHAEUSER_URL,
+            beschreibung='',
+            quelle='recklinghaeuser', kategorie='',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 28. Subergs im Festspielhaus — WordPress-Blog (Datum im Titel)
+# ---------------------------------------------------------------------------
+
+def hole_subergs(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von subergs.de/events/ (WordPress-Blogposts, Datum im Titel)."""
+    try:
+        response = requests.get(SUBERGS_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (Subergs): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+
+    # Events haben h3-Tags mit Links, Datum im Format "DD.MM.YYYY – Titel"
+    for h3 in soup.find_all('h3'):
+        a = h3.find('a')
+        if not a:
+            continue
+
+        text = a.get_text(strip=True)
+        # Muster: "13.03.2026 – Tatort Dinner „Mord in Paris""
+        m = re.match(r'(\d{2})\.(\d{2})\.(\d{4})\s*[–\-]\s*(.+)', text)
+        if not m:
+            continue
+
+        tag, mon, jahr_str, name = int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4).strip()
+
+        try:
+            datum = datetime(jahr_str, mon, tag)
+        except ValueError:
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        link = a.get('href', '')
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit='siehe Website',
+            ort='Subergs im Festspielhaus, Recklinghausen',
+            link=link,
+            beschreibung='',
+            quelle='subergs', kategorie='',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 29. Manuelle Termine — JSON-Datei
 # ---------------------------------------------------------------------------
 
 def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:

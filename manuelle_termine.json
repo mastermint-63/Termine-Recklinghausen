@@ -8,5 +8,121 @@
         "beschreibung": "16. Kirchliches Filmfestival — Stummfilm mit Live-Orgelbegleitung",
         "kategorie": "Film",
         "freigegeben": true
+    },
+    {
+        "name": "Finissage: Bodenschatz — Die verborgenen Reichtümer unter unseren Füßen",
+        "datum": "2026-03-08",
+        "uhrzeit": "15:00",
+        "ort": "Atelierhaus Recklinghausen",
+        "link": "https://atelierhaus-recklinghausen.de/bodenschatz-die-verborgenen-reichtuemer-unter-unseren-fuessen/",
+        "beschreibung": "Finissage der Ausstellung Bodenschatz im Atelierhaus",
+        "kategorie": "Kunst",
+        "freigegeben": true
+    },
+    {
+        "name": "Ausstellung: Preisträger des Kunstpreises Henriettenglück",
+        "datum": "2026-03-29",
+        "ort": "Atelierhaus Recklinghausen",
+        "link": "https://atelierhaus-recklinghausen.de/category/henriettenglueck/",
+        "beschreibung": "Eröffnung der Ausstellung mit Preisträgern des Kunstpreises Henriettenglück",
+        "kategorie": "Kunst",
+        "freigegeben": true
+    },
+    {
+        "name": "The C.U.T. live",
+        "datum": "2026-03-07",
+        "uhrzeit": "21:00",
+        "ort": "Drübbelken, Recklinghausen",
+        "link": "https://www.regioactive.de/konzert/the-c-u-t-live-recklinghausen-druebbelken-2026-03-07-Jg8lR0xxd8",
+        "beschreibung": "",
+        "kategorie": "Konzert",
+        "freigegeben": true
+    },
+    {
+        "name": "Premiere Circus Roncalli",
+        "datum": "2026-03-12",
+        "uhrzeit": "19:30",
+        "ort": "Recklinghausen",
+        "link": "https://www.eventim.de/artist/circus-roncalli/circus-theater-roncalli-recklinghausen-4028394/",
+        "beschreibung": "Circus Theater Roncalli gastiert in Recklinghausen",
+        "kategorie": "Show",
+        "freigegeben": true
+    },
+    {
+        "name": "Tatort-Dinner: Mord in Paris",
+        "datum": "2026-03-13",
+        "uhrzeit": "19:00",
+        "ort": "Subergs im Festspielhaus, Recklinghausen",
+        "link": "https://www.subergs.de/2026/01/09/13-03-2026-tatort-dinner-mord-in-paris/",
+        "beschreibung": "Krimi-Dinner bei Subergs im Festspielhaus",
+        "kategorie": "Show",
+        "freigegeben": true
+    },
+    {
+        "name": "Ü-30 Party",
+        "datum": "2026-03-21",
+        "ort": "Festspielhaus, Recklinghausen",
+        "link": "https://www.subergs.de/2026/01/09/31-08-2024-ue30-party/",
+        "beschreibung": "",
+        "kategorie": "Party",
+        "freigegeben": true
+    },
+    {
+        "name": "LitDom: Mascha Kaléko — Lesung aus 'Wenn ich eine Wolke wäre' von Volker Weidemann",
+        "datum": "2026-03-07",
+        "uhrzeit": "18:00",
+        "ort": "Gemeindezentrum Arche, Nordseestr. 104, Recklinghausen",
+        "link": "",
+        "beschreibung": "LitDom erinnert an die Dichterin Mascha Kaléko",
+        "kategorie": "Lesung",
+        "freigegeben": true
+    },
+    {
+        "name": "Discofox-Night",
+        "datum": "2026-03-14",
+        "uhrzeit": "21:00",
+        "ort": "Der Recklinghäuser, Recklinghausen",
+        "link": "https://www.der-recklinghaeuser.de/",
+        "beschreibung": "",
+        "kategorie": "Party",
+        "freigegeben": true
+    },
+    {
+        "name": "Pilgern im Pott",
+        "datum": "2026-03-07",
+        "uhrzeit": "09:30",
+        "ort": "Gastkirche, Recklinghausen",
+        "link": "https://gastkirche.de/index.php/52-angebote/pilgerforum/pilgerwege/pilgern-im-pott",
+        "beschreibung": "",
+        "kategorie": "Wandern",
+        "freigegeben": true
+    },
+    {
+        "name": "Ausgewählte Preisträger 'Kunstpreis Junger Westen'",
+        "datum": "2026-03-06",
+        "ort": "Kommunale Galerie, Rathaus Recklinghausen",
+        "link": "https://www.recklinghausen.de/inhalte/startseite/ruhrfestspiele_kultur/_details.asp?form=detail&db=513&id=31740",
+        "beschreibung": "Ausstellung in der Kommunalen Galerie im Rathaus. Bis 25. September 2026.",
+        "kategorie": "Kunst",
+        "freigegeben": true
+    },
+    {
+        "name": "'Demokratie braucht soziale Gerechtigkeit' — Politischer Gesprächsabend der KAB",
+        "datum": "2026-03-12",
+        "uhrzeit": "19:00",
+        "ort": "Pfarrheim Liebfrauen, Recklinghausen",
+        "link": "https://www.kab-muenster.de/kab/nachrichten/uebersicht/detailansicht/article/demokratie-braucht-soziale-gerechtigkeit-kab-laedt-zu-politischem-gespraechsabend-mit-lars-ehm",
+        "beschreibung": "KAB lädt zum politischen Gesprächsabend mit Lars Ehm",
+        "kategorie": "Vortrag",
+        "freigegeben": true
+    },
+    {
+        "name": "Evensong mit der Chorgemeinschaft",
+        "datum": "2026-03-30",
+        "ort": "Pauluskirche, Recklinghausen",
+        "link": "https://josefeich.de/event/evensong-in-der-pauluskirche/",
+        "beschreibung": "",
+        "kategorie": "Konzert",
+        "freigegeben": true
     }
 ]

@@ -25,6 +25,7 @@ from scraper import (
     hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld,
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
+    hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_manuelle_termine, Termin,
 )
 
@@ -55,6 +56,9 @@ QUELLEN = {
     'zu-gast-in-re': 'Zu Gast in RE',
     're-leuchtet': 'RE-leuchtet',
     'frauenforum': 'Frauenforum',
+    'josefeich': 'Josef P. Eich',
+    'recklinghaeuser': 'Der Recklinghäuser',
+    'subergs': 'Subergs',
     'manuell': 'Redaktion',
 }
 
@@ -85,6 +89,9 @@ SCRAPER = [
     (hole_zu_gast_in_re, 'Zu Gast in RE'),
     (hole_re_leuchtet, 'RE-leuchtet'),
     (hole_frauenforum, 'Frauenforum'),
+    (hole_josefeich, 'Josef P. Eich'),
+    (hole_recklinghaeuser, 'Der Recklinghäuser'),
+    (hole_subergs, 'Subergs'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -245,6 +252,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'zu-gast-in-re': 'badge-zu-gast-in-re',
                 're-leuchtet': 'badge-re-leuchtet',
                 'frauenforum': 'badge-frauenforum',
+                'josefeich': 'badge-josefeich',
+                'recklinghaeuser': 'badge-recklinghaeuser',
+                'subergs': 'badge-subergs',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -709,6 +719,18 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #c0387a 0%, #a02060 100%);
             color: white;
         }}
+        .badge-josefeich {{
+            background: linear-gradient(135deg, #8a7050 0%, #7a6040 100%);
+            color: white;
+        }}
+        .badge-recklinghaeuser {{
+            background: linear-gradient(135deg, #b08030 0%, #a07020 100%);
+            color: white;
+        }}
+        .badge-subergs {{
+            background: linear-gradient(135deg, #5a5a7a 0%, #4a4a6a 100%);
+            color: white;
+        }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -891,11 +913,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     <div class="container">
         <header>
             <div class="header-inner">
-                <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert">
+                <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert" width="604" height="280" decoding="async">
                 <div class="header-text">
                     <h1>Termine in Recklinghausen</h1>
                 </div>
-                <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert">
+                <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert" width="351" height="276" decoding="async">
             </div>
             <div class="nav">
                 <a href="{prev_link}" class="nav-btn{prev_class}">&larr; {monatsnamen[prev_monat]}</a>
@@ -947,7 +969,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank" rel="noopener noreferrer">Atelierhaus</a> &middot;
             <a href="https://www.zu-gast-in-re.de/programm" target="_blank" rel="noopener noreferrer">Zu Gast in RE</a> &middot;
-            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a>
+            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a> &middot;
+            <a href="https://josefeich.de/events/" target="_blank" rel="noopener noreferrer">Josef P. Eich</a> &middot;
+            <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
+            <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>

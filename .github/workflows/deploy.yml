@@ -9,6 +9,8 @@ on:
     paths:
       - 'termine_re_*.html'
       - 'index.html'
+      - 'favicon*'
+      - 'robots.txt'
 
 # Berechtigungen für GitHub Pages
 permissions:
