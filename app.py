@@ -16,6 +16,7 @@ import re
 import webbrowser
 import calendar
 from datetime import datetime
+from difflib import SequenceMatcher
 
 from scraper import (
     hole_regioactive, hole_stadt_re, hole_altstadtschmiede,
@@ -26,7 +27,7 @@ from scraper import (
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
-    hole_manuelle_termine, Termin,
+    hole_seniorenbeirat, hole_manuelle_termine, Termin,
 )
 
 
@@ -59,6 +60,7 @@ QUELLEN = {
     'josefeich': 'Josef P. Eich',
     'recklinghaeuser': 'Der Recklinghäuser',
     'subergs': 'Subergs',
+    'seniorenbeirat': 'Seniorenbeirat',
     'manuell': 'Redaktion',
 }
 
@@ -92,6 +94,7 @@ SCRAPER = [
     (hole_josefeich, 'Josef P. Eich'),
     (hole_recklinghaeuser, 'Der Recklinghäuser'),
     (hole_subergs, 'Subergs'),
+    (hole_seniorenbeirat, 'Seniorenbeirat'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -99,9 +102,102 @@ SCRAPER = [
 def _normalisiere(name: str) -> str:
     """Normalisiert einen Eventnamen für Vergleiche."""
     name = name.lower().strip()
-    name = re.sub(r'[^\w\s]', '', name)  # Sonderzeichen entfernen
-    name = re.sub(r'\s+', ' ', name)     # Mehrfach-Leerzeichen
+    name = name.replace('-', ' ')         # Bindestriche zu Leerzeichen
+    name = re.sub(r'[^\w\s]', '', name)   # Sonderzeichen entfernen
+    name = re.sub(r'\s+', ' ', name)      # Mehrfach-Leerzeichen
     return name
+
+
+def _ist_fuzzy_duplikat(name_a: str, name_b: str) -> bool:
+    """Prüft ob zwei normalisierte Namen fuzzy-ähnlich genug sind für ein Duplikat."""
+    woerter_a = name_a.split()
+    woerter_b = name_b.split()
+    # Guard: Beide Namen mindestens 4 Wörter (kurze Namen sind zu mehrdeutig)
+    if len(woerter_a) < 4 or len(woerter_b) < 4:
+        return False
+    # SequenceMatcher: Zeichenbasierte Ähnlichkeit >= 0.75
+    if SequenceMatcher(None, name_a, name_b).ratio() < 0.75:
+        return False
+    # Jaccard token overlap >= 0.5
+    set_a = set(woerter_a)
+    set_b = set(woerter_b)
+    jaccard = len(set_a & set_b) / len(set_a | set_b)
+    if jaccard < 0.7:
+        return False
+    return True
+
+
+# Stoppwörter: zu generisch für Schlüsselwort-Dedup
+_STOPPWOERTER = {
+    # Artikel, Präpositionen, Konjunktionen
+    'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine',
+    'und', 'oder', 'mit', 'für', 'von', 'zu', 'am', 'auf', 'aus', 'bei',
+    'nach', 'vor', 'über', 'unter', 'zwischen', 'durch', 'bis', 'um',
+    'einen', 'einem', 'einer', 'eines', 'nicht', 'aber', 'auch', 'noch',
+    'wie', 'was', 'zum', 'zur', 'vom', 'beim', 'ins',
+    # Veranstaltungs-generisch
+    'recklinghausen', 're', 'veranstaltung', 'party', 'night', 'nacht',
+    'club', 'live', 'show', 'abend', 'konzert', 'fest', 'festival',
+    'vortrag', 'online', 'onlinevortrag', 'workshop', 'kurs', 'seminar',
+    'bildungsurlaub', 'intensivkurs', 'thema', 'leicht', 'gemacht',
+    # Sprachen / VHS-generisch
+    'anfänger', 'anfängerinnen', 'teilnehmende', 'vorkenntnissen',
+    'spanisch', 'französisch', 'englisch', 'italienisch', 'niederländisch',
+    # Häufig in Titeln, aber nicht markant
+    'geschichte', 'kunst', 'welt', 'leben', 'menschen', 'neue', 'neuen',
+    'lesung', 'führung', 'vortrag', 'ausstellung', 'eröffnung',
+    'alltag', 'beruf', 'beruflichen', 'frau', 'frauen', 'mann', 'männer',
+    'treffen', 'gruppe', 'trauer', 'trauergruppe',
+    'reise', 'familienfragen',
+}
+
+
+def _hat_markantes_schluesselwort(name_a: str, name_b: str) -> bool:
+    """Prüft ob zwei normalisierte Namen ein markantes Schlüsselwort teilen (≥5 Zeichen).
+    Erkennt auch Zusammenschreibungen: 'discofox' matcht 'disco fox'."""
+    woerter_a = set(name_a.split()) - _STOPPWOERTER
+    woerter_b = set(name_b.split()) - _STOPPWOERTER
+    # Direkte Wort-Übereinstimmung (nur markante Wörter)
+    for wort in woerter_a & woerter_b:
+        if len(wort) >= 5:
+            return True
+    # Zusammenschreibung: ganzer Name ohne Leerzeichen enthält Wort aus dem anderen
+    # z.B. "discofox" in "disco fox night" → kompakt_b = "discofoxnight"
+    kompakt_a = name_a.replace(' ', '')
+    kompakt_b = name_b.replace(' ', '')
+    for wort in woerter_a:
+        if len(wort) >= 6 and wort in kompakt_b:
+            return True
+    for wort in woerter_b:
+        if len(wort) >= 6 and wort in kompakt_a:
+            return True
+    return False
+
+
+def _parse_stunde(uhrzeit: str) -> int | None:
+    """Extrahiert die Startstunde aus einem Uhrzeit-String."""
+    m = re.search(r'(\d{1,2})[:.]?\d{0,2}\s*(?:Uhr|uhr|$)', uhrzeit)
+    if m:
+        return int(m.group(1))
+    m = re.match(r'(\d{1,2})', uhrzeit)
+    if m:
+        return int(m.group(1))
+    return None
+
+
+def _gleiche_zeitnah(uhrzeit_a: str, uhrzeit_b: str) -> bool:
+    """Prüft ob zwei Uhrzeiten kompatibel sind (gleich, nah beieinander, oder eine fehlt/generisch)."""
+    generisch = ('', 'ganztägig', 'siehe Website')
+    if uhrzeit_a in generisch or uhrzeit_b in generisch:
+        return True
+    if uhrzeit_a == uhrzeit_b:
+        return True
+    # Toleranz: maximal 2 Stunden Differenz
+    h_a = _parse_stunde(uhrzeit_a)
+    h_b = _parse_stunde(uhrzeit_b)
+    if h_a is not None and h_b is not None:
+        return abs(h_a - h_b) <= 2
+    return False
 
 
 def _termin_score(t: Termin) -> int:
@@ -138,9 +234,18 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
             ist_duplikat = False
             for vorhandener in behalten:
                 norm_v = _normalisiere(vorhandener.name)
-                # Exakt gleich oder einer ist Teilstring des anderen
+                # Stufe 1: Exakt gleich oder einer ist Teilstring des anderen
                 if norm_k == norm_v or norm_k in norm_v or norm_v in norm_k:
                     ist_duplikat = True
+                # Stufe 2: Fuzzy-Match + kompatible Uhrzeit
+                elif _ist_fuzzy_duplikat(norm_k, norm_v) and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit):
+                    ist_duplikat = True
+                    print(f"[Fuzzy-Dedup] '{kandidat.name}' ({kandidat.quelle}) ≈ '{vorhandener.name}' ({vorhandener.quelle})")
+                # Stufe 3: Markantes Schlüsselwort + kompatible Uhrzeit
+                elif _hat_markantes_schluesselwort(norm_k, norm_v) and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit):
+                    ist_duplikat = True
+                    print(f"[Keyword-Dedup] '{kandidat.name}' ({kandidat.quelle}) ≈ '{vorhandener.name}' ({vorhandener.quelle})")
+                if ist_duplikat:
                     # Fehlende Felder aus dem Duplikat ergänzen
                     if not vorhandener.beschreibung and kandidat.beschreibung:
                         vorhandener.beschreibung = kandidat.beschreibung
@@ -255,6 +360,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'josefeich': 'badge-josefeich',
                 'recklinghaeuser': 'badge-recklinghaeuser',
                 'subergs': 'badge-subergs',
+                'seniorenbeirat': 'badge-seniorenbeirat',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -731,6 +837,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #5a5a7a 0%, #4a4a6a 100%);
             color: white;
         }}
+        .badge-seniorenbeirat {{
+            background: linear-gradient(135deg, #8a3a5a 0%, #7a2a4a 100%);
+            color: white;
+        }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -972,7 +1082,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a> &middot;
             <a href="https://josefeich.de/events/" target="_blank" rel="noopener noreferrer">Josef P. Eich</a> &middot;
             <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
-            <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a>
+            <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a> &middot;
+            <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
