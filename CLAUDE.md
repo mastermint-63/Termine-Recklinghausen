@@ -31,7 +31,7 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 
 **scraper.py** — 28 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
 
-**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind **beim Seitenaufruf immer ausgeblendet** (kein localStorage). Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Direktaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL); Monatsnavigation-Links tragen `#top` → Browser scrollt nach oben, Auto-Sprung wird unterdrückt. Canonical-URL und og:url zeigen auf die jeweilige Monatsdatei (`/termine_re_YYYY_MM.html`), nicht auf die Root-URL. `generiere_html()` erwartet `dateiname`-Parameter für die Canonical-URL. Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()` (`app.py`): gleiches Datum + normalisierter Name (exakt oder Teilstring) → Eintrag mit besserem Info-Score wird behalten, **fehlende Felder (beschreibung, uhrzeit, ort) werden aus dem Duplikat ergänzt** (z.B. Stadtarchiv-PDF liefert Uhrzeit, stad-re-Kalender liefert Beschreibung). Beschreibungen werden auf 800 Zeichen begrenzt; bei Terminen mit Link und langer Beschreibung (>120 Zeichen) erscheint ein aufklappbarer Text mit `termin-beschreibung-mehr`-Klasse und `onclick`-Toggle.
+**app.py** — Generiert standalone HTML-Dateien (`termine_re_YYYY_MM.html`) mit eingebettetem CSS + JS. Kein Build-System. Holzwurm-Design (warme Beige-/Orange-Töne), Dark Mode via `prefers-color-scheme`. Jeder Termin hat `data-quelle` Attribut für JavaScript-Filterung: Quellen-Dropdown + Toggle-Buttons (VHS, Kino) zum Ausblenden dominanter Quellen. VHS und Kino sind **beim Seitenaufruf immer ausgeblendet** (kein localStorage). Filterleiste ist `position: sticky` mit Milchglas-Effekt (`backdrop-filter: blur`). Beim Direktaufruf springt JS automatisch zum ersten heutigen oder zukünftigen Termin (sofern kein Anker in der URL); Monatsnavigation-Links tragen `#top` → Browser scrollt nach oben, Auto-Sprung wird unterdrückt. Canonical-URL und og:url zeigen auf die jeweilige Monatsdatei (`/termine_re_YYYY_MM.html`), nicht auf die Root-URL. `generiere_html()` erwartet `dateiname`-Parameter für die Canonical-URL. Kalender markiert den heutigen Tag per JS (`kal-heute`-Klasse). Deduplizierung über `entferne_duplikate()` (`app.py`): gleiches Datum + normalisierter Name (exakt oder Teilstring) → Eintrag mit besserem Info-Score wird behalten, **fehlende Felder (beschreibung, uhrzeit, ort) werden aus dem Duplikat ergänzt** (link wird nie überschrieben). **`_QUELLEN_TIER`** unterscheidet Aggregatoren (Tier 2: `stadt-re`, `vesterleben`, `recklinghaeuser`) von Veranstaltern (Tier 1 = Default): Aggregatoren bekommen −10 Score-Malus, sodass spezifische Veranstalter (NLGR, Altstadtschmiede usw.) immer gewinnen, auch wenn der Aggregator mehr Felder gefüllt hat. (z.B. Stadtarchiv-PDF liefert Uhrzeit, stad-re-Kalender liefert Beschreibung). Beschreibungen werden auf 800 Zeichen begrenzt; bei Terminen mit Link und langer Beschreibung (>120 Zeichen) erscheint ein aufklappbarer Text mit `termin-beschreibung-mehr`-Klasse und `onclick`-Toggle.
 
 **update.sh** — Tägliche Automation: Scraping → Löschroutine für alte Dateien → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad. Dateien älter als der Vormonat werden automatisch per `git rm` entfernt und im gleichen Commit mitgepusht (1-Monats-Puffer: Vormonat bleibt erhalten).
 
@@ -48,6 +48,15 @@ launchctl list | grep termine-re           # Status prüfen
 launchctl start de.termine-re.update       # Manuell auslösen
 tail -f launchd.log                        # Live-Log
 ```
+
+## Tests
+
+```bash
+/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 -m pytest tests/ -v   # alle Tests
+/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 -m pytest tests/test_dedup.py -v  # einzelne Datei
+```
+
+`tests/test_dedup.py` — testet `_termin_score()` und `entferne_duplikate()` aus `app.py`. Kein Mock-Framework nötig; Termin-Objekte werden direkt instanziiert.
 
 ## Abhängigkeiten
 
@@ -116,11 +125,12 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 2. In `app.py` importieren und in `main()` aufrufen
 3. `quelle`-String für Filterung setzen
 4. Label in `QUELLEN`-Dict eintragen — **modulweite Konstante in `app.py` Zeile ~30**, nicht innerhalb einer Funktion
-5. Badge-CSS-Klasse `.badge-neuequelle` mit Farbgradient in `generiere_html()` ergänzen — Konvention: `linear-gradient(135deg, #HELL 0%, #DUNKEL 100%)`, zweite Farbe ca. 10 Einheiten dunkler; alle 25 vorhandenen Farben sind in der Funktion dokumentiert, keine Doppelung wählen
-6. Badge-Zuordnung in `badge_classes`-Dict in `generiere_html()` eintragen
-7. Footer-Link in `generiere_html()` ergänzen
-8. Optional: Toggle-Button falls Quelle viele Termine liefert — `toggleXyz()`-Funktion + `xyzAusgeblendet`-Variable + `xyzMatch`-Check in `filterTermine()` (Muster: siehe VHS/Kino-Toggle)
-9. Quellentabelle in dieser CLAUDE.md aktualisieren
+5. Falls die Quelle ein Aggregator ist (listet auch fremde Events auf): `quelle`-Key in `_QUELLEN_TIER` mit Wert `2` eintragen — sonst verdrängt sie spezifische Veranstalter im Dedup
+6. Badge-CSS-Klasse `.badge-neuequelle` mit Farbgradient in `generiere_html()` ergänzen — Konvention: `linear-gradient(135deg, #HELL 0%, #DUNKEL 100%)`, zweite Farbe ca. 10 Einheiten dunkler; alle 25 vorhandenen Farben sind in der Funktion dokumentiert, keine Doppelung wählen
+7. Badge-Zuordnung in `badge_classes`-Dict in `generiere_html()` eintragen
+8. Footer-Link in `generiere_html()` ergänzen
+9. Optional: Toggle-Button falls Quelle viele Termine liefert — `toggleXyz()`-Funktion + `xyzAusgeblendet`-Variable + `xyzMatch`-Check in `filterTermine()` (Muster: siehe VHS/Kino-Toggle)
+10. Quellentabelle in dieser CLAUDE.md aktualisieren
 
 **`hebbert/`** — Maskottchen-Bilder für den Seitenheader. Aktiv: `1984-01-verkleinert.jpg` (links) und `1985-04-verkleinert.jpg` (rechts). Originals liegen als Fallback daneben, nicht mehr referenziert.
 
