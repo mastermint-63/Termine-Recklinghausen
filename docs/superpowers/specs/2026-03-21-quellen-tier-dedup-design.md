@@ -21,10 +21,15 @@ _QUELLEN_TIER: dict[str, int] = {
     'stadt-re': 2,
     'vesterleben': 2,
     'recklinghaeuser': 2,
+    # 'regioactive': 2,  # blockiert seit 2026-03; bei Reaktivierung aktivieren
 }
 ```
 
 Aggregatoren: **Stadt RE**, **Vesterleben**, **Der Recklinghäuser** — diese drei Quellen listen Veranstaltungen anderer Organisationen auf, weil sie an städtischen oder lokalen Orten stattfinden.
+
+**Nicht-Aggregator:** Altstadtschmiede scrapt zwar von `/events/` (zeigt auch Fremdveranstaltungen), ist aber primär Veranstalter — bleibt Tier 1.
+
+**Tier-Keys** müssen exakt mit den `quelle`-Strings in `scraper.py` übereinstimmen.
 
 ### Änderung in `_termin_score()`
 
@@ -48,11 +53,19 @@ def _termin_score(t: Termin) -> int:
 
 - Max-Score eines Veranstalters: 6 (Link + Uhrzeit + Beschreibung + Ort)
 - Aggregator mit vollem Score: 6 − 10 = −4
-- Veranstalter gewinnt immer, auch mit nur einem Feld (Score 2 > −4)
+- Veranstalter gewinnt immer, auch ohne ein einziges Feld (Score 0 > −4)
+
+**Beispiel:** NLGR (Score 3: Link + Uhrzeit) vs. Stadt RE (Score −4: alle Felder − Malus) → NLGR gewinnt.
+
+### Edge Cases
+
+**Zwei Aggregatoren als Duplikat:** Beide haben Malus −10. Der mit dem höheren Basis-Score gewinnt. Bei Gleichstand entscheidet die SCRAPER-Reihenfolge (Stadt RE vor Vesterleben vor Recklinghäuser).
+
+**Zwei Veranstalter als Duplikat:** Normales Score-Verhalten, kein Malus. Unverändert zur bisherigen Logik.
 
 ### Ergänzungs-Logik bleibt erhalten
 
-Die bestehende Logik in `entferne_duplikate()` füllt fehlende Felder des Gewinners aus dem Verlierer auf (Beschreibung, Uhrzeit, Ort). Das bleibt unverändert: NLGR gewinnt als Quelle, bekommt aber trotzdem die Beschreibung aus dem Stadt-RE-Eintrag — das Beste aus beiden Welten.
+Die bestehende Logik in `entferne_duplikate()` füllt fehlende Felder des Gewinners aus dem Verlierer auf: `beschreibung`, `uhrzeit`, `ort`. **Nicht ergänzt wird `link`** — das ist gewollt (der Veranstalter-Link ist relevanter als der Aggregator-Link). Das bleibt unverändert: NLGR gewinnt als Quelle, bekommt aber trotzdem Beschreibung/Uhrzeit/Ort aus dem Stadt-RE-Eintrag.
 
 ## Betroffene Dateien
 
