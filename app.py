@@ -19,7 +19,8 @@ from datetime import datetime
 from difflib import SequenceMatcher
 
 from scraper import (
-    hole_regioactive, hole_stadt_re, hole_altstadtschmiede,
+    # hole_regioactive,  # regioactive.de blockiert seit 2026-03 mit 403
+    hole_stadt_re, hole_altstadtschmiede,
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
     hole_akademie, hole_stadtarchiv, hole_geschichte_re,
@@ -32,7 +33,7 @@ from scraper import (
 
 
 QUELLEN = {
-    'regioactive': 'regioactive.de',
+    # 'regioactive': 'regioactive.de',  # blockiert seit 2026-03 mit 403
     'stadt-re': 'Stadt RE',
     'altstadtschmiede': 'Altstadtschmiede',
     'vesterleben': 'Vesterleben.de',
@@ -66,7 +67,7 @@ QUELLEN = {
 
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
 SCRAPER = [
-    (hole_regioactive, 'regioactive.de'),
+    # (hole_regioactive, 'regioactive.de'),  # blockiert seit 2026-03 mit 403
     (hole_stadt_re, 'Stadt RE'),
     (hole_altstadtschmiede, 'Altstadtschmiede'),
     (hole_vesterleben, 'Vesterleben.de'),
@@ -106,6 +107,16 @@ def _normalisiere(name: str) -> str:
     name = re.sub(r'[^\w\s]', '', name)   # Sonderzeichen entfernen
     name = re.sub(r'\s+', ' ', name)      # Mehrfach-Leerzeichen
     return name
+
+
+# Tier 2 = Aggregatoren (listen auch fremde Events auf → Malus im Score)
+# Tier 1 = Veranstalter (Default; listen nur eigene Events)
+_QUELLEN_TIER: dict[str, int] = {
+    'stadt-re': 2,
+    'vesterleben': 2,
+    'recklinghaeuser': 2,
+    # 'regioactive': 2,  # blockiert seit 2026-03; bei Reaktivierung aktivieren
+}
 
 
 def _ist_fuzzy_duplikat(name_a: str, name_b: str) -> bool:
@@ -201,7 +212,10 @@ def _gleiche_zeitnah(uhrzeit_a: str, uhrzeit_b: str) -> bool:
 
 
 def _termin_score(t: Termin) -> int:
-    """Bewertet die Informationsqualität eines Termins (höher = besser)."""
+    """Bewertet die Informationsqualität eines Termins (höher = besser).
+    Aggregator-Quellen (Tier 2) erhalten −10 Malus, damit spezifische
+    Veranstalter im Dedup-Vergleich immer gewinnen.
+    """
     score = 0
     if t.link:
         score += 2
@@ -211,6 +225,8 @@ def _termin_score(t: Termin) -> int:
         score += 1
     if t.ort:
         score += 1
+    if _QUELLEN_TIER.get(t.quelle, 1) == 2:
+        score -= 10  # Aggregator-Malus: Veranstalter gewinnen immer
     return score
 
 
