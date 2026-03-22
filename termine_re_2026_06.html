@@ -615,7 +615,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="ikonen-museum">Ikonen-Museum</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="ikonen-museum">Ikonen-Museum</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
@@ -2098,12 +2098,24 @@
             <div class="datum-header">Do 18.06.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="stadt-re">
-                    <div class="termin-zeit">18 Uhr</div>
+                <div class="termin" data-quelle="stadtbibliothek">
+                    <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/index.asp?form=detail&db=79&id=401041" target="_blank" rel="noopener noreferrer">Die goldenen1920er-Jahre der Vestischen Kleinbahnen: Mobilität für alle</a>
-                            <span class="badge badge-stadt">Stadt RE</span>
+                            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/index.asp?form=detail&db=79&id=401162" target="_blank" rel="noopener noreferrer">Bilderbuchkino in Süd</a>
+                            <span class="badge badge-stadtbibliothek">Stadtbibliothek</span> <span class="badge badge-kategorie">Bibliothek</span>
+                        </div>
+                        <div class="termin-ort">Stadtbibliothek, Am Neumarkt 19</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Das Bilderbuchkino der Stadtbibliothek in Recklinghausen-Süd, Am Neumarkt 19,  geht in eine neue Runde. Mitarbeiter*innen im Haus der Bildung lesen für Kinder vor. Die Bilder der Geschichte werden auf eine große Leinwand projiziert. Auf dem Programm steht das Bilderbuch „Pettersson zeltet&quot; von Sven Nordqvist. Darin erleben der alte Pettersson und sein lebhafter Kater Findus ein neues Abenteuer. Diesmal steht Zelten auf dem Programm, ein Vorhaben, das vor allem bei Findus große Begeisterung weckt. Er hat noch nie in einem Zelt geschlafen und ist voller Vorfreude auf die neue Erfahrung. Pettersson, der eigentlich sein Angelzeug auf dem Dachboden gesucht hat, stolpert dabei über sein altes Zelt. Die Gelegenheit scheint perfekt, nicht nur um zu zelten, sondern auch um seine neueste Erfind</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadtarchiv">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/Programm_1-Halbjahr_2026_Stadtarchiv.pdf" target="_blank" rel="noopener noreferrer">Die goldenen 1920er-Jahre der Vestischen Kleinbahnen: Mobilität für alle</a>
+                            <span class="badge badge-stadtarchiv">Stadtarchiv</span> <span class="badge badge-kategorie">Geschichte</span>
                         </div>
                         <div class="termin-ort">Institut für Stadtgeschichte</div>
                         <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Anlässlich des 125-jährigen Jubiläums der Vestischen Straßenbahnen GmbH wirft Franz-Josef Hauke einen Blick auf die spannende Unternehmensgeschichte. Die Nordwanderung des Bergbaus und die Gründung des Siedlungsverbandes Ruhrkohlenbezirk (SVR) sowie neue Finanzierungsmöglichkeiten entfachten eine beispiellose Planungsoffensive. Getragen von großzügigen Verbandsstraßenprojekten sollte sich das Netz bis 1920 nahezu verdoppeln. Das Schließen wichtiger Streckenlücken in Marl und Bottrop, die Überquerung der Lippe in Dorsten und die Einführung der Schnellstraßenbahn nach Bork spiegelten den Modernisierungswillen der Weimarer Republik wider. Verkehrsbänder, die Schiene und Straße miteinander verbanden, eröffneten den Vestischen Kleinbahnen völlig neue Möglichkeiten. Der Zentralbahnhof in Recklin</div>
@@ -2183,18 +2195,6 @@
                         </div>
                         <div class="termin-ort">Familienbüro</div>
                         <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Offener Vater-Kind-Treff im Familienbüro - Vater sein! Spielzeit mit anderen Vätern und Kindern Stärkung und Unterstützung von Vätern in ihrer Elternrolle Begegnung, Austausch, Vernetzung Raum für Fragen, Anregungen, Wünsche</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="nlgr">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://nlgr.de/veranstaltung/literaturtreff-am-samstag-41/" target="_blank" rel="noopener noreferrer">Literaturtreff am Samstag</a>
-                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
-                        </div>
-                        <div class="termin-ort">Stadtbibliothek, Augustinessenstr. 3</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;Der Literaturtreff am Samstag ist eine regelmäßige Veranstaltung für alle Literaturbegeisterten. Alle vier Wochen findet sich ein lockerer Kreis Kulturinteressierter zusammen und tauscht sich unter der Leitung von Monika Wischnowski über neue Lesetipps, gelesene Bücher und Autoren aus. Inhalte un</div>
                     </div>
                 </div>
             
@@ -2645,7 +2645,7 @@
         </main>
 
         <footer>
-            Generiert am 21.03.2026 um 06:38 Uhr<br>
+            Generiert am 22.03.2026 um 06:39 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
