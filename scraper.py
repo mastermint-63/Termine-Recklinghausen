@@ -51,6 +51,8 @@ ATELIERHAUS_URL = "https://atelierhaus-recklinghausen.de/kalendar/"
 JOSEFEICH_URL = "https://josefeich.de/events/"
 RECKLINGHAEUSER_URL = "https://www.der-recklinghaeuser.de/"
 SUBERGS_URL = "https://www.subergs.de/events/"
+SENIORENBEIRAT_URL = "https://seniorenbeirat-recklinghausen.com/veranstaltungen/liste/"
+ZECHE_KLAERCHEN_URL = "https://zeche-klaerchen.de/index.php/aktuelles"
 
 
 @dataclass
@@ -261,8 +263,33 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
 # 3. Altstadtschmiede — JSON-LD Events (MEC Plugin)
 # ---------------------------------------------------------------------------
 
+def _hole_altstadtschmiede_beschreibung(url: str) -> str:
+    """Holt die Beschreibung von einer Altstadtschmiede-Detailseite."""
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=15)
+        r.raise_for_status()
+    except requests.RequestException:
+        return ''
+    soup = BeautifulSoup(r.text, 'html.parser')
+    desc_div = soup.select_one('.mec-single-event-description')
+    if not desc_div:
+        return ''
+    # Erste Zeile = Datum/Preis, Ticket-Buttons überspringen → nur <p>-Absätze ab dem 2. nehmen
+    absaetze = desc_div.find_all('p')
+    texte = []
+    for p in absaetze:
+        text = p.get_text(strip=True)
+        if not text:
+            continue
+        # Erste Zeile enthält Datum/Uhrzeit/Preis (z.B. "25.03. / 19 Uhr / VVK ...")
+        if re.match(r'\d{1,2}\.\d{2}\.?\s*/\s*\d', text):
+            continue
+        texte.append(text)
+    return '\n'.join(texte)
+
+
 def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
-    """Holt Events von der Altstadtschmiede via JSON-LD."""
+    """Holt Events von der Altstadtschmiede via JSON-LD + Beschreibungen von Detailseiten."""
     try:
         response = requests.get(ALTSTADTSCHMIEDE_URL, headers=HEADERS, timeout=30)
         response.raise_for_status()
@@ -314,10 +341,10 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
         if not _im_monat(datum, jahr, monat):
             continue
 
-        # Uhrzeit aus der Beschreibung extrahieren (z.B. "09.02. / 18 Uhr")
+        # Uhrzeit aus der JSON-LD-Beschreibung extrahieren (z.B. "09.02. / 18 Uhr")
         beschreibung_html = data.get('description', '')
-        beschreibung = _html_zu_text(beschreibung_html)
-        uhrzeit_match = re.search(r'(\d{1,2}(?:[.:]\d{2})?)\s*Uhr', beschreibung)
+        beschreibung_kurz = _html_zu_text(beschreibung_html)
+        uhrzeit_match = re.search(r'(\d{1,2}(?:[.:]\d{2})?)\s*Uhr', beschreibung_kurz)
         if uhrzeit_match:
             zeit = uhrzeit_match.group(1).replace('.', ':')
             if ':' not in zeit:
@@ -333,9 +360,12 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
 
         link = data.get('offers', {}).get('url', '') or data.get('url', '') or ALTSTADTSCHMIEDE_URL
 
+        # Beschreibung von der Detailseite holen
+        beschreibung = _hole_altstadtschmiede_beschreibung(link)
+
         termine.append(Termin(
             name=name[:150], datum=datum, uhrzeit=uhrzeit,
-            ort='Altstadtschmiede', link=link, beschreibung=beschreibung[:200],
+            ort='Altstadtschmiede', link=link, beschreibung=beschreibung,
             quelle='altstadtschmiede', kategorie='Kultur',
         ))
 
@@ -2313,7 +2343,228 @@ def hole_subergs(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 29. Manuelle Termine — JSON-Datei
+# 29. Seniorenbeirat Recklinghausen — Events Manager (WordPress)
+# ---------------------------------------------------------------------------
+
+def hole_seniorenbeirat(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events vom Seniorenbeirat Recklinghausen (Events Manager Plugin)."""
+    termine = []
+    besuchte_urls: set[str] = set()
+    url = SENIORENBEIRAT_URL
+
+    while url and url not in besuchte_urls and len(besuchte_urls) < 10:
+        besuchte_urls.add(url)
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=30)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            if not besuchte_urls - {url}:
+                print(f"  Fehler beim Abrufen (Seniorenbeirat): {e}")
+            break
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        gefunden = False
+
+        for item in soup.select('.em-item'):
+            h3 = item.find('h3')
+            if not h3:
+                continue
+
+            a = h3.find('a')
+            name = a.get_text(strip=True) if a else h3.get_text(strip=True)
+            link = a.get('href', '') if a else ''
+            if not name:
+                continue
+
+            meta = item.select_one('.em-item-meta')
+            ort_el = item.select_one('.em-event-location a') or item.select_one('.em-event-location')
+            meta_text = meta.get_text(strip=True) if meta else ''
+            ort = ort_el.get_text(strip=True) if ort_el else ''
+
+            # Datum parsen: "16. März 2026" oder "16.3.2026" oder "16.3." etc.
+            datum = None
+            uhrzeit = 'siehe Website'
+
+            # Format "DD. Monat YYYY" (Events Manager Standard)
+            monate_de = {
+                'januar': 1, 'februar': 2, 'märz': 3, 'april': 4,
+                'mai': 5, 'juni': 6, 'juli': 7, 'august': 8,
+                'september': 9, 'oktober': 10, 'november': 11, 'dezember': 12,
+            }
+            dm = re.search(r'(\d{1,2})\.\s*(\w+)\s*(\d{4})', meta_text)
+            if dm:
+                tag = int(dm.group(1))
+                monat_name = dm.group(2).lower()
+                jahr_str = int(dm.group(3))
+                if monat_name in monate_de:
+                    try:
+                        datum = datetime(jahr_str, monate_de[monat_name], tag)
+                    except ValueError:
+                        pass
+
+            # Fallback: "DD.MM.YYYY"
+            if not datum:
+                dm2 = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})', meta_text)
+                if dm2:
+                    try:
+                        datum = datetime(int(dm2.group(3)), int(dm2.group(2)), int(dm2.group(1)))
+                    except ValueError:
+                        pass
+
+            if not datum:
+                continue
+
+            # Uhrzeit aus eigenem Element extrahieren
+            zeit_el = item.select_one('.em-event-time')
+            zeit_text = zeit_el.get_text(strip=True) if zeit_el else ''
+            zm = re.search(r'(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})', zeit_text)
+            if zm:
+                uhrzeit = f"{zm.group(1)}–{zm.group(2)} Uhr"
+            else:
+                zm2 = re.search(r'(\d{1,2}:\d{2})', zeit_text)
+                if zm2:
+                    uhrzeit = f"{zm2.group(1)} Uhr"
+
+            # Stunde in datum setzen
+            if uhrzeit != 'siehe Website':
+                try:
+                    h, m = map(int, re.search(r'(\d{1,2}):(\d{2})', uhrzeit).groups())
+                    datum = datum.replace(hour=h, minute=m)
+                except (ValueError, AttributeError):
+                    pass
+
+            if not _im_monat(datum, jahr, monat):
+                gefunden = True  # Es gibt Events, aber nicht im Zielmonat
+                continue
+
+            gefunden = True
+            termine.append(Termin(
+                name=unescape(name)[:150], datum=datum, uhrzeit=uhrzeit,
+                ort=unescape(ort)[:150] if ort else 'Recklinghausen',
+                link=link,
+                beschreibung='',
+                quelle='seniorenbeirat', kategorie='Senioren',
+            ))
+
+        # Paginierung: nächste Seite via ?pno=N
+        next_link = None
+        for pg_a in soup.select('a[href*="pno="]'):
+            href = pg_a.get('href', '')
+            pno_match = re.search(r'pno=(\d+)', href)
+            if pno_match and href not in besuchte_urls:
+                next_link = href
+                if not next_link.startswith('http'):
+                    next_link = f"https://seniorenbeirat-recklinghausen.com{next_link}"
+                break
+
+        # Aufhören wenn keine Events mehr gefunden oder alle im Zielmonat vorbei
+        if not gefunden and termine:
+            break
+        url = next_link
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 30. Zeche Klärchen — Stadtteilpark Hochlarmark (Text-Parsing)
+# ---------------------------------------------------------------------------
+
+_MONATE_DE_ZK = {
+    'Januar': 1, 'Februar': 2, 'März': 3, 'April': 4,
+    'Mai': 5, 'Juni': 6, 'Juli': 7, 'August': 8,
+    'September': 9, 'Oktober': 10, 'November': 11, 'Dezember': 12,
+}
+_DATUM_RE_ZK = re.compile(
+    r'(\d{1,2})\.\s*(?:und\s+\d{1,2}\.\s*)?'
+    r'(?:(' + '|'.join(_MONATE_DE_ZK) + r')\s+(\d{4})'
+    r'|(\d{2})\.(\d{4}))'
+)
+
+
+def hole_zeche_klaerchen(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von Zeche Klärchen (Stadtteilpark Hochlarmark).
+
+    Struktur: Joomla-Seite, Termine als Fließtext in <p>-Elementen mit
+    font-size:24px Spans. Datum und Titel manchmal getrennte <p>-Tags,
+    manchmal in einem gemeinsamen.
+    Datumsformate: "27. März 2026", "12.09.2026", "10. und 11. Oktober 2026".
+    """
+    try:
+        response = requests.get(ZECHE_KLAERCHEN_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (Zeche Klärchen): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    main = soup.find('main', id='tm-main') or soup
+
+    # Alle <p>-Elemente mit 24px-Spans sammeln (Seitenuntertitel ausschließen)
+    paras = []
+    for p in main.find_all('p'):
+        spans = p.find_all('span', style=lambda s: s and 'font-size: 24px' in s)
+        if not spans:
+            continue
+        text = p.get_text(separator=' ', strip=True)
+        text = re.sub(r'\s+', ' ', text.replace('\xa0', ' ')).strip()
+        if text and 'Veranstaltungen im' not in text:
+            paras.append(text)
+
+    termine = []
+    i = 0
+    while i < len(paras):
+        text = paras[i]
+        m = _DATUM_RE_ZK.search(text)
+        if not m:
+            i += 1
+            continue
+
+        tag = int(m.group(1))
+        if m.group(2):  # "DD. Monat YYYY"
+            monat_nr = _MONATE_DE_ZK[m.group(2)]
+            jahr_nr = int(m.group(3))
+        else:  # "DD.MM.YYYY"
+            monat_nr = int(m.group(4))
+            jahr_nr = int(m.group(5))
+
+        try:
+            datum = datetime(jahr_nr, monat_nr, tag)
+        except ValueError:
+            i += 1
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            i += 1
+            continue
+
+        # Titel: alles nach dem Datum im gleichen Para, sonst nächstes Para
+        titel = text[m.end():].strip()
+        if not titel and i + 1 < len(paras):
+            naechstes = paras[i + 1]
+            if not _DATUM_RE_ZK.search(naechstes):
+                titel = naechstes
+                i += 1
+
+        if not titel:
+            titel = 'Veranstaltung Zeche Klärchen'
+
+        termine.append(Termin(
+            name=titel[:150],
+            datum=datum,
+            uhrzeit='',
+            ort='Zeche Klärchen, Hochlarmark',
+            link=ZECHE_KLAERCHEN_URL,
+            beschreibung='',
+            quelle='zeche-klaerchen',
+            kategorie='',
+        ))
+        i += 1
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 31. Manuelle Termine — JSON-Datei
 # ---------------------------------------------------------------------------
 
 def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:

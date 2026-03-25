@@ -28,7 +28,7 @@ from scraper import (
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
-    hole_seniorenbeirat, hole_manuelle_termine, Termin,
+    hole_seniorenbeirat, hole_zeche_klaerchen, hole_manuelle_termine, Termin,
 )
 
 
@@ -62,6 +62,7 @@ QUELLEN = {
     'recklinghaeuser': 'Der Recklinghäuser',
     'subergs': 'Subergs',
     'seniorenbeirat': 'Seniorenbeirat',
+    'zeche-klaerchen': 'Zeche Klärchen',
     'manuell': 'Redaktion',
 }
 
@@ -96,6 +97,7 @@ SCRAPER = [
     (hole_recklinghaeuser, 'Der Recklinghäuser'),
     (hole_subergs, 'Subergs'),
     (hole_seniorenbeirat, 'Seniorenbeirat'),
+    (hole_zeche_klaerchen, 'Zeche Klärchen'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -339,7 +341,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         '''
 
         for t in sorted(tage, key=lambda x: (x.uhrzeit == 'ganztägig', x.uhrzeit == 'siehe Website', x.uhrzeit, x.name)):
-            beschreibung_escaped = _html.escape(t.beschreibung)[:800]
+            beschreibung_escaped = _html.escape(t.beschreibung)[:1000]
 
             name_esc = _html.escape(t.name)
             uhrzeit_esc = _html.escape(t.uhrzeit)
@@ -377,6 +379,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'recklinghaeuser': 'badge-recklinghaeuser',
                 'subergs': 'badge-subergs',
                 'seniorenbeirat': 'badge-seniorenbeirat',
+                'zeche-klaerchen': 'badge-zeche-klaerchen',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -857,6 +860,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #8a3a5a 0%, #7a2a4a 100%);
             color: white;
         }}
+        .badge-zeche-klaerchen {{
+            background: linear-gradient(135deg, #7a4a30 0%, #6a3a20 100%);
+            color: white;
+        }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -927,7 +934,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
 
         .termin.expanded .termin-beschreibung {{
-            -webkit-line-clamp: 50;
+            display: block;
+            -webkit-line-clamp: unset;
             overflow: visible;
         }}
 
@@ -1099,7 +1107,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://josefeich.de/events/" target="_blank" rel="noopener noreferrer">Josef P. Eich</a> &middot;
             <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
             <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a> &middot;
-            <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a>
+            <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a> &middot;
+            <a href="https://zeche-klaerchen.de/index.php/aktuelles" target="_blank" rel="noopener noreferrer">Zeche Klärchen</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
