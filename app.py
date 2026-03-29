@@ -28,7 +28,8 @@ from scraper import (
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
-    hole_seniorenbeirat, hole_zeche_klaerchen, hole_manuelle_termine, Termin,
+    hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
+    hole_manuelle_termine, Termin,
 )
 
 
@@ -63,6 +64,7 @@ QUELLEN = {
     'subergs': 'Subergs',
     'seniorenbeirat': 'Seniorenbeirat',
     'zeche-klaerchen': 'Zeche Klärchen',
+    'stadtlabor': 'StadtLabor RE',
     'manuell': 'Redaktion',
 }
 
@@ -98,6 +100,7 @@ SCRAPER = [
     (hole_subergs, 'Subergs'),
     (hole_seniorenbeirat, 'Seniorenbeirat'),
     (hole_zeche_klaerchen, 'Zeche Klärchen'),
+    (hole_stadtlabor, 'StadtLabor RE'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -380,6 +383,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'subergs': 'badge-subergs',
                 'seniorenbeirat': 'badge-seniorenbeirat',
                 'zeche-klaerchen': 'badge-zeche-klaerchen',
+                'stadtlabor': 'badge-stadtlabor',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -864,6 +868,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #7a4a30 0%, #6a3a20 100%);
             color: white;
         }}
+        .badge-stadtlabor {{
+            background: linear-gradient(135deg, #c06020 0%, #b05010 100%);
+            color: white;
+        }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -1026,6 +1034,12 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-color);
         }}
 
+        .nav-bottom {{
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0 20px;
+        }}
+
         @media (max-width: 600px) {{
             .termin {{
                 flex-direction: column;
@@ -1077,6 +1091,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             {termine_html if termine else '<div class="keine-termine">Keine Termine gefunden</div>'}
         </main>
 
+        <div class="nav-bottom">
+            <a href="{prev_link}" class="nav-btn{prev_class}">&larr; {monatsnamen[prev_monat]}</a>
+            <a href="{next_link}" class="nav-btn{next_class}">{monatsnamen[next_monat]} &rarr;</a>
+        </div>
+
         <footer>
             Generiert am {datetime.now().strftime('%d.%m.%Y um %H:%M Uhr')}<br>
             Quellen:
@@ -1108,7 +1127,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
             <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a> &middot;
             <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a> &middot;
-            <a href="https://zeche-klaerchen.de/index.php/aktuelles" target="_blank" rel="noopener noreferrer">Zeche Klärchen</a>
+            <a href="https://zeche-klaerchen.de/index.php/aktuelles" target="_blank" rel="noopener noreferrer">Zeche Klärchen</a> &middot;
+            <a href="https://www.stadtlabor-re.de/aktuell/aktuell.php" target="_blank" rel="noopener noreferrer">StadtLabor RE</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>

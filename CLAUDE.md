@@ -26,7 +26,7 @@ python3 app.py --no-browser       # Ohne Browser öffnen
 ## Architektur
 
 ```
-28 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
+29 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) → GitHub Pages
 ```
 
 **scraper.py** — 28 Funktionen, jede gibt `list[Termin]` zurück. Gemeinsamer `Termin`-Dataclass mit Feldern: name, datum, uhrzeit, ort, link, beschreibung, quelle, kategorie. Wichtige Shared Helpers: `_im_monat(datum, jahr, monat)` prüft ob ein Termin im Zielmonat liegt; `_hole_events_calendar(url, quelle, kategorie, jahr, monat)` extrahiert JSON-LD Events (The Events Calendar / MEC Plugin) — wird von NLGR, Literaturtage, Altstadtschmiede und Backyard genutzt; `_adfc_fetch(unit_key, event_type)` holt ADFC-Events per JSON-API; `_ics_unfold/wert/datum` parsen ICS-Feeds.
@@ -97,6 +97,7 @@ pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), f
 | `hole_josefeich()` | josefeich.de | JSON-LD `Event` (The Events Calendar Plugin); Kirchenmusik-Termine |
 | `hole_recklinghaeuser()` | der-recklinghaeuser.de | Fließtext-Parsing: deutsche Datumsformate ("Sa. 14. März 2026"), Titel + Uhrzeit aus Folgezeilen |
 | `hole_subergs()` | subergs.de/events/ | WordPress-Blogposts: Datum im h3-Titel ("DD.MM.YYYY – Titel"), Elementor-Layout |
+| `hole_stadtlabor()` | stadtlabor-re.de | Armadillo-Blog: `div.blog-entry`, Vernissage-Datum/Uhrzeit aus Titel+Body per Regex (DE/EN-Monate, DD.MM.YYYY) |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.
 

@@ -53,6 +53,7 @@ RECKLINGHAEUSER_URL = "https://www.der-recklinghaeuser.de/"
 SUBERGS_URL = "https://www.subergs.de/events/"
 SENIORENBEIRAT_URL = "https://seniorenbeirat-recklinghausen.com/veranstaltungen/liste/"
 ZECHE_KLAERCHEN_URL = "https://zeche-klaerchen.de/index.php/aktuelles"
+STADTLABOR_URL = "https://www.stadtlabor-re.de/aktuell/aktuell.php"
 
 
 @dataclass
@@ -2564,7 +2565,188 @@ def hole_zeche_klaerchen(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 31. Manuelle Termine — JSON-Datei
+# 31. StadtLabor RE — Kunstverein, Ausstellungen & Vernissagen
+# ---------------------------------------------------------------------------
+
+_MONATE_EN = {
+    'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5,
+    'june': 6, 'july': 7, 'august': 8, 'september': 9, 'october': 10,
+    'november': 11, 'december': 12,
+}
+
+
+def hole_stadtlabor(jahr: int, monat: int) -> list[Termin]:
+    """Holt Ausstellungen und Vernissagen vom Kunstverein StadtLabor RE."""
+    try:
+        r = requests.get(STADTLABOR_URL, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+    except requests.RequestException:
+        return []
+
+    soup = BeautifulSoup(r.text, 'html.parser')
+    termine = []
+
+    for entry in soup.find_all('div', class_='blog-entry'):
+        title_tag = entry.find('h1', class_='blog-entry-title')
+        if not title_tag:
+            continue
+        link_tag = title_tag.find('a', class_='blog-permalink')
+        if not link_tag:
+            continue
+
+        name = link_tag.get_text(strip=True)[:150]
+        if not name:
+            continue
+        link = link_tag.get('href', '')
+        if link and not link.startswith('http'):
+            link = 'https://www.stadtlabor-re.de' + link
+
+        # Datum aus div.blog-entry-date (englisch: "3. February 2026")
+        date_div = entry.find('div', class_='blog-entry-date')
+        if not date_div:
+            continue
+        date_text = date_div.get_text(strip=True)
+        m_date = re.match(r'(\d{1,2})\.\s*(\w+)\s+(\d{4})', date_text)
+        if not m_date:
+            continue
+        tag = int(m_date.group(1))
+        monat_en = m_date.group(2).lower()
+        jahr_parsed = int(m_date.group(3))
+        monat_nr = _MONATE_EN.get(monat_en)
+        if not monat_nr:
+            continue
+
+        # Beschreibung aus div.blog-entry-body
+        body_div = entry.find('div', class_='blog-entry-body')
+        body_text = ''
+        beschreibung = ''
+        if body_div:
+            body_text = _html_zu_text(str(body_div)).strip()
+            beschreibung = body_text[:800]
+
+        # Versuche Vernissage-Datum + Uhrzeit aus Titel oder Beschreibung
+        combined = name + ' ' + body_text
+        de_monate = {
+            'januar': 1, 'februar': 2, 'märz': 3, 'april': 4, 'mai': 5,
+            'juni': 6, 'juli': 7, 'august': 8, 'september': 9, 'oktober': 10,
+            'november': 11, 'dezember': 12,
+        }
+
+        v_datum = None
+        v_stunde = None
+
+        # Format 1: "Vernissage ... DD. Monat YYYY ... HH Uhr"
+        m1 = re.search(
+            r'[Vv]ernissage[:\s]+(?:am\s+)?(?:[a-zA-ZäöüÄÖÜ]+,?\s+)?(\d{1,2})\.?\s+(\w+)\.?\s+(\d{4})',
+            combined,
+        )
+        if m1:
+            v_monat_str = m1.group(2).lower().rstrip('.')
+            v_monat_num = de_monate.get(v_monat_str) or _MONATE_EN.get(v_monat_str)
+            if v_monat_num:
+                try:
+                    v_datum = datetime(int(m1.group(3)), v_monat_num, int(m1.group(1)))
+                except ValueError:
+                    pass
+
+        # Format 2: "Vernissage ... DD.MM.YYYY"
+        if not v_datum:
+            m2 = re.search(
+                r'[Vv]ernissage[:\s]*(?:[a-zA-ZäöüÄÖÜ]+,?\s+)?(\d{1,2})\.(\d{1,2})\.(\d{2,4})',
+                combined,
+            )
+            if m2:
+                v_j = int(m2.group(3))
+                if v_j < 100:
+                    v_j += 2000
+                try:
+                    v_datum = datetime(v_j, int(m2.group(2)), int(m2.group(1)))
+                except ValueError:
+                    pass
+
+        # Uhrzeit: "... HH Uhr" oder "... HH.MM Uhr" nahe Vernissage
+        if v_datum:
+            m_zeit = re.search(
+                r'[Vv]ernissage.{0,200}?(\d{1,2})(?:[.:]\d{2})?\s*Uhr',
+                combined, re.DOTALL,
+            )
+            if m_zeit:
+                v_stunde = int(m_zeit.group(1))
+
+        # Kein Vernissage-Datum, aber "Vernissage HH Uhr" → Datum aus Titel
+        if not v_datum and v_stunde is None:
+            m_vonly = re.search(
+                r'[Vv]ernissage\s+(\d{1,2})(?:[.:]\d{2})?\s*Uhr', combined,
+            )
+            if m_vonly:
+                v_stunde = int(m_vonly.group(1))
+                # Datum aus Titel: DD.MM.YYYY
+                m_title_d = re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})', name)
+                if m_title_d:
+                    try:
+                        v_datum = datetime(
+                            int(m_title_d.group(3)),
+                            int(m_title_d.group(2)),
+                            int(m_title_d.group(1)),
+                        )
+                    except ValueError:
+                        pass
+
+        if v_datum and v_stunde is not None:
+            try:
+                v_datum = v_datum.replace(hour=v_stunde, minute=0)
+            except ValueError:
+                pass
+            if _im_monat(v_datum, jahr, monat):
+                termine.append(Termin(
+                    name=name,
+                    datum=v_datum,
+                    uhrzeit=f'{v_stunde:02d}:00 Uhr',
+                    ort='StadtLabor Galerie, Heilige-Geist-Str. 3, Recklinghausen',
+                    link=link,
+                    beschreibung=beschreibung,
+                    quelle='stadtlabor',
+                    kategorie='Kunst',
+                ))
+                continue
+        elif v_datum:
+            if _im_monat(v_datum, jahr, monat):
+                termine.append(Termin(
+                    name=name,
+                    datum=v_datum,
+                    uhrzeit='siehe Website',
+                    ort='StadtLabor Galerie, Heilige-Geist-Str. 3, Recklinghausen',
+                    link=link,
+                    beschreibung=beschreibung,
+                    quelle='stadtlabor',
+                    kategorie='Kunst',
+                ))
+                continue
+
+        # Fallback: Blog-Datum als Termin verwenden
+        try:
+            datum = datetime(jahr_parsed, monat_nr, tag)
+        except ValueError:
+            continue
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        termine.append(Termin(
+            name=name,
+            datum=datum,
+            uhrzeit='siehe Website',
+            ort='StadtLabor Galerie, Heilige-Geist-Str. 3, Recklinghausen',
+            link=link,
+            beschreibung=beschreibung,
+            quelle='stadtlabor',
+            kategorie='Kunst',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 32. Manuelle Termine — JSON-Datei
 # ---------------------------------------------------------------------------
 
 def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
