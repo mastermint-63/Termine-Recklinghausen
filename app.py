@@ -469,14 +469,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     <title>Holzwurm Recklinghausen - Veranstaltungskalender — {monatsnamen[monat]} {jahr}</title>
     <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
-    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/{dateiname}" />
+    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/" />
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/webp" href="favicon-96x96-1.webp">
     <meta property="og:locale" content="de_DE" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
     <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
-    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de/{dateiname}" />
+    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de/" />
     <meta property="og:site_name" content="Holzwurm Recklinghausen" />
     <style>
         :root {{
@@ -1316,6 +1316,24 @@ def main():
     with open(index_pfad, 'w', encoding='utf-8') as f:
         f.write(index_html)
     print(f"index.html -> {erster_monat_datei}")
+
+    # sitemap.xml
+    heute = datetime.now().strftime('%Y-%m-%d')
+    basis_url = "https://termine.holzwurm-recklinghausen.de"
+    prioritaeten = [1.00, 0.64, 0.51, 0.41, 0.33, 0.26, 0.20, 0.16, 0.13, 0.10]
+    sitemap_urls = [f'  <url>\n    <loc>{basis_url}/</loc>\n    <lastmod>{heute}</lastmod>\n    <priority>1.00</priority>\n  </url>']
+    for idx, (j, m) in enumerate(monate_liste):
+        prio = prioritaeten[min(idx + 1, len(prioritaeten) - 1)]
+        datei = dateiname_fuer_monat(j, m)
+        sitemap_urls.append(f'  <url>\n    <loc>{basis_url}/{datei}</loc>\n    <lastmod>{heute}</lastmod>\n    <priority>{prio:.2f}</priority>\n  </url>')
+    sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(sitemap_urls)}
+</urlset>'''
+    sitemap_pfad = os.path.join(basis_pfad, 'sitemap.xml')
+    with open(sitemap_pfad, 'w', encoding='utf-8') as f:
+        f.write(sitemap_xml)
+    print(f"sitemap.xml generiert ({len(monate_liste) + 1} URLs)")
 
     print("\n" + "=" * 50)
     print(f"Fertig! {anzahl_monate} Dateien generiert.")
