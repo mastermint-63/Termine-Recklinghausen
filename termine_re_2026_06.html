@@ -630,12 +630,12 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="akademie">Ev. Akademie</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="akademie">Ev. Akademie</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="ikonen-museum">Ikonen-Museum</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
-                <span id="termine-count">149</span> Termine
+                <span id="termine-count">150</span> Termine
             </div>
         </div>
 
@@ -665,6 +665,18 @@
                             <span class="badge badge-seniorenbeirat">Seniorenbeirat</span> <span class="badge badge-kategorie">Senioren</span>
                         </div>
                         <div class="termin-ort">K17 Diakonie Infocenter</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45645" target="_blank" rel="noopener noreferrer">EPiC: Elvis Presley in Concert</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         
                     </div>
                 </div>
@@ -758,18 +770,6 @@
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
                         <div class="termin-beschreibung">Kunstausstellung der Ruhrfestspiele in der Kunsthalle Recklinghausen</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Feierabendtour - Fahrt in&#x27;s Blaue</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1013,18 +1013,6 @@
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">12:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Fahrradcodierung im Infoladen Börster Weg 38a</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
-                        </div>
-                        <div class="termin-ort">ADFC Infoladen - Börster Weg 38a 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Jeden ersten Freitag im Monat bietet der ADFC im Infoladen, Börster Weg 38a, 45657 Recklinghausen in der Zeit von 14.00 bis 17.00 Uhr seine beliebte Fahrradcodierung an</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">16:00 Uhr</div>
                     <div class="termin-info">
@@ -1186,6 +1174,18 @@
             <div class="termine-liste">
         
                 <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45647" target="_blank" rel="noopener noreferrer">Sentimental Value</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
@@ -1218,6 +1218,18 @@
                         </div>
                         <div class="termin-ort">Ruhrfestspielhaus Kleines Haus</div>
                         <div class="termin-beschreibung">liest Erzählungen von Franz Kafka</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="ikonen-museum">
+                    <div class="termin-zeit">15:00–16:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank" rel="noopener noreferrer">Öffentliche Führung</a>
+                            <span class="badge badge-ikonen-museum">Ikonen-Museum</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Ikonen-Museum Recklinghausen</div>
+                        
                     </div>
                 </div>
             
@@ -1286,6 +1298,21 @@
                         </div>
                         <div class="termin-ort">online</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="altstadtschmiede">
+                    <div class="termin-zeit">18:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.altstadtschmiede.de/events/queerer-stammtisch-9" target="_blank" rel="noopener noreferrer">Queerer Stammtisch</a>
+                            <span class="badge badge-altstadtschmiede">Altstadtschmiede</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Altstadtschmiede</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">18 Uhr / Eintritt frei
+Am Montag öffnet die Altstadtschmiede wieder ihre Türen für einen bunten Treffpunkt in Recklinghausen: den queeren Stammtisch. In lockerer Atmosphäre können sich hier queere Menschen und Allies begegnen, austauschen und vernetzen, ganz unabhängig davon, ob out oder nicht.
+Der Stammtisch findet regelmäßig in den gemütlichen Räumen der Altstadtschmiede statt und versteht sich als offenes Angebot für alle, die sich der queeren Community zugehörig fühlen oder solidarisch zeigen möchten. Jede*r ist willkommen! Mit oder ohne Label, laut oder leise, allein oder in Begleitung.
+Wir freuen uns auf euch!</div>
                     </div>
                 </div>
             
@@ -1410,30 +1437,6 @@
                         </div>
                         <div class="termin-ort">Kunsthalle Recklinghausen</div>
                         <div class="termin-beschreibung">Kunstausstellung der Ruhrfestspiele in der Kunsthalle Recklinghausen</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">13:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Fahrsicherheitstraining mit dem Pedelec</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Veranstaltung</span>
-                        </div>
-                        <div class="termin-ort">Kurt-Oster-Straße 45659 Recklinghausen</div>
-                        <div class="termin-beschreibung">Am10. Juini führt der ADFC Recklinghausen wieder ein Pedelec Training durch</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Feierabend Tour - Fahrt in&#x27;s Blaue</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -1749,18 +1752,6 @@
             <div class="datum-header">Sa 13.06.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">08:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Durch den Naturpark Hohe Mark nach Dorsten</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">40 - 59 km · 15-18 km/h — Vom Rathaus Recklinghausen durch Bockholt nach Marl, weiter durch die Lippeauen zur Zeche Fürst Leopold, dann zur Altstadt Dorsten und über Haus Lüttinghoff und Scherlebeck z</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">09:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -1949,6 +1940,18 @@
             <div class="datum-header">So 14.06.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45650" target="_blank" rel="noopener noreferrer">Rental Family</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="vhs">
                     <div class="termin-zeit">14:30–17:00 Uhr</div>
                     <div class="termin-info">
@@ -2037,18 +2040,6 @@
             <div class="datum-header">Di 16.06.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Feierabendtour - Fahrt in&#x27;s Blaue</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="frauenforum">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -2069,6 +2060,30 @@
             <div class="datum-header">Mi 17.06.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45654" target="_blank" rel="noopener noreferrer">Der Held vom Bahnhof Friedrichstraße</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45653" target="_blank" rel="noopener noreferrer">Extrawurst</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="gastkirche">
                     <div class="termin-zeit">18:30 Uhr</div>
                     <div class="termin-info">
@@ -2221,6 +2236,18 @@
             <div class="datum-header">So 21.06.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 17:15 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45655" target="_blank" rel="noopener noreferrer">No Other Choice</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="sternwarte">
                     <div class="termin-zeit">15:00 Uhr</div>
                     <div class="termin-info">
@@ -2230,6 +2257,18 @@
                         </div>
                         <div class="termin-ort">Planetarium</div>
                         <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">In den Sternen finden wir die Namen einiger Zauberer aus einer euch wohlbekannten Geschichte. Einige der Namen aus dem Harry Potter Universum findet man auch am Himmel wieder. Wir zeigen euch, wie ihr</div>
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="ikonen-museum">
+                    <div class="termin-zeit">15:00–16:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank" rel="noopener noreferrer">Öffentliche Themenführung: Heilige Frauen</a>
+                            <span class="badge badge-ikonen-museum">Ikonen-Museum</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">Ikonen-Museum Recklinghausen</div>
+                        
                     </div>
                 </div>
             
@@ -2338,18 +2377,6 @@
                         </div>
                         <div class="termin-ort">RETRO STATION</div>
                         <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Wer Recklinghausen und seine mehr als 1.000-jährige Geschichte besser kennenlernen möchte, hat hier die Gelegenheit. Bei einem Rundgang durch die stadtgeschichtliche Ausstellung der Retro Station werden zentrale Ereignisse der Vergangenheit ebenso anschaulich erläutert wie das Alltagsleben der Menschen in früheren Zeiten. In drei modern gestalteten Ausstellungsbereichen zeigen zahlreiche Exponate die frühe Entwicklung der Stadt, die Bergbaugeschichte der Region und prägende Ereignisse des 20. Jahrhunderts. Das Angebot ist kostenfrei, die Anmeldung unter stadtgeschichte[at]recklinghausen.de ist erforderlich.</div>
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Feierabend Tour - Fahrt in&#x27;s Blaue</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Rathausplatz 4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
                     </div>
                 </div>
             
@@ -2532,18 +2559,6 @@ Die aktuelle Ausstellung  in der Galerie im VestQuartier thematisiert historisch
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">17:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Glühwürmchentour</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Rathausplatz 3-4 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">60 - 79 km · 15-18 km/h — Ausflug nach Haltern über den Stausee zum (hoffentlich zu sehenden) Naturschauspiel der fliegenden Glühwürmchen. Höhepunkt von 22-0 Uhr, entsprechend späte Heimkehr beachten.</div>
-                    </div>
-                </div>
-            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -2552,6 +2567,18 @@ Die aktuelle Ausstellung  in der Galerie im VestQuartier thematisiert historisch
             <div class="datum-header">So 28.06.2026</div>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="cineworld">
+                    <div class="termin-zeit">11:00 / 19:45 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://kinotickets.express/recklinghausen-cineworld/booking/45658" target="_blank" rel="noopener noreferrer">Father Mother Sister Brother</a>
+                            <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
+                        </div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">11:00 Uhr</div>
                     <div class="termin-info">
@@ -2640,18 +2667,6 @@ Die aktuelle Ausstellung  in der Galerie im VestQuartier thematisiert historisch
             <div class="datum-header">Di 30.06.2026</div>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="adfc">
-                    <div class="termin-zeit">16:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">Feierabendtour - Fahrt in&#x27;s Blaue</a>
-                            <span class="badge badge-adfc">ADFC Recklinghausen</span> <span class="badge badge-kategorie">Radtour</span>
-                        </div>
-                        <div class="termin-ort">Ruhrfestspielhaus, Stadtgarten 1 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung">20 - 39 km · &lt; 15 km/h — Für zwei Stunden mit netten Menschen auf dem Rad unterwegs 😊</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="stadt-re">
                     <div class="termin-zeit">18 Uhr</div>
                     <div class="termin-info">
@@ -2688,7 +2703,7 @@ Die aktuelle Ausstellung  in der Galerie im VestQuartier thematisiert historisch
         </div>
 
         <footer>
-            Generiert am 02.04.2026 um 06:40 Uhr<br>
+            Generiert am 03.04.2026 um 06:37 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
