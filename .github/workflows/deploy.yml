@@ -11,6 +11,7 @@ on:
       - 'index.html'
       - 'favicon*'
       - 'robots.txt'
+      - 'sitemap.xml'
 
 # Berechtigungen für GitHub Pages
 permissions:

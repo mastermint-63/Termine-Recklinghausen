@@ -11,6 +11,7 @@ Verwendung:
 """
 
 import html as _html
+import json as _json
 import os
 import re
 import webbrowser
@@ -339,7 +340,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         termine_html += f'''
         <div class="datum-gruppe" id="datum-{datum_key}">
-            <div class="datum-header">{datum_formatiert}</div>
+            <h2 class="datum-header">{datum_formatiert}</h2>
             <div class="termine-liste">
         '''
 
@@ -453,6 +454,53 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     tage_mit_events = set(int(k.split('-')[2]) for k in nach_datum.keys())
     kalender_html = generiere_kalender(jahr, monat, tage_mit_events)
 
+    basis_url = "https://termine.holzwurm-recklinghausen.de"
+    if dateiname and dateiname != "index.html":
+        canonical_url = f"{basis_url}/{dateiname}"
+    else:
+        canonical_url = f"{basis_url}/"
+
+    anzahl = len(termine)
+    beschreibung_meta = f"Veranstaltungskalender Recklinghausen {monatsnamen[monat]} {jahr} — {anzahl} Termine aus 30 Quellen"
+    titel = f"Termine Recklinghausen {monatsnamen[monat]} {jahr} ({anzahl}) | Holzwurm"
+
+    # JSON-LD: CollectionPage + einzelne Events
+    events_ld = []
+    for t in termine:
+        event_obj = {
+            "@type": "Event",
+            "name": t.name,
+            "startDate": t.datum.strftime('%Y-%m-%d'),
+            "location": {
+                "@type": "Place",
+                "name": t.ort or "Recklinghausen",
+                "address": {"@type": "PostalAddress", "addressLocality": "Recklinghausen"}
+            }
+        }
+        if t.link and t.link.startswith(('http://', 'https://')):
+            event_obj["url"] = t.link
+        if t.beschreibung:
+            event_obj["description"] = t.beschreibung[:300]
+        if t.uhrzeit and t.uhrzeit not in ('ganztägig', 'siehe Website'):
+            # Nur erste Uhrzeit verwenden (Kino hat "13:00 / 14:00 / ...")
+            erste_zeit = t.uhrzeit.split('/')[0].replace(' Uhr', '').strip()
+            if len(erste_zeit) == 5 and ':' in erste_zeit:
+                event_obj["startDate"] = t.datum.strftime('%Y-%m-%d') + 'T' + erste_zeit
+        events_ld.append(event_obj)
+
+    jsonld = _json.dumps({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": f"Veranstaltungskalender Recklinghausen — {monatsnamen[monat]} {jahr}",
+        "description": beschreibung_meta,
+        "url": canonical_url,
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": anzahl,
+            "itemListElement": events_ld[:50]
+        }
+    }, ensure_ascii=False)
+
     html = f'''<!DOCTYPE html>
 <html lang="de">
 <head>
@@ -466,18 +514,23 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holzwurm Recklinghausen - Veranstaltungskalender — {monatsnamen[monat]} {jahr}</title>
-    <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
+    <title>{titel}</title>
+    <meta name="description" content="{beschreibung_meta}"/>
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
-    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/" />
+    <link rel="canonical" href="{canonical_url}" />
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/webp" href="favicon-96x96-1.webp">
     <meta property="og:locale" content="de_DE" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
-    <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
-    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de/" />
+    <meta property="og:title" content="{titel}" />
+    <meta property="og:description" content="{beschreibung_meta}" />
+    <meta property="og:url" content="{canonical_url}" />
     <meta property="og:site_name" content="Holzwurm Recklinghausen" />
+    <meta property="og:image" content="{basis_url}/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{beschreibung_meta}" />
+    <script type="application/ld+json">{jsonld}</script>
     <style>
         :root {{
             --bg-color: #e8e0d8;
@@ -660,6 +713,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: var(--accent-color);
             color: white;
             border-radius: 10px 10px 0 0;
+            margin: 0;
         }}
 
         .termine-liste {{
@@ -1067,11 +1121,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 </div>
                 <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert" width="351" height="276" decoding="async">
             </div>
-            <div class="nav">
+            <nav class="nav" aria-label="Monatsnavigation">
                 <a href="{prev_link}" class="nav-btn{prev_class}">&larr; {monatsnamen[prev_monat]}</a>
                 <span class="monat-titel">{monatsnamen[monat]} {jahr}</span>
                 <a href="{next_link}" class="nav-btn{next_class}">{monatsnamen[next_monat]} &rarr;</a>
-            </div>
+            </nav>
         </header>
 
         {kalender_html}
@@ -1252,6 +1306,7 @@ def main():
 
     basis_pfad = os.path.dirname(__file__)
     erster_dateiname = None
+    erster_monat_termine = None
 
     for idx, (j, m) in enumerate(monate_liste):
         monatsnamen = ['', 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
@@ -1279,43 +1334,15 @@ def main():
 
         if idx == 0:
             erster_dateiname = ausgabe_pfad
+            erster_monat_termine = alle_termine
 
-    # index.html
-    erster_monat_datei = dateiname_fuer_monat(monate_liste[0][0], monate_liste[0][1])
-    index_html = f'''<!DOCTYPE html>
-<html lang="de">
-<head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RML793W7R2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', 'G-RML793W7R2');
-    </script>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url={erster_monat_datei}">
-    <title>Holzwurm Recklinghausen - Veranstaltungskalender</title>
-    <meta name="description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute - Veranstaltungskalender Recklinghausen"/>
-    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"/>
-    <link rel="canonical" href="https://termine.holzwurm-recklinghausen.de" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/webp" href="favicon-96x96-1.webp">
-    <meta property="og:locale" content="de_DE" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Holzwurm Recklinghausen - Holzwurm - Zeitschrift für Recklinghausen – Veranstaltungskalender Recklinghausen" />
-    <meta property="og:description" content="Holzwurm - Zeitschrift für Recklinghausen 1976 bis heute" />
-    <meta property="og:url" content="https://termine.holzwurm-recklinghausen.de" />
-    <meta property="og:site_name" content="Holzwurm Recklinghausen" />
-</head>
-<body>
-    <p>Weiterleitung zu <a href="{erster_monat_datei}">{erster_monat_datei}</a>...</p>
-</body>
-</html>'''
+    # index.html — eigener Canonical auf Root-URL
+    j0, m0 = monate_liste[0]
+    index_html = generiere_html(erster_monat_termine, j0, m0, monate_liste, "index.html")
     index_pfad = os.path.join(basis_pfad, 'index.html')
     with open(index_pfad, 'w', encoding='utf-8') as f:
         f.write(index_html)
-    print(f"index.html -> {erster_monat_datei}")
+    print(f"index.html generiert (Canonical: Root-URL)")
 
     # sitemap.xml
     heute = datetime.now().strftime('%Y-%m-%d')
