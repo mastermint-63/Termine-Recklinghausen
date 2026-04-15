@@ -16,6 +16,18 @@ HEADERS = {
     'Accept-Language': 'de-DE, de;q=0.9',
 }
 
+
+def _request_mit_retry(url, **kwargs):
+    """Führt einen GET-Request mit 1x Retry (2s Pause) bei Fehler aus."""
+    import time
+    try:
+        response = _request_mit_retry(url, **kwargs)
+        return response
+    except requests.RequestException:
+        time.sleep(2)
+        response = _request_mit_retry(url, **kwargs)
+        return response
+
 # URLs
 REGIOACTIVE_URL = "https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte"
 STADT_RE_URL = "https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/"
@@ -54,6 +66,8 @@ SUBERGS_URL = "https://www.subergs.de/events/"
 SENIORENBEIRAT_URL = "https://seniorenbeirat-recklinghausen.com/veranstaltungen/liste/"
 ZECHE_KLAERCHEN_URL = "https://zeche-klaerchen.de/index.php/aktuelles"
 STADTLABOR_URL = "https://www.stadtlabor-re.de/aktuell/aktuell.php"
+GEGENDRUCK_ICS = "https://theater-gegendruck.de/?post_type=tribe_events&ical=1"
+GEGENDRUCK_URL = "https://theater-gegendruck.de/termine/"
 
 
 @dataclass
@@ -96,8 +110,7 @@ def _im_monat(datum: datetime, jahr: int, monat: int) -> bool:
 def hole_regioactive(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von regioactive.de via JSON-LD structured data."""
     try:
-        response = requests.get(REGIOACTIVE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(REGIOACTIVE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (regioactive): {e}")
         return []
@@ -176,8 +189,7 @@ def hole_regioactive(jahr: int, monat: int) -> list[Termin]:
 def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
     """Holt Events vom offiziellen Veranstaltungskalender der Stadt RE."""
     try:
-        response = requests.get(STADT_RE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(STADT_RE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (stadt-re): {e}")
         return []
@@ -227,12 +239,11 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
         ort = 'Recklinghausen'
 
         try:
-            detail = requests.get(link, headers=HEADERS, timeout=15)
-            detail.raise_for_status()
+            detail = _request_mit_retry(link, headers=HEADERS, timeout=15)
             ds = BeautifulSoup(detail.text, 'html.parser')
 
-            def _sf(cls):
-                d = ds.find(class_=cls)
+            def _sf(cls, soup=ds):
+                d = soup.find(class_=cls)
                 if d:
                     val = d.find(class_='selfdb_columnvalue')
                     if val:
@@ -267,8 +278,7 @@ def hole_stadt_re(jahr: int, monat: int) -> list[Termin]:
 def _hole_altstadtschmiede_beschreibung(url: str) -> str:
     """Holt die Beschreibung von einer Altstadtschmiede-Detailseite."""
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
-        r.raise_for_status()
+        r = _request_mit_retry(url, headers=HEADERS, timeout=15)
     except requests.RequestException:
         return ''
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -292,8 +302,7 @@ def _hole_altstadtschmiede_beschreibung(url: str) -> str:
 def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von der Altstadtschmiede via JSON-LD + Beschreibungen von Detailseiten."""
     try:
-        response = requests.get(ALTSTADTSCHMIEDE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(ALTSTADTSCHMIEDE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (altstadtschmiede): {e}")
         return []
@@ -380,8 +389,7 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
 def hole_vesterleben(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von vesterleben.de, gefiltert auf Recklinghausen."""
     try:
-        response = requests.get(VESTERLEBEN_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(VESTERLEBEN_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (vesterleben): {e}")
         return []
@@ -400,7 +408,7 @@ def hole_vesterleben(jahr: int, monat: int) -> list[Termin]:
         # Text-Zeilen des gesamten Link-Elements
         # Struktur: "Sonntag |  8.02.2026" / "Stadtname" / "| 15:00 Uhr" / Titel / Desc / Adresse / "PLZ | Stadt"
         text = link_tag.get_text('\n', strip=True)
-        lines = [l.strip() for l in text.split('\n') if l.strip()]
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
 
         datum = None
         uhrzeit = 'siehe Website'
@@ -493,8 +501,7 @@ def hole_sternwarte(jahr: int, monat: int) -> list[Termin]:
     Struktur: <p><u>Tag, DD. Monat, HH.MM Uhr, Ort</u><br><strong>Titel</strong><br>Beschreibung</p>
     """
     try:
-        response = requests.get(STERNWARTE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(STERNWARTE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (sternwarte): {e}")
         return []
@@ -550,7 +557,7 @@ def hole_sternwarte(jahr: int, monat: int) -> list[Termin]:
         if name in full_text:
             rest = full_text.split(name, 1)[-1].strip()
             # Erste Zeile nach Titel die nicht zum Header gehört
-            rest_lines = [l.strip() for l in rest.split('\n') if l.strip()]
+            rest_lines = [line.strip() for line in rest.split('\n') if line.strip()]
             if rest_lines:
                 beschreibung = rest_lines[0][:200]
 
@@ -575,8 +582,7 @@ def hole_kunsthalle(jahr: int, monat: int) -> list[Termin]:
     Struktur im Text: DD.MM. / Titel / Day, HH:MM - / HH:MM Uhr / Beschreibung
     """
     try:
-        response = requests.get(KUNSTHALLE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(KUNSTHALLE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (kunsthalle): {e}")
         return []
@@ -586,7 +592,7 @@ def hole_kunsthalle(jahr: int, monat: int) -> list[Termin]:
 
     # Gesamten sichtbaren Text zeilenweise durchgehen
     text = soup.get_text('\n')
-    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
 
     i = 0
     while i < len(lines):
@@ -687,8 +693,7 @@ def hole_stadtbibliothek(jahr: int, monat: int) -> list[Termin]:
         'fieldStichworte': 'stadtbuecherei',
     }
     try:
-        response = requests.get(STADTBIBLIOTHEK_URL, params=params, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(STADTBIBLIOTHEK_URL, params=params, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (stadtbibliothek): {e}")
         return []
@@ -757,8 +762,7 @@ def _hole_events_calendar(url: str, quelle: str, kategorie: str,
                           jahr: int, monat: int) -> list[Termin]:
     """Holt Events von Seiten mit The Events Calendar Plugin via JSON-LD."""
     try:
-        response = requests.get(url, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(url, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen ({quelle}): {e}")
         return []
@@ -855,8 +859,7 @@ def hole_akademie(jahr: int, monat: int) -> list[Termin]:
     Alle Events auf einer Seite, keine Paginierung.
     """
     try:
-        response = requests.get(AKADEMIE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(AKADEMIE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (akademie): {e}")
         return []
@@ -916,7 +919,7 @@ _WOCHENTAGE = r'Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag'
 
 def _parse_stadtarchiv_text(text: str, jahr: int, monat: int, pdf_url: str) -> list[Termin]:
     """Parst Events aus dem Stadtarchiv-PDF-Text."""
-    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
     termine = []
     gesehen: set[str] = set()
 
@@ -1040,9 +1043,7 @@ def hole_stadtarchiv(jahr: int, monat: int) -> list[Termin]:
 
     for pdf_url in urls:
         try:
-            response = requests.get(pdf_url, headers=HEADERS, timeout=30)
-            if response.status_code != 200:
-                continue
+            response = _request_mit_retry(pdf_url, headers=HEADERS, timeout=30)
         except requests.RequestException:
             continue
 
@@ -1163,8 +1164,7 @@ def hole_vhs(jahr: int, monat: int) -> list[Termin]:
         while url and url not in besuchte_urls and len(besuchte_urls) < 5:
             besuchte_urls.add(url)
             try:
-                response = requests.get(url, headers=HEADERS, timeout=30)
-                response.raise_for_status()
+                response = _request_mit_retry(url, headers=HEADERS, timeout=30)
             except requests.RequestException:
                 break
 
@@ -1190,8 +1190,7 @@ def hole_geschichte_re(jahr: int, monat: int) -> list[Termin]:
     für Beschreibung.
     """
     try:
-        response = requests.get(GESCHICHTE_RE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(GESCHICHTE_RE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (geschichte-re): {e}")
         return []
@@ -1390,8 +1389,7 @@ def hole_gastkirche(jahr: int, monat: int) -> list[Termin]:
         for montag in montage:
             url = f"{GASTKIRCHE_URL}/{montag.strftime('%Y/%m/%d')}/{kat_id}"
             try:
-                response = requests.get(url, headers=HEADERS, timeout=30)
-                response.raise_for_status()
+                response = _request_mit_retry(url, headers=HEADERS, timeout=30)
             except requests.RequestException:
                 continue
 
@@ -1415,8 +1413,7 @@ def hole_ruhrfestspiele(jahr: int, monat: int) -> list[Termin]:
     """
     # Hauptseite: alle Produktions-Links sammeln
     try:
-        response = requests.get(RUHRFESTSPIELE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(RUHRFESTSPIELE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (ruhrfestspiele): {e}")
         return []
@@ -1437,8 +1434,7 @@ def hole_ruhrfestspiele(jahr: int, monat: int) -> list[Termin]:
 
     for prod_url in produktion_urls:
         try:
-            response = requests.get(prod_url, headers=HEADERS, timeout=30)
-            response.raise_for_status()
+            response = _request_mit_retry(prod_url, headers=HEADERS, timeout=30)
         except requests.RequestException:
             continue
 
@@ -1540,14 +1536,12 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
 
         while True:
             try:
-                response = requests.get(
+                response = _request_mit_retry(
                     CINEWORLD_API,
                     params={'cinemaId': CINEWORLD_CINEMA_ID, 'date': datum_str, 'page': seite},
                     headers=HEADERS,
                     timeout=15,
                 )
-                if response.status_code != 200:
-                    break
                 data = response.json()
             except (requests.RequestException, ValueError):
                 break
@@ -1631,8 +1625,7 @@ def hole_neue_philharmonie(jahr: int, monat: int) -> list[Termin]:
     Stadtfilter: nur Events mit c-event__city = "Recklinghausen".
     """
     try:
-        response = requests.get(NEUE_PHILHARMONIE_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(NEUE_PHILHARMONIE_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (neue-philharmonie): {e}")
         return []
@@ -1720,8 +1713,7 @@ def hole_ikonen_museum(jahr: int, monat: int) -> list[Termin]:
     Beschreibung aus div.teaser.
     """
     try:
-        response = requests.get(IKONEN_MUSEUM_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(IKONEN_MUSEUM_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (ikonen-museum): {e}")
         return []
@@ -1802,8 +1794,7 @@ def hole_debut_um_11(jahr: int, monat: int) -> list[Termin]:
     Beschreibung aus div.post-excerpt.
     """
     try:
-        response = requests.get(DEBUT_UM_11_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(DEBUT_UM_11_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (debut-um-11): {e}")
         return []
@@ -1875,8 +1866,7 @@ def _adfc_fetch(unit_key: str, event_type: str) -> list[dict]:
         'limit': '500',
     }
     try:
-        response = requests.get(ADFC_API_URL, params=params, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(ADFC_API_URL, params=params, headers=HEADERS, timeout=30)
         return response.json().get('items', [])
     except (requests.RequestException, ValueError) as e:
         print(f"  Fehler beim Abrufen (adfc/{event_type}): {e}")
@@ -1978,8 +1968,7 @@ def hole_atelierhaus(jahr: int, monat: int) -> list[Termin]:
     Mehrtägige Ausstellungen erscheinen in jedem Monat, den sie abdecken.
     """
     try:
-        response = requests.get(ATELIERHAUS_ICS, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(ATELIERHAUS_ICS, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (atelierhaus): {e}")
         return []
@@ -2062,8 +2051,7 @@ def hole_zu_gast_in_re(jahr: int, monat: int) -> list[Termin]:
     wenn noch kein Programm für das gewünschte Jahr/Monat veröffentlicht ist.
     """
     try:
-        response = requests.get(ZU_GAST_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(ZU_GAST_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (zu-gast-in-re): {e}")
         return []
@@ -2134,8 +2122,7 @@ def hole_re_leuchtet(jahr: int, monat: int) -> list[Termin]:
         'per_page': 50,
     }
     try:
-        response = requests.get(RE_LEUCHTET_API, params=params, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(RE_LEUCHTET_API, params=params, headers=HEADERS, timeout=30)
         data = response.json()
     except (requests.RequestException, ValueError) as e:
         print(f"  Fehler beim Abrufen (re-leuchtet): {e}")
@@ -2219,8 +2206,7 @@ def hole_josefeich(jahr: int, monat: int) -> list[Termin]:
 def hole_recklinghaeuser(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von der-recklinghaeuser.de (Fließtext-Parsing)."""
     try:
-        response = requests.get(RECKLINGHAEUSER_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(RECKLINGHAEUSER_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (Der Recklinghäuser): {e}")
         return []
@@ -2299,8 +2285,7 @@ def hole_recklinghaeuser(jahr: int, monat: int) -> list[Termin]:
 def hole_subergs(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von subergs.de/events/ (WordPress-Blogposts, Datum im Titel)."""
     try:
-        response = requests.get(SUBERGS_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(SUBERGS_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (Subergs): {e}")
         return []
@@ -2356,8 +2341,7 @@ def hole_seniorenbeirat(jahr: int, monat: int) -> list[Termin]:
     while url and url not in besuchte_urls and len(besuchte_urls) < 10:
         besuchte_urls.add(url)
         try:
-            response = requests.get(url, headers=HEADERS, timeout=30)
-            response.raise_for_status()
+            response = _request_mit_retry(url, headers=HEADERS, timeout=30)
         except requests.RequestException as e:
             if not besuchte_urls - {url}:
                 print(f"  Fehler beim Abrufen (Seniorenbeirat): {e}")
@@ -2491,8 +2475,7 @@ def hole_zeche_klaerchen(jahr: int, monat: int) -> list[Termin]:
     Datumsformate: "27. März 2026", "12.09.2026", "10. und 11. Oktober 2026".
     """
     try:
-        response = requests.get(ZECHE_KLAERCHEN_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
+        response = _request_mit_retry(ZECHE_KLAERCHEN_URL, headers=HEADERS, timeout=30)
     except requests.RequestException as e:
         print(f"  Fehler beim Abrufen (Zeche Klärchen): {e}")
         return []
@@ -2578,8 +2561,7 @@ _MONATE_EN = {
 def hole_stadtlabor(jahr: int, monat: int) -> list[Termin]:
     """Holt Ausstellungen und Vernissagen vom Kunstverein StadtLabor RE."""
     try:
-        r = requests.get(STADTLABOR_URL, headers=HEADERS, timeout=30)
-        r.raise_for_status()
+        r = _request_mit_retry(STADTLABOR_URL, headers=HEADERS, timeout=30)
     except requests.RequestException:
         return []
 
@@ -2746,7 +2728,57 @@ def hole_stadtlabor(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 32. Manuelle Termine — JSON-Datei
+# 32. Theater Gegendruck — ICS-Feed (The Events Calendar)
+# ---------------------------------------------------------------------------
+
+def hole_gegendruck(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine des Theater Gegendruck via ICS-Feed."""
+    try:
+        response = _request_mit_retry(GEGENDRUCK_ICS, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (gegendruck): {e}")
+        return []
+
+    termine = []
+    for block in re.findall(r'BEGIN:VEVENT(.*?)END:VEVENT', response.text, re.DOTALL):
+        name = unescape(_ics_wert(block, 'SUMMARY'))
+        if not name:
+            continue
+
+        dtstart_raw = _ics_wert(block, 'DTSTART')
+        if not dtstart_raw:
+            continue
+
+        datum_start = _ics_datum(dtstart_raw)
+        if not datum_start:
+            continue
+
+        if not _im_monat(datum_start, jahr, monat):
+            continue
+
+        all_day = 'T' not in dtstart_raw
+        uhrzeit = datum_start.strftime('%H:%M Uhr') if not all_day else 'ganztägig'
+        link = _ics_wert(block, 'URL') or GEGENDRUCK_URL
+        ort_raw = _ics_wert(block, 'LOCATION') or 'Theater im Atelierhaus, Königstraße 49a, Recklinghausen'
+        ort = ort_raw.replace('\\,', ',').replace('\\;', ';')
+        # PLZ am Ende entfernen (z.B. ", 45663")
+        ort = re.sub(r',\s*\d{5}\s*$', '', ort)
+        beschreibung_raw = unescape(_ics_wert(block, 'DESCRIPTION'))
+        beschreibung = beschreibung_raw.replace('\\n', ' ').replace('\\,', ',').replace('\\;', ';').strip()
+        # Mehrfache Leerzeichen zusammenfassen
+        beschreibung = re.sub(r' {2,}', ' ', beschreibung)[:800]
+
+        termine.append(Termin(
+            name=name[:150], datum=datum_start, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link, beschreibung=beschreibung,
+            quelle='gegendruck', kategorie='Theater',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 33. Manuelle Termine — JSON-Datei
 # ---------------------------------------------------------------------------
 
 def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
