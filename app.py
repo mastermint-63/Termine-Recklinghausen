@@ -30,7 +30,7 @@ from scraper import (
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
-    hole_manuelle_termine, Termin,
+    hole_gegendruck, hole_manuelle_termine, hole_ratssitzungen, hole_moondock, Termin,
 )
 
 
@@ -66,7 +66,10 @@ QUELLEN = {
     'seniorenbeirat': 'Seniorenbeirat',
     'zeche-klaerchen': 'Zeche Klärchen',
     'stadtlabor': 'StadtLabor RE',
+    'gegendruck': 'Theater Gegendruck',
     'manuell': 'Redaktion',
+    'ratssitzungen': 'Ratssitzungen',
+    'moondock': 'mOOndock',
 }
 
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
@@ -102,6 +105,9 @@ SCRAPER = [
     (hole_seniorenbeirat, 'Seniorenbeirat'),
     (hole_zeche_klaerchen, 'Zeche Klärchen'),
     (hole_stadtlabor, 'StadtLabor RE'),
+    (hole_gegendruck, 'Theater Gegendruck'),
+    (hole_ratssitzungen, 'Ratssitzungen'),
+    (hole_moondock, 'mOOndock'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -162,7 +168,7 @@ _STOPPWOERTER = {
     'spanisch', 'französisch', 'englisch', 'italienisch', 'niederländisch',
     # Häufig in Titeln, aber nicht markant
     'geschichte', 'kunst', 'welt', 'leben', 'menschen', 'neue', 'neuen',
-    'lesung', 'führung', 'vortrag', 'ausstellung', 'eröffnung',
+    'lesung', 'führung', 'ausstellung', 'eröffnung',
     'alltag', 'beruf', 'beruflichen', 'frau', 'frauen', 'mann', 'männer',
     'treffen', 'gruppe', 'trauer', 'trauergruppe',
     'reise', 'familienfragen',
@@ -385,6 +391,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'seniorenbeirat': 'badge-seniorenbeirat',
                 'zeche-klaerchen': 'badge-zeche-klaerchen',
                 'stadtlabor': 'badge-stadtlabor',
+                'gegendruck': 'badge-gegendruck',
+                'ratssitzungen': 'badge-ratssitzungen',
+                'moondock': 'badge-moondock',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -926,6 +935,18 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #c06020 0%, #b05010 100%);
             color: white;
         }}
+        .badge-gegendruck {{
+            background: linear-gradient(135deg, #8b2252 0%, #6b1242 100%);
+            color: white;
+        }}
+        .badge-ratssitzungen {{
+            background: linear-gradient(135deg, #1a3a5c 0%, #0a2a4c 100%);
+            color: white;
+        }}
+        .badge-moondock {{
+            background: linear-gradient(135deg, #4a1a6b 0%, #3a0a5b 100%);
+            color: white;
+        }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
             color: white;
@@ -1182,7 +1203,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a> &middot;
             <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a> &middot;
             <a href="https://zeche-klaerchen.de/index.php/aktuelles" target="_blank" rel="noopener noreferrer">Zeche Klärchen</a> &middot;
-            <a href="https://www.stadtlabor-re.de/aktuell/aktuell.php" target="_blank" rel="noopener noreferrer">StadtLabor RE</a>
+            <a href="https://www.stadtlabor-re.de/aktuell/aktuell.php" target="_blank" rel="noopener noreferrer">StadtLabor RE</a> &middot;
+            <a href="https://theater-gegendruck.de/termine/" target="_blank" rel="noopener noreferrer">Theater Gegendruck</a> &middot;
+            <a href="https://stadt-recklinghausen.gremien.info" target="_blank" rel="noopener noreferrer">Ratssitzungen</a> &middot;
+            <a href="https://www.moondock.tv/page/Events" target="_blank" rel="noopener noreferrer">mOOndock</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
@@ -1342,7 +1366,7 @@ def main():
     index_pfad = os.path.join(basis_pfad, 'index.html')
     with open(index_pfad, 'w', encoding='utf-8') as f:
         f.write(index_html)
-    print(f"index.html generiert (Canonical: Root-URL)")
+    print("index.html generiert (Canonical: Root-URL)")
 
     # sitemap.xml
     heute = datetime.now().strftime('%Y-%m-%d')

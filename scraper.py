@@ -21,11 +21,13 @@ def _request_mit_retry(url, **kwargs):
     """Führt einen GET-Request mit 1x Retry (2s Pause) bei Fehler aus."""
     import time
     try:
-        response = _request_mit_retry(url, **kwargs)
+        response = requests.get(url, **kwargs)
+        response.raise_for_status()
         return response
     except requests.RequestException:
         time.sleep(2)
-        response = _request_mit_retry(url, **kwargs)
+        response = requests.get(url, **kwargs)
+        response.raise_for_status()
         return response
 
 # URLs
@@ -68,6 +70,13 @@ ZECHE_KLAERCHEN_URL = "https://zeche-klaerchen.de/index.php/aktuelles"
 STADTLABOR_URL = "https://www.stadtlabor-re.de/aktuell/aktuell.php"
 GEGENDRUCK_ICS = "https://theater-gegendruck.de/?post_type=tribe_events&ical=1"
 GEGENDRUCK_URL = "https://theater-gegendruck.de/termine/"
+
+# Ratsinformationssystem Stadt Recklinghausen (more!rubin via gremien.info)
+RIS_RE_API = "https://stadt-recklinghausen.gremien.info/api.php?id=calendar&action=get&view=default"
+RIS_RE_URL = "https://stadt-recklinghausen.gremien.info"
+
+# Moondock Diskothek
+MOONDOCK_URL = "https://www.moondock.tv/page/Events"
 
 
 @dataclass
@@ -2823,6 +2832,148 @@ def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
             beschreibung=e.get('beschreibung', '')[:800],
             quelle='manuell',
             kategorie=e.get('kategorie', ''),
+        ))
+
+    return termine
+
+
+def hole_ratssitzungen(jahr: int, monat: int) -> list[Termin]:
+    """Holt Ratssitzungen der Stadt Recklinghausen via gremien.info JSON-API."""
+    monat_str = f"{jahr}-{monat:02d}"
+    url = f"{RIS_RE_API}&from={monat_str}&to={monat_str}"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        daten = r.json()
+    except (requests.RequestException, json.JSONDecodeError):
+        return []
+
+    termine = []
+    for meeting in daten.get("meetings", []):
+        try:
+            datum = datetime.strptime(meeting["datum"], "%Y-%m-%d")
+        except (ValueError, KeyError):
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        beginn = meeting.get("beginn", "00:00:00")
+        uhrzeit = ""
+        try:
+            h, m, *_ = beginn.split(":")
+            h, m = int(h), int(m)
+            if h > 0 or m > 0:
+                datum = datum.replace(hour=h, minute=m)
+                uhrzeit = f"{h:02d}:{m:02d} Uhr"
+        except (ValueError, AttributeError):
+            pass
+
+        titel = meeting.get("titel", "Sitzung")
+        room = meeting.get("room", {})
+        ort = room.get("name", "")
+        if room.get("address", {}).get("street"):
+            ort = f"{ort}, {room['address']['street']}" if ort else room['address']['street']
+        link = meeting.get("full_url", f"{RIS_RE_URL}/meeting?id={meeting.get('nummer', meeting.get('id', ''))}")
+
+        termine.append(Termin(
+            name=titel[:150],
+            datum=datum,
+            uhrzeit=uhrzeit,
+            ort=ort[:150],
+            link=link,
+            beschreibung='',
+            quelle='ratssitzungen',
+            kategorie='Politik',
+        ))
+
+    return termine
+
+
+# Englische Monatsnamen → Monatsnummer (Moondock nutzt englische Abkürzungen)
+_MOONDOCK_MONATE = {
+    'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
+    'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
+}
+
+
+def hole_moondock(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events von der Moondock Diskothek (moondock.tv)."""
+    try:
+        r = requests.get(MOONDOCK_URL, headers=HEADERS, timeout=30, verify=False)
+        r.raise_for_status()
+    except requests.RequestException:
+        return []
+
+    soup = BeautifulSoup(r.text, 'lxml')
+    termine = []
+
+    for article in soup.select('article.post-item'):
+        day_el = article.select_one('span.day')
+        month_el = article.select_one('span.month')
+        title_el = article.select_one('h3.title.post')
+        if not day_el or not month_el or not title_el:
+            continue
+
+        # Datum parsen: "18" + "Apr 2026"
+        try:
+            tag = int(day_el.get_text(strip=True))
+            monat_jahr = month_el.get_text(strip=True).split()  # ["Apr", "2026"]
+            monat_nr = _MOONDOCK_MONATE.get(monat_jahr[0].lower()[:3])
+            event_jahr = int(monat_jahr[1]) if len(monat_jahr) > 1 else jahr
+            if not monat_nr:
+                continue
+            datum = datetime(event_jahr, monat_nr, tag)
+        except (ValueError, IndexError):
+            continue
+
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        name = title_el.get_text(strip=True)
+
+        # Ort aus h4.title.small (enthält "Location : Adresse")
+        ort = 'mOOndock, Alte Grenzstr. 153e, Recklinghausen'
+        ort_el = article.select_one('h4.title.small')
+        if ort_el:
+            ort_text = ort_el.get_text(strip=True)
+            if 'Location' in ort_text:
+                ort_text = ort_text.split(':', 1)[-1].strip()
+            if ort_text:
+                ort = f"mOOndock, {ort_text}"
+
+        # Beschreibung aus <p> (ohne date-p)
+        beschreibung = ''
+        for p in article.find_all('p'):
+            if 'date' not in ' '.join(p.get('class', [])):
+                text = p.get_text(strip=True)
+                if text and len(text) > 5:
+                    beschreibung = text[:800]
+                    break
+
+        # Uhrzeit aus Beschreibung extrahieren (z.B. "ab 21 Uhr")
+        uhrzeit = ''
+        uhr_match = re.search(r'ab\s+(\d{1,2})\s*Uhr', beschreibung)
+        if uhr_match:
+            h = int(uhr_match.group(1))
+            datum = datum.replace(hour=h)
+            uhrzeit = f"{h:02d}:00 Uhr"
+
+        # Link
+        link_el = article.select_one('a.btn')
+        link = link_el['href'] if link_el and link_el.get('href') else MOONDOCK_URL
+        if link and not link.startswith('http'):
+            link = f"https://www.moondock.tv{link}"
+
+        termine.append(Termin(
+            name=name[:150],
+            datum=datum,
+            uhrzeit=uhrzeit,
+            ort=ort[:150],
+            link=link,
+            beschreibung=beschreibung,
+            quelle='moondock',
+            kategorie='Party',
         ))
 
     return termine
