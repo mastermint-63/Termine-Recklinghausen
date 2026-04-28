@@ -513,14 +513,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     html = f'''<!DOCTYPE html>
 <html lang="de">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RML793W7R2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', 'G-RML793W7R2');
-    </script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="0c076e52-895f-4cda-98cc-68c5c7f0fa6c"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{titel}</title>
