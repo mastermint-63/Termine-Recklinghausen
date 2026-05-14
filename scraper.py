@@ -1,6 +1,7 @@
 """Scraper für Veranstaltungen in Recklinghausen aus mehreren Quellen."""
 
 import json
+import os
 import re
 import requests
 from dataclasses import dataclass
@@ -33,7 +34,7 @@ def _request_mit_retry(url, **kwargs):
 # URLs
 REGIOACTIVE_URL = "https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte"
 STADT_RE_URL = "https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/"
-ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/events/"
+ALTSTADTSCHMIEDE_URL = "https://www.altstadtschmiede.de/aktuelle-veranstaltungen"
 VESTERLEBEN_URL = "https://vesterleben.de/termine-alle"
 STERNWARTE_URL = "https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/"
 KUNSTHALLE_URL = "https://kunsthalle-recklinghausen.de/programm/kalender"
@@ -77,6 +78,11 @@ RIS_RE_URL = "https://stadt-recklinghausen.gremien.info"
 
 # Moondock Diskothek
 MOONDOCK_URL = "https://www.moondock.tv/page/Events"
+
+# Facebook via Apify
+FACEBOOK_EXPLORE_URL = "https://www.facebook.com/events/search/?q=recklinghausen"
+FACEBOOK_ALTSTADTSCHMIEDE_URL = "https://www.facebook.com/altstadtschmiede.re/events"
+APIFY_ACTOR_ID = "apify~facebook-events-scraper"
 
 
 @dataclass
@@ -2974,6 +2980,141 @@ def hole_moondock(jahr: int, monat: int) -> list[Termin]:
             beschreibung=beschreibung,
             quelle='moondock',
             kategorie='Party',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 33. Facebook Events via Apify
+# ---------------------------------------------------------------------------
+
+def _lese_apify_token() -> str:
+    """Liest den Apify-API-Token aus .env im selben Verzeichnis oder Umgebungsvariable."""
+    env_pfad = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+    try:
+        with open(env_pfad) as f:
+            for zeile in f:
+                if zeile.startswith('APIFY_TOKEN='):
+                    return zeile.split('=', 1)[1].strip()
+    except FileNotFoundError:
+        pass
+    return os.environ.get('APIFY_TOKEN', '')
+
+
+def _ist_recklinghausen_event(ev: dict) -> bool:
+    """Prüft ob ein Facebook-Event aus Recklinghausen stammt."""
+    loc = ev.get('location') or {}
+    if not isinstance(loc, dict):
+        return False
+    if loc.get('countryCode') != 'DE':
+        return False
+    name = (loc.get('name') or '').lower()
+    city = (loc.get('city') or '').lower()
+    contextual = (loc.get('contextualName') or '').lower()
+    return (
+        'recklinghausen' in name
+        or 'recklinghausen' in city
+        or 'recklinghausen' in contextual
+    )
+
+
+_FACEBOOK_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.facebook_cache.json')
+_FACEBOOK_CACHE_TAGE = 7
+
+
+def _lade_facebook_cache() -> list[dict] | None:
+    """Gibt gecachte Events zurück wenn Cache jünger als 7 Tage, sonst None."""
+    try:
+        with open(_FACEBOOK_CACHE) as f:
+            data = json.load(f)
+        alter = datetime.now().timestamp() - data.get('timestamp', 0)
+        if alter < _FACEBOOK_CACHE_TAGE * 86400:
+            return data['events']
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        pass
+    return None
+
+
+def _speichere_facebook_cache(events: list[dict]) -> None:
+    try:
+        with open(_FACEBOOK_CACHE, 'w') as f:
+            json.dump({'timestamp': datetime.now().timestamp(), 'events': events}, f)
+    except OSError:
+        pass
+
+
+def hole_facebook(jahr: int, monat: int) -> list[Termin]:
+    """Scrapet Facebook-Events für Recklinghausen via Apify (max. 1x pro Woche, sonst Cache)."""
+    events = _lade_facebook_cache()
+
+    if events is None:
+        token = _lese_apify_token()
+        if not token:
+            return []
+
+        url = (
+            f"https://api.apify.com/v2/acts/{APIFY_ACTOR_ID}/run-sync-get-dataset-items"
+            f"?token={token}&timeout=300&memory=1024"
+        )
+        payload = {
+            "startUrls": [
+                FACEBOOK_EXPLORE_URL,
+                FACEBOOK_ALTSTADTSCHMIEDE_URL,
+            ],
+            "maxEvents": 50,
+        }
+
+        try:
+            response = requests.post(url, json=payload, timeout=360)
+            response.raise_for_status()
+            events = response.json()
+            _speichere_facebook_cache(events)
+        except Exception as e:
+            msg = str(e)
+            if token and token in msg:
+                msg = msg.replace(token, 'REDACTED')
+            print(f"  [Facebook] Fehler: {msg}")
+            return []
+
+    tz_berlin = ZoneInfo('Europe/Berlin')
+    termine = []
+
+    for ev in events:
+        if ev.get('isCanceled'):
+            continue
+        if not _ist_recklinghausen_event(ev):
+            continue
+
+        # Datum parsen (ISO UTC → lokale Zeit)
+        utc_str = ev.get('utcStartDate') or ''
+        if not utc_str:
+            continue
+        try:
+            utc_dt = datetime.fromisoformat(utc_str.replace('Z', '+00:00'))
+            lokale_dt = utc_dt.astimezone(tz_berlin)
+        except ValueError:
+            continue
+
+        if not _im_monat(lokale_dt, jahr, monat):
+            continue
+
+        uhrzeit = lokale_dt.strftime('%H:%M Uhr') if lokale_dt.hour != 0 else ''
+
+        loc = ev.get('location') or {}
+        ort = loc.get('name') or loc.get('city') or 'Recklinghausen'
+
+        beschreibung = (ev.get('description') or '')[:800]
+
+        termine.append(Termin(
+            name=(ev.get('name') or '')[:150],
+            datum=lokale_dt.replace(tzinfo=None),
+            uhrzeit=uhrzeit,
+            ort=ort[:150],
+            link=ev.get('url') or '',
+            beschreibung=beschreibung,
+            quelle='facebook',
+            kategorie='',
         ))
 
     return termine
