@@ -645,7 +645,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="moondock">mOOndock</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ratssitzungen">Ratssitzungen</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="cineworld">Cineworld</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="moondock">mOOndock</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ratssitzungen">Ratssitzungen</option><option value="ruhrfestspiele">Ruhrfestspiele</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtarchiv">Stadtarchiv</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
@@ -3105,6 +3105,18 @@ Jazz, Funk und Fusion treffen auf eine Live-Show: Das Confusion Project bringt a
                     </div>
                 </div>
             
+                <div class="termin" data-quelle="vhs">
+                    <div class="termin-zeit">18:00–19:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://www.vhs-recklinghausen.de/politik-und-gesellschaft/kw/bereich/kursdetails/kurs/26A-1010/kursname/Von der NS-Ordensburg Vogelsang ins Reichskommissariat Ostland/kategorie-id/4" target="_blank" rel="noopener noreferrer">Friedrich Neugebauer - Von der NS-Ordensburg Vogelsang</a>
+                            <span class="badge badge-vhs">VHS</span> <span class="badge badge-kategorie">Bildung</span>
+                        </div>
+                        <div class="termin-ort">Online</div>
+                        
+                    </div>
+                </div>
+            
             </div>
             <div class="zurueck-link"><a href="#kalender">&#8593; Kalender</a></div>
         </div>
@@ -3329,29 +3341,6 @@ Jazz, Funk und Fusion treffen auf eine Live-Show: Das Confusion Project bringt a
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="stadtlabor">
-                    <div class="termin-zeit">17:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="http://stadtlabor-re.de/rw_common/plugins/stacks/armadillo/index.php/?post_id=158&title=ekaterina-kizilova-historische-architektur-in-recklinghausen-und-umgebung--im-spiegel-der-malerei--vernissage:-27-juni-2026--17-uhr-" target="_blank" rel="noopener noreferrer">Ekaterina Kizilova Historische Architektur in Recklinghausen und Umgebung  im Spiegel der Malerei  Vernissage: 27. Juni 2026  17 Uhr</a>
-                            <span class="badge badge-stadtlabor">StadtLabor RE</span> <span class="badge badge-kategorie">Kunst</span>
-                        </div>
-                        <div class="termin-ort">StadtLabor Galerie, Heilige-Geist-Str. 3, Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">27. Juni bis 12. September 2025
-
-WO? 
-Galerie im  Vestquartier  Sterngasse 3  2.OG
-Öffnungszeiten: Mo-Mi 8-16 Uhr Do 8-18 Uhr Fr 8-13 Uhr 
-und nach Vereinbarung
-
-Die neue Ausstellung des Vereins Stadtlabor e.V.  zeigt Arbeiten der renommierten russischen Künstlerin Ekaterina Kizilova.
-Ekaterina Kizilova stammt aus Kursk in Russland  und studierte Kunst und Grafik an der Staatlichen Universität Kursk. 2020 promovierte sie in Geschichte.  Ihre Arbeiten waren in zahlreichen Ausstellungen in Russland, China und Deutschland zu sehen.
-Ihre Genres sind Landschaft, Porträts und Stilleben.
-Seit 2022 lebt und arbeitet sie in Recklinghausen.
-Die aktuelle Ausstellung  in der Galerie im VestQuartier thematisiert historische Architektur von Recklinghausen und Umgebung. Die historischen Gebäude der Altst</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="adfc">
                     <div class="termin-zeit">17:00 Uhr</div>
                     <div class="termin-info">
@@ -3558,7 +3547,7 @@ Weitere Infos folgen in Kürze!</div>
         </div>
 
         <footer>
-            Generiert am 18.05.2026 um 06:34 Uhr<br>
+            Generiert am 19.05.2026 um 06:34 Uhr<br>
             Quellen:
             <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
             <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
