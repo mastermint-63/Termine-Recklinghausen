@@ -42,7 +42,7 @@ STADTBIBLIOTHEK_URL = "https://www.recklinghausen.de/inhalte/startseite/familie_
 NLGR_URL = "https://nlgr.de/veranstaltungen/"
 LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
 VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
-AKADEMIE_URL = "https://www.ahademie.com/veranstaltungen/"
+
 GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
 GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
 RUHRFESTSPIELE_URL = "https://www.ruhrfestspiele.de/programm"
@@ -860,69 +860,6 @@ def hole_nlgr(jahr: int, monat: int) -> list[Termin]:
 def hole_literaturtage(jahr: int, monat: int) -> list[Termin]:
     """Holt Events der Literaturtage Recklinghausen."""
     return _hole_events_calendar(LITERATURTAGE_URL, 'literaturtage', 'Literatur', jahr, monat)
-
-
-# ---------------------------------------------------------------------------
-# 11. Evangelische Akademie Recklinghausen (ahademie.com) — TYPO3
-# ---------------------------------------------------------------------------
-
-def hole_akademie(jahr: int, monat: int) -> list[Termin]:
-    """Holt Events der Evangelischen Akademie Recklinghausen.
-
-    TYPO3-basiert: div.col-md-4 mit a.box-hov (Link+Datum in p.eventdate-big),
-    p.subheadline (Titel) und optionalem <p> (Referent).
-    Alle Events auf einer Seite, keine Paginierung.
-    """
-    try:
-        response = _request_mit_retry(AKADEMIE_URL, headers=HEADERS, timeout=30)
-    except requests.RequestException as e:
-        print(f"  Fehler beim Abrufen (akademie): {e}")
-        return []
-
-    soup = BeautifulSoup(response.text, 'html.parser')
-    termine = []
-
-    for card in soup.find_all('div', class_='col-md-4'):
-        a_tag = card.find('a', class_='box-hov')
-        if not a_tag:
-            continue
-
-        datum_p = a_tag.find('p', class_='eventdate-big')
-        if not datum_p:
-            continue
-
-        datum_text = datum_p.get_text(strip=True)
-        try:
-            datum = datetime.strptime(datum_text, '%d.%m.%Y')
-        except ValueError:
-            continue
-
-        if not _im_monat(datum, jahr, monat):
-            continue
-
-        titel_p = card.find('p', class_='subheadline')
-        name = titel_p.get_text(strip=True) if titel_p else ''
-        if not name:
-            continue
-
-        # Referent/Beschreibung: nächstes <p> nach dem Titel
-        beschreibung = ''
-        if titel_p:
-            next_p = titel_p.find_next_sibling('p')
-            if next_p:
-                beschreibung = next_p.get_text(strip=True)
-
-        href = a_tag.get('href', '')
-        link = f"https://www.ahademie.com{href}" if href and not href.startswith('http') else href
-
-        termine.append(Termin(
-            name=name[:150], datum=datum, uhrzeit='siehe Website',
-            ort='Ev. Akademie Recklinghausen', link=link,
-            beschreibung=beschreibung[:200],
-            quelle='akademie', kategorie='Bildung',
-        ))
-
-    return termine
 
 
 # ---------------------------------------------------------------------------

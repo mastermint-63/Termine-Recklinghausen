@@ -24,13 +24,14 @@ from scraper import (
     hole_stadt_re, hole_altstadtschmiede,
     hole_vesterleben, hole_sternwarte, hole_kunsthalle,
     hole_stadtbibliothek, hole_nlgr, hole_literaturtage, hole_vhs,
-    hole_akademie, hole_stadtarchiv, hole_geschichte_re,
+    hole_stadtarchiv, hole_geschichte_re,
     hole_gastkirche, hole_ruhrfestspiele, hole_backyard, hole_cineworld,
     hole_neue_philharmonie, hole_ikonen_museum, hole_debut_um_11, hole_adfc,
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
-    hole_gegendruck, hole_manuelle_termine, hole_ratssitzungen, hole_moondock, Termin,
+    hole_gegendruck, hole_manuelle_termine, hole_ratssitzungen, hole_moondock,
+    hole_facebook, Termin,
 )
 
 
@@ -45,7 +46,7 @@ QUELLEN = {
     'nlgr': 'Neue Lit. Gesellschaft',
     'literaturtage': 'Literaturtage',
     'vhs': 'VHS',
-    'akademie': 'Ev. Akademie',
+
     'stadtarchiv': 'Stadtarchiv',
     'geschichte-re': 'Heimatkunde',
     'gastkirche': 'Gastkirche',
@@ -70,6 +71,7 @@ QUELLEN = {
     'manuell': 'Redaktion',
     'ratssitzungen': 'Ratssitzungen',
     'moondock': 'mOOndock',
+    'facebook': 'Weitere Tipps',
 }
 
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
@@ -84,7 +86,6 @@ SCRAPER = [
     (hole_nlgr, 'NLGR'),
     (hole_literaturtage, 'Literaturtage'),
     (hole_vhs, 'VHS'),
-    (hole_akademie, 'Ev. Akademie'),
     (hole_stadtarchiv, 'Stadtarchiv'),
     (hole_geschichte_re, 'Heimatkunde'),
     (hole_gastkirche, 'Gastkirche'),
@@ -108,6 +109,7 @@ SCRAPER = [
     (hole_gegendruck, 'Theater Gegendruck'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
+    (hole_facebook, 'Facebook'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
 
@@ -127,6 +129,7 @@ _QUELLEN_TIER: dict[str, int] = {
     'stadt-re': 2,
     'vesterleben': 2,
     'recklinghaeuser': 2,
+    'facebook': 2,
     # 'regioactive': 2,  # blockiert seit 2026-03; bei Reaktivierung aktivieren
 }
 
@@ -240,6 +243,26 @@ def _termin_score(t: Termin) -> int:
     if _QUELLEN_TIER.get(t.quelle, 1) == 2:
         score -= 10  # Aggregator-Malus: Veranstalter gewinnen immer
     return score
+
+
+# Veranstaltungen demokratiefeindlicher Gruppierungen werden grundsätzlich nicht
+# aufgenommen. Wortgrenzen (\b) sind wichtig, damit harmlose Treffer (z.B. "afd"
+# in einem URL-Hash) nicht fälschlich gefiltert werden.
+_AUSGESCHLOSSENE_MUSTER = re.compile(
+    r"\bafd\b|\ba\.f\.d\.?|alternative für deutschland|junge alternative|afd-kv",
+    re.IGNORECASE,
+)
+
+
+def ist_ausgeschlossen(t: Termin) -> bool:
+    """True, wenn der Termin von einer ausgeschlossenen Gruppierung stammt (z.B. AfD)."""
+    text = " ".join(filter(None, [t.name, t.beschreibung, t.ort, t.link]))
+    return bool(_AUSGESCHLOSSENE_MUSTER.search(text))
+
+
+def entferne_ausgeschlossene(termine: list[Termin]) -> list[Termin]:
+    """Filtert Termine demokratiefeindlicher Gruppierungen (AfD) heraus."""
+    return [t for t in termine if not ist_ausgeschlossen(t)]
 
 
 def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
@@ -370,7 +393,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'nlgr': 'badge-nlgr',
                 'literaturtage': 'badge-literaturtage',
                 'vhs': 'badge-vhs',
-                'akademie': 'badge-akademie',
+
                 'stadtarchiv': 'badge-stadtarchiv',
                 'geschichte-re': 'badge-geschichte-re',
                 'gastkirche': 'badge-gastkirche',
@@ -394,6 +417,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'gegendruck': 'badge-gegendruck',
                 'ratssitzungen': 'badge-ratssitzungen',
                 'moondock': 'badge-moondock',
+                'facebook': 'badge-facebook',
                 'manuell': 'badge-manuell',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
@@ -513,7 +537,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     html = f'''<!DOCTYPE html>
 <html lang="de">
 <head>
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="0c076e52-895f-4cda-98cc-68c5c7f0fa6c"></script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="14825bec-c437-48e5-af55-02f181fdb17c"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{titel}</title>
@@ -830,10 +854,6 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: white;
         }}
 
-        .badge-akademie {{
-            background: linear-gradient(135deg, #6a6a9a 0%, #5a5a8a 100%);
-            color: white;
-        }}
 
         .badge-stadtarchiv {{
             background: linear-gradient(135deg, #7a7060 0%, #6a6050 100%);
@@ -938,6 +958,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-moondock {{
             background: linear-gradient(135deg, #4a1a6b 0%, #3a0a5b 100%);
+            color: white;
+        }}
+        .badge-facebook {{
+            background: linear-gradient(135deg, #1877F2 0%, #0f65d9 100%);
             color: white;
         }}
         .badge-manuell {{
@@ -1177,7 +1201,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://nlgr.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">NLGR</a> &middot;
             <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">Literaturtage</a> &middot;
             <a href="https://www.vhs-recklinghausen.de" target="_blank" rel="noopener noreferrer">VHS</a> &middot;
-            <a href="https://www.ahademie.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Ev. Akademie</a> &middot;
+
             <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank" rel="noopener noreferrer">Stadtarchiv</a> &middot;
             <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank" rel="noopener noreferrer">Heimatkunde</a> &middot;
             <a href="https://www.gastkirche.de/index.php/termine" target="_blank" rel="noopener noreferrer">Gastkirche</a> &middot;
@@ -1199,7 +1223,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <a href="https://www.stadtlabor-re.de/aktuell/aktuell.php" target="_blank" rel="noopener noreferrer">StadtLabor RE</a> &middot;
             <a href="https://theater-gegendruck.de/termine/" target="_blank" rel="noopener noreferrer">Theater Gegendruck</a> &middot;
             <a href="https://stadt-recklinghausen.gremien.info" target="_blank" rel="noopener noreferrer">Ratssitzungen</a> &middot;
-            <a href="https://www.moondock.tv/page/Events" target="_blank" rel="noopener noreferrer">mOOndock</a>
+            <a href="https://www.moondock.tv/page/Events" target="_blank" rel="noopener noreferrer">mOOndock</a> &middot;
+            <a href="https://www.facebook.com/events/search/?q=recklinghausen" target="_blank" rel="noopener noreferrer">Weitere Tipps</a>
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
@@ -1336,6 +1361,12 @@ def main():
             events = scraper_fn(j, m)
             print(f"  -> {len(events)} {label}")
             alle_termine.extend(events)
+
+        vor_filter = len(alle_termine)
+        alle_termine = entferne_ausgeschlossene(alle_termine)
+        ausgeschlossen = vor_filter - len(alle_termine)
+        if ausgeschlossen:
+            print(f"  -> {ausgeschlossen} Termin(e) ausgeschlossen (demokratiefeindliche Gruppierung)")
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)
