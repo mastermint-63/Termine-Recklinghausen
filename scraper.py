@@ -72,6 +72,10 @@ STADTLABOR_URL = "https://www.stadtlabor-re.de/aktuell/aktuell.php"
 GEGENDRUCK_ICS = "https://theater-gegendruck.de/?post_type=tribe_events&ical=1"
 GEGENDRUCK_URL = "https://theater-gegendruck.de/termine/"
 
+# Evangelische Akademie Recklinghausen (neue Domain seit 2026, ersetzt ahademie.com)
+EV_AKADEMIE_URL = "https://www.akademie-re.de/veranstaltungen/"
+EV_AKADEMIE_BASIS = "https://www.akademie-re.de"
+
 # Ratsinformationssystem Stadt Recklinghausen (more!rubin via gremien.info)
 RIS_RE_API = "https://stadt-recklinghausen.gremien.info/api.php?id=calendar&action=get&view=default"
 RIS_RE_URL = "https://stadt-recklinghausen.gremien.info"
@@ -2730,7 +2734,113 @@ def hole_gegendruck(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 33. Manuelle Termine — JSON-Datei
+# 33. Evangelische Akademie Recklinghausen — akademie-re.de (event-card HTML)
+# ---------------------------------------------------------------------------
+
+_AKADEMIE_MONATE_KURZ = {
+    'jan': 1, 'feb': 2, 'mär': 3, 'mrz': 3, 'apr': 4, 'mai': 5, 'jun': 6,
+    'jul': 7, 'aug': 8, 'sep': 9, 'okt': 10, 'nov': 11, 'dez': 12,
+}
+_AKADEMIE_ELLIPSIS_RE = re.compile(r'\s*(?:…|\.\.\.)\s*$')
+
+
+def hole_ev_akademie(jahr: int, monat: int) -> list[Termin]:
+    """Holt Veranstaltungen der Ev. Akademie Recklinghausen (akademie-re.de).
+
+    Struktur: <article class="event-card"> mit .event-card-date-badge (.day/.month,
+    ohne Jahr), .event-card-meta-item (Uhrzeit per Regex erkannt, sonst Ort), h3 a
+    (Titel + relativer Link). Vergangene Events tragen 'past-event' und werden
+    übersprungen. Das Jahr wird aus dem Ziel-Monat abgeleitet (Scraper filtert ohnehin
+    pro Monat — gleiches Muster wie hole_neue_philharmonie).
+    """
+    try:
+        response = _request_mit_retry(EV_AKADEMIE_URL, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (ev-akademie): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    termine = []
+    zeit_re = re.compile(r'(\d{1,2}):(\d{2})')
+
+    for card in soup.select('.event-card'):
+        if 'past-event' in card.get('class', []):
+            continue
+
+        badge = card.select_one('.event-card-date-badge')
+        a = card.select_one('h3 a')
+        if not badge or not a:
+            continue
+        day_el = badge.select_one('.day')
+        mon_el = badge.select_one('.month')
+        if not day_el or not mon_el:
+            continue
+
+        try:
+            tag = int(day_el.get_text(strip=True))
+        except ValueError:
+            continue
+        monat_kurz = mon_el.get_text(strip=True).lower()[:3]
+        event_monat = _AKADEMIE_MONATE_KURZ.get(monat_kurz, 0)
+        if not event_monat or event_monat != monat:
+            continue
+
+        # Meta-Items klassifizieren: Uhrzeit (enthält "Uhr" + HH:MM) vs. Ort.
+        # Reine Labels ("Veranstaltungsort:") und abgeschnittene Orte ("… ") bereinigen.
+        uhrzeit = 'siehe Website'
+        stunde, minute = 0, 0
+        ort = ''
+        ort_unvollstaendig = False
+        for meta in card.select('.event-card-meta-item'):
+            text = meta.get_text(strip=True)
+            if not text or text.endswith(':'):
+                continue
+            zm = zeit_re.search(text)
+            if zm and 'Uhr' in text:
+                stunde, minute = int(zm.group(1)), int(zm.group(2))
+                uhrzeit = f"{stunde:02d}:{minute:02d} Uhr"
+            elif not ort:
+                ort = _AKADEMIE_ELLIPSIS_RE.sub('', text)
+                ort_unvollstaendig = bool(_AKADEMIE_ELLIPSIS_RE.search(text))
+
+        try:
+            datum = datetime(jahr, event_monat, tag, stunde, minute)
+        except ValueError:
+            continue
+
+        name = a.get_text(strip=True)
+        if not name:
+            continue
+        href = a.get('href', '')
+        link = href if href.startswith('http') else EV_AKADEMIE_BASIS + href
+
+        # In der Listenansicht ist der Ort serverseitig gekürzt — vollen Ort nur dann
+        # gezielt von der Detailseite nachladen (fehlertolerant: Listen-Ort als Fallback).
+        if link.startswith('http') and (not ort or ort_unvollstaendig):
+            try:
+                detail = _request_mit_retry(link, headers=HEADERS, timeout=30)
+                loc = BeautifulSoup(detail.text, 'html.parser').select_one('.location-name')
+                if loc:
+                    voll = loc.get_text(' ', strip=True)
+                    if voll:
+                        ort = voll
+            except requests.RequestException:
+                pass  # Listen-Ort behalten
+
+        # Label-Präfix "Veranstaltungsort:" entfernen; bleibt nichts übrig → kein Ort
+        ort = re.sub(r'^\s*(?:📍\s*)?Veranstaltungsort:?\s*', '', ort, flags=re.IGNORECASE).strip()
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link, beschreibung='',
+            quelle='ev-akademie', kategorie='Bildung',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 34. Manuelle Termine — JSON-Datei
 # ---------------------------------------------------------------------------
 
 def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:

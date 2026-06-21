@@ -30,8 +30,8 @@ from scraper import (
     hole_atelierhaus, hole_zu_gast_in_re, hole_re_leuchtet, hole_frauenforum,
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
-    hole_gegendruck, hole_manuelle_termine, hole_ratssitzungen, hole_moondock,
-    hole_facebook, Termin,
+    hole_gegendruck, hole_ev_akademie, hole_manuelle_termine, hole_ratssitzungen,
+    hole_moondock, hole_facebook, Termin,
 )
 
 
@@ -68,11 +68,51 @@ QUELLEN = {
     'zeche-klaerchen': 'Zeche Klärchen',
     'stadtlabor': 'StadtLabor RE',
     'gegendruck': 'Theater Gegendruck',
+    'ev-akademie': 'Ev. Akademie',
     'manuell': 'Redaktion',
     'ratssitzungen': 'Ratssitzungen',
     'moondock': 'mOOndock',
     'facebook': 'Weitere Tipps',
 }
+
+# Footer-Quellenlinks (Anzeigename, URL). Werden im Footer per sorted() alphabetisch
+# gerendert — beim Hinzufügen einer neuen Quelle hier eintragen, Reihenfolge egal.
+# regioactive.de bewusst NICHT enthalten (Cloudflare-Block seit 26.02.2026, liefert nichts).
+FOOTER_QUELLEN = [
+    ('ADFC Recklinghausen', 'https://recklinghausen.adfc.de/'),
+    ('Altstadtschmiede', 'https://www.altstadtschmiede.de/aktuelle-veranstaltungen'),
+    ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
+    ('Backyard-Club', 'https://backyard-club.de/events'),
+    ('Cineworld', 'https://www.cineworld-recklinghausen.de/de/programm'),
+    ('Debut um 11', 'https://debut-um-11.de/konzerte-102/'),
+    ('Der Recklinghäuser', 'https://www.der-recklinghaeuser.de/'),
+    ('Gastkirche', 'https://www.gastkirche.de/index.php/termine'),
+    ('Heimatkunde', 'https://geschichte-recklinghausen.de/veranstaltung/'),
+    ('Ikonen-Museum', 'https://ikonen-museum.com/veranstaltungen/termine'),
+    ('Josef P. Eich', 'https://josefeich.de/events/'),
+    ('Kunsthalle', 'https://kunsthalle-recklinghausen.de/en/program/calendar'),
+    ('Literaturtage', 'https://literaturtage-recklinghausen.de/veranstaltungen/'),
+    ('mOOndock', 'https://www.moondock.tv/page/Events'),
+    ('Neue Philharmonie', 'https://www.neue-philharmonie-westfalen.de/termine'),
+    ('NLGR', 'https://nlgr.de/veranstaltungen/'),
+    ('Ratssitzungen', 'https://stadt-recklinghausen.gremien.info'),
+    ('RE-leuchtet', 'https://re-leuchtet.de/programm'),
+    ('Ruhrfestspiele', 'https://www.ruhrfestspiele.de/programm'),
+    ('Seniorenbeirat', 'https://seniorenbeirat-recklinghausen.com/veranstaltungen/'),
+    ('Stadt RE', 'https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/'),
+    ('Stadtarchiv', 'https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/'),
+    ('Stadtbibliothek', 'https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/'),
+    ('StadtLabor RE', 'https://www.stadtlabor-re.de/aktuell/aktuell.php'),
+    ('Sternwarte', 'https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/'),
+    ('Subergs', 'https://www.subergs.de/events/'),
+    ('Theater Gegendruck', 'https://theater-gegendruck.de/termine/'),
+    ('Ev. Akademie', 'https://www.akademie-re.de/veranstaltungen/'),
+    ('Vesterleben.de', 'https://vesterleben.de/termine'),
+    ('VHS', 'https://www.vhs-recklinghausen.de'),
+    ('Weitere Tipps', 'https://www.facebook.com/events/search/?q=recklinghausen'),
+    ('Zeche Klärchen', 'https://zeche-klaerchen.de/index.php/aktuelles'),
+    ('Zu Gast in RE', 'https://www.zu-gast-in-re.de/programm'),
+]
 
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
 SCRAPER = [
@@ -107,6 +147,7 @@ SCRAPER = [
     (hole_zeche_klaerchen, 'Zeche Klärchen'),
     (hole_stadtlabor, 'StadtLabor RE'),
     (hole_gegendruck, 'Theater Gegendruck'),
+    (hole_ev_akademie, 'Ev. Akademie'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -265,6 +306,43 @@ def entferne_ausgeschlossene(termine: list[Termin]) -> list[Termin]:
     return [t for t in termine if not ist_ausgeschlossen(t)]
 
 
+# Kommerzielle Einzelhandelswerbung (z.B. Laden-Neueröffnungen, Rabattaktionen)
+# rutscht gelegentlich über das Facebook-Screening (Apify, "Weitere Tipps") rein
+# und gehört nicht in den Veranstaltungskalender. Konservativ gehalten: greift nur
+# bei eindeutigen Werbesignalen ODER bekannten Discounter-/Ladenketten. Wortgrenzen
+# (\b) sind essenziell, damit harmlose Treffer (z.B. "dm" oder "action" als Teil
+# eines anderen Wortes) nicht fälschlich gefiltert werden.
+_WERBE_MUSTER = re.compile(
+    r"\bneueröffnung\b|\bwiedereröffnung\b|\beröffnungsangebot\w*|\beröffnungsfeier\b|"
+    r"\beröffnungswoche\b|\brabattaktion\w*|\d+\s*%\s*rabatt|\bschlussverkauf\b|"
+    # Bekannte Discounter-/Ladenketten (Non-Food / Drogerie / Lebensmittel).
+    # Bewusst NICHT enthalten: "Action" — als Alltagswort zu mehrdeutig
+    # (Action-Film, Action-Workshop); Action-Filialwerbung wird über die
+    # Werbesignale oben (Neueröffnung/Rabatt) gefangen.
+    r"\btedi\b|\bkik\b|\bwoolworth\b|\brossmann\b|\bmüller drogerie\b|"
+    r"\blidl\b|\baldi\b|\bpenny\b|\bnkd\b|\btakko\b|\bdeichmann\b|"
+    r"\bmäc[\s-]?geiz\b|\bthomas philipps\b|\bernsting'?s family\b|\bkodi\b|\bpepco\b",
+    re.IGNORECASE,
+)
+
+
+def ist_werbung(t: Termin) -> bool:
+    """True, wenn ein Facebook-Termin kommerzielle Einzelhandelswerbung ist.
+
+    Greift bewusst nur auf die Facebook-Quelle (Apify-Screening), aus der solche
+    Werbung stammt — seriöse Veranstalter-Quellen bleiben unberührt.
+    """
+    if t.quelle != 'facebook':
+        return False
+    text = " ".join(filter(None, [t.name, t.beschreibung, t.ort]))
+    return bool(_WERBE_MUSTER.search(text))
+
+
+def entferne_werbung(termine: list[Termin]) -> list[Termin]:
+    """Filtert kommerzielle Einzelhandelswerbung aus Facebook-Terminen heraus."""
+    return [t for t in termine if not ist_werbung(t)]
+
+
 def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
     """Entfernt Duplikate: gleiches Datum + identischer oder enthaltener Name."""
     # Nach Datum gruppieren
@@ -415,6 +493,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'zeche-klaerchen': 'badge-zeche-klaerchen',
                 'stadtlabor': 'badge-stadtlabor',
                 'gegendruck': 'badge-gegendruck',
+                'ev-akademie': 'badge-ev-akademie',
                 'ratssitzungen': 'badge-ratssitzungen',
                 'moondock': 'badge-moondock',
                 'facebook': 'badge-facebook',
@@ -487,6 +566,12 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     tage_mit_events = set(int(k.split('-')[2]) for k in nach_datum.keys())
     kalender_html = generiere_kalender(jahr, monat, tage_mit_events)
 
+    # Footer-Quellenlinks alphabetisch (case-insensitiv) rendern
+    footer_links_html = ' &middot;\n            '.join(
+        f'<a href="{url}" target="_blank" rel="noopener noreferrer">{_html.escape(name)}</a>'
+        for name, url in sorted(FOOTER_QUELLEN, key=lambda x: x[0].lower())
+    )
+
     basis_url = "https://termine.holzwurm-recklinghausen.de"
     if dateiname and dateiname != "index.html":
         canonical_url = f"{basis_url}/{dateiname}"
@@ -494,7 +579,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         canonical_url = f"{basis_url}/"
 
     anzahl = len(termine)
-    beschreibung_meta = f"Veranstaltungskalender Recklinghausen {monatsnamen[monat]} {jahr} — {anzahl} Termine aus 30 Quellen"
+    beschreibung_meta = f"Veranstaltungskalender Recklinghausen {monatsnamen[monat]} {jahr} — {anzahl} Termine aus {len(SCRAPER)} Quellen"
     titel = f"Termine Recklinghausen {monatsnamen[monat]} {jahr} ({anzahl}) | Holzwurm"
 
     # JSON-LD: CollectionPage + einzelne Events
@@ -632,6 +717,15 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         h1 {{
             font-size: 2rem;
             font-weight: 600;
+            margin-bottom: 6px;
+        }}
+
+        .header-claim {{
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-color);
             margin-bottom: 10px;
         }}
 
@@ -952,6 +1046,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             background: linear-gradient(135deg, #8b2252 0%, #6b1242 100%);
             color: white;
         }}
+        .badge-ev-akademie {{
+            background: linear-gradient(135deg, #1f6f78 0%, #0f5f68 100%);
+            color: white;
+        }}
         .badge-ratssitzungen {{
             background: linear-gradient(135deg, #1a3a5c 0%, #0a2a4c 100%);
             color: white;
@@ -1155,7 +1253,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <div class="header-inner">
                 <img src="hebbert/1984-01-verkleinert.jpg" alt="Hebbert in Aktion" class="hebbert" width="604" height="280" decoding="async">
                 <div class="header-text">
-                    <h1>Termine in Recklinghausen</h1>
+                    <h1>Termine und Veranstaltungen in Recklinghausen</h1>
+                    <p class="header-claim">powered by HOLZWURM</p>
                 </div>
                 <img src="hebbert/1985-04-verkleinert.jpg" alt="Hebbert's Terminkalender" class="hebbert" width="351" height="276" decoding="async">
             </div>
@@ -1191,40 +1290,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         <footer>
             Generiert am {datetime.now().strftime('%d.%m.%Y um %H:%M Uhr')}<br>
             Quellen:
-            <a href="https://www.regioactive.de/events/22868/recklinghausen/veranstaltungen-party-konzerte" target="_blank" rel="noopener noreferrer">regioactive.de</a> &middot;
-            <a href="https://www.recklinghausen.de/inhalte/startseite/_veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Stadt RE</a> &middot;
-            <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;
-            <a href="https://vesterleben.de/termine" target="_blank" rel="noopener noreferrer">Vesterleben.de</a> &middot;
-            <a href="https://sternwarte-recklinghausen.de/programm/veranstaltungskalender/" target="_blank" rel="noopener noreferrer">Sternwarte</a> &middot;
-            <a href="https://kunsthalle-recklinghausen.de/en/program/calendar" target="_blank" rel="noopener noreferrer">Kunsthalle</a> &middot;
-            <a href="https://www.recklinghausen.de/inhalte/startseite/familie_bildung/stadtbibliothek/Veranstaltungen/" target="_blank" rel="noopener noreferrer">Stadtbibliothek</a> &middot;
-            <a href="https://nlgr.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">NLGR</a> &middot;
-            <a href="https://literaturtage-recklinghausen.de/veranstaltungen/" target="_blank" rel="noopener noreferrer">Literaturtage</a> &middot;
-            <a href="https://www.vhs-recklinghausen.de" target="_blank" rel="noopener noreferrer">VHS</a> &middot;
-
-            <a href="https://www.recklinghausen.de/Inhalte/Startseite/Ruhrfestspiele_Kultur/Dokumente/" target="_blank" rel="noopener noreferrer">Stadtarchiv</a> &middot;
-            <a href="https://geschichte-recklinghausen.de/veranstaltung/" target="_blank" rel="noopener noreferrer">Heimatkunde</a> &middot;
-            <a href="https://www.gastkirche.de/index.php/termine" target="_blank" rel="noopener noreferrer">Gastkirche</a> &middot;
-            <a href="https://www.ruhrfestspiele.de/programm" target="_blank" rel="noopener noreferrer">Ruhrfestspiele</a> &middot;
-            <a href="https://backyard-club.de/events" target="_blank" rel="noopener noreferrer">Backyard-Club</a> &middot;
-            <a href="https://www.cineworld-recklinghausen.de/de/programm" target="_blank" rel="noopener noreferrer">Cineworld</a> &middot;
-            <a href="https://www.neue-philharmonie-westfalen.de/termine" target="_blank" rel="noopener noreferrer">Neue Philharmonie</a> &middot;
-            <a href="https://ikonen-museum.com/veranstaltungen/termine" target="_blank" rel="noopener noreferrer">Ikonen-Museum</a> &middot;
-            <a href="https://debut-um-11.de/konzerte-102/" target="_blank" rel="noopener noreferrer">Debut um 11</a> &middot;
-            <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
-            <a href="https://atelierhaus-recklinghausen.de/kalendar/" target="_blank" rel="noopener noreferrer">Atelierhaus</a> &middot;
-            <a href="https://www.zu-gast-in-re.de/programm" target="_blank" rel="noopener noreferrer">Zu Gast in RE</a> &middot;
-            <a href="https://re-leuchtet.de/programm" target="_blank" rel="noopener noreferrer">RE-leuchtet</a> &middot;
-            <a href="https://josefeich.de/events/" target="_blank" rel="noopener noreferrer">Josef P. Eich</a> &middot;
-            <a href="https://www.der-recklinghaeuser.de/" target="_blank" rel="noopener noreferrer">Der Recklinghäuser</a> &middot;
-            <a href="https://www.subergs.de/events/" target="_blank" rel="noopener noreferrer">Subergs</a> &middot;
-            <a href="https://seniorenbeirat-recklinghausen.com/veranstaltungen/" target="_blank" rel="noopener noreferrer">Seniorenbeirat</a> &middot;
-            <a href="https://zeche-klaerchen.de/index.php/aktuelles" target="_blank" rel="noopener noreferrer">Zeche Klärchen</a> &middot;
-            <a href="https://www.stadtlabor-re.de/aktuell/aktuell.php" target="_blank" rel="noopener noreferrer">StadtLabor RE</a> &middot;
-            <a href="https://theater-gegendruck.de/termine/" target="_blank" rel="noopener noreferrer">Theater Gegendruck</a> &middot;
-            <a href="https://stadt-recklinghausen.gremien.info" target="_blank" rel="noopener noreferrer">Ratssitzungen</a> &middot;
-            <a href="https://www.moondock.tv/page/Events" target="_blank" rel="noopener noreferrer">mOOndock</a> &middot;
-            <a href="https://www.facebook.com/events/search/?q=recklinghausen" target="_blank" rel="noopener noreferrer">Weitere Tipps</a>
+            {footer_links_html}
             <br><br>
             <a href="https://holzwurm-recklinghausen.de/impressum" target="_blank" rel="noopener noreferrer">Impressum</a> &middot;
             <a href="https://holzwurm-recklinghausen.de/datenschutzerklaerung" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
@@ -1367,6 +1433,12 @@ def main():
         ausgeschlossen = vor_filter - len(alle_termine)
         if ausgeschlossen:
             print(f"  -> {ausgeschlossen} Termin(e) ausgeschlossen (demokratiefeindliche Gruppierung)")
+
+        vor_werbung = len(alle_termine)
+        alle_termine = entferne_werbung(alle_termine)
+        werbung = vor_werbung - len(alle_termine)
+        if werbung:
+            print(f"  -> {werbung} Termin(e) ausgeschlossen (kommerzielle Werbung)")
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)
