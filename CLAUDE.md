@@ -44,6 +44,8 @@ rund 35 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) �
 
 **update.sh** — Tägliche Automation: Scraping → Löschroutine für alte Dateien → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad. Dateien älter als der Vormonat werden automatisch per `git rm` entfernt und im gleichen Commit mitgepusht (1-Monats-Puffer: Vormonat bleibt erhalten).
 
+> ⚠️ **Wichtig:** `update.sh` committet **nur die generierten HTML-Dateien** (`termine_re_*.html`, `index.html`, `sitemap.xml`), **nicht** den Quellcode. Nach Änderungen an `app.py`/`scraper.py`/`CLAUDE.md` diese **separat** committen und pushen — sonst zeigt die Live-Seite zwar den neuen Stand, aber der erzeugende Code bleibt unversioniert (Repo-Drift).
+
 ### Automatische Aktualisierung
 
 Lokales Scraping via launchd (bestimmte Cloud-IPs werden blockiert, z.B. GitHub Actions/Azure → 503; Hetzner Falkenstein war 04/2026 OK – kann sich ändern).
