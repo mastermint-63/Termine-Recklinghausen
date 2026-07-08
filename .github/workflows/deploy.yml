@@ -25,15 +25,15 @@ jobs:
 
     steps:
       - name: Repository auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: GitHub Pages konfigurieren
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Dateien für Pages vorbereiten
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: '.'
 
       - name: Auf GitHub Pages deployen
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
