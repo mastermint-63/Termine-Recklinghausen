@@ -126,7 +126,7 @@ HIGHLIGHTS = {
         'fuss': 'Anmeldung nicht erforderlich · Statt Geschenken: Beiträge fürs Mitbringbuffet',
         'link': 'https://holzwurm-recklinghausen.de/',
         'link_label': 'holzwurm-recklinghausen.de',
-        'bild': 'hebbert/hebbert.svg',
+        'bild': 'hebbert/hebbert-winkend.png',
     },
 }
 
@@ -934,11 +934,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .spotlight-hebbert {{
             float: right;
-            width: 74px;
+            width: 82px;
             height: auto;
             margin-left: 14px;
-            transform: rotate(4deg);
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            background: #fff;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            transform: rotate(3deg);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
         }}
 
         .spotlight-jahre {{
