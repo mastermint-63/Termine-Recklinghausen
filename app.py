@@ -127,6 +127,8 @@ HIGHLIGHTS = {
         'link': 'https://holzwurm-recklinghausen.de/',
         'link_label': 'holzwurm-recklinghausen.de',
         'bild': 'hebbert/hebbert-winkend.png',
+        'signatur': 'hebbert/hebbert-signatur.png',
+        'signatur_text': 'Euer',
     },
 }
 
@@ -502,7 +504,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                     </div>
                     <div class="spotlight-programm">{punkte_html}
                     </div>
-                    <div class="spotlight-fuss">{cfg['fuss']} · <a href="{cfg['link']}" target="_blank" rel="noopener noreferrer">{cfg['link_label']}</a></div>
+                    <div class="spotlight-fuss">
+                        <span>{cfg['fuss']} · <a href="{cfg['link']}" target="_blank" rel="noopener noreferrer">{cfg['link_label']}</a></span>
+                        {f'<span class="spotlight-signatur">{cfg["signatur_text"]} <img src="{cfg["signatur"]}" alt="Hebbert (Unterschrift)" loading="lazy"></span>' if cfg.get('signatur') else ''}
+                    </div>
                 </div>
             '''
 
@@ -1007,11 +1012,31 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
 
         .spotlight-fuss {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 14px;
             padding: 10px 20px;
             font-size: 13px;
             color: var(--text-secondary);
             background: rgba(201, 162, 39, 0.10);
             border-top: 1px solid var(--border-color);
+        }}
+
+        .spotlight-signatur {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-style: italic;
+            white-space: nowrap;
+        }}
+
+        /* multiply blendet den weißen Bildhintergrund in den hellen Fuß ein */
+        .spotlight-signatur img {{
+            height: 26px;
+            width: auto;
+            mix-blend-mode: multiply;
         }}
 
         .spotlight-fuss a {{
@@ -1037,6 +1062,13 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             .spotlight-zeit,
             .spotlight-fuss a {{
                 color: #d4af37;
+            }}
+
+            /* invert + screen: Striche werden weiß, der (invertiert schwarze)
+               Hintergrund verschwindet auf der dunklen Fläche */
+            .spotlight-signatur img {{
+                filter: invert(1);
+                mix-blend-mode: screen;
             }}
         }}
 
