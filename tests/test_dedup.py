@@ -140,3 +140,22 @@ def test_zwei_aggregatoren_gleichstand_reihenfolge():
 
     assert len(ergebnis) == 1
     assert ergebnis[0].quelle == 'stadt-re'  # erster in der Liste
+
+
+def test_highlight_gewinnt_gegen_veranstalter():
+    """Spotlight-Einträge (highlight gesetzt) gewinnen jedes Duplikat —
+    auch gegen einen Veranstalter mit mehr gefüllten Feldern."""
+    spotlight = _termin('Revival: 50 Jahre Holzwurm', 'manuell',
+                        link='https://holzwurm-recklinghausen.de/')
+    spotlight.highlight = 'holzwurm50'
+    veranstalter = _termin('Revival: 50 Jahre Holzwurm', 'altstadtschmiede',
+                           link='https://altstadtschmiede.de', uhrzeit='19:00 Uhr',
+                           beschreibung='Jubiläumsfeier', ort='Altstadtschmiede')
+
+    ergebnis = entferne_duplikate([veranstalter, spotlight])
+
+    assert len(ergebnis) == 1
+    assert ergebnis[0].quelle == 'manuell'
+    assert ergebnis[0].highlight == 'holzwurm50'
+    # Fehlende Felder werden aus dem unterlegenen Duplikat ergänzt
+    assert ergebnis[0].uhrzeit == '19:00 Uhr'

@@ -1,5 +1,38 @@
 [
     {
+        "name": "Stadtführung: Orte der Medienkultur in Recklinghausen",
+        "datum": "2026-09-18",
+        "uhrzeit": "15:00",
+        "ort": "Altstadtschmiede, Kellerstraße 10, Recklinghausen",
+        "link": "https://holzwurm-recklinghausen.de/",
+        "beschreibung": "Auftakt zum Jubiläum 50 Jahre Holzwurm. Leitung: Michael Wehling. Treffpunkt an der Altstadtschmiede.",
+        "kategorie": "Jubiläum",
+        "highlight": "holzwurm50",
+        "freigegeben": true
+    },
+    {
+        "name": "Diskussionsrunde: Deliberative Demokratie und lokale Öffentlichkeit im Zeitalter von KI, Social Media und Rechtsextremismus",
+        "datum": "2026-09-18",
+        "uhrzeit": "17:00",
+        "ort": "Altstadtschmiede, Kellerstraße 10, Recklinghausen",
+        "link": "https://holzwurm-recklinghausen.de/",
+        "beschreibung": "Mit Mareike Graepel (freie Journalistin), Stefan Prott (RDN Verlag), Alexander Spieß (Recklinghäuser Zeitung), Frank Stach (ehem. Holzwurm-Redakteur, ehem. DJV-NRW-Landesvorsitzender) und Aycha Riffi (Grimme-Institut). Einführung und Moderation: Prof. Dr. Erich Behrendt.",
+        "kategorie": "Jubiläum",
+        "highlight": "holzwurm50",
+        "freigegeben": true
+    },
+    {
+        "name": "Revival: 50 Jahre Holzwurm — die Jubiläumsfeier",
+        "datum": "2026-09-18",
+        "uhrzeit": "19:00",
+        "ort": "Altstadtschmiede, Kellerstraße 10, Recklinghausen",
+        "link": "https://holzwurm-recklinghausen.de/",
+        "beschreibung": "Anstoßen, lachen, essen, diskutieren — alte Fotos, Anekdoten und andere Devotionalien sind willkommen.",
+        "kategorie": "Jubiläum",
+        "highlight": "holzwurm50",
+        "freigegeben": true
+    },
+    {
         "name": "Öffentliche Diskussionsveranstaltung — attac Recklinghausen",
         "datum": "2026-03-17",
         "uhrzeit": "19:00",

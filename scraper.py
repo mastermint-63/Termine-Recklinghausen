@@ -100,6 +100,9 @@ class Termin:
     beschreibung: str = ''
     quelle: str = ''
     kategorie: str = ''
+    # Highlight-Key für redaktionelle Spotlight-Karten (z.B. 'holzwurm50');
+    # wird nur über manuelle_termine.json gesetzt, Rendering in app.py
+    highlight: str = ''
 
     def datum_formatiert(self) -> str:
         tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
@@ -2885,6 +2888,7 @@ def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
             beschreibung=e.get('beschreibung', '')[:800],
             quelle='manuell',
             kategorie=e.get('kategorie', ''),
+            highlight=e.get('highlight', ''),
         ))
 
     return termine

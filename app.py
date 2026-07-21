@@ -114,6 +114,22 @@ FOOTER_QUELLEN = [
     ('Zu Gast in RE', 'https://www.zu-gast-in-re.de/programm'),
 ]
 
+# Spotlight-Karten: Termine mit gleichem highlight-Key (aus manuelle_termine.json)
+# werden pro Tag zu EINER besonders gestalteten Karte zusammengefasst statt als
+# Einzeltermine zu erscheinen. Die Karte ist von der Quellen-Filterung ausgenommen.
+HIGHLIGHTS = {
+    'holzwurm50': {
+        'jahre': '1976 — 2026',
+        'titel': '50 Jahre Holzwurm',
+        'untertitel': '… und kein bisschen leise!',
+        'meta': 'Freitag, 18. September 2026 · Altstadtschmiede, Kellerstraße 10',
+        'fuss': 'Anmeldung nicht erforderlich · Statt Geschenken: Beiträge fürs Mitbringbuffet',
+        'link': 'https://holzwurm-recklinghausen.de/',
+        'link_label': 'holzwurm-recklinghausen.de',
+        'bild': 'hebbert/hebbert.svg',
+    },
+}
+
 # Scraper-Funktionen in Abruf-Reihenfolge: (Funktion, Label für Ausgabe)
 SCRAPER = [
     # (hole_regioactive, 'regioactive.de'),  # blockiert seit 2026-03 mit 403
@@ -283,6 +299,8 @@ def _termin_score(t: Termin) -> int:
         score += 1
     if _QUELLEN_TIER.get(t.quelle, 1) == 2:
         score -= 10  # Aggregator-Malus: Veranstalter gewinnen immer
+    if t.highlight:
+        score += 100  # Spotlight-Einträge gewinnen jedes Duplikat
     return score
 
 
@@ -451,7 +469,45 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <div class="termine-liste">
         '''
 
-        for t in sorted(tage, key=lambda x: (x.uhrzeit == 'ganztägig', x.uhrzeit == 'siehe Website', x.uhrzeit, x.name)):
+        # Spotlight-Karten: alle Highlight-Termine des Tages mit gleichem Key
+        # werden zu einer Gold-Karte gebündelt (Konfiguration in HIGHLIGHTS)
+        spotlight_keys = []
+        for t in tage:
+            if t.highlight in HIGHLIGHTS and t.highlight not in spotlight_keys:
+                spotlight_keys.append(t.highlight)
+        for hl_key in spotlight_keys:
+            cfg = HIGHLIGHTS[hl_key]
+            punkte = sorted((t for t in tage if t.highlight == hl_key), key=lambda x: x.uhrzeit)
+            punkte_html = ''
+            for t in punkte:
+                besch_html = f'<div class="spotlight-beschreibung">{_html.escape(t.beschreibung)}</div>' if t.beschreibung else ''
+                zeit = _html.escape(t.uhrzeit.replace(' Uhr', ''))
+                punkte_html += f'''
+                    <div class="spotlight-punkt">
+                        <div class="spotlight-zeit">{zeit}</div>
+                        <div class="spotlight-punkt-info">
+                            <div class="spotlight-name">{_html.escape(t.name)}</div>
+                            {besch_html}
+                        </div>
+                    </div>'''
+            bild_html = f'<img class="spotlight-hebbert" src="{cfg["bild"]}" alt="Hebbert, das Holzwurm-Maskottchen" loading="lazy">' if cfg.get('bild') else ''
+            termine_html += f'''
+                <div class="spotlight-karte" data-events="{len(punkte)}">
+                    <div class="spotlight-kopf">
+                        {bild_html}
+                        <div class="spotlight-jahre">{cfg['jahre']}</div>
+                        <div class="spotlight-titel">{cfg['titel']}</div>
+                        <div class="spotlight-untertitel">{cfg['untertitel']}</div>
+                        <div class="spotlight-meta">{cfg['meta']}</div>
+                    </div>
+                    <div class="spotlight-programm">{punkte_html}
+                    </div>
+                    <div class="spotlight-fuss">{cfg['fuss']} · <a href="{cfg['link']}" target="_blank" rel="noopener noreferrer">{cfg['link_label']}</a></div>
+                </div>
+            '''
+
+        normale_termine = [t for t in tage if t.highlight not in HIGHLIGHTS]
+        for t in sorted(normale_termine, key=lambda x: (x.uhrzeit == 'ganztägig', x.uhrzeit == 'siehe Website', x.uhrzeit, x.name)):
             beschreibung_escaped = _html.escape(t.beschreibung)[:1000]
 
             name_esc = _html.escape(t.name)
@@ -856,6 +912,135 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .termin:hover {{
             background: var(--hover-color);
+        }}
+
+        /* Spotlight-Karte (redaktionelle Highlights, z.B. 50 Jahre Holzwurm).
+           Goldpalette angelehnt an das Holzwurm-Heftcover. */
+        .spotlight-karte {{
+            margin: 14px;
+            border: 2px solid #b8912a;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            box-shadow: 0 3px 12px rgba(184, 145, 42, 0.35);
+        }}
+
+        .spotlight-kopf {{
+            position: relative;
+            background: linear-gradient(135deg, #c9a227 0%, #a5820f 100%);
+            color: #fff;
+            padding: 18px 20px;
+        }}
+
+        .spotlight-hebbert {{
+            float: right;
+            width: 74px;
+            height: auto;
+            margin-left: 14px;
+            transform: rotate(4deg);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }}
+
+        .spotlight-jahre {{
+            font-size: 12px;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }}
+
+        .spotlight-titel {{
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 2px 0;
+        }}
+
+        .spotlight-untertitel {{
+            font-style: italic;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }}
+
+        .spotlight-meta {{
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.95;
+        }}
+
+        .spotlight-programm {{
+            padding: 6px 20px;
+        }}
+
+        .spotlight-punkt {{
+            display: flex;
+            gap: 14px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }}
+
+        .spotlight-punkt:last-child {{
+            border-bottom: none;
+        }}
+
+        .spotlight-zeit {{
+            width: 52px;
+            flex-shrink: 0;
+            font-weight: 700;
+            color: #a5820f;
+            font-size: 14px;
+        }}
+
+        .spotlight-punkt-info {{
+            flex: 1;
+        }}
+
+        .spotlight-name {{
+            font-weight: 600;
+            margin-bottom: 2px;
+        }}
+
+        .spotlight-beschreibung {{
+            font-size: 13px;
+            color: var(--text-secondary);
+        }}
+
+        .spotlight-fuss {{
+            padding: 10px 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: rgba(201, 162, 39, 0.10);
+            border-top: 1px solid var(--border-color);
+        }}
+
+        .spotlight-fuss a {{
+            color: #a5820f;
+            font-weight: 600;
+            text-decoration: none;
+        }}
+
+        .spotlight-fuss a:hover {{
+            text-decoration: underline;
+        }}
+
+        @media (prefers-color-scheme: dark) {{
+            .spotlight-karte {{
+                border-color: #d4af37;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+            }}
+
+            .spotlight-kopf {{
+                background: linear-gradient(135deg, #8a6d10 0%, #6b540c 100%);
+            }}
+
+            .spotlight-zeit,
+            .spotlight-fuss a {{
+                color: #d4af37;
+            }}
+        }}
+
+        @media (max-width: 600px) {{
+            .spotlight-hebbert {{
+                width: 60px;
+            }}
         }}
 
         .termin-zeit {{
@@ -1370,11 +1555,18 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 }}
             }});
 
+            // Spotlight-Karten sind von der Filterung ausgenommen (immer sichtbar),
+            // ihre Termine zählen aber mit
+            document.querySelectorAll('.spotlight-karte').forEach(k => {{
+                sichtbar += parseInt(k.dataset.events || '0', 10);
+            }});
+
             document.getElementById('termine-count').textContent = sichtbar;
 
             document.querySelectorAll('.datum-gruppe').forEach(g => {{
                 const sichtbareTermine = g.querySelectorAll('.termin:not(.hidden)');
-                g.classList.toggle('hidden', sichtbareTermine.length === 0);
+                const hatSpotlight = g.querySelector('.spotlight-karte') !== null;
+                g.classList.toggle('hidden', sichtbareTermine.length === 0 && !hatSpotlight);
             }});
         }}
     </script>
