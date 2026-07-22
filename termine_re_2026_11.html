@@ -237,6 +237,165 @@
             background: var(--hover-color);
         }
 
+        /* Spotlight-Karte (redaktionelle Highlights, z.B. 50 Jahre Holzwurm).
+           Goldpalette angelehnt an das Holzwurm-Heftcover. */
+        .spotlight-karte {
+            margin: 14px;
+            border: 2px solid #b8912a;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            box-shadow: 0 3px 12px rgba(184, 145, 42, 0.35);
+        }
+
+        .spotlight-kopf {
+            position: relative;
+            background: linear-gradient(135deg, #c9a227 0%, #a5820f 100%);
+            color: #fff;
+            padding: 18px 20px;
+        }
+
+        .spotlight-hebbert {
+            float: right;
+            width: 82px;
+            height: auto;
+            margin-left: 14px;
+            background: #fff;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            transform: rotate(3deg);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        }
+
+        .spotlight-jahre {
+            font-size: 12px;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        .spotlight-titel {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 2px 0;
+        }
+
+        .spotlight-untertitel {
+            font-style: italic;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .spotlight-meta {
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .spotlight-programm {
+            padding: 6px 20px;
+        }
+
+        .spotlight-punkt {
+            display: flex;
+            gap: 14px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .spotlight-punkt:last-child {
+            border-bottom: none;
+        }
+
+        .spotlight-zeit {
+            width: 52px;
+            flex-shrink: 0;
+            font-weight: 700;
+            color: #a5820f;
+            font-size: 14px;
+        }
+
+        .spotlight-punkt-info {
+            flex: 1;
+        }
+
+        .spotlight-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .spotlight-beschreibung {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .spotlight-fuss {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            padding: 10px 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: rgba(201, 162, 39, 0.10);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .spotlight-signatur {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-style: italic;
+            white-space: nowrap;
+        }
+
+        /* multiply blendet den weißen Bildhintergrund in den hellen Fuß ein */
+        .spotlight-signatur img {
+            height: 26px;
+            width: auto;
+            mix-blend-mode: multiply;
+        }
+
+        .spotlight-fuss a {
+            color: #a5820f;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .spotlight-fuss a:hover {
+            text-decoration: underline;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .spotlight-karte {
+                border-color: #d4af37;
+                box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+            }
+
+            .spotlight-kopf {
+                background: linear-gradient(135deg, #8a6d10 0%, #6b540c 100%);
+            }
+
+            .spotlight-zeit,
+            .spotlight-fuss a {
+                color: #d4af37;
+            }
+
+            /* invert + screen: Striche werden weiß, der (invertiert schwarze)
+               Hintergrund verschwindet auf der dunklen Fläche */
+            .spotlight-signatur img {
+                filter: invert(1);
+                mix-blend-mode: screen;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .spotlight-hebbert {
+                width: 60px;
+            }
+        }
+
         .termin-zeit {
             width: 110px;
             font-weight: 500;
@@ -2610,7 +2769,7 @@ Wir freuen uns auf euch!</div>
         </div>
 
         <footer>
-            Generiert am 21.07.2026 um 06:36 Uhr<br>
+            Generiert am 22.07.2026 um 06:36 Uhr<br>
             Quellen:
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;
@@ -2724,11 +2883,18 @@ Wir freuen uns auf euch!</div>
                 }
             });
 
+            // Spotlight-Karten sind von der Filterung ausgenommen (immer sichtbar),
+            // ihre Termine zählen aber mit
+            document.querySelectorAll('.spotlight-karte').forEach(k => {
+                sichtbar += parseInt(k.dataset.events || '0', 10);
+            });
+
             document.getElementById('termine-count').textContent = sichtbar;
 
             document.querySelectorAll('.datum-gruppe').forEach(g => {
                 const sichtbareTermine = g.querySelectorAll('.termin:not(.hidden)');
-                g.classList.toggle('hidden', sichtbareTermine.length === 0);
+                const hatSpotlight = g.querySelector('.spotlight-karte') !== null;
+                g.classList.toggle('hidden', sichtbareTermine.length === 0 && !hatSpotlight);
             });
         }
     </script>
