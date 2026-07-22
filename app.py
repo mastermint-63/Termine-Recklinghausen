@@ -123,7 +123,7 @@ HIGHLIGHTS = {
         'titel': '50 Jahre Holzwurm',
         'untertitel': '… und kein bisschen leise!',
         'meta': 'Freitag, 18. September 2026 · Altstadtschmiede, Kellerstraße 10',
-        'fuss': 'Anmeldung nicht erforderlich · Statt Geschenken: Beiträge fürs Mitbringbuffet',
+        'fuss': 'Anmeldung erforderlich · Statt Geschenken: Beiträge fürs Mitbringbuffet',
         'link': 'https://holzwurm-recklinghausen.de/',
         'link_label': 'holzwurm-recklinghausen.de',
         'bild': 'hebbert/hebbert-winkend.png',
