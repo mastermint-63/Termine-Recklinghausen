@@ -106,7 +106,7 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 | `hole_literaturtage()` | literaturtage-recklinghausen.de | JSON-LD `Event` (The Events Calendar Plugin) |
 | `hole_vhs()` | vhs-recklinghausen.de | KuferWeb: 7 Kategorieseiten mit Paginierung, `h4.kw-ue-title` + `div.row`, interne Duplikat-Erkennung über Name+Datum |
 | `hole_stadtarchiv()` | recklinghausen.de (PDF) | PyMuPDF: Halbjahres-PDFs, Regex für deutsche Datumsformate |
-| `hole_geschichte_re()` | geschichte-recklinghausen.de | ECT-Timeline: `div.ect-timeline-post`, Datum aus `content`-Attribut (Stunde%12-Bug: 1–8→+12) |
+| `hole_geschichte_re()` | geschichte-recklinghausen.de | TEC REST-API (`wp-json/tribe/events/v1/events`, seit 08/2026 — vorher fragiles ECT-Timeline-Parsing mit Stunde%12-Bug); Verein pflegt halbjahresweise → 0 Events heißt meist nur „Halbjahresprogramm noch nicht eingetragen" |
 | `hole_gastkirche()` | gastkirche.de | JEvents (Joomla): Wochenansicht, Kat. 68+70, `li.ev_td_li` mit `a.ev_link_row` |
 | `hole_ruhrfestspiele()` | ruhrfestspiele.de | Zweistufig: /programm → Produktions-Links → Detailseiten, `article.production-schedule-item` |
 | `hole_backyard()` | backyard-club.de | TEC JSON-LD (doppelt auf Seite → interne Deduplizierung + HTML-Entity-Bereinigung) |
@@ -127,6 +127,7 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 | `hole_ev_akademie()` | akademie-re.de/veranstaltungen/ | HTML `article.event-card`: `.event-card-date-badge` (`.day`/`.month`, **ohne Jahr** → aus Ziel-Monat abgeleitet), `.event-card-meta-item` (Uhrzeit per Regex, sonst Ort), `h3 a` (Titel + relativer Link); `past-event`-Klasse übersprungen. Ort in Liste serverseitig gekürzt → bei `…`/leer gezielt von Detailseite (`.location-name`) nachgeladen; `kategorie='Bildung'`. Neue Domain seit 06/2026 (ersetzt ahademie.com) |
 | `hole_ratssitzungen()` | stadt-recklinghausen.gremien.info | JSON-API (more!rubin/gremien.info): `api.php?id=calendar&action=get&from=YYYY-MM&to=YYYY-MM`; alle Ausschüsse, Beiräte, Rat; `kategorie='Politik'` |
 | `hole_moondock()` | moondock.tv/page/Events | HTML-Scraping: `article.post-item`, `span.day`/`span.month` (EN-Monate), `h3.title.post`; `verify=False` (SSL); Uhrzeit aus Beschreibung ("ab 21 Uhr") |
+| `hole_campus_emscherland()` | campus-emscherland.eu (Das Gelbe Haus, RE-Süd) | JSON-API von kalender.digital (`api.kalender.digital/event`, capabilityId in `scraper.py`); Serien bereits aufgelöst; Filter: `imported=True` (Feiertags-Feed) + „geschlossen" im `who`-Feld; mehrtägige Termine → `kategorie='Ausstellung'`, ein Eintrag pro überlappendem Monat; Kategorie aus Unterkalender-ID (`_CAMPUS_KATEGORIEN`). **Achtung:** Ausstellungen, die nur im Blog auf der Startseite stehen, aber nicht im Kalender eingetragen sind, sieht der Scraper nicht |
 | `hole_facebook()` | Facebook Events (via Apify) | Apify-Actor `apify~facebook-events-scraper`; Start-URLs: Explore-Suche + Altstadtschmiede-Seite; Filter: `countryCode == 'DE'` + "recklinghausen" in location; `utcStartDate` → Europe/Berlin; Token aus `.env` (`APIFY_TOKEN=...`); Tier 2; im UI als **"Weitere Tipps"** beschriftet |
 
 **Wartungshinweis:** Parser sind fragil gegenüber HTML-Strukturänderungen. Bei 0 Events aus einer Quelle: erst echte HTML-Struktur mit Debug-Script prüfen, nie auf Vermutungen basieren.

@@ -44,6 +44,7 @@ LITERATURTAGE_URL = "https://literaturtage-recklinghausen.de/veranstaltungen/"
 VHS_BASE_URL = "https://www.vhs-recklinghausen.de"
 
 GESCHICHTE_RE_URL = "https://geschichte-recklinghausen.de/veranstaltung/"
+GESCHICHTE_RE_API = "https://geschichte-recklinghausen.de/wp-json/tribe/events/v1/events"
 GASTKIRCHE_URL = "https://www.gastkirche.de/index.php/termine/eventsnachwoche"
 RUHRFESTSPIELE_URL = "https://www.ruhrfestspiele.de/programm"
 BACKYARD_URL = "https://backyard-club.de/events"
@@ -82,6 +83,12 @@ RIS_RE_URL = "https://stadt-recklinghausen.gremien.info"
 
 # Moondock Diskothek
 MOONDOCK_URL = "https://www.moondock.tv/page/Events"
+
+# Campus Emscherland (Das Gelbe Haus, RE-Süd) — Kalender bei kalender.digital
+CAMPUS_EMSCHERLAND_API = "https://api.kalender.digital/event"
+CAMPUS_EMSCHERLAND_CAPABILITY = "7a105559d69ac6f43ee8"
+CAMPUS_EMSCHERLAND_KALENDER_URL = "https://kalender.digital/7a105559d69ac6f43ee8"
+CAMPUS_EMSCHERLAND_URL = "https://www.campus-emscherland.eu/"
 
 # Facebook via Apify
 FACEBOOK_EXPLORE_URL = "https://www.facebook.com/events/search/?q=recklinghausen"
@@ -1143,82 +1150,46 @@ def hole_vhs(jahr: int, monat: int) -> list[Termin]:
 def hole_geschichte_re(jahr: int, monat: int) -> list[Termin]:
     """Holt Events vom Verein für Orts- und Heimatkunde Recklinghausen.
 
-    WordPress mit The Events Calendar + ECT (Events Calendar Templates).
-    Timeline-Ansicht: div.ect-timeline-post mit content-Attribut für Datum,
-    h2>a für Titel/Link, meta[itemprop=name] für Ort, div.ect-event-content
-    für Beschreibung.
+    WordPress mit The Events Calendar — REST-API wie bei RE-leuchtet.
+    (Bis 08/2026 wurde die ECT-Timeline-Ansicht geparst; die API liefert
+    dieselben Events ohne den Stunde-%12-Bug des ECT-Plugins.)
+    Der Verein pflegt den Kalender halbjahresweise — 0 Events bedeutet
+    meist nur, dass das nächste Halbjahresprogramm noch nicht eingetragen ist.
     """
+    letzter_tag = monthrange(jahr, monat)[1]
+    params = {
+        'start_date': f'{jahr}-{monat:02d}-01',
+        'end_date': f'{jahr}-{monat:02d}-{letzter_tag}',
+        'per_page': 50,
+    }
     try:
-        response = _request_mit_retry(GESCHICHTE_RE_URL, headers=HEADERS, timeout=30)
-    except requests.RequestException as e:
+        response = _request_mit_retry(GESCHICHTE_RE_API, params=params, headers=HEADERS, timeout=30)
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
         print(f"  Fehler beim Abrufen (geschichte-re): {e}")
         return []
 
-    soup = BeautifulSoup(response.text, 'html.parser')
     termine = []
-
-    for post in soup.find_all('div', class_='ect-timeline-post'):
-        # Datum aus content-Attribut: "2026-03-25CET6:00" oder "2026-04-11CEST9:00"
-        date_area = post.find('div', class_='ect-date-area')
-        if not date_area:
+    for event in data.get('events', []):
+        name = unescape(event.get('title', '').strip())
+        if not name:
             continue
 
-        content = date_area.get('content', '')
-        if not content:
-            continue
-
-        # "2026-03-25CET6:00" → Datum + Uhrzeit
-        # ECT-Plugin-Bug: speichert Stunde % 12 (ohne AM/PM)
-        # 18:00→6:00, 14:00→2:00, 9:00→9:00
-        date_match = re.match(r'(\d{4}-\d{2}-\d{2})(?:CES?T)(\d{1,2}):(\d{2})', content)
-        if not date_match:
-            continue
-
+        start = event.get('start_date', '')
         try:
-            datum = datetime.strptime(date_match.group(1), '%Y-%m-%d')
-            stunde, minute = int(date_match.group(2)), int(date_match.group(3))
-            # Stunde 1–8 → Nachmittag/Abend (+12), 9–11 → Vormittag
-            if 1 <= stunde <= 8:
-                stunde += 12
-            datum = datum.replace(hour=stunde, minute=minute)
+            datum = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
         except ValueError:
             continue
 
-        if not _im_monat(datum, jahr, monat):
-            continue
-
-        uhrzeit = f"{stunde:02d}:{minute:02d} Uhr" if stunde or minute else 'siehe Website'
-
-        # Titel + Link aus h2 > a
-        h2 = post.find('h2')
-        if not h2:
-            continue
-        a_tag = h2.find('a')
-        name = a_tag.get_text(strip=True) if a_tag else h2.get_text(strip=True)
-        if not name:
-            continue
-        link = a_tag.get('href', '') if a_tag else GESCHICHTE_RE_URL
-
-        # Ort aus venue meta-Tag
-        venue_block = post.find('div', class_='timeline-view-venue')
-        ort = ''
-        if venue_block:
-            venue_meta = venue_block.find('meta', itemprop='name')
-            if venue_meta:
-                ort = venue_meta.get('content', '')
-
-        # Beschreibung aus ect-event-content
-        desc_div = post.find('div', class_='ect-event-content')
-        beschreibung = ''
-        if desc_div:
-            beschreibung = desc_div.get_text(strip=True)
-            # "Finde mehr heraus »" entfernen
-            beschreibung = re.sub(r'\s*\[…\].*$', '', beschreibung)
+        uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
+        venue = event.get('venue', {})
+        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        link = event.get('url', '') or GESCHICHTE_RE_URL
+        beschreibung = _html_zu_text(event.get('description', ''))[:200]
 
         termine.append(Termin(
             name=name[:150], datum=datum, uhrzeit=uhrzeit,
-            ort=ort[:150] or 'Recklinghausen', link=link,
-            beschreibung=beschreibung[:200],
+            ort=ort[:150], link=link, beschreibung=beschreibung,
             quelle='geschichte-re', kategorie='Geschichte',
         ))
 
@@ -3166,6 +3137,112 @@ def hole_facebook(jahr: int, monat: int) -> list[Termin]:
             beschreibung=beschreibung,
             quelle='facebook',
             kategorie='',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 35. Campus Emscherland — kalender.digital JSON-API
+# ---------------------------------------------------------------------------
+
+# Unterkalender-IDs → Kategorie (aus /calendar?capabilityId=...):
+# 6299589 Seminar, 6299590 Ausstellung Galerie, 6299591 Ausstellung Atelier,
+# 6299592 Event, 6299593 Feiertage (importierter Feed, wird gefiltert)
+_CAMPUS_KATEGORIEN = {
+    6299589: 'Bildung',
+    6299590: 'Ausstellung',
+    6299591: 'Ausstellung',
+    6299592: 'Kultur',
+}
+
+
+def hole_campus_emscherland(jahr: int, monat: int) -> list[Termin]:
+    """Holt Events vom Campus Emscherland (Das Gelbe Haus, RE-Süd).
+
+    Der Verein pflegt seinen Kalender bei kalender.digital; dessen JSON-API
+    liefert Einzeltermine (Serien bereits aufgelöst) mit who/where-Feldern.
+    Gefiltert werden der importierte Feiertags-Feed (imported=True) und
+    nicht-öffentliche Einträge ("Geschlossene TN-Gruppe" im who-Feld).
+    Mehrtägige Termine (Ausstellungen) erscheinen wie beim Atelierhaus in
+    jedem überlappenden Monat. Achtung: Ausstellungen, die nur im Blog auf
+    campus-emscherland.eu stehen, aber nicht im Kalender eingetragen sind,
+    kann der Scraper nicht sehen.
+    """
+    erste = datetime(jahr, monat, 1)
+    letzte = datetime(jahr, monat, monthrange(jahr, monat)[1])
+    params = {
+        'timeZone': 'Europe/Berlin',
+        # 120 Tage Vorlauf, damit laufende Ausstellungen mit Beginn vor dem
+        # Zielmonat mitkommen; Überlappungs-Check unten filtert den Rest
+        'startDate': (erste - timedelta(days=120)).strftime('%Y-%m-%d 00:00:00'),
+        'endDate': (letzte + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00'),
+        'capabilityId': CAMPUS_EMSCHERLAND_CAPABILITY,
+    }
+    try:
+        response = _request_mit_retry(CAMPUS_EMSCHERLAND_API, params=params, headers=HEADERS, timeout=30)
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"  Fehler beim Abrufen (campus-emscherland): {e}")
+        return []
+
+    termine = []
+    for event in data if isinstance(data, list) else []:
+        name = event.get('title', '').strip()
+        if not name:
+            continue
+
+        # Feiertags-Feed und nicht-öffentliche Einträge überspringen
+        if event.get('imported'):
+            continue
+        who = (event.get('who') or '').strip()
+        if 'geschlossen' in who.lower():
+            continue
+
+        try:
+            datum_start = datetime.strptime(event.get('start_date', ''), '%Y-%m-%d %H:%M:%S')
+            datum_end = datetime.strptime(event.get('end_date', ''), '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            continue
+
+        ganztags = bool(event.get('wholeDay'))
+        # Ganztages-Events: end_date = exklusiver Folgetag → einen Tag zurück
+        if ganztags and datum_end > datum_start:
+            datum_end -= timedelta(days=1)
+
+        sub_ids = event.get('subCalendars') or []
+        kategorie = next((_CAMPUS_KATEGORIEN[s] for s in sub_ids if s in _CAMPUS_KATEGORIEN), 'Kultur')
+
+        beschreibung_teile = []
+        mehrtaegig = (datum_end.date() - datum_start.date()).days >= 1
+        if mehrtaegig:
+            # Ausstellung: erscheint in jedem Monat, den der Zeitraum überlappt
+            if not (datum_start <= letzte and datum_end >= erste):
+                continue
+            datum = max(datum_start, erste)
+            uhrzeit = 'ganztägig'
+            bis = datum_end.strftime('%d.%m.%Y') if datum_end.year != jahr else datum_end.strftime('%d.%m.')
+            beschreibung_teile.append(f'Bis {bis}')
+            kategorie = 'Ausstellung'
+        else:
+            if not _im_monat(datum_start, jahr, monat):
+                continue
+            datum = datum_start
+            uhrzeit = 'ganztägig' if ganztags else datum.strftime('%H:%M Uhr')
+
+        text = (event.get('text') or '').strip()
+        if text:
+            beschreibung_teile.append(text)
+        if who and who.lower() != 'öffentlich':
+            beschreibung_teile.append(who)
+
+        ort = (event.get('where') or '').strip() or 'Das Gelbe Haus, König-Ludwig-Str. 8, Recklinghausen'
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=CAMPUS_EMSCHERLAND_KALENDER_URL,
+            beschreibung=' — '.join(beschreibung_teile)[:200],
+            quelle='campus-emscherland', kategorie=kategorie,
         ))
 
     return termine

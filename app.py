@@ -31,7 +31,7 @@ from scraper import (
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
     hole_gegendruck, hole_ev_akademie, hole_manuelle_termine, hole_ratssitzungen,
-    hole_moondock, hole_facebook, Termin,
+    hole_moondock, hole_facebook, hole_campus_emscherland, Termin,
 )
 
 
@@ -69,6 +69,7 @@ QUELLEN = {
     'stadtlabor': 'StadtLabor RE',
     'gegendruck': 'Theater Gegendruck',
     'ev-akademie': 'Ev. Akademie',
+    'campus-emscherland': 'Campus Emscherland',
     'manuell': 'Redaktion',
     'ratssitzungen': 'Ratssitzungen',
     'moondock': 'mOOndock',
@@ -82,6 +83,7 @@ FOOTER_QUELLEN = [
     ('ADFC Recklinghausen', 'https://recklinghausen.adfc.de/'),
     ('Altstadtschmiede', 'https://www.altstadtschmiede.de/aktuelle-veranstaltungen'),
     ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
+    ('Campus Emscherland', 'https://www.campus-emscherland.eu/'),
     ('Backyard-Club', 'https://backyard-club.de/events'),
     ('Cineworld', 'https://www.cineworld-recklinghausen.de/de/programm'),
     ('Debut um 11', 'https://debut-um-11.de/konzerte-102/'),
@@ -166,6 +168,7 @@ SCRAPER = [
     (hole_stadtlabor, 'StadtLabor RE'),
     (hole_gegendruck, 'Theater Gegendruck'),
     (hole_ev_akademie, 'Ev. Akademie'),
+    (hole_campus_emscherland, 'Campus Emscherland'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -555,6 +558,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'stadtlabor': 'badge-stadtlabor',
                 'gegendruck': 'badge-gegendruck',
                 'ev-akademie': 'badge-ev-akademie',
+                'campus-emscherland': 'badge-campus-emscherland',
                 'ratssitzungen': 'badge-ratssitzungen',
                 'moondock': 'badge-moondock',
                 'facebook': 'badge-facebook',
@@ -1268,6 +1272,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-ev-akademie {{
             background: linear-gradient(135deg, #1f6f78 0%, #0f5f68 100%);
+            color: white;
+        }}
+        .badge-campus-emscherland {{
+            background: linear-gradient(135deg, #e0b020 0%, #c09010 100%);
             color: white;
         }}
         .badge-ratssitzungen {{
