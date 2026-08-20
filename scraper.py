@@ -90,6 +90,10 @@ CAMPUS_EMSCHERLAND_CAPABILITY = "7a105559d69ac6f43ee8"
 CAMPUS_EMSCHERLAND_KALENDER_URL = "https://kalender.digital/7a105559d69ac6f43ee8"
 CAMPUS_EMSCHERLAND_URL = "https://www.campus-emscherland.eu/"
 
+AGENDA21_URL = "https://www.lokale-agenda21-re.de/termine/"
+KATHOLISCH_NETZWERK_URL = "https://www.katholisch-re.de/aktuelles-termine/netzwerk"
+SELBSTHILFEGRUPPEN_RE_URL = "https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33"
+
 # Facebook via Apify
 FACEBOOK_EXPLORE_URL = "https://www.facebook.com/events/search/?q=recklinghausen"
 FACEBOOK_ALTSTADTSCHMIEDE_URL = "https://www.facebook.com/altstadtschmiede.re/events"
@@ -1892,6 +1896,22 @@ def _ics_datum(dtstr: str) -> datetime | None:
             return None
 
 
+def _google_kalender_events(calendar_id: str, quelle_label: str) -> list[str]:
+    """Holt VEVENT-Blöcke eines öffentlichen Google-Kalenders (ICS-Export).
+
+    Genutzt von Agenda21 und Selbsthilfegruppen-RE, die beide mehrere
+    öffentliche Google-Group-Kalender per iframe einbetten. Der ICS-Export
+    ist ohne Auth abrufbar, solange der Kalender öffentlich freigegeben ist.
+    """
+    url = f'https://calendar.google.com/calendar/ical/{calendar_id}%40group.calendar.google.com/public/basic.ics'
+    try:
+        response = _request_mit_retry(url, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen ({quelle_label}): {e}")
+        return []
+    return re.findall(r'BEGIN:VEVENT(.*?)END:VEVENT', response.text, re.DOTALL)
+
+
 def hole_atelierhaus(jahr: int, monat: int) -> list[Termin]:
     """Holt Events des Atelierhauses via ICS-Feed.
 
@@ -3243,6 +3263,223 @@ def hole_campus_emscherland(jahr: int, monat: int) -> list[Termin]:
             ort=ort[:150], link=CAMPUS_EMSCHERLAND_KALENDER_URL,
             beschreibung=' — '.join(beschreibung_teile)[:200],
             quelle='campus-emscherland', kategorie=kategorie,
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 36. Lokale Agenda 21 & Selbsthilfegruppen-RE — Google-Kalender (iframe)
+# ---------------------------------------------------------------------------
+
+# Kalender-IDs aus dem eingebetteten Google-Calendar-iframe auf der Termine-
+# Seite extrahiert (Base64-dekodiert). Der deutsche Feiertagskalender
+# (de.german#holiday@group.v.calendar.google.com) wird bewusst nicht
+# eingebunden.
+_AGENDA21_KALENDER = {
+    'k8mvjep18susnd11t0kjbch7sg': 'Forum Fairtrade Town',
+    'dec3inv42hmd5mmkb4qn1ln1ik': 'Forum Konsum und Lebensstil',
+    'jp34e1ntab2u435ekpflhf254c': 'Forum Kunst und Kultur',
+    'sc9g5elq0d3j80tefe47r4g4ms': 'Forum Nachhaltige Stadtentwicklung',
+    '4qfvqph9va2lcvmmqjn34kljqc': 'Forum Runder Frauentisch',
+    'ta8k7t5job9pdhiqtafj0f8g10': 'Forum VestGarten',
+    'lbefuiufcvnfi3g0cqeqeds7kk': 'Forum Vitale Stadt',
+    'dc9782e1a38d8b3638df65357dfde695b4c0deb5c623b4b6c9630f7c7f2005fe': 'Feuchtbiotop Paschgraben',
+    'ab9m31r1s94pmckpls962u6hn4': 'Sitzung Lenkungskreis',
+    '2dnvvb5atpd7isumigl92o1ttg': 'Sonstige Termine',
+    'rn3snqnvoni3ho5kv1c8mek9co': 'Treffen Agendaforum',
+}
+
+# Kalender-IDs aus dem iframe auf selbsthilfegruppen-recklinghausen.de.
+# Bewusst NICHT eingebunden: 'Feiertage', 'NRW Ferien' (keine
+# Veranstaltungen) und 'Geburtstage' (listet SHG-Jahrestage, redaktionell
+# nicht relevant für den Veranstaltungskalender).
+_SHG_RE_KALENDER = {
+    'ijbmh76fq9gghlm47vc5a7rsus': 'Adipositas SHG RE',
+    'vajamjcr5qtep83i43k2uqpj5s': 'Depressions SHG RE',
+    'jrobkkbebbnb3sd9ki9h9e880c': 'Intoleranzen SHG RE',
+    'gikmp640kj3g5ojqj4rh4fvfno': 'ReN',
+    'ba462ob5tutjn6bi31u7rk95eo': 'Schlafapnoe SHG RE',
+    'i64cc5hdgrueouos0kdiod5ol0': 'SHG Sport',
+    'vjo1v2od194gmg9fbsqnivkkt4': 'Veranstaltungen',
+    '9qp0etb0hchphtl5ht8ert27f4': 'Ü100',
+}
+
+
+def _google_kalender_termine(
+    kalender: dict[str, str], jahr: int, monat: int, *,
+    quelle: str, kategorie: str, fallback_link: str, fallback_ort: str,
+) -> list[Termin]:
+    """Gemeinsame Verarbeitung mehrerer Google-Kalender einer Quelle.
+
+    Mehrtägige Events (Ganztages-Zeitraum) erscheinen analog zu
+    hole_atelierhaus() in jedem überlappenden Monat.
+    """
+    erste = datetime(jahr, monat, 1)
+    letzte = datetime(jahr, monat, monthrange(jahr, monat)[1])
+
+    termine = []
+    for calendar_id, label in kalender.items():
+        for block in _google_kalender_events(calendar_id, f'{quelle}-{label}'):
+            name = unescape(_ics_wert(block, 'SUMMARY'))
+            if not name:
+                continue
+
+            dtstart_raw = _ics_wert(block, 'DTSTART')
+            dtend_raw = _ics_wert(block, 'DTEND')
+            if not dtstart_raw:
+                continue
+
+            datum_start = _ics_datum(dtstart_raw)
+            datum_end = _ics_datum(dtend_raw) if dtend_raw else datum_start
+            if not datum_start or not datum_end:
+                continue
+
+            all_day = 'T' not in dtstart_raw
+            # iCal: DTEND bei Ganztages-Events = exklusiver Folgetag → einen Tag zurück
+            if all_day and datum_end > datum_start:
+                datum_end -= timedelta(days=1)
+
+            mehrtaegig = (datum_end - datum_start).days >= 1
+            if mehrtaegig:
+                if not (datum_start <= letzte and datum_end >= erste):
+                    continue
+                datum = max(datum_start, erste)
+                uhrzeit = 'ganztägig'
+            else:
+                if not _im_monat(datum_start, jahr, monat):
+                    continue
+                datum = datum_start
+                uhrzeit = datum.strftime('%H:%M Uhr') if not all_day else 'ganztägig'
+
+            ort_raw = _ics_wert(block, 'LOCATION').replace('\\,', ',').replace('\\;', ';')
+            ort = ort_raw or fallback_ort
+
+            beschreibung_raw = _ics_wert(block, 'DESCRIPTION').replace('\\n', ' ').replace('\\,', ',').replace('\\;', ';')
+            beschreibung = _html_zu_text(beschreibung_raw)[:200]
+
+            link_raw = _ics_wert(block, 'URL')
+            link = link_raw if link_raw.startswith(('http://', 'https://')) else fallback_link
+
+            termine.append(Termin(
+                name=name[:150], datum=datum, uhrzeit=uhrzeit,
+                ort=ort[:150], link=link, beschreibung=beschreibung,
+                quelle=quelle, kategorie=kategorie,
+            ))
+
+    return termine
+
+
+def hole_agenda21(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine der Lokalen Agenda 21 Recklinghausen.
+
+    Die Termine-Seite bettet 11 öffentliche Google-Kalender (Foren,
+    Lenkungskreis, Agendaforum, Sonstige Termine) per iframe ein; deren
+    öffentlicher ICS-Export ist ohne Auth abrufbar. Kalender-IDs sind fest
+    hinterlegt (aus der Seite extrahiert) statt live aus dem iframe geparst,
+    da das robuster gegenüber Layout-Änderungen der Jimdo-Seite ist — bei
+    neuen Foren müssen die IDs hier manuell nachgezogen werden.
+    """
+    return _google_kalender_termine(
+        _AGENDA21_KALENDER, jahr, monat,
+        quelle='agenda21', kategorie='Ehrenamt',
+        fallback_link=AGENDA21_URL, fallback_ort='Recklinghausen',
+    )
+
+
+def hole_selbsthilfegruppen_re(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine der Selbsthilfegruppen Recklinghausen.
+
+    Gleiches iframe-Muster wie hole_agenda21(). Stand 08/2026: alle 8
+    eingebundenen Kalender liefern aktuell 0 zukünftige Termine (jüngster
+    Eintrag über alle Kalender: 20.07.2026, die meisten Kalender enden
+    bereits 2015-2022) — kein Scraper-Bug, sondern Ausdruck eines offenbar
+    größtenteils aufgegebenen Kalendersystems. Sollten die Gruppen ihre
+    Kalender wieder pflegen, greift der Scraper automatisch.
+    """
+    return _google_kalender_termine(
+        _SHG_RE_KALENDER, jahr, monat,
+        quelle='selbsthilfegruppen-re', kategorie='Selbsthilfe',
+        fallback_link=SELBSTHILFEGRUPPEN_RE_URL, fallback_ort='Recklinghausen',
+    )
+
+
+# ---------------------------------------------------------------------------
+# 37. Netzwerk "Katholisch in Recklinghausen" — statische HTML-Liste
+# ---------------------------------------------------------------------------
+
+def hole_katholisch_netzwerk(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine des Netzwerks "Katholisch in Recklinghausen".
+
+    Statische HTML-Liste unter der Überschrift "Aktuelles": pro <li> eine
+    Datums-/Zeit-/Ort-Zeile, gefolgt von einer Titel-Zeile und optionalen
+    Beschreibungs-Absätzen.
+    """
+    try:
+        response = _request_mit_retry(KATHOLISCH_NETZWERK_URL, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (katholisch-netzwerk): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    aktuelles_h3 = next(
+        (h3 for h3 in soup.find_all('h3') if 'aktuelles' in h3.get_text(strip=True).lower()),
+        None,
+    )
+    if not aktuelles_h3:
+        return []
+
+    container = aktuelles_h3.find_parent('div', class_='frame')
+    if not container:
+        return []
+
+    monate_pattern = '|'.join(_MONATE.keys())
+    datum_re = re.compile(
+        r'(\d{1,2})\.\s*(' + monate_pattern + r')\s+(\d{4})\s*,?\s*(.*)$',
+        re.IGNORECASE,
+    )
+    zeit_re = re.compile(r'^(\d{1,2})[.:](\d{2})(?:\s*bis\s*\d{1,2}[.:]\d{2})?\s*Uhr\s*,?\s*(.*)$')
+
+    termine = []
+    for li in container.find_all('li'):
+        absaetze = [p.get_text(' ', strip=True) for p in li.find_all('p')]
+        absaetze = [a for a in absaetze if a]
+        if not absaetze:
+            continue
+
+        m = datum_re.search(absaetze[0])
+        if not m:
+            continue
+        tag, monat_name, jahr_str, rest = m.groups()
+        try:
+            datum = datetime(int(jahr_str), _MONATE[monat_name.lower()], int(tag))
+        except ValueError:
+            continue
+        if not _im_monat(datum, jahr, monat):
+            continue
+
+        rest = rest.strip()
+        zeit_m = zeit_re.match(rest)
+        if zeit_m:
+            uhrzeit = f'{int(zeit_m.group(1)):02d}:{zeit_m.group(2)} Uhr'
+            ort = zeit_m.group(3).strip()
+        elif rest.lower().startswith('anschl'):
+            uhrzeit = 'im Anschluss'
+            ort = rest.split(',', 1)[1].strip() if ',' in rest else ''
+        else:
+            uhrzeit = 'siehe Website'
+            ort = rest
+        ort = ort.lstrip(', ').strip() or 'Recklinghausen'
+
+        name = absaetze[1] if len(absaetze) > 1 else ''
+        if not name:
+            continue
+        beschreibung = ' '.join(absaetze[2:])[:300]
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=KATHOLISCH_NETZWERK_URL, beschreibung=beschreibung,
+            quelle='katholisch-netzwerk', kategorie='Kirche',
         ))
 
     return termine

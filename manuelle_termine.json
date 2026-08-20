@@ -167,5 +167,45 @@
         "beschreibung": "",
         "kategorie": "Konzert",
         "freigegeben": true
+    },
+    {
+        "name": "Ehrenamts- und Selbsthilfe-Café",
+        "datum": "2026-09-01",
+        "uhrzeit": "15:00",
+        "ort": "Netzwerk Bürgerengagement, Oerweg 38, Recklinghausen",
+        "link": "https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine",
+        "beschreibung": "Offenes Treffen von Freiwilligenagentur und Selbsthilfe-Kontaktstelle Recklinghausen. Austausch, Begegnung, Diskussion — für alle, die sich freiwillig in Ehrenamt und Selbsthilfe engagieren oder dies noch tun wollen. Einfach vorbeikommen, keine Anmeldung erforderlich.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Ehrenamts- und Selbsthilfe-Café",
+        "datum": "2026-10-06",
+        "uhrzeit": "15:00",
+        "ort": "Netzwerk Bürgerengagement, Oerweg 38, Recklinghausen",
+        "link": "https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine",
+        "beschreibung": "Offenes Treffen von Freiwilligenagentur und Selbsthilfe-Kontaktstelle Recklinghausen. Austausch, Begegnung, Diskussion — für alle, die sich freiwillig in Ehrenamt und Selbsthilfe engagieren oder dies noch tun wollen. Einfach vorbeikommen, keine Anmeldung erforderlich.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Ehrenamts- und Selbsthilfe-Café",
+        "datum": "2026-11-03",
+        "uhrzeit": "15:00",
+        "ort": "Netzwerk Bürgerengagement, Oerweg 38, Recklinghausen",
+        "link": "https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine",
+        "beschreibung": "Offenes Treffen von Freiwilligenagentur und Selbsthilfe-Kontaktstelle Recklinghausen. Austausch, Begegnung, Diskussion — für alle, die sich freiwillig in Ehrenamt und Selbsthilfe engagieren oder dies noch tun wollen. Einfach vorbeikommen, keine Anmeldung erforderlich.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Ehrenamts- und Selbsthilfe-Café",
+        "datum": "2026-12-01",
+        "uhrzeit": "15:00",
+        "ort": "Netzwerk Bürgerengagement, Oerweg 38, Recklinghausen",
+        "link": "https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine",
+        "beschreibung": "Offenes Treffen von Freiwilligenagentur und Selbsthilfe-Kontaktstelle Recklinghausen. Austausch, Begegnung, Diskussion — für alle, die sich freiwillig in Ehrenamt und Selbsthilfe engagieren oder dies noch tun wollen. Einfach vorbeikommen, keine Anmeldung erforderlich.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
     }
 ]

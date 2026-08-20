@@ -31,7 +31,8 @@ from scraper import (
     hole_josefeich, hole_recklinghaeuser, hole_subergs,
     hole_seniorenbeirat, hole_zeche_klaerchen, hole_stadtlabor,
     hole_gegendruck, hole_ev_akademie, hole_manuelle_termine, hole_ratssitzungen,
-    hole_moondock, hole_facebook, hole_campus_emscherland, Termin,
+    hole_moondock, hole_facebook, hole_campus_emscherland,
+    hole_agenda21, hole_selbsthilfegruppen_re, hole_katholisch_netzwerk, Termin,
 )
 
 
@@ -74,6 +75,9 @@ QUELLEN = {
     'ratssitzungen': 'Ratssitzungen',
     'moondock': 'mOOndock',
     'facebook': 'Weitere Tipps',
+    'agenda21': 'Lokale Agenda 21',
+    'selbsthilfegruppen-re': 'Selbsthilfegruppen RE',
+    'katholisch-netzwerk': 'Katholisch in RE',
 }
 
 # Footer-Quellenlinks (Anzeigename, URL). Werden im Footer per sorted() alphabetisch
@@ -82,6 +86,9 @@ QUELLEN = {
 FOOTER_QUELLEN = [
     ('ADFC Recklinghausen', 'https://recklinghausen.adfc.de/'),
     ('Altstadtschmiede', 'https://www.altstadtschmiede.de/aktuelle-veranstaltungen'),
+    ('Lokale Agenda 21', 'https://www.lokale-agenda21-re.de/termine/'),
+    ('Selbsthilfegruppen RE', 'https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33'),
+    ('Katholisch in RE', 'https://www.katholisch-re.de/aktuelles-termine/netzwerk'),
     ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
     ('Campus Emscherland', 'https://www.campus-emscherland.eu/'),
     ('Backyard-Club', 'https://backyard-club.de/events'),
@@ -169,6 +176,9 @@ SCRAPER = [
     (hole_gegendruck, 'Theater Gegendruck'),
     (hole_ev_akademie, 'Ev. Akademie'),
     (hole_campus_emscherland, 'Campus Emscherland'),
+    (hole_agenda21, 'Lokale Agenda 21'),
+    (hole_selbsthilfegruppen_re, 'Selbsthilfegruppen RE'),
+    (hole_katholisch_netzwerk, 'Katholisch in RE'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -563,6 +573,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'moondock': 'badge-moondock',
                 'facebook': 'badge-facebook',
                 'manuell': 'badge-manuell',
+                'agenda21': 'badge-agenda21',
+                'selbsthilfegruppen-re': 'badge-selbsthilfegruppen-re',
+                'katholisch-netzwerk': 'badge-katholisch-netzwerk',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -1292,6 +1305,18 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-manuell {{
             background: linear-gradient(135deg, #2a8a8a 0%, #1a7a7a 100%);
+            color: white;
+        }}
+        .badge-agenda21 {{
+            background: linear-gradient(135deg, #2f7d4f 0%, #1f6a3f 100%);
+            color: white;
+        }}
+        .badge-selbsthilfegruppen-re {{
+            background: linear-gradient(135deg, #c0625a 0%, #a8483f 100%);
+            color: white;
+        }}
+        .badge-katholisch-netzwerk {{
+            background: linear-gradient(135deg, #7a2020 0%, #601818 100%);
             color: white;
         }}
 
