@@ -93,6 +93,8 @@ CAMPUS_EMSCHERLAND_URL = "https://www.campus-emscherland.eu/"
 AGENDA21_URL = "https://www.lokale-agenda21-re.de/termine/"
 KATHOLISCH_NETZWERK_URL = "https://www.katholisch-re.de/aktuelles-termine/netzwerk"
 SELBSTHILFEGRUPPEN_RE_URL = "https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33"
+HOLZWURM_API = "https://holzwurm-recklinghausen.de/wp-json/tribe/events/v1/events"
+HOLZWURM_URL = "https://holzwurm-recklinghausen.de/veranstaltungen"
 
 # Facebook via Apify
 FACEBOOK_EXPLORE_URL = "https://www.facebook.com/events/search/?q=recklinghausen"
@@ -128,6 +130,7 @@ def _html_zu_text(html: str) -> str:
     text = re.sub(r'<br\s*/?>', '\n', html)
     text = re.sub(r'<[^>]+>', '', text)
     text = unescape(text)
+    text = text.replace('\xad', '')  # weiche Trennzeichen (WordPress-Silbentrennung)
     return text.strip()
 
 
@@ -3480,6 +3483,71 @@ def hole_katholisch_netzwerk(jahr: int, monat: int) -> list[Termin]:
             name=name[:150], datum=datum, uhrzeit=uhrzeit,
             ort=ort[:150], link=KATHOLISCH_NETZWERK_URL, beschreibung=beschreibung,
             quelle='katholisch-netzwerk', kategorie='Kirche',
+        ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 38. Holzwurm Recklinghausen — eigene Website (TEC REST-API)
+# ---------------------------------------------------------------------------
+
+# "50 Jahre Holzwurm" ist bereits als redaktionelle Spotlight-Karte in
+# manuelle_termine.json hinterlegt (highlight='holzwurm50') — hier
+# ausgeschlossen, sonst erscheint das Jubiläum doppelt.
+_HOLZWURM_AUSGESCHLOSSENE_SLUGS = {'50-jahre-holzwurm'}
+
+
+def hole_holzwurm(jahr: int, monat: int) -> list[Termin]:
+    """Holt Veranstaltungen von der eigenen Holzwurm-Website.
+
+    WordPress mit The Events Calendar — REST-API wie bei Heimatkunde,
+    RE-leuchtet und Josef P. Eich.
+    """
+    letzter_tag = monthrange(jahr, monat)[1]
+    params = {
+        'start_date': f'{jahr}-{monat:02d}-01',
+        'end_date': f'{jahr}-{monat:02d}-{letzter_tag}',
+        'per_page': 50,
+    }
+    try:
+        response = _request_mit_retry(HOLZWURM_API, params=params, headers=HEADERS, timeout=30)
+        data = response.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"  Fehler beim Abrufen (holzwurm): {e}")
+        return []
+
+    termine = []
+    for event in data.get('events', []):
+        if event.get('slug', '') in _HOLZWURM_AUSGESCHLOSSENE_SLUGS:
+            continue
+
+        name = unescape(event.get('title', '').strip())
+        if not name:
+            continue
+
+        start = event.get('start_date', '')
+        try:
+            datum = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            continue
+
+        uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
+        venue = event.get('venue', {})
+        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        link = event.get('url', '') or HOLZWURM_URL
+        # Leere Termin-Schedule-Box des Block-Editors (Datum/Zeit-Platzhalter,
+        # normalerweise clientseitig per JS gefüllt) vor dem Text entfernen
+        beschreibung_raw = re.sub(
+            r'^\s*<div class="tribe-events-schedule.*?</div>\s*', '',
+            event.get('description', ''), flags=re.DOTALL,
+        )
+        beschreibung = _html_zu_text(beschreibung_raw)[:200]
+
+        termine.append(Termin(
+            name=name[:150], datum=datum, uhrzeit=uhrzeit,
+            ort=ort[:150], link=link, beschreibung=beschreibung,
+            quelle='holzwurm', kategorie='Bildung',
         ))
 
     return termine
