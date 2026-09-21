@@ -460,7 +460,8 @@ def finde_konflikt(eintrag: dict) -> str | None:
     """Ähnlicher Termin einer Scraper-Quelle an einem ANDEREN Tag (+-60 Tage)?
 
     Fängt widersprüchliche Datumsangaben ab (Mail sagt 24.10., Veranstalter-Website 20.10.).
-    Manuelle Einträge zählen nicht, sonst würden Serien (z.B. wöchentlicher Stammtisch) blockiert.
+    Manuelle Einträge zählen nicht, sonst würden Serien (z.B. wöchentlicher Stammtisch) blockiert;
+    Kino und VHS ebenfalls nicht (hunderte ähnlicher Titel pro Monat).
     """
     import app
 
@@ -472,7 +473,7 @@ def finde_konflikt(eintrag: dict) -> str | None:
             if tag == d or abs((tag - d).days) > 60:
                 continue
             for t in termine:
-                if t.quelle == "manuell":
+                if t.quelle in ("manuell", "cineworld", "vhs"):  # Serien/Massenquellen: Fehlalarme
                     continue
                 norm_v = app._normalisiere(t.name)
                 if norm_k in norm_v or norm_v in norm_k or app._hat_markantes_schluesselwort(norm_k, norm_v):

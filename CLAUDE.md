@@ -136,7 +136,7 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 | `hole_gastkirche()` | gastkirche.de | JEvents (Joomla): Wochenansicht, Kat. 68+70, `li.ev_td_li` mit `a.ev_link_row` |
 | `hole_ruhrfestspiele()` | ruhrfestspiele.de | Zweistufig: /programm → Produktions-Links → Detailseiten, `article.production-schedule-item` |
 | `hole_backyard()` | backyard-club.de | TEC JSON-LD (doppelt auf Seite → interne Deduplizierung + HTML-Entity-Bereinigung) |
-| `hole_cineworld()` | cineworld-recklinghausen.de | Cineamo API (`api.cineamo.com`), Cinema-ID 877, pro Tag abgefragt, Vorstellungen pro Film gruppiert |
+| `hole_cineworld()` | cineworld-recklinghausen.de | Cineamo API (`api.cineamo.com`), Cinema-ID 877, pro Tag abgefragt; **ein Eintrag pro Film und Tag**, alle Vorstellungszeiten des Tages im Uhrzeit-Feld (`14:00 / 19:30 Uhr`). Von 02/2026 bis 09/2026 gab es nur einen Eintrag pro Film und Monat (Commit `a76a284`, damals Kino standardmäßig sichtbar); aufgehoben, weil Kino per Toggle beim Seitenaufruf ausgeblendet ist. Kino-Einträge zählen nicht im Seitenzähler der Sichtbaren, solange der Toggle aus ist |
 | `hole_neue_philharmonie()` | neue-philharmonie-westfalen.de | HTML `div.c-event`, Datum `span.c-event__date-date` ("10. März" ohne Jahr), Stadtfilter auf "Recklinghausen" |
 | `hole_ikonen_museum()` | ikonen-museum.com | HTML `div.event-list-item`, Datum `div.event-startdate` ("01.03." ohne Jahr), Uhrzeit aus `div.info` |
 | `hole_debut_um_11()` | debut-um-11.de | WordPress `article.post-item`, Termin aus `h2.entry-title a` Link-Text ("15. März 2026, 11:00 Uhr") |

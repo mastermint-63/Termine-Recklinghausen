@@ -1468,7 +1468,9 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
     Termin erzeugt, alle Vorstellungszeiten stehen im Uhrzeit-Feld.
     """
     tage_im_monat = monthrange(jahr, monat)[1]
-    # Film-Key (name|datum) → Liste der Uhrzeiten + Metadaten
+    # Film-Key (name|datum) → Uhrzeiten + Metadaten: ein Eintrag pro Film UND Tag
+    # (seit 03/2026 wieder; 02/2026 waren es vorübergehend nur Film/Monat, als Kino noch
+    # standardmäßig eingeblendet war — heute ist Kino per Toggle ausgeblendet)
     filme: dict[str, dict] = {}
 
     for tag in range(1, tage_im_monat + 1):
@@ -1507,21 +1509,17 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
                     continue
 
                 zeit_str = dt.strftime('%H:%M')
-                key = name  # Ein Eintrag pro Film pro Monat
+                key = f"{name}|{dt.strftime('%Y-%m-%d')}"
                 ticket_url = s.get('bookingUrlExternal', '') or s.get('onlineTicketUrl', '')
 
                 if key not in filme:
                     filme[key] = {
                         'name': name,
-                        'datum': dt.replace(hour=0, minute=0),  # Erste Vorstellung
+                        'datum': dt.replace(hour=0, minute=0),
                         'zeiten': set(),
                         'link': ticket_url or CINEWORLD_URL,
                         'beschreibung': '',
                     }
-                else:
-                    # Frühestes Datum merken
-                    if dt.replace(hour=0, minute=0) < filme[key]['datum']:
-                        filme[key]['datum'] = dt.replace(hour=0, minute=0)
 
                 filme[key]['zeiten'].add(zeit_str)
 
@@ -1533,11 +1531,7 @@ def hole_cineworld(jahr: int, monat: int) -> list[Termin]:
 
     termine = []
     for info in filme.values():
-        zeiten = sorted(info['zeiten'])
-        if len(zeiten) <= 4:
-            uhrzeit = ' / '.join(zeiten) + ' Uhr'
-        else:
-            uhrzeit = 'täglich mehrere Zeiten'
+        uhrzeit = ' / '.join(sorted(info['zeiten'])) + ' Uhr'
 
         termine.append(Termin(
             name=info['name'][:150],
