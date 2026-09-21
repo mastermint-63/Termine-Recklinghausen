@@ -95,6 +95,8 @@ KATHOLISCH_NETZWERK_URL = "https://www.katholisch-re.de/aktuelles-termine/netzwe
 SELBSTHILFEGRUPPEN_RE_URL = "https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33"
 SELBSTHILFE_KONTAKTSTELLE_URL = ("https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/"
                                 "selbsthilfe-kontaktstelle/aktuelles-und-termine")
+GENIAL_RE_URL = "https://genial.re/all-events/"
+GENIAL_RE_AJAX_URL = "https://genial.re/wp-admin/admin-ajax.php"
 HOLZWURM_API = "https://holzwurm-recklinghausen.de/wp-json/tribe/events/v1/events"
 HOLZWURM_URL = "https://holzwurm-recklinghausen.de/veranstaltungen"
 
@@ -3687,5 +3689,113 @@ def hole_selbsthilfe_kontaktstelle(jahr: int, monat: int) -> list[Termin]:
                     name=name[:150], datum=datum, uhrzeit=uhrzeit, ort=ort[:150], link=link,
                     beschreibung=beschreibung, quelle='selbsthilfe-kontaktstelle', kategorie='Selbsthilfe',
                 ))
+
+    return termine
+
+
+
+# ---------------------------------------------------------------------------
+# 40. ge·ni·al e.V. Recklinghausen (Begegnungsstätte) — EventPrime, AJAX
+# ---------------------------------------------------------------------------
+
+# Veranstaltungsarten (EventPrime-Taxonomie auf genial.re, Stand 09/2026):
+#   8 Offenes Café, 9 Offenes Angebot, 11 Veranstaltung  -> öffentlich, werden übernommen
+#   10 Gruppen (Angebote für bestimmte Zielgruppen), 25 Intern, ohne Typ ("0", z.B. Vermietung)
+#   -> bewusst NICHT übernommen (redaktionelle Entscheidung; Gruppen ggf. später per '10' ergänzen)
+_GENIAL_TYPEN = {'8': 'Offenes Café', '9': 'Offenes Angebot', '11': 'Veranstaltung'}
+# Ganzwortgenau: "Internationales Sprachcafé" darf NICHT auf "intern" anspringen
+_GENIAL_AUSSCHLUSS_TITEL = re.compile(r'\b(intern(e[rsmn]?)?|vermietung|geschlossen\w*)\b', re.IGNORECASE)
+
+
+def hole_genial_re(jahr: int, monat: int) -> list[Termin]:
+    """Holt öffentliche Termine der Begegnungsstätte ge·ni·al e.V. (genial.re).
+
+    WordPress mit EventPrime: Die Monatsansicht lädt per AJAX (`ep_get_calendar_event`).
+    Der Endpunkt braucht die Nonce aus dem Seitenquelltext (`em_front_event_object._nonce`);
+    die Seite wird mit Cache-Buster geholt, damit kein veralteter Cache-Stand eine ungültige
+    Nonce liefert. Kein offizielles API — bei 0 Events zuerst prüfen, ob sich Aktion, Nonce-Feld
+    oder Antwortformat geändert haben. Die REST-Route `eventprime/v1/events` liefert nur ID+Name.
+    Mehrtägige Termine erscheinen an jedem Tag (max. 14), ganztägig ohne Uhrzeit.
+    """
+    import time
+    beginn = datetime(jahr, monat, 1)
+    ende = datetime(jahr + monat // 12, monat % 12 + 1, 1)
+    try:
+        seite = _request_mit_retry(GENIAL_RE_URL, params={'_': int(time.time())}, headers=HEADERS, timeout=30)
+        nonce = re.search(r'"_nonce":"(\w+)"', seite.text)
+        if not nonce:
+            print("  Fehler (genial-re): Nonce nicht im Seitenquelltext gefunden")
+            return []
+        daten_form = {
+            'action': 'ep_get_calendar_event', 'security': nonce.group(1),
+            'start': beginn.strftime('%Y-%m-%dT00:00:00'), 'end': ende.strftime('%Y-%m-%dT00:00:00'),
+            'args': '[]', 'search_param': '',
+        }
+        try:
+            antwort = requests.post(GENIAL_RE_AJAX_URL, data=daten_form, headers=HEADERS, timeout=30)
+            antwort.raise_for_status()
+        except requests.RequestException:
+            time.sleep(2)
+            antwort = requests.post(GENIAL_RE_AJAX_URL, data=daten_form, headers=HEADERS, timeout=30)
+            antwort.raise_for_status()
+        daten = antwort.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"  Fehler beim Abrufen (genial-re): {e}")
+        return []
+    if not isinstance(daten, dict) or not daten.get('success'):
+        print(f"  Fehler (genial-re): unerwartete Antwort {str(daten)[:80]}")
+        return []
+
+    termine = []
+    for e in daten.get('data') or []:
+        typ = e.get('event_type')
+        typ = str(typ[0] if isinstance(typ, list) and typ else typ)
+        if typ not in _GENIAL_TYPEN:
+            continue
+        titel = unescape((e.get('title') or '').strip())
+        if not titel or _GENIAL_AUSSCHLUSS_TITEL.search(titel):
+            continue
+        try:
+            start = datetime.fromisoformat(e['start'])
+            ende_ev = datetime.fromisoformat(e['end']) if e.get('end') else start
+        except (KeyError, ValueError):
+            continue
+
+        venue = unescape((e.get('venue_name') or '').strip())
+        adresse = unescape((e.get('address') or '').strip())
+        if adresse and 'recklinghausen' not in adresse.lower():
+            continue
+        if venue and adresse:
+            ort = f'{venue}, {adresse}'
+        elif venue and 'genial' in venue.lower():
+            ort = f'{venue}, Limperstraße 11, Recklinghausen'
+        else:
+            ort = venue or 'Recklinghausen'
+
+        beschreibung = f'{_GENIAL_TYPEN[typ]}, ge·ni·al e.V. (Begegnungsstätte)'
+        notiz = unescape((e.get('date_custom_note') or '').strip())
+        if notiz:
+            beschreibung += f'. {notiz}'
+        link = e.get('event_url') or e.get('url') or GENIAL_RE_URL
+
+        ganztags = (e.get('all_day') in (1, '1', True)
+                    or (start.hour == 0 and start.minute == 0 and ende_ev.hour == 23 and ende_ev.minute >= 59))
+        tage = min((ende_ev.date() - start.date()).days, 13)
+        for n in range(tage + 1):
+            tag = datetime.combine(start.date() + timedelta(days=n), datetime.min.time())
+            if not _im_monat(tag, jahr, monat):
+                continue
+            if ganztags or (n > 0 and tage > 0):
+                uhrzeit, datum = 'ganztägig', tag
+            else:
+                datum = tag.replace(hour=start.hour, minute=start.minute)
+                uhrzeit = start.strftime('%H:%M')
+                if ende_ev.date() == start.date() and ende_ev > start:
+                    uhrzeit += ende_ev.strftime('–%H:%M')
+                uhrzeit += ' Uhr'
+            termine.append(Termin(
+                name=titel[:150], datum=datum, uhrzeit=uhrzeit, ort=ort[:150], link=link,
+                beschreibung=beschreibung[:300], quelle='genial-re', kategorie='Begegnung',
+            ))
 
     return termine

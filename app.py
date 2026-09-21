@@ -33,7 +33,7 @@ from scraper import (
     hole_gegendruck, hole_ev_akademie, hole_manuelle_termine, hole_ratssitzungen,
     hole_moondock, hole_facebook, hole_campus_emscherland,
     hole_agenda21, hole_selbsthilfegruppen_re, hole_katholisch_netzwerk,
-    hole_holzwurm, hole_selbsthilfe_kontaktstelle, Termin,
+    hole_holzwurm, hole_selbsthilfe_kontaktstelle, hole_genial_re, Termin,
 )
 
 
@@ -81,6 +81,7 @@ QUELLEN = {
     'katholisch-netzwerk': 'Katholisch in RE',
     'holzwurm': 'Holzwurm',
     'selbsthilfe-kontaktstelle': 'Selbsthilfe-Kontaktstelle',
+    'genial-re': 'ge·ni·al e.V.',
 }
 
 # Footer-Quellenlinks (Anzeigename, URL). Werden im Footer per sorted() alphabetisch
@@ -93,6 +94,7 @@ FOOTER_QUELLEN = [
     ('Selbsthilfegruppen RE', 'https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33'),
     ('Katholisch in RE', 'https://www.katholisch-re.de/aktuelles-termine/netzwerk'),
     ('Holzwurm', 'https://holzwurm-recklinghausen.de/veranstaltungen'),
+    ('ge·ni·al e.V.', 'https://genial.re/all-events/'),
     ('Selbsthilfe-Kontaktstelle', 'https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine'),
     ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
     ('Campus Emscherland', 'https://www.campus-emscherland.eu/'),
@@ -186,6 +188,7 @@ SCRAPER = [
     (hole_katholisch_netzwerk, 'Katholisch in RE'),
     (hole_holzwurm, 'Holzwurm'),
     (hole_selbsthilfe_kontaktstelle, 'Selbsthilfe-Kontaktstelle'),
+    (hole_genial_re, 'ge·ni·al e.V.'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -585,6 +588,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'katholisch-netzwerk': 'badge-katholisch-netzwerk',
                 'holzwurm': 'badge-holzwurm',
                 'selbsthilfe-kontaktstelle': 'badge-selbsthilfe-kontaktstelle',
+                'genial-re': 'badge-genial-re',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -1334,6 +1338,10 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-selbsthilfe-kontaktstelle {{
             background: linear-gradient(135deg, #d4708a 0%, #b85670 100%);
+            color: white;
+        }}
+        .badge-genial-re {{
+            background: linear-gradient(135deg, #3a9ac0 0%, #2a7fa3 100%);
             color: white;
         }}
 
