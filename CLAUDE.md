@@ -62,6 +62,32 @@ launchctl start de.termine-re.update       # Manuell auslösen
 tail -f launchd.log                        # Live-Log
 ```
 
+## HW-Import (Mails mit eM-Client-Kategorie „HW")
+
+Die Redaktion (Ralf, Erich, Klaus) schickt Termine, Plakatfotos und Terminseiten per Mail. Frank markiert relevante Mails in eM Client mit der Kategorie **„HW"**. `hw_import.py` liest sie nachts aus und pflegt sie ein.
+
+```
+05:30 launchd (de.holzwurm-hw-import) → hw_import.sh → hw_import.py → manuelle_termine.json
+06:30 launchd (de.termine-re.update)  → update.sh → HTML → git push (Veröffentlichung)
+```
+
+- **Lesen:** eM-Client-SQLite, nur lesend (`MailCategoryNames.categoryName = 'HW'`, alle 5 Konten). Bilder/PDFs werden dem Modell mitgegeben, große Fotos per `sips` auf 2000 px verkleinert.
+- **Extraktion:** ein Modellaufruf pro Mail (`claude-sonnet-5`, Fallback Haiku 4.5; `HW_MODEL` überschreibt) mit **erzwungenem Tool-Schema**. Mailinhalt gilt als Daten. API-Key aus `mail/.env` (wird nie geloggt).
+- **Validierung im Code, nicht im Modell:** gültiges Datum, nicht vergangen, **Beleg-Zitat muss im Mailtext stehen** (oder „BILD"/„PDF" bei Anhang), Wochentag im Beleg muss zum Datum passen, Link nur wenn im Mailtext, AfD-Filter (`app._AUSGESCHLOSSENE_MUSTER`), Ort in Recklinghausen, Ort oder Uhrzeit vorhanden.
+- **Dubletten:** gegen die zuletzt generierten Monatsseiten mit `app.entferne_duplikate()`. **Konflikt-Check:** ähnlicher Termin einer Scraper-Quelle an anderem Tag (±60 Tage) → zur Prüfung (fängt widersprüchliche Daten, z.B. Mail 24.10. vs. Website 20.10.). Manuelle Serien sind ausgenommen.
+- **Ergebnis:** eindeutig → `freigegeben: true`; sonst `freigegeben: false` + `hinweis` + Eintrag in `hw_pruefliste.md`. Zum Freigeben `freigegeben` auf `true` setzen oder Eintrag löschen. Jeder Eintrag trägt `hw_mail` (Konto:Message-ID).
+- **Neue Terminseiten** landen in `hw_neue_quellen.md` mit Vorab-Befund (JSON-LD, ICS, TEC, EventPrime …). **Es wird bewusst kein Scraper automatisch geschrieben** — Entwicklung mit Claude Code an echten Daten. Bereits bekannte Hosts (Scraper-URLs + in dieser Doku erwähnte, z.B. verworfene Seiten) werden nicht erneut gemeldet.
+- **iMessage** (`IMESSAGE_TARGET` aus `mail/.env`) nur, wenn etwas eingetragen, zu prüfen, neu oder fehlerhaft ist.
+- **State:** `hw_state.db` (verarbeitete Mails, nach Message-ID). Erneut verarbeiten: `--force`; Einzeltest ohne Flag/State: `--mail konto:id`; nichts schreiben: `--dry-run`. `hw_state.db`, `hw_pruefliste.md`, `hw_neue_quellen.md` sind git-ignoriert (enthalten Mail-Betreffs).
+- **Grenzen:** max. 15 Mails pro Lauf; wird eine Mail nicht verarbeitet (API-Fehler), bleibt sie unmarkiert und kommt in der nächsten Nacht erneut. Die Modellantwort ist nicht deterministisch (gleiche Mail kann unterschiedlich viele Termine liefern) — deshalb die Code-Validierung und der State.
+- `update.sh` committet `manuelle_termine.json` mit (seit 21.09.2026), damit automatisch eingetragene Termine versioniert werden.
+
+```bash
+python3 hw_import.py --dry-run                    # HW-Mails prüfen, nichts schreiben
+python3 hw_import.py --dry-run --mail gmx:16529   # gezielt eine Mail testen
+tail -f ~/Library/Logs/holzwurm-hw-import/holzwurm-hw-import.log
+```
+
 ## Tests
 
 ```bash

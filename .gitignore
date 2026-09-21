@@ -4,3 +4,8 @@ launchd.log
 .claude/
 .env
 .facebook_cache.json
+
+# HW-Import: State + Arbeitslisten (enthalten Mail-Betreffs, nicht ins öffentliche Repo)
+hw_state.db
+hw_pruefliste.md
+hw_neue_quellen.md

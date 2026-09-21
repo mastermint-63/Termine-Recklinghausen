@@ -80,7 +80,7 @@ if [ "$HAT_AENDERUNGEN" = false ]; then
     PUSH_STATUS="Keine Änderungen"
 else
     echo "Änderungen gefunden - pushe zu GitHub..."
-    git add termine_re_*.html index.html 2>/dev/null
+    git add termine_re_*.html index.html manuelle_termine.json 2>/dev/null
     COMMIT_MSG="Termine RE aktualisiert $DATUM"
     [ ${#GELOESCHT[@]} -gt 0 ] && COMMIT_MSG="$COMMIT_MSG (${#GELOESCHT[@]} alte Datei(en) gelöscht)"
     git commit -m "$COMMIT_MSG" 2>&1
