@@ -3495,7 +3495,11 @@ def hole_katholisch_netzwerk(jahr: int, monat: int) -> list[Termin]:
 # "50 Jahre Holzwurm" ist bereits als redaktionelle Spotlight-Karte in
 # manuelle_termine.json hinterlegt (highlight='holzwurm50') — hier
 # ausgeschlossen, sonst erscheint das Jubiläum doppelt.
-_HOLZWURM_AUSGESCHLOSSENE_SLUGS = {'50-jahre-holzwurm'}
+# "veranstaltungskalender-workshop": Website nennt fälschlich den 20.10.; richtig ist
+# Sa 24.10.2026 (Frank Stach ist Referent, Redaktionsmails bestätigen es). Termin steht
+# mit korrektem Datum in manuelle_termine.json (Stand 21.09.2026). Slug wieder entfernen,
+# sobald das Datum auf der Website korrigiert ist.
+_HOLZWURM_AUSGESCHLOSSENE_SLUGS = {'50-jahre-holzwurm', 'veranstaltungskalender-workshop'}
 
 
 def hole_holzwurm(jahr: int, monat: int) -> list[Termin]:
