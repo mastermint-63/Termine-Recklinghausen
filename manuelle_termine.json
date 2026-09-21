@@ -207,5 +207,105 @@
         "beschreibung": "Offenes Treffen von Freiwilligenagentur und Selbsthilfe-Kontaktstelle Recklinghausen. Austausch, Begegnung, Diskussion — für alle, die sich freiwillig in Ehrenamt und Selbsthilfe engagieren oder dies noch tun wollen. Einfach vorbeikommen, keine Anmeldung erforderlich.",
         "kategorie": "Ehrenamt",
         "freigegeben": true
+    },
+    {
+        "name": "Blind Beggars - Iron Maiden Tribute",
+        "datum": "2026-09-26",
+        "uhrzeit": "",
+        "ort": "Le Mirage, Große-Perdekamp-Str. 23, Recklinghausen",
+        "link": "",
+        "beschreibung": "Iron-Maiden-Tribute-Band Blind Beggars live im Le Mirage. Uhrzeit auf dem Plakat nicht angegeben.",
+        "kategorie": "Konzert",
+        "freigegeben": true
+    },
+    {
+        "name": "Faires Frühstück auf dem Schulbauernhof",
+        "datum": "2026-09-22",
+        "uhrzeit": "09:00",
+        "ort": "Schulbauern- und Naturschutzhof, Zechenstraße 18, Recklinghausen",
+        "link": "https://www.re-kids.de/",
+        "beschreibung": "Im Rahmen der Fairen Woche (11.-25.09.2026). 9 bis 11 Uhr. Anmeldung: info@re-kids.de",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Faire Woche: „Wo kommt die Schokolade her?“ - Infoveranstaltung",
+        "datum": "2026-09-23",
+        "uhrzeit": "10:00",
+        "ort": "Schulbauern- und Naturschutzhof, Zechenstraße 18, Recklinghausen",
+        "link": "https://www.re-kids.de/",
+        "beschreibung": "Im Rahmen der Fairen Woche (11.-25.09.2026). 10 bis 11 Uhr. Anmeldung: info@re-kids.de",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Faire Woche: Info-Talk Nachhaltigkeit mit dem Team „Klima & Mobilität“",
+        "datum": "2026-09-24",
+        "uhrzeit": "14:00",
+        "ort": "Familienbüro, Große Geldstraße 19, Recklinghausen",
+        "link": "",
+        "beschreibung": "Im Rahmen der Fairen Woche (11.-25.09.2026). 14 bis 17 Uhr. Info-Talk mit dem städtischen Team „Klima & Mobilität“.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-09-23",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-09-30",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-10-07",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-10-14",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-10-21",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
+    },
+    {
+        "name": "Mittwoch-Stammtisch im Kolpinghaus",
+        "datum": "2026-10-28",
+        "uhrzeit": "18:30",
+        "ort": "Kolpinghaus, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Runde mit Menschen aus Recklinghausen und Umgebung - einfach vorbeikommen. Der Stammtisch findet wöchentlich mittwochs statt.",
+        "kategorie": "Treffen",
+        "freigegeben": true
     }
 ]
