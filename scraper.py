@@ -93,6 +93,8 @@ CAMPUS_EMSCHERLAND_URL = "https://www.campus-emscherland.eu/"
 AGENDA21_URL = "https://www.lokale-agenda21-re.de/termine/"
 KATHOLISCH_NETZWERK_URL = "https://www.katholisch-re.de/aktuelles-termine/netzwerk"
 SELBSTHILFEGRUPPEN_RE_URL = "https://www.selbsthilfegruppen-recklinghausen.de/?page_id=33"
+SELBSTHILFE_KONTAKTSTELLE_URL = ("https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/"
+                                "selbsthilfe-kontaktstelle/aktuelles-und-termine")
 HOLZWURM_API = "https://holzwurm-recklinghausen.de/wp-json/tribe/events/v1/events"
 HOLZWURM_URL = "https://holzwurm-recklinghausen.de/veranstaltungen"
 
@@ -3553,5 +3555,137 @@ def hole_holzwurm(jahr: int, monat: int) -> list[Termin]:
             ort=ort[:150], link=link, beschreibung=beschreibung,
             quelle='holzwurm', kategorie='Bildung',
         ))
+
+    return termine
+
+
+
+# ---------------------------------------------------------------------------
+# 39. Selbsthilfe-Kontaktstelle Kreis Recklinghausen (Der Paritätische) — CMS-Blöcke mit Fließtext
+# ---------------------------------------------------------------------------
+
+_SHK_INTERN = re.compile(r'exklusiv an|nur für Gruppenleitung|nicht öffentlich', re.IGNORECASE)
+_SHK_WOCHENTAG = r'(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)'
+_SHK_META_ZEILE = re.compile(r'^(Ort|Anmeldung|Anmeldung bis|Eintritt|Hinweis|Termin|Termine|Datum|Vernissage|'
+                             r'Telefon|Wann|Kosten)\s*:', re.IGNORECASE)
+
+
+def hole_selbsthilfe_kontaktstelle(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine der Selbsthilfe-Kontaktstelle Kreis Recklinghausen (Der Paritätische).
+
+    TYPO3-Seite ohne JSON-LD/ICS: jeder Eintrag ist ein Block (`div.t3el-textmedia`) mit
+    Überschrift (h2/h3) und Fließtext. Ein Termin wird nur aus Zeilen gelesen, die MIT dem
+    Datum (oder "Termin:/Datum:/Vernissage:" + Datum) BEGINNEN, mit vollständigem Jahr:
+    "Mittwoch, 23. September 2026, 16–17:30 Uhr" oder "Datum: 31.10.2026 und 28.11.2026,
+    jeweils 14:00 bis 18:00 Uhr". Datumsnennungen mitten im Satz werden ignoriert (Doppelungen).
+    Bewusst NICHT übernommen: Termine ohne Jahr (z.B. "Nächster Termin: Mittwoch, 14.10."),
+    Blöcke "exklusiv an Gruppenleitungen", Termine ohne "Ort:"-Zeile oder mit Ort außerhalb
+    von Recklinghausen (z.B. Oer-Erkenschwick). Das monatliche Ehrenamts- und
+    Selbsthilfe-Café steht ohne Jahr auf der Seite und wird über manuelle_termine.json gepflegt.
+    """
+    try:
+        response = _request_mit_retry(SELBSTHILFE_KONTAKTSTELLE_URL, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (selbsthilfe-kontaktstelle): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    monate_pattern = '|'.join(_MONATE.keys())
+    start_re = re.compile(
+        rf'^(?:(Termin|Datum|Vernissage|Wann)\s*:\s*)?(?={_SHK_WOCHENTAG},?\s+\d|\d{{1,2}}\.\d{{1,2}}\.\d{{4}})',
+        re.IGNORECASE)
+    datum_re = re.compile(
+        rf'{_SHK_WOCHENTAG},?\s+(\d{{1,2}})\.\s*({monate_pattern})\s+(\d{{4}})|(\d{{1,2}})\.(\d{{1,2}})\.(\d{{4}})',
+        re.IGNORECASE)
+    zeit_re = re.compile(r'(\d{1,2})(?:[:.](\d{2}))?\s*(?:(?:–|-|bis)\s*(\d{1,2})(?:[:.](\d{2}))?\s*)?Uhr')
+    untertitel_re = re.compile(r'^(Vortrag|Workshop|Lesung|Führung|Konzert|Seminar)\s*:', re.IGNORECASE)
+
+    termine, gesehen = [], set()
+    for block in soup.select('div.t3el-textmedia'):
+        ueberschrift = block.find(['h2', 'h3'])
+        titel = ueberschrift.get_text(' ', strip=True).rstrip(':').strip() if ueberschrift else ''
+        if not titel or titel in ('Aktuelles', 'Termine'):
+            continue
+        body = block.select_one('.ce-bodytext') or block
+        # Absatzweise Text: <br> = Zeilenumbruch, Inline-Tags (<strong>Ort:</strong> …) bleiben in einer Zeile
+        for br in body.find_all('br'):
+            br.replace_with('\n')
+        for absatz in body.find_all(['p', 'li', 'h4', 'h5', 'div']):
+            absatz.append('\n')
+        zeilen = [z.replace('\xa0', ' ').strip() for z in body.get_text('').split('\n')]
+        zeilen = [z for z in zeilen if z]
+        if _SHK_INTERN.search(' '.join(zeilen)):
+            continue
+
+        datum_idx = [i for i, z in enumerate(zeilen) if start_re.match(z)]
+        block_ort = next((re.sub(r'^Ort\s*:\s*', '', z, flags=re.IGNORECASE) for z in zeilen
+                          if re.match(r'^Ort\s*:', z, re.IGNORECASE)), '')
+        beschreibung = ' '.join(z for z in zeilen if not _SHK_META_ZEILE.match(z)
+                                and not start_re.match(z))[:300]
+        anker = block.get('id', '')
+        link = f'{SELBSTHILFE_KONTAKTSTELLE_URL}#{anker}' if anker else SELBSTHILFE_KONTAKTSTELLE_URL
+
+        for pos, i in enumerate(datum_idx):
+            zeile = zeilen[i]
+            label = (start_re.match(zeile).group(1) or '').lower()
+            naechste = datum_idx[pos + 1] if pos + 1 < len(datum_idx) else len(zeilen)
+
+            # Ort: erste "Ort:"-Zeile im Abschnitt (auch in derselben Zeile), sonst erste des Blocks
+            ort, ort_aus_block = '', False
+            for z in zeilen[i:naechste]:
+                m = re.search(r'Ort\s*:\s*(.+)$', z, re.IGNORECASE)
+                if m:
+                    ort = m.group(1).strip()
+                    break
+            if not ort and block_ort:
+                ort, ort_aus_block = block_ort, True
+            if 'recklinghausen' not in ort.lower():
+                continue  # kein/unbekannter Ort oder anderer Ort (z.B. Oer-Erkenschwick)
+            if ort_aus_block:
+                ort = f'{ort} (Ort laut Ankündigung des Angebots)'
+
+            # Uhrzeit: nach Entfernen der Datumsangaben
+            rest = datum_re.sub('', zeile.split('Ort:')[0])
+            uhrzeit, stunde, minute = 'siehe Website', None, None
+            zm = zeit_re.search(rest)
+            if zm:
+                stunde, minute = int(zm.group(1)), int(zm.group(2) or 0)
+                if stunde < 24 and minute < 60:
+                    uhrzeit = f'{stunde:02d}:{minute:02d}'
+                    if zm.group(3):
+                        uhrzeit += f'–{int(zm.group(3)):02d}:{int(zm.group(4) or 0):02d}'
+                    uhrzeit += ' Uhr'
+                else:
+                    stunde = minute = None
+
+            # Name: Blocküberschrift; bei mehreren Terminen im Block Zwischenüberschrift ("Workshop: …")
+            name = titel
+            if label == 'vernissage':
+                name = f'{titel}: Vernissage'
+            elif len(datum_idx) > 1:
+                vorher = zeilen[(datum_idx[pos - 1] + 1 if pos else 0):i]
+                sub = next((z for z in reversed(vorher) if untertitel_re.match(z) and len(z) <= 120), '')
+                name = sub.rstrip(':') or titel
+
+            for m in datum_re.finditer(zeile.split('Ort:')[0]):
+                try:
+                    if m.group(1):
+                        datum = datetime(int(m.group(3)), _MONATE[m.group(2).lower()], int(m.group(1)))
+                    else:
+                        datum = datetime(int(m.group(6)), int(m.group(5)), int(m.group(4)))
+                except (ValueError, KeyError):
+                    continue
+                if not _im_monat(datum, jahr, monat):
+                    continue
+                if stunde is not None:
+                    datum = datum.replace(hour=stunde, minute=minute)
+                schluessel = (datum, name)
+                if schluessel in gesehen:
+                    continue
+                gesehen.add(schluessel)
+                termine.append(Termin(
+                    name=name[:150], datum=datum, uhrzeit=uhrzeit, ort=ort[:150], link=link,
+                    beschreibung=beschreibung, quelle='selbsthilfe-kontaktstelle', kategorie='Selbsthilfe',
+                ))
 
     return termine
