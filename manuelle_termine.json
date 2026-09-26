@@ -327,5 +327,75 @@
         "beschreibung": "Künstlerisch-dokumentarischer Film über Aphasie und ihre Auswirkungen auf Kommunikation, Selbstbild und soziales Umfeld. Einlass 10:00 Uhr, Film 115 Minuten, anschließend Gesprächsrunde mit Regisseurin Samira Klaho. Eintritt 12 €. Karten im Vorverkauf u.a. bei Kapitel Zwei, Attatroll Buchladen, Britts Bücherforum, Lotto Brast.",
         "kategorie": "Film",
         "freigegeben": true
+    },
+    {
+        "name": "Lesung und Gespräch: „Wir Kuckucksbürger“",
+        "datum": "2026-09-28",
+        "uhrzeit": "18:00",
+        "ort": "VHS Recklinghausen, Herzogswall 17, Recklinghausen",
+        "link": "https://www.vhs-recklinghausen.de",
+        "beschreibung": "Sandra Ling und Sandro Kenda lesen aus dem Erzählband „Wir Kuckucksbürger“ mit 33 persönlichen Geschichten von Menschen mit interkultureller Biografie, anschließend Gespräch. Eintritt frei, Anmeldung erbeten (Tel. 02361/50-2000 oder vhs@recklinghausen.de).",
+        "kategorie": "Lesung",
+        "freigegeben": true
+    },
+    {
+        "name": "Vortrag: „Let's Europe arise – Lasst Europa auferstehen!“ (Winston Churchill 1946)",
+        "datum": "2026-10-01",
+        "uhrzeit": "19:00",
+        "ort": "VHS Recklinghausen, Sitzungssaal, Herzogswall 17, Recklinghausen",
+        "link": "https://www.vhs-recklinghausen.de",
+        "beschreibung": "Stadtarchivar Dr. Matthias Kordes über Winston Churchills Züricher Europa-Rede von 1946 und ihre Bedeutung als früher Impuls für die europäische Einigung. Anmeldung erforderlich (vhs@recklinghausen.de).",
+        "kategorie": "Vortrag",
+        "freigegeben": true
+    },
+    {
+        "name": "Flashmob zum Weltaltentag",
+        "datum": "2026-10-01",
+        "uhrzeit": "09:30",
+        "ort": "Altstadtmarkt, Recklinghausen",
+        "link": "",
+        "beschreibung": "Seniorenbeirat und Seniorenreferat der Stadt Recklinghausen laden unter dem Motto „Jung und Alt gemeinsam – Talent kennt keine Altersgrenze“ zu gemeinsamem Gesang, Musik und Bewegung sowie einer Straßenkreideaktion ein. Alle Altersgruppen willkommen.",
+        "kategorie": "Freizeit",
+        "freigegeben": true
+    },
+    {
+        "name": "Ausstellungseröffnung: „Vest im Blick“ (Waldemar Grabelus)",
+        "datum": "2026-10-02",
+        "uhrzeit": "17:00",
+        "ort": "Galerie VestQuartier, Augustinessenstraße 3, 45657 Recklinghausen (2. OG)",
+        "link": "",
+        "beschreibung": "Erste Ausstellung der neuen Kultursaison im Kulturquartier Recklinghausen: Waldemar Grabelus zeigt Landschafts- und Architekturmalerei aus der Vest-Region. Ausstellung bis 21.12.2026 zu sehen (Mo–Mi 8–16 Uhr, Do 8–18 Uhr, Fr 8–13 Uhr).",
+        "kategorie": "Kunst",
+        "freigegeben": true
+    },
+    {
+        "name": "Jugendtheater: „Müsli vor dem offenen Kühlschrank“",
+        "datum": "2026-10-11",
+        "uhrzeit": "15:00",
+        "ort": "Bürgerhaus Süd, Körnerplatz 2, 45661 Recklinghausen",
+        "link": "https://www.kultur-kommt-ticket.de",
+        "beschreibung": "Jugendtheaterstück der Burghofbühne Dinslaken ab 14 Jahren über Liebe, Freundschaft und sexuelle Identität, im Rahmen der Coming Out Days NRW. Karten an der Abendkasse, online sowie bei Tourist Information, Attatroll, Recklinghäuser Zeitung und Lotto Brast.",
+        "kategorie": "Theater",
+        "freigegeben": true
+    },
+    {
+        "name": "Trauerfestakt für Peter Borggraefe",
+        "datum": "2026-10-02",
+        "uhrzeit": "18:00",
+        "ort": "Rathaus, Großer Sitzungssaal, Rathausplatz 3/4, Recklinghausen",
+        "link": "",
+        "beschreibung": "Die Stadt Recklinghausen würdigt den verstorbenen ehemaligen Stadtdirektor und Bürgermeister Peter Borggraefe (1928–2026, gestorben 8. Juli 2026 im Alter von 86 Jahren) mit einer Gedenkfeier. Neben Bürgermeister Axel Tschersich kommen Wegbegleiter*innen in einer Talkrunde zu Wort.",
+        "kategorie": "Gedenken",
+        "freigegeben": true
+    },
+    {
+        "name": "Tag der offenen Moschee",
+        "datum": "2026-10-03",
+        "uhrzeit": "15:00",
+        "ort": "Eyüp-Sultan-Moschee (Islamische Kulturunion), Bochumer Straße 98A, Recklinghausen",
+        "link": "https://www.recklinghaeuser-zeitung.de/recklinghausen/tag-der-offenen-moschee-recklinghausen-fuehrungen-gespraeche-3-oktober-eyup-sultan-w1250789-6001407563/",
+        "beschreibung": "Führungen um 15, 16 und 17 Uhr geben Einblicke in Architektur, religiöse Traditionen und Gemeindeleben, im Anschluss türkischer Tee und kulinarische Spezialitäten. Eintritt frei, keine Anmeldung erforderlich. Teil der bundesweiten Aktion zum Tag der Deutschen Einheit.",
+        "kategorie": "Begegnung",
+        "freigegeben": true
     }
 ]
