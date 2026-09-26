@@ -62,16 +62,22 @@ launchctl start de.termine-re.update       # Manuell auslösen
 tail -f launchd.log                        # Live-Log
 ```
 
-## HW-Import (Mails mit eM-Client-Kategorie „HW")
+## HW-Import (Mails mit eM-Client-Kategorie „HW" + automatische Presse-Erkennung)
 
 Die Redaktion (Ralf, Erich, Klaus) schickt Termine, Plakatfotos und Terminseiten per Mail. Frank markiert relevante Mails in eM Client mit der Kategorie **„HW"**. `hw_import.py` liest sie nachts aus und pflegt sie ein.
+
+**Seit 26.09.2026 zusätzlich automatische Erkennung** von Pressemitteilungen der Pressestellen von Stadt und Kreis Recklinghausen (`_ist_presse_mail()`, `finde_presse_mail_ids()`) — **ohne** manuelle „HW"-Markierung. Hintergrund: Die manuelle Markierung war der eigentliche Flaschenhals (der Import selbst funktionierte, bekam aber tagelang keine Mails zugewiesen). Kriterium: Absenderadresse `PressestelleRecklinghausen@recklinghausen.de`, Anzeigename exakt „Kreis Recklinghausen" (die Adresse `info@presse-service.de` ist eine geteilte Presseservice-Adresse, die auch andere Kommunen wie Hamm nutzen — deshalb zählt dort nur der Anzeigename, nicht die Adresse), oder eine beliebige `@recklinghausen.de`-Adresse mit Betreff `PM:`/`PT:`/`Pressemitteilung:` (deckt einzelne Pressesprecher wie Hermann Böckmann ab). Rückblickfenster `AUTO_PRESSE_TAGE` (21 Tage). Die „HW"-Kategorie bleibt für alle anderen Absender (Vereine, externe Veranstalter) der Weg.
+
+Bewusst **kein regelbasierter (KI-freier) Filter** für „ist das ein echter Termin": Presse-Mails der Stadt enthalten strukturell ähnliche, aber inhaltlich zu unterscheidende Fälle (z.B. Bürgerkoffer-Termine oder Geburtsbäumchen-Aktionen mit Datum/Uhrzeit/Ort, aber kein Kalendertermin) — diese Unterscheidung übernimmt weiterhin das Modell. Bei ~4-6 Presse-Mails/Tag bleiben die API-Kosten vernachlässigbar.
+
+**Reine Presse-Fototermine ausgeschlossen:** Termine, die im Mailtext ausdrücklich als „Fototermin" bezeichnet sind (z.B. die wöchentliche Übersicht „Pressetermine für die Woche …"), meldet das Modell nicht (SYSTEM-Prompt-Regel 6) — das sind Zugangstermine für Fotografen, keine Publikumsveranstaltungen.
 
 ```
 05:30 launchd (de.holzwurm-hw-import) → hw_import.sh → hw_import.py → manuelle_termine.json
 06:30 launchd (de.termine-re.update)  → update.sh → HTML → git push (Veröffentlichung)
 ```
 
-- **Lesen:** eM-Client-SQLite, nur lesend (`MailCategoryNames.categoryName = 'HW'`, alle 5 Konten). Bilder/PDFs werden dem Modell mitgegeben, große Fotos per `sips` auf 2000 px verkleinert.
+- **Lesen:** eM-Client-SQLite, nur lesend (`MailCategoryNames.categoryName = 'HW'` ODER automatische Presse-Erkennung, alle 5 Konten). Bilder/PDFs werden dem Modell mitgegeben, große Fotos per `sips` auf 2000 px verkleinert. **Word-Anhänge (`.docx`)** werden per `python-docx` in Text umgewandelt und an den Mailtext angehängt — ca. 1 von 6 Presse-Mails der Stadt liefert den eigentlichen Text nur als `.docx`-Anhang, nicht im Mailbody (der Body enthält oft nur eine kurze Weiterleitungsnotiz).
 - **Extraktion:** ein Modellaufruf pro Mail (`claude-sonnet-5`, Fallback Haiku 4.5; `HW_MODEL` überschreibt) mit **erzwungenem Tool-Schema**. Mailinhalt gilt als Daten. API-Key aus `mail/.env` (wird nie geloggt).
 - **Validierung im Code, nicht im Modell:** gültiges Datum, nicht vergangen, **Beleg-Zitat muss im Mailtext stehen** (oder „BILD"/„PDF" bei Anhang), Wochentag im Beleg muss zum Datum passen, Link nur wenn im Mailtext, AfD-Filter (`app._AUSGESCHLOSSENE_MUSTER`), Ort in Recklinghausen, Ort oder Uhrzeit vorhanden.
 - **Dubletten:** gegen die zuletzt generierten Monatsseiten mit `app.entferne_duplikate()`. **Konflikt-Check:** ähnlicher Termin einer Scraper-Quelle an anderem Tag (±60 Tage) → zur Prüfung (fängt widersprüchliche Daten, z.B. Mail 24.10. vs. Website 20.10.). Manuelle Serien sind ausgenommen.
@@ -102,6 +108,7 @@ tail -f ~/Library/Logs/holzwurm-hw-import/holzwurm-hw-import.log
 ```bash
 pip install requests beautifulsoup4 lxml pymupdf   # pymupdf = PyMuPDF (fitz), für Stadtarchiv-PDF
 # requirements.txt enthält nur requests/beautifulsoup4/lxml — pymupdf bewusst ausgelassen (optional)
+# python-docx (für hw_import.py, Word-Anhänge in Presse-Mails) ebenfalls nicht in requirements.txt
 ```
 
 ## Apify-Integration (Facebook / „Weitere Tipps")

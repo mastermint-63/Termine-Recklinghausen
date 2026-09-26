@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """HW-Import: Mails mit der eM-Client-Kategorie "HW" in den Kalender übernehmen.
 
+Zusätzlich zur manuellen "HW"-Markierung werden Pressemitteilungen der Pressestellen von
+Stadt und Kreis Recklinghausen automatisch erkannt (siehe _ist_presse_mail()) - keine manuelle
+Kategorisierung mehr nötig. Für alle anderen Absender bleibt die "HW"-Markierung der Weg.
+
 Ablauf (nächtlich per launchd, VOR dem Kalender-Lauf um 06:30):
-  1. Alle mit "HW" markierten Mails aus den fünf eM-Client-Konten lesen (nur lesend).
+  1. Alle mit "HW" markierten sowie automatisch erkannte Presse-Mails aus den fünf
+     eM-Client-Konten lesen (nur lesend).
   2. Pro noch nicht verarbeiteter Mail: Claude extrahiert Termine und neue Terminseiten
      (erzwungenes Tool-Schema, Mailinhalt gilt als Daten, nicht als Anweisung).
   3. Der Code validiert selbst (Datum, Wochentag, Beleg-Zitat im Mailtext, AfD-Filter,
@@ -52,6 +57,16 @@ KONTEN = {
 }
 KATEGORIE_NAME = "HW"
 
+# Automatische Erkennung von Pressemitteilungen (Stadt/Kreis Recklinghausen), ohne manuelle
+# "HW"-Markierung. Kreis Recklinghausen verschickt über eine geteilte Presseservice-Adresse
+# (info@presse-service.de, auch von anderen Kommunen genutzt) - dort zaehlt nur der exakte
+# Anzeigename, nicht die Adresse.
+AUTO_PRESSE_TAGE = 21
+AUTO_PRESSE_ADRESSEN = {"pressestellerecklinghausen@recklinghausen.de"}
+AUTO_PRESSE_NAMEN = {"kreis recklinghausen"}
+AUTO_PRESSE_DOMAIN = "@recklinghausen.de"
+AUTO_PRESSE_BETREFF_MUSTER = re.compile(r"(?i)^(pm|pt|pressemitteilung)\s*[:\-]")
+
 JSON_PFAD = HIER / "manuelle_termine.json"
 STATE_PFAD = HIER / "hw_state.db"
 NEUE_QUELLEN_MD = HIER / "hw_neue_quellen.md"
@@ -97,6 +112,10 @@ class Mail:
 
 def _ticks_zu_datetime(ticks) -> datetime:
     return datetime(1, 1, 1) + timedelta(microseconds=(ticks or 0) / 10)
+
+
+def _datetime_zu_ticks(dt: datetime) -> int:
+    return int((dt - datetime(1, 1, 1)).total_seconds() * 10_000_000)
 
 
 def _dekodiere(b, content_type: str) -> str:
@@ -149,6 +168,21 @@ def _verkleinere(b: bytes, media_type: str) -> bytes:
     return b
 
 
+def _docx_zu_text(b: bytes) -> str:
+    from docx import Document
+    try:
+        doc = Document(io.BytesIO(b))
+    except Exception:
+        return ""
+    teile = [p.text for p in doc.paragraphs if p.text.strip()]
+    for tabelle in doc.tables:
+        for row in tabelle.rows:
+            zeile = " | ".join(c.text.strip() for c in row.cells if c.text.strip())
+            if zeile:
+                teile.append(zeile)
+    return "\n".join(teile)
+
+
 def _oeffne(konto: str, datei: str) -> sqlite3.Connection:
     pfad = EM_BASIS / KONTEN[konto] / datei
     return sqlite3.connect(f"file:{pfad}?mode=ro", uri=True, timeout=10)
@@ -171,7 +205,7 @@ def lade_mail(konto: str, mail_id: int) -> Mail:
         "select partName, contentType, partBody from LocalMailContents where id=?", (mail_id,)).fetchall()
     daten.close()
 
-    plain, html_txt, bilder, pdfs, ics = [], [], [], [], []
+    plain, html_txt, bilder, pdfs, ics, docx_dateien = [], [], [], [], [], []
     for _name, ct, body in teile:
         ct_l = (ct or "").lower()
         if body is None or (isinstance(body, (bytes, str)) and len(body) == 0):
@@ -188,10 +222,16 @@ def lade_mail(konto: str, mail_id: int) -> Mail:
                 bilder.append((typ, _verkleinere(body, typ)))
         elif ct_l.startswith("application/pdf") and isinstance(body, bytes) and len(body) <= 4_000_000:
             pdfs.append(body)
+        elif ct_l.startswith("application/vnd.openxmlformats-officedocument.wordprocessingml.document") \
+                and isinstance(body, bytes) and len(body) <= 5_000_000:
+            docx_dateien.append(body)
 
     text = max(plain, key=len, default="")
     if len(text.strip()) < 40:
         text = max(html_txt, key=len, default=text)
+    docx_texte = [t for t in (_docx_zu_text(b) for b in docx_dateien[:2]) if t.strip()]
+    if docx_texte:
+        text = (text + "\n\n[Angehängtes Word-Dokument]\n" + "\n\n---\n\n".join(docx_texte)).strip()
     if ics:
         text += "\n\n[Kalendereinladung im Anhang]\n" + "\n".join(ics)[:4000]
     if len(text.strip()) < 40 and preview:
@@ -212,6 +252,37 @@ def finde_hw_mail_ids() -> list[tuple[str, int]]:
                 "where k.categoryName=? order by m.receivedDate", (KATEGORIE_NAME,)).fetchall()
             idx.close()
             treffer += [(konto, r[0]) for r in rows]
+        except sqlite3.Error as e:
+            log.error("Konto %s nicht lesbar: %s", konto, e)
+    return treffer
+
+
+def _ist_presse_mail(adresse: str, name: str, betreff: str) -> bool:
+    """Presse-Mail von Stadt oder Kreis Recklinghausen - unabhaengig von der 'HW'-Markierung."""
+    adresse = (adresse or "").strip().lower()
+    name = (name or "").strip().lower()
+    if adresse in AUTO_PRESSE_ADRESSEN:
+        return True
+    if name in AUTO_PRESSE_NAMEN:
+        return True
+    return bool(adresse.endswith(AUTO_PRESSE_DOMAIN) and AUTO_PRESSE_BETREFF_MUSTER.match((betreff or "").strip()))
+
+
+def finde_presse_mail_ids() -> list[tuple[str, int]]:
+    """Presse-Mails der letzten AUTO_PRESSE_TAGE Tage automatisch erkennen, siehe _ist_presse_mail()."""
+    cutoff = _datetime_zu_ticks(datetime.now() - timedelta(days=AUTO_PRESSE_TAGE))
+    treffer = []
+    for konto in KONTEN:
+        try:
+            idx = _oeffne(konto, "mail_index.dat")
+            rows = idx.execute(
+                "select m.id, m.subject, a.displayName, a.address from MailItems m "
+                "join MailAddresses a on a.parentId=m.id and a.type=1 "
+                "where m.receivedDate>=? order by m.receivedDate", (cutoff,)).fetchall()
+            idx.close()
+            for mid, betreff, name, adresse in rows:
+                if _ist_presse_mail(adresse, name, betreff):
+                    treffer.append((konto, mid))
         except sqlite3.Error as e:
             log.error("Konto %s nicht lesbar: %s", konto, e)
     return treffer
@@ -292,9 +363,11 @@ Fehlt das Jahr, nimm das nächstliegende zukünftige Datum ab Empfangsdatum.
 4. `eindeutig` = true nur, wenn Titel und Datum sicher aus der Mail hervorgehen. Sonst false und `unklar_grund` füllen.
 5. `beleg` ist ein kurzes, WÖRTLICHES Zitat aus dem Mailtext, das das Datum belegt. Stammt die Angabe nur aus einem \
 Bild oder PDF, schreibe 'BILD' bzw. 'PDF'.
-6. Meldung nur für öffentliche Veranstaltungen. Interne Termine (Redaktionssitzung, Videokonferenz, Absprachen) und \
-bereits vergangene Termine meldest du nicht. Bei Serien (z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. \
-Mehrtägige Ausstellungen: ein Termin am ersten Tag, den Zeitraum nennst du in der Beschreibung.
+6. Meldung nur für öffentliche Veranstaltungen. Interne Termine (Redaktionssitzung, Videokonferenz, Absprachen), \
+reine Fototermine für die Presse (im Text ausdrücklich als "Fototermin" bezeichnet, kein Programm für Publikum, \
+z.B. Pressetermin-Übersichten der Stadt Recklinghausen) und bereits vergangene Termine meldest du nicht. Bei Serien \
+(z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. Mehrtägige Ausstellungen: ein Termin am ersten Tag, \
+den Zeitraum nennst du in der Beschreibung.
 7. `in_recklinghausen` = true, wenn der Ort im Stadtgebiet Recklinghausen liegt. Andere Städte (Herten, Marl, Münster, ...) \
 und reine Online-Veranstaltungen: false.
 8. `terminseiten`: URLs, die laut Mail eine Übersicht oder einen Kalender mit mehreren Veranstaltungen eines Veranstalters \
@@ -634,9 +707,12 @@ def sende_imessage(text: str):
     esc = text.replace("\\", "\\\\").replace('"', '\\"')
     script = (f'tell application "Messages"\n send "{esc}" to buddy "{ziel}" of '
               f'(first service whose service type is iMessage)\nend tell')
-    r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=30)
-    if r.returncode != 0:
-        log.error("iMessage fehlgeschlagen: %s", r.stderr.strip())
+    try:
+        r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            log.error("iMessage fehlgeschlagen: %s", r.stderr.strip())
+    except subprocess.TimeoutExpired:
+        log.error("iMessage fehlgeschlagen: Timeout nach 30s (Messages.app nicht erreichbar?)")
 
 
 # --------------------------------------------------------------------------- Hauptablauf
@@ -679,7 +755,9 @@ def main():
         kandidaten = [(konto, int(mid))]
     else:
         kandidaten = finde_hw_mail_ids()
-    log.info("%d HW-markierte Mail(s) gefunden", len(kandidaten))
+        vorhandene = set(kandidaten)
+        kandidaten += [k for k in finde_presse_mail_ids() if k not in vorhandene]
+    log.info("%d Mail(s) gefunden (HW-markiert oder automatisch als Pressestelle erkannt)", len(kandidaten))
 
     alle_neu, betreffs, summe = [], {}, {"auto": 0, "pruefen": 0, "verwerfen": 0}
     seiten_gesamt, fehler, verarbeitet = [], 0, 0
