@@ -317,5 +317,15 @@
         "beschreibung": "Wie werde ich mit meiner Veranstaltung vom KI-Veranstaltungskalender des Holzwurm gefunden und wie kann ich sehr schnell auch als Laie eine eigene Website gestalten? Kostenfreier Workshop für Veranstalter in und um Recklinghausen, 13 bis 17 Uhr. Mit Frank Stach (Holzwurm, Ex-NRW-Landesvorsitzender des DJV). Maximal 12 Teilnehmende. Anmeldung per Mail: hebbert@holzwurm-recklinghausen.de",
         "kategorie": "Bildung",
         "freigegeben": true
+    },
+    {
+        "name": "Die verlorene Sprache",
+        "datum": "2026-11-07",
+        "uhrzeit": "10:30",
+        "ort": "Cineworld Recklinghausen, Kemnastr. 3, 45657 Recklinghausen",
+        "link": "https://www.samira-klaho.de/die-verlorene-sprache-film/",
+        "beschreibung": "Künstlerisch-dokumentarischer Film über Aphasie und ihre Auswirkungen auf Kommunikation, Selbstbild und soziales Umfeld. Einlass 10:00 Uhr, Film 115 Minuten, anschließend Gesprächsrunde mit Regisseurin Samira Klaho. Eintritt 12 €. Karten im Vorverkauf u.a. bei Kapitel Zwei, Attatroll Buchladen, Britts Bücherforum, Lotto Brast.",
+        "kategorie": "Film",
+        "freigegeben": true
     }
 ]
