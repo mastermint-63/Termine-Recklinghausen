@@ -842,7 +842,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="agenda21">Lokale Agenda 21</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="campus-emscherland">Campus Emscherland</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="genial-re">ge·ni·al e.V.</option><option value="holzwurm">Holzwurm</option><option value="manuell">Redaktion</option><option value="ratssitzungen">Ratssitzungen</option><option value="recklinghaeuser">Der Recklinghäuser</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option><option value="zeche-klaerchen">Zeche Klärchen</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="agenda21">Lokale Agenda 21</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="campus-emscherland">Campus Emscherland</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="genial-re">ge·ni·al e.V.</option><option value="holzwurm">Holzwurm</option><option value="manuell">Redaktion</option><option value="ratssitzungen">Ratssitzungen</option><option value="recklinghaeuser">Der Recklinghäuser</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option><option value="zeche-klaerchen">Zeche Klärchen</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
@@ -8548,18 +8548,6 @@ in Hannover studieren. Vor allem auf das „</div>
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="seniorenbeirat">
-                    <div class="termin-zeit">15:00–17:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://seniorenbeirat-recklinghausen.com/events/senioren-internetcafe-2026-09-28/" target="_blank" rel="noopener noreferrer">Senioren Internetcafé</a>
-                            <span class="badge badge-seniorenbeirat">Seniorenbeirat</span> <span class="badge badge-kategorie">Senioren</span>
-                        </div>
-                        <div class="termin-ort">K17 Diakonie Infocenter</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">15:15 Uhr</div>
                     <div class="termin-info">
@@ -8960,7 +8948,13 @@ in Hannover studieren. Vor allem auf das „</div>
                             <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
-                        
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Die beiden Künstler und Ingenieure versuchen mit Ihren Arbeiten die verborgene Schönheit, Tiefe und Bedeutung in den kleinsten, alltäglichsten Dingen des Lebens sichtbar zu machen und fühlen sich dabei verbunden mit Rilke. 
+,,Aller Aufgaben Aufgabe ist: Geringes in Großes umwandeln, Unscheinbares in Scheinendes; ein Stäubchen so zu zeigen, daß wir seine Unendlichkeit fühlen ... &quot; 
+Vernissage am 03. Oktober 2026 um 18:00 mit musikalischer Umrahmung von Udo Homeyer mit Handpan
+Ausstellung vom 03.10.-24.10.26 jeweils geöffnet FR und SA 15-18 Uhr
+Finissage am 24.10.26 von 15:00 - 18:00 
+und ein Vortrag &quot;Zen in der Philosophie des Ostens&quot; von Udo Homeyeer am 09.10.26 um 18:00
+Stadt-Labor Galerie Recklinghausen, Heilige Geiststraße 3, 45657 Recklinghausen</div>
                     </div>
                 </div>
             
@@ -8985,6 +8979,28 @@ in Hannover studieren. Vor allem auf das „</div>
                         </div>
                         <div class="termin-ort">DRK KV Recklinghausen Kreisgeschäftsstelle / DRK Centrum</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="stadtlabor">
+                    <div class="termin-zeit">siehe Website</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="http://stadtlabor-re.de/rw_common/plugins/stacks/armadillo/index.php/?post_id=170&title=vest-im-blick-vernissage-021026-um-17-uhr-in-der-galerie-vestquartier-augustinessenstr-3-in-re" target="_blank" rel="noopener noreferrer">&quot;Vest im Blick&quot; Vernissage 02.10.26 um 17 Uhr in der Galerie VestQuartier, Augustinessenstr. 3 in RE</a>
+                            <span class="badge badge-stadtlabor">StadtLabor RE</span> <span class="badge badge-kategorie">Kunst</span>
+                        </div>
+                        <div class="termin-ort">StadtLabor Galerie, Heilige-Geist-Str. 3, Recklinghausen</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Ausstellung ist bis zum 21.12.2026 geöffnet
+
+
+Meine Bilder sind das Ergebnis vieler Beobachtungen in der Vest Region, die ich au fPapier oder Leinwand festgehalten habe.
+Oft begleitet mich unterwegs ein Skizzenbuc, in dem ich die Landschaft und Architektur skizziere und später ausarbeite. Viele Bilder entstehen aber auch direkt Pleinair. Bestimmte Lichtstimmungen, Tagesabschnitte und Jahreszeiten inspirieren mich dabei.
+Der Prozess des Malens führt immer zu einem unvorhergesehbaren Ergebnis, was das Malen an sich unvorstellbar spannend macht. 
+(Waldemar Grabelus)
+Öffnungszeiten 
+MO-MI 8-16 Uhr
+DO 8-18 Uhr und Fr. 8-13 Uhr
+Ausstellung in der Galerie VestQuartier Augustinessenstr. 3, 45657 Recklinghausen</div>
                     </div>
                 </div>
             
@@ -9347,7 +9363,7 @@ Das Angebot findet im Rahmen vonREspect4Youstatt und ist ein Kooperationsprojekt
         </div>
 
         <footer>
-            Generiert am 29.09.2026 um 06:31 Uhr<br>
+            Generiert am 30.09.2026 um 06:31 Uhr<br>
             Quellen:
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;
