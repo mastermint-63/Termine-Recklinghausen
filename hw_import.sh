@@ -4,7 +4,7 @@
 cd "$(dirname "$0")" || exit 1
 echo "=========================================="
 echo "HW-Import gestartet: $(date)"
-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 hw_import.py
+"${PYTHON:-python3}" hw_import.py
 RC=$?
 echo "HW-Import beendet: $(date), Exit-Code $RC"
 exit $RC

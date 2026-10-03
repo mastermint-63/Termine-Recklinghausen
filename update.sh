@@ -19,7 +19,7 @@ for html in termine_re_*.html; do
 done
 
 # Termine abrufen
-OUTPUT=$(/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 app.py --no-browser 2>&1)
+OUTPUT=$("${PYTHON:-python3}" app.py --no-browser 2>&1)
 PYTHON_EXIT=$?
 echo "$OUTPUT"
 
@@ -80,10 +80,13 @@ if [ "$HAT_AENDERUNGEN" = false ]; then
     PUSH_STATUS="Keine Änderungen"
 else
     echo "Änderungen gefunden - pushe zu GitHub..."
-    git add termine_re_*.html index.html manuelle_termine.json 2>/dev/null
+    git add termine_re_*.html index.html sitemap.xml manuelle_termine.json 2>/dev/null
     COMMIT_MSG="Termine RE aktualisiert $DATUM"
     [ ${#GELOESCHT[@]} -gt 0 ] && COMMIT_MSG="$COMMIT_MSG (${#GELOESCHT[@]} alte Datei(en) gelöscht)"
     git commit -m "$COMMIT_MSG" 2>&1
+
+    # Rebase auf Remote-Stand, falls divergiert (Code-Pushes aus dev/termine/re)
+    git pull --rebase --autostash 2>&1
 
     if git push 2>&1; then
         echo "Push erfolgreich!"

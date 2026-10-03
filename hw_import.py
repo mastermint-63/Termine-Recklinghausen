@@ -71,7 +71,8 @@ JSON_PFAD = HIER / "manuelle_termine.json"
 STATE_PFAD = HIER / "hw_state.db"
 NEUE_QUELLEN_MD = HIER / "hw_neue_quellen.md"
 PRUEFLISTE_MD = HIER / "hw_pruefliste.md"
-ENV_PFAD = Path("/Volumes/ki/claude/mail/.env")
+# ANTHROPIC_API_KEY, IMESSAGE_TARGET; im Betrieb per HW_ENV_FILE aus prod/termine/secrets/
+ENV_PFAD = Path(os.environ.get("HW_ENV_FILE") or HIER / ".env")
 
 MODELLE = [m for m in [os.environ.get("HW_MODEL"), "claude-sonnet-5", "claude-haiku-4-5-20251001"] if m]
 MAX_MAILS_PRO_LAUF = 15

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Python-Pfad (System nutzt 3.14 Framework-Installation)
-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 app.py --no-browser
+.venv/bin/python app.py --no-browser
 
 python3 app.py                    # 5 Monate ab heute, öffnet Browser
 python3 app.py 2026 2             # 5 Monate ab Februar 2026
@@ -97,8 +97,8 @@ tail -f ~/Library/Logs/holzwurm-hw-import/holzwurm-hw-import.log
 ## Tests
 
 ```bash
-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 -m pytest tests/ -v   # alle Tests
-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3 -m pytest tests/test_dedup.py -v  # einzelne Datei
+.venv/bin/python -m pytest tests/ -v   # alle Tests
+.venv/bin/python -m pytest tests/test_dedup.py -v  # einzelne Datei
 ```
 
 `tests/test_dedup.py` — testet `_termin_score()` und `entferne_duplikate()` aus `app.py`. Kein Mock-Framework nötig; Termin-Objekte werden direkt instanziiert.
