@@ -1158,6 +1158,17 @@ def hole_vhs(jahr: int, monat: int) -> list[Termin]:
 # 13. Verein für Orts- und Heimatkunde (geschichte-recklinghausen.de)
 # ---------------------------------------------------------------------------
 
+def _tec_ort(event: dict) -> str:
+    """Ort aus einem Event der The-Events-Calendar-API.
+
+    Ohne eingetragenen Ort liefert die API `"venue": []` statt eines Objekts
+    (Absturz am 02.10.2026, Exkursion ohne Ort bei geschichte-re).
+    """
+    venue = event.get('venue')
+    name = venue.get('venue', '') if isinstance(venue, dict) else ''
+    return unescape(name or 'Recklinghausen')
+
+
 def hole_geschichte_re(jahr: int, monat: int) -> list[Termin]:
     """Holt Events vom Verein für Orts- und Heimatkunde Recklinghausen.
 
@@ -1193,8 +1204,7 @@ def hole_geschichte_re(jahr: int, monat: int) -> list[Termin]:
             continue
 
         uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
-        venue = event.get('venue', {})
-        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        ort = _tec_ort(event)
         link = event.get('url', '') or GESCHICHTE_RE_URL
         beschreibung = _html_zu_text(event.get('description', ''))[:200]
 
@@ -2092,8 +2102,7 @@ def hole_re_leuchtet(jahr: int, monat: int) -> list[Termin]:
             continue
 
         uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
-        venue = event.get('venue', {})
-        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        ort = _tec_ort(event)
         link = event.get('url', '') or RE_LEUCHTET_URL
         beschreibung = _html_zu_text(event.get('description', ''))[:200]
 
@@ -3535,8 +3544,7 @@ def hole_holzwurm(jahr: int, monat: int) -> list[Termin]:
             continue
 
         uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
-        venue = event.get('venue', {})
-        ort = unescape(venue.get('venue', '') or 'Recklinghausen')
+        ort = _tec_ort(event)
         link = event.get('url', '') or HOLZWURM_URL
         # Leere Termin-Schedule-Box des Block-Editors (Datum/Zeit-Platzhalter,
         # normalerweise clientseitig per JS gefüllt) vor dem Text entfernen
