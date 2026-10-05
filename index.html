@@ -842,7 +842,7 @@
 
         <div class="filter-bar">
             <select id="quelle-filter" onchange="filterTermine()">
-                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="campus-emscherland">Campus Emscherland</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="ev-akademie">Ev. Akademie</option><option value="facebook">Weitere Tipps</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="gegendruck">Theater Gegendruck</option><option value="genial-re">ge·ni·al e.V.</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="manuell">Redaktion</option><option value="moondock">mOOndock</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ratssitzungen">Ratssitzungen</option><option value="recklinghaeuser">Der Recklinghäuser</option><option value="selbsthilfe-kontaktstelle">Selbsthilfe-Kontaktstelle</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option><option value="zeche-klaerchen">Zeche Klärchen</option>
+                <option value="">Alle Quellen</option><option value="adfc">ADFC Recklinghausen</option><option value="altstadtschmiede">Altstadtschmiede</option><option value="backyard">Backyard-Club</option><option value="campus-emscherland">Campus Emscherland</option><option value="cineworld">Cineworld</option><option value="debut-um-11">Debut um 11</option><option value="ev-akademie">Ev. Akademie</option><option value="facebook">Weitere Tipps</option><option value="frauenforum">Frauenforum</option><option value="gastkirche">Gastkirche</option><option value="genial-re">ge·ni·al e.V.</option><option value="geschichte-re">Heimatkunde</option><option value="ikonen-museum">Ikonen-Museum</option><option value="kunsthalle">Kunsthalle</option><option value="manuell">Redaktion</option><option value="moondock">mOOndock</option><option value="nlgr">Neue Lit. Gesellschaft</option><option value="ratssitzungen">Ratssitzungen</option><option value="recklinghaeuser">Der Recklinghäuser</option><option value="selbsthilfe-kontaktstelle">Selbsthilfe-Kontaktstelle</option><option value="seniorenbeirat">Seniorenbeirat</option><option value="stadt-re">Stadt RE</option><option value="stadtbibliothek">Stadtbibliothek</option><option value="stadtlabor">StadtLabor RE</option><option value="sternwarte">Sternwarte</option><option value="vesterleben">Vesterleben.de</option><option value="vhs">VHS</option><option value="zeche-klaerchen">Zeche Klärchen</option>
             </select>
             <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
@@ -1670,18 +1670,6 @@ Link zur Online-Nennung:
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">11:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/weintasting-am-spaeten-morgen" target="_blank" rel="noopener noreferrer">Weintasting am späten Morgen</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
-                        
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">11:15 / 13:15 / 15:15 / 17:15 Uhr</div>
                     <div class="termin-info">
@@ -1727,18 +1715,6 @@ Link zur Online-Nennung:
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="kunsthalle">
-                    <div class="termin-zeit">12:00–13:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://kunsthalle-recklinghausen.de/programm/kalender" target="_blank" rel="noopener noreferrer">Öffentliche Führung</a>
-                            <span class="badge badge-kunsthalle">Kunsthalle</span> <span class="badge badge-kategorie">Kunst</span>
-                        </div>
-                        <div class="termin-ort">Kunsthalle Recklinghausen</div>
-                        <div class="termin-beschreibung">Rundgang durch die aktuelle Ausstellung &quot;What Lies Below Is Another Above&quot;</div>
                     </div>
                 </div>
             
@@ -1862,18 +1838,6 @@ Link zur Online-Nennung:
                     </div>
                 </div>
             
-                <div class="termin" data-quelle="gegendruck">
-                    <div class="termin-zeit">18:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://theater-gegendruck.de/termin/furcht-und-elend-des-iii-reiches-3/" target="_blank" rel="noopener noreferrer">FURCHT UND ELEND DES III. REICHES</a>
-                            <span class="badge badge-gegendruck">Theater Gegendruck</span> <span class="badge badge-kategorie">Theater</span>
-                        </div>
-                        <div class="termin-ort">Theater im Atelierhaus, Königstraße 49a, Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">von Bertolt Brecht unter Verwendung von Passagen aus Das Dritte Reich des Traums von Charlotte Beradt Furcht und Elend des III. Reiches, Probenfoto: Matthias Schilling Bertolt Brecht schreibt die Szenenfolge über den Alltag im nationalsozialistischen Deutschland 1934 bis 1938 im dänischen Exil. In kurzen und längeren Episoden schildert der Theaterautor in Furcht und Elend des III. Reiches eindringlich, was in seinem Heimatland geschieht. Entstanden ist eine zeitlose Studie, wie Gewalt und Terror eines faschistischen Systems ihre Wirkung zeigen und den Alltag einer Gesellschaft bis in seine kleinsten Poren durchsetzen. Zu erleben ist ein Klima der Angst und der Denunziation, das auch vor der Familie nicht haltmacht. Der Ort: Arbeiter- und Bürgerwohnungen. Zu sehen sind: „die gesten des vers</div>
-                    </div>
-                </div>
-            
                 <div class="termin" data-quelle="cineworld">
                     <div class="termin-zeit">18:30 / 20:45 Uhr</div>
                     <div class="termin-info">
@@ -1906,18 +1870,6 @@ Link zur Online-Nennung:
                             <span class="badge badge-cineworld">Cineworld</span> <span class="badge badge-kategorie">Kino</span>
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
-                        
-                    </div>
-                </div>
-            
-                <div class="termin" data-quelle="vesterleben">
-                    <div class="termin-zeit">20:00 Uhr</div>
-                    <div class="termin-info">
-                        <div class="termin-name">
-                            <a href="https://vesterleben.de/termin-detail/gemeinsam-laut-rabies-urbis-sebel" target="_blank" rel="noopener noreferrer">GEMEINSAM LAUT! Rabies, Urbis &amp; Sebel</a>
-                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
-                        </div>
-                        <div class="termin-ort">Recklinghausen</div>
                         
                     </div>
                 </div>
@@ -2519,6 +2471,18 @@ Link zur Online-Nennung:
                         </div>
                         <div class="termin-ort">Cineworld, Kemnastr. 3</div>
                         
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="manuell">
+                    <div class="termin-zeit">14:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <span class="termin-toggle" onclick="this.closest('.termin').classList.toggle('expanded')">Schallplatten Kunsthaus (SKH 5.0) - Eröffnung</span>
+                            <span class="badge badge-manuell">Redaktion</span> <span class="badge badge-kategorie">Fest</span>
+                        </div>
+                        <div class="termin-ort">Breite Str. 7, 45657 Recklinghausen</div>
+                        <div class="termin-beschreibung">Pop-up-Laden mit Schallplatten, CDs, Bildern, Keramik, Kunsthandwerk und Vintage Fashion, dazu Konzerte, Lesungen und weitere Events. Geöffnet vom 7. Oktober bis 19. Dezember 2026, mittwochs bis freitags 14-18:30 Uhr, samstags 11-18 Uhr sowie an verkaufsoffenen Sonntagen. Ein Teil der Erlöse wird an mehrere caritative Einrichtungen gespendet.</div>
                     </div>
                 </div>
             
@@ -3580,6 +3544,30 @@ Wir freuen uns auf euch!</div>
             <h2 class="datum-header">Mi 14.10.2026</h2>
             <div class="termine-liste">
         
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">06:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/troedelmarkt-vestlandhalle-19" target="_blank" rel="noopener noreferrer">Trödelmarkt Vestlandhalle</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">09:30 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/ki-fuer-powerpoint-praesentationen" target="_blank" rel="noopener noreferrer">KI für PowerPoint-Präsentationen</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
+                        
+                    </div>
+                </div>
+            
                 <div class="termin" data-quelle="seniorenbeirat">
                     <div class="termin-zeit">10:00–13:00 Uhr</div>
                     <div class="termin-info">
@@ -3636,6 +3624,18 @@ Wir freuen uns auf euch!</div>
                             <span class="badge badge-ratssitzungen">Ratssitzungen</span> <span class="badge badge-kategorie">Politik</span>
                         </div>
                         <div class="termin-ort">Zentraler Betriebshof, EG, Raum Remise 33, Beckbruchweg 33</div>
+                        
+                    </div>
+                </div>
+            
+                <div class="termin" data-quelle="vesterleben">
+                    <div class="termin-zeit">17:00 Uhr</div>
+                    <div class="termin-info">
+                        <div class="termin-name">
+                            <a href="https://vesterleben.de/termin-detail/zwangsarbeiter-und-zwangsarbeiterinnen-in" target="_blank" rel="noopener noreferrer">Zwangsarbeiter und Zwangsarbeiterinnen in</a>
+                            <span class="badge badge-vesterleben">Vesterleben.de</span> <span class="badge badge-kategorie">Kultur</span>
+                        </div>
+                        <div class="termin-ort">Recklinghausen</div>
                         
                     </div>
                 </div>
@@ -5591,7 +5591,7 @@ Besucht uns auch sonntags von 11 bis 13 Uhr, wenn ihr kostenlos in der Bücherei
         </div>
 
         <footer>
-            Generiert am 04.10.2026 um 06:36 Uhr<br>
+            Generiert am 05.10.2026 um 06:37 Uhr<br>
             Quellen:
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;

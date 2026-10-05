@@ -559,5 +559,40 @@
         "freigegeben": true,
         "hw_mail": "gmx:131a9530273c40ada18888e75f1e9f07@recklinghausen.de",
         "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Schallplatten Kunsthaus (SKH 5.0) - Eröffnung",
+        "datum": "2026-10-07",
+        "uhrzeit": "14:00",
+        "ort": "Breite Str. 7, 45657 Recklinghausen",
+        "link": "",
+        "beschreibung": "Pop-up-Laden mit Schallplatten, CDs, Bildern, Keramik, Kunsthandwerk und Vintage Fashion, dazu Konzerte, Lesungen und weitere Events. Geöffnet vom 7. Oktober bis 19. Dezember 2026, mittwochs bis freitags 14-18:30 Uhr, samstags 11-18 Uhr sowie an verkaufsoffenen Sonntagen. Ein Teil der Erlöse wird an mehrere caritative Einrichtungen gespendet.",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "gmx:009b01dd527d$a39ba8a0$ead2f9e0$@agentur-prinz.de"
+    },
+    {
+        "name": "Bilderbuchkino: „Die kleine Hexe – Ausflug mit Abraxas“ und „Philipp im Leuchtturm“",
+        "datum": "2026-10-10",
+        "uhrzeit": "16:00",
+        "ort": "Stadtbibliothek im Haus der Bildung, Am Neumarkt 19, Recklinghausen-Süd",
+        "link": "",
+        "beschreibung": "Mitarbeiter*innen der Stadtbibliothek lesen Kindern die Bilderbücher „Die kleine Hexe – Ausflug mit Abraxas“ und „Philipp im Leuchtturm“ vor, die Bilder werden dabei auf eine Leinwand projiziert. Das Angebot richtet sich an Familien mit Kindern zwischen vier und acht Jahren. Die Teilnahme ist kostenfrei, eine Voranmeldung ist nicht nötig.",
+        "kategorie": "Familie",
+        "freigegeben": false,
+        "hw_mail": "gmx:033d912fed9b44e4a1f2a08a862455f6@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-08 (stadtbibliothek): Bilderbuchkino in Süd - Datum abweichend?; Wochentag im Beleg passt nicht zum Datum"
+    },
+    {
+        "name": "Deutschlandticket-Kurs der VHS: Sicher unterwegs mit dem Deutschlandticket",
+        "datum": "2026-10-06",
+        "uhrzeit": "10:00",
+        "ort": "Willy-Brandt-Haus, Herzogswall 17, Recklinghausen",
+        "link": "",
+        "beschreibung": "Tagesveranstaltung der Volkshochschule mit Kursleiter Klaus Herrmann zur sicheren Nutzung des Deutschlandtickets, u.a. Ticketbuchung, Apps und Routenplanung. Die Teilnahmegebühr beträgt 10 Euro, Anmeldung bei der VHS (Kursnummer 26B-1210, Tel. 02361 50 20 00).",
+        "kategorie": "Bildung",
+        "freigegeben": false,
+        "hw_mail": "gmx:f285a8d10f7b4d229ced6a500220f5e8@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-13 (ratssitzungen): Sitzung des Ausschusses für Ordnung und Sicherheit, Feuerweh - Datum abweichend?"
     }
 ]
