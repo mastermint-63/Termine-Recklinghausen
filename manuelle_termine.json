@@ -594,5 +594,108 @@
         "freigegeben": false,
         "hw_mail": "gmx:f285a8d10f7b4d229ced6a500220f5e8@recklinghausen.de",
         "hinweis": "ähnlicher Termin am 2026-10-13 (ratssitzungen): Sitzung des Ausschusses für Ordnung und Sicherheit, Feuerweh - Datum abweichend?"
+    },
+    {
+        "name": "Mittelaltermarkt an der Drachenbrücke",
+        "datum": "2026-10-09",
+        "uhrzeit": "15:00",
+        "ort": "Drachenbrücke, Hochlarmark, Recklinghausen",
+        "link": "",
+        "beschreibung": "Mittelaltermarkt auf dem ehemaligen Zechengelände an der Drachenbrücke mit mittelalterlichem Handwerk, Händlern, Tavernen, Lagerleben, Musik und Unterhaltung. Veranstaltung läuft von Freitag, 9. Oktober (15-22 Uhr) bis Sonntag, 11. Oktober (11-17 Uhr), am Samstag 11-23 Uhr. Überschüsse kommen dem Ambulanten Kinder- und Jugendhospizdienst Kreis Recklinghausen zugute.",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "gmx:a1a881f611f44fbdb5e0646eaf6f2bab@recklinghausen.de"
+    },
+    {
+        "name": "Mezzoforte: Vom Wandern - Konzert mit Marie Borger und Thorsten Töpp",
+        "datum": "2026-10-11",
+        "uhrzeit": "16:00",
+        "ort": "Gymnasialkirche, Gymnasium Petrinum, Recklinghausen",
+        "link": "",
+        "beschreibung": "Auftaktkonzert der neuen Reihe 'Mezzoforte' mit der Mezzosopranin Marie Borger und dem Konzertgitarristen Thorsten Töpp unter dem Titel 'Vom Wandern'. Gespielt werden Werke von John Dowland und Franz Schubert sowie eine Neukomposition nach Texten von Mascha Kalèko. Der Eintritt ist frei, um eine Spende am Ausgang wird gebeten.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:f133a5f2049e4a8cb38e116264d23080@recklinghausen.de"
+    },
+    {
+        "name": "Schnupper-Fahrstunde für Senior*innen",
+        "datum": "2026-10-17",
+        "uhrzeit": "",
+        "ort": "Recklinghausen (genaue Treffpunkte je nach Teilnehmerzahl per E-Mail)",
+        "link": "",
+        "beschreibung": "Der Seniorenbeirat der Stadt Recklinghausen bietet in Zusammenarbeit mit der Fahrschule Flögel eine halbstündige Schnupper-Fahrt durch die Stadt mit einer erfahrenen Fahrlehrerin an. Die Fahrt kann im eigenen Auto oder im Fahrschulwagen stattfinden, Kosten 40 Euro pro Person. Anmeldung bis 10. Oktober per E-Mail an j.herrmann@info-sbre.de.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "gmx:500de7e5818c4b5e8f7aea78ed38becc@recklinghausen.de"
+    },
+    {
+        "name": "RE leuchtet 2026 - Eröffnung mit Rathausshow",
+        "datum": "2026-10-23",
+        "uhrzeit": "19:30",
+        "ort": "Rathausplatz, Recklinghausen",
+        "link": "",
+        "beschreibung": "Eröffnung des Lichterfestivals „RE leuchtet 2026“ unter dem Motto „Träume unterm Sternenhimmel“. Das Festival läuft bis zum 8. November, die Rathausshow wird täglich ab 18 bis 21 Uhr gezeigt. Am Eröffnungstag startet die erste Show erst nach der Eröffnung.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+    },
+    {
+        "name": "RE leuchtet - Drohnenshow (Premiere)",
+        "datum": "2026-10-23",
+        "uhrzeit": "20:00",
+        "ort": "Recklinghausen",
+        "link": "",
+        "beschreibung": "Drohnenshow zur Premiere der Rathausshow im Rahmen des Festivals „RE leuchtet“.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Terrassenglühen",
+        "datum": "2026-10-24",
+        "uhrzeit": "18:00",
+        "ort": "Kirchplatz, Recklinghausen",
+        "link": "",
+        "beschreibung": "Programmpunkt im Rahmen von „RE leuchtet 2026“ auf dem Kirchplatz.",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de"
+    },
+    {
+        "name": "Ruhepol-Konzerte der Neuen Philharmonie Westfalen",
+        "datum": "2026-11-08",
+        "uhrzeit": "17:00",
+        "ort": "St. Peter, Recklinghausen",
+        "link": "",
+        "beschreibung": "Konzerte der Neuen Philharmonie Westfalen im Rahmen von „RE leuchtet 2026“ in der Kirche St. Peter, mit drei Terminen um 17, 17.45 und 18.30 Uhr.",
+        "kategorie": "Konzert",
+        "freigegeben": false,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-11-09 (sternwarte): Online-Vortragsreihe: Kulturastronomie und Archäoastronomie  - Datum abweichend?"
+    },
+    {
+        "name": "Verkaufsoffener Sonntag",
+        "datum": "2026-11-08",
+        "uhrzeit": "15:00",
+        "ort": "Altstadt, Recklinghausen",
+        "link": "",
+        "beschreibung": "Verkaufsoffener Sonntag in der Altstadt im Rahmen des Abschlusswochenendes von „RE leuchtet 2026“.",
+        "kategorie": "Sonstiges",
+        "freigegeben": false,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-09-18 (stadtbibliothek): Literaturtage 2026: Andreas Pietsch – Septembersonntag - Datum abweichend?"
+    },
+    {
+        "name": "Abschlusswochenende mit DJ Moguai",
+        "datum": "2026-11-07",
+        "uhrzeit": "",
+        "ort": "Rathausplatz, Recklinghausen",
+        "link": "",
+        "beschreibung": "Auftritt von DJ Moguai zum Abschlusswochenende von „RE leuchtet 2026“, der den Rathausplatz in eine Tanzfläche verwandelt. An diesem Tag findet keine Rathausshow statt.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de"
     }
 ]
