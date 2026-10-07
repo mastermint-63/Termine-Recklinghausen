@@ -697,5 +697,28 @@
         "kategorie": "Party",
         "freigegeben": true,
         "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de"
+    },
+    {
+        "name": "WO BIST DU DENN, und wo bin ich? – Bachmann und Frisch im Zeichen Hans Werner Henzes",
+        "datum": "2026-10-16",
+        "uhrzeit": "19:30",
+        "ort": "Ruhrfestspielhaus Recklinghausen",
+        "link": "",
+        "beschreibung": "Ein literarisch-musikalischer Abend mit Briefen, Bühnenszenen und Musik rund um Ingeborg Bachmann und Max Frisch, im Rahmen der Reihe Henze100. Es spielen Monika Bujinski und Michael Kamp, am Klavier Jay J. Wang; Musik von Henze, de Falla, Debussy und Mahler. Karten kosten 15 € und sind an der Abendkasse sowie über www.kultur-kommt-ticket.de erhältlich.",
+        "kategorie": "Theater",
+        "freigegeben": true,
+        "hw_mail": "gmx:9955473f56bf4f2bac6532c56dc190dc@recklinghausen.de"
+    },
+    {
+        "name": "Jahreskonzert des Akkordeon-Orchesters Recklinghausen e. V.",
+        "datum": "2026-10-10",
+        "uhrzeit": "17:00",
+        "ort": "Dorfhaus Essel, Esseler Straße 218, Recklinghausen",
+        "link": "",
+        "beschreibung": "Jahreskonzert des Akkordeon-Orchesters Recklinghausen e. V. im Dorfhaus Essel. Die stellvertretende Bürgermeisterin Bergmaier nimmt teil; die Stadt kündigt dazu einen Fototermin für die Presse an.",
+        "kategorie": "Konzert",
+        "freigegeben": false,
+        "hw_mail": "gmx:89dd31331c8d46a1b7cb4f9d897a6166@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-12-05 (stadt-re): Kaffee- und Kuchenkonzert des Jugendsinfonieorchesters - Datum abweichend?; Mail bezeichnet den Termin als Fototermin für die Presse, es ist unklar, ob das Konzert für die Öffentlichkeit zugänglich ist."
     }
 ]
