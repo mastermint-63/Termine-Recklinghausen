@@ -3801,3 +3801,209 @@ def hole_genial_re(jahr: int, monat: int) -> list[Termin]:
             ))
 
     return termine
+
+
+# ---------------------------------------------------------------------------
+# 39. Demokratie-Werkstadt RE — Fließtext-Seite (WordPress)
+# ---------------------------------------------------------------------------
+
+DEMOKRATIE_WERKSTADT_URL = "https://www.demokratie-werkstadt-re.de/termine/"
+
+_DW_MONATSKOPF_RE = re.compile(
+    r'^(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+(\d{4})$'
+)
+_DW_ZEIT_RE = re.compile(r'(\d{1,2}):(\d{2})\s*(?:-\s*\d{1,2}:\d{2})?\s*Uhr')
+_DW_ORT_RE = re.compile(
+    r'(?:str\.|straße|strasse|platz\b|Altstadtschmiede|Kinderschutzbund|Gruppenraum|Weinladen|Kirche\b|^Ort:)',
+    re.IGNORECASE,
+)
+
+
+def hole_demokratie_werkstadt(jahr: int, monat: int) -> list[Termin]:
+    """Holt Termine der Demokratie-Werkstadt RE (demokratie-werkstadt-re.de/termine/).
+
+    Prosa-Seite ohne JSON-LD/ICS: pro Monat eine Überschrift ("Oktober 2026"), darunter Termine
+    als Textblöcke, die mit dem Tag beginnen ("3. September 19:00-21:30 Uhr", "1.10. Liederabend, ...",
+    "11./25. Oktober, 16:00-18:00 Uhr"). Gelesen wird nur der Teil vor der Überschrift "Rückblick".
+    Der Titel steht inline oder in der Folgezeile, der Ort wird per Straßen-/Ortsmuster erkannt.
+    **Fragil:** bei Layoutänderungen prüfen. Die "Regelmäßig"-Hinweise (2./4. Sonntag usw.) werden
+    nicht ausgewertet, nur konkrete Monatstermine.
+    """
+    try:
+        response = _request_mit_retry(DEMOKRATIE_WERKSTADT_URL, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (demokratie-werkstadt): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    for tag in soup(['script', 'style', 'nav', 'header', 'footer']):
+        tag.decompose()
+    zeilen = [z.strip() for z in soup.get_text('\n').split('\n')]
+    zeilen = [z for z in zeilen if z]
+
+    # Nur den aktuellen Teil bis "Rückblick" lesen
+    ende = next((i for i, z in enumerate(zeilen) if z.lower() == 'rückblick'), len(zeilen))
+    zeilen = zeilen[:ende]
+
+    monate_pattern = '|'.join(_MONATE_DE.keys())
+    # Terminkopf: "3. September ...", "11./25. Oktober, ...", "1.10. ..."
+    kopf_re = re.compile(
+        r'^(\d{1,2}\.(?:/\d{1,2}\.)*)\s*(' + monate_pattern + r')?\b[\s,.:-]*(.*)$'
+        r'|^(\d{1,2})\.(\d{1,2})\.\s*(.*)$'
+    )
+
+    termine = []
+    akt_jahr, akt_monat = None, None
+    bloecke = []  # (jahr, monat, [tage], kopfrest, folgezeilen)
+    for z in zeilen:
+        mk = _DW_MONATSKOPF_RE.match(z)
+        if mk:
+            akt_monat, akt_jahr = _MONATE_DE[mk.group(1)], int(mk.group(2))
+            continue
+        if akt_jahr is None:
+            continue
+        # "1.10. Titel ..." (Tag.Monat.) hat Vorrang vor dem Namensmonat-Muster
+        m_num = re.match(r'^(\d{1,2})\.(\d{1,2})\.\s*(.*)$', z)
+        if m_num and int(m_num.group(2)) == akt_monat:
+            bloecke.append((akt_jahr, akt_monat, [int(m_num.group(1))], m_num.group(3), []))
+            continue
+        m = re.match(r'^((?:\d{1,2}\.\s*/?\s*)+)(' + monate_pattern + r')?\b(.*)$', z)
+        if m and (m.group(2) is None or _MONATE_DE[m.group(2)] == akt_monat):
+            tage = [int(t) for t in re.findall(r'\d{1,2}', m.group(1))]
+            # Zeile wie "5. Sitzung ..." ohne Monat und ohne Uhrzeit ist kein Terminkopf
+            if m.group(2) is None and not _DW_ZEIT_RE.search(m.group(3)):
+                if bloecke:
+                    bloecke[-1][4].append(z)
+                continue
+            bloecke.append((akt_jahr, akt_monat, tage, m.group(3), []))
+            continue
+        if bloecke:
+            bloecke[-1][4].append(z)
+
+    for b_jahr, b_monat, tage, kopfrest, folge in bloecke:
+        text_alle = ' '.join([kopfrest] + folge[:3])
+        zm = _DW_ZEIT_RE.search(kopfrest) or (_DW_ZEIT_RE.match(folge[0]) if folge else None)
+        uhrzeit = f'{int(zm.group(1)):02d}:{zm.group(2)} Uhr' if zm else 'siehe Website'
+        if zm and zm.string == kopfrest:
+            kopfrest = _DW_ZEIT_RE.sub('', kopfrest)
+        elif zm and folge:
+            folge = folge[1:] if _DW_ZEIT_RE.match(folge[0]) and not folge[0][zm.end():].strip() else folge
+        titel_inline = kopfrest.strip(' ,:-–—').strip()
+        folge = [f for f in folge if not re.match(r'^(Vorankündigung!?|Foto:.*|\(Foto.*|im|in)$', f)]
+        # Zeilen, die nur ein Satzzeichen-Anhängsel der vorigen sind (", Kellerstr., RE"), anhängen
+        verbunden = []
+        for f in folge:
+            if verbunden and f.startswith(','):
+                verbunden[-1] = f'{verbunden[-1]}{f}'
+            else:
+                verbunden.append(f)
+        folge = verbunden
+
+        # Ort: erste passende Zeile, abgebrochene Zeilen ("Kinderschutzbund,") mit der nächsten verbinden
+        ort, rest_start = '', 0
+        for i, f in enumerate(folge):
+            if _DW_ORT_RE.search(f) and len(f) < 120 and not f.endswith(':'):
+                ort = f
+                if f.endswith(',') and i + 1 < len(folge):
+                    ort = f'{f} {folge[i + 1]}'
+                    rest_idx = i + 2
+                else:
+                    rest_idx = i + 1
+                folge = folge[:i] + folge[rest_idx:]
+                break
+        ort = re.sub(r'^Ort:\s*', '', ort).strip(' ,')
+        if not ort or ort.lower().startswith('folgt'):
+            ort = 'Recklinghausen'
+        elif 'recklinghausen' not in ort.lower() and not re.search(r',\s*RE\b', ort):
+            ort = f'{ort}, Recklinghausen'
+
+        if titel_inline:
+            name = titel_inline
+        elif folge:
+            name = folge.pop(0).strip(' ,-–—')
+            if name.endswith(':') and folge:
+                name = f'{name} {folge.pop(0)}'
+            elif folge and folge[0][:1] in '„"“':
+                name = f'{name}: {folge.pop(0)}'
+        else:
+            continue
+        name = name.strip(' ,-–—')
+        beschreibung = ' '.join(folge)[:600]
+
+        for tag in tage:
+            try:
+                datum = datetime(b_jahr, b_monat, tag)
+            except ValueError:
+                continue
+            if not _im_monat(datum, jahr, monat):
+                continue
+            termine.append(Termin(
+                name=name[:150], datum=datum, uhrzeit=uhrzeit, ort=ort[:150],
+                link=DEMOKRATIE_WERKSTADT_URL, beschreibung=beschreibung,
+                quelle='demokratie-werkstadt', kategorie='Politik',
+            ))
+
+    return termine
+
+
+# ---------------------------------------------------------------------------
+# 40. Attac Recklinghausen — Blog-Freitext (TYPO3)
+# ---------------------------------------------------------------------------
+
+ATTAC_RE_URL = "https://www.attac-netzwerk.de/recklinghausen/termine"
+
+
+def _attac_re_alle() -> list[Termin]:
+    """Holt die Einladungen der Attac-Regionalgruppe Recklinghausen (attac-netzwerk.de/recklinghausen/termine).
+
+    Die Seite ist eine Liste von Einladungstexten ohne Terminstruktur, Satzmuster:
+    "am Montag, den 31. August 2026 um 19 Uhr in der Westerwaldstraße 27 Recklinghausen" bzw.
+    "am Donnerstag, 13. Februar 2025, ab 19 Uhr im Heinrich-Pardon-Haus (HPH) in Recklinghausen".
+    Es werden nur Termine übernommen, die dieses Muster mit Jahr, Uhrzeit und Ort erfüllen.
+    Die Gruppe lädt unregelmäßig ein (wenige Termine pro Jahr); 0 zukünftige Termine sind normal.
+    Gibt die gesamte Liste zurück, der Monatsfilter passiert in `hole_attac_re()`.
+    """
+    try:
+        response = _request_mit_retry(ATTAC_RE_URL, headers=HEADERS, timeout=30)
+    except requests.RequestException as e:
+        print(f"  Fehler beim Abrufen (attac-re): {e}")
+        return []
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    haupt = soup.find('main') or soup.body or soup
+    for tag in haupt(['script', 'style']):
+        tag.decompose()
+    text = re.sub(r'\s+', ' ', haupt.get_text(' '))
+
+    monate_pattern = '|'.join(_MONATE_DE.keys())
+    muster = re.compile(
+        r'am\s+(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag),?\s+(?:den\s+)?'
+        r'(\d{1,2})\.\s*(' + monate_pattern + r')\s+(\d{4})\s*,?\s*(?:um|ab)\s+(\d{1,2})(?:[.:](\d{2}))?\s*Uhr\s*,?\s*'
+        r'((?:in der|im|in den|in)\s+.{3,120}?)(?=\.\s+(?:Die|Interessierte|Wir)|\.$|$)'
+    )
+    termine = []
+    gesehen = set()
+    for m in muster.finditer(text):
+        tag, monat_name, jahr_str, std, minute, ort = m.groups()
+        try:
+            datum = datetime(int(jahr_str), _MONATE_DE[monat_name], int(tag))
+        except ValueError:
+            continue
+        if datum in gesehen:
+            continue
+        gesehen.add(datum)
+        ort = re.sub(r'^(?:in der|im|in den|in)\s+', '', ort).strip()
+        termine.append(Termin(
+            name='Öffentliche Diskussionsveranstaltung - attac Recklinghausen',
+            datum=datum, uhrzeit=f'{int(std):02d}:{minute or "00"} Uhr',
+            ort=ort if 'recklinghausen' in ort.lower() else f'{ort}, Recklinghausen',
+            link=ATTAC_RE_URL,
+            beschreibung='Einladung der attac-Regionalgruppe Recklinghausen. Die Tagesordnung wird zu Beginn des Abends besprochen.',
+            quelle='attac-re', kategorie='Politik',
+        ))
+    return termine
+
+
+def hole_attac_re(jahr: int, monat: int) -> list[Termin]:
+    """Attac Recklinghausen, gefiltert auf den Zielmonat (Signatur wie die übrigen Scraper)."""
+    return [t for t in _attac_re_alle() if _im_monat(t.datum, jahr, monat)]

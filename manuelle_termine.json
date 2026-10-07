@@ -720,5 +720,15 @@
         "freigegeben": false,
         "hw_mail": "gmx:89dd31331c8d46a1b7cb4f9d897a6166@recklinghausen.de",
         "hinweis": "ähnlicher Termin am 2026-12-05 (stadt-re): Kaffee- und Kuchenkonzert des Jugendsinfonieorchesters - Datum abweichend?; Mail bezeichnet den Termin als Fototermin für die Presse, es ist unklar, ob das Konzert für die Öffentlichkeit zugänglich ist."
+    },
+    {
+        "name": "Konzert: Tallana Gabriel und Boris Rosenthal",
+        "datum": "2026-10-25",
+        "uhrzeit": "17:00",
+        "ort": "Jüdische Kultusgemeinde, Am Polizeipräsidium 3, Recklinghausen",
+        "link": "https://jg-recklinghausen.de/veranstaltungen/",
+        "beschreibung": "Treffpunkt Synagoge, Eintritt frei. Die Berlinerin Tallana Gabriel (Jazz) und Gemeindeliebling Boris Rosenthal spielen beliebte jüdische, jiddische, israelische und russische Hits sowie amerikanische Jazz-Standards.",
+        "kategorie": "Konzert",
+        "freigegeben": true
     }
 ]

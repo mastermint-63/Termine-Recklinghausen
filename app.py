@@ -33,7 +33,8 @@ from scraper import (
     hole_gegendruck, hole_ev_akademie, hole_manuelle_termine, hole_ratssitzungen,
     hole_moondock, hole_facebook, hole_campus_emscherland,
     hole_agenda21, hole_selbsthilfegruppen_re, hole_katholisch_netzwerk,
-    hole_holzwurm, hole_selbsthilfe_kontaktstelle, hole_genial_re, Termin,
+    hole_holzwurm, hole_selbsthilfe_kontaktstelle, hole_genial_re,
+    hole_demokratie_werkstadt, hole_attac_re, Termin,
 )
 
 
@@ -82,6 +83,8 @@ QUELLEN = {
     'holzwurm': 'Holzwurm',
     'selbsthilfe-kontaktstelle': 'Selbsthilfe-Kontaktstelle',
     'genial-re': 'ge·ni·al e.V.',
+    'demokratie-werkstadt': 'Demokratie-Werkstadt',
+    'attac-re': 'Attac Recklinghausen',
 }
 
 # Footer-Quellenlinks (Anzeigename, URL). Werden im Footer per sorted() alphabetisch
@@ -95,6 +98,8 @@ FOOTER_QUELLEN = [
     ('Katholisch in RE', 'https://www.katholisch-re.de/aktuelles-termine/netzwerk'),
     ('Holzwurm', 'https://holzwurm-recklinghausen.de/veranstaltungen'),
     ('ge·ni·al e.V.', 'https://genial.re/all-events/'),
+    ('Demokratie-Werkstadt', 'https://www.demokratie-werkstadt-re.de/termine/'),
+    ('Attac Recklinghausen', 'https://www.attac-netzwerk.de/recklinghausen/termine'),
     ('Selbsthilfe-Kontaktstelle', 'https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine'),
     ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
     ('Campus Emscherland', 'https://www.campus-emscherland.eu/'),
@@ -189,6 +194,8 @@ SCRAPER = [
     (hole_holzwurm, 'Holzwurm'),
     (hole_selbsthilfe_kontaktstelle, 'Selbsthilfe-Kontaktstelle'),
     (hole_genial_re, 'ge·ni·al e.V.'),
+    (hole_demokratie_werkstadt, 'Demokratie-Werkstadt'),
+    (hole_attac_re, 'Attac Recklinghausen'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -237,6 +244,8 @@ def _ist_fuzzy_duplikat(name_a: str, name_b: str) -> bool:
 
 # Stoppwörter: zu generisch für Schlüsselwort-Dedup
 _STOPPWOERTER = {
+    # Generika ("Offenes Café" ≈ "Offenes Werkstadt-Treffen" wäre ein Fehlalarm)
+    'offenes', 'offene', 'offener', 'treffen',
     # Artikel, Präpositionen, Konjunktionen
     'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine',
     'und', 'oder', 'mit', 'für', 'von', 'zu', 'am', 'auf', 'aus', 'bei',
@@ -589,6 +598,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'holzwurm': 'badge-holzwurm',
                 'selbsthilfe-kontaktstelle': 'badge-selbsthilfe-kontaktstelle',
                 'genial-re': 'badge-genial-re',
+                'demokratie-werkstadt': 'badge-demokratie-werkstadt',
+                'attac-re': 'badge-attac-re',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -1342,6 +1353,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-genial-re {{
             background: linear-gradient(135deg, #3a9ac0 0%, #2a7fa3 100%);
+            color: white;
+        }}
+        .badge-demokratie-werkstadt {{
+            background: linear-gradient(135deg, #6b8e23 0%, #55731a 100%);
+            color: white;
+        }}
+        .badge-attac-re {{
+            background: linear-gradient(135deg, #cc5500 0%, #a84500 100%);
             color: white;
         }}
 
