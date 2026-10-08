@@ -730,5 +730,119 @@
         "beschreibung": "Treffpunkt Synagoge, Eintritt frei. Die Berlinerin Tallana Gabriel (Jazz) und Gemeindeliebling Boris Rosenthal spielen beliebte jüdische, jiddische, israelische und russische Hits sowie amerikanische Jazz-Standards.",
         "kategorie": "Konzert",
         "freigegeben": true
+    },
+    {
+        "name": "Klassenvorspiel Schlagzeug (Christian Schneider)",
+        "datum": "2026-10-10",
+        "uhrzeit": "11:00",
+        "ort": "Saal der Musikschule, Recklinghausen",
+        "link": "",
+        "beschreibung": "Klassenvorspiel der Schlagzeugklasse von Christian Schneider im Saal der Musikschule. Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+    },
+    {
+        "name": "Klassenvorspiel Violine (Bernd Kullack)",
+        "datum": "2026-10-14",
+        "uhrzeit": "17:00",
+        "ort": "Friedhofskapelle (Grüne Kapelle), Beisinger Weg 40, Recklinghausen",
+        "link": "",
+        "beschreibung": "Klassenvorspiel der Violinenklasse von Bernd Kullack in der Friedhofskapelle (Grüne Kapelle). Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+    },
+    {
+        "name": "Klassenvorspiel Schlagzeug (Kai Putzke)",
+        "datum": "2026-10-16",
+        "uhrzeit": "17:00",
+        "ort": "Saal der Musikschule, Recklinghausen",
+        "link": "",
+        "beschreibung": "Klassenvorspiel der Schlagzeugklasse von Kai Putzke im Saal der Musikschule. Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+    },
+    {
+        "name": "Bienenwachskerzen selber herstellen - Workshop",
+        "datum": "2026-10-20",
+        "uhrzeit": "10:00",
+        "ort": "Institut für Stadtgeschichte, Recklinghausen",
+        "link": "",
+        "beschreibung": "Ferienaktion der Imkerei Keinhörster: Workshop zum Herstellen einer Bienenwachskerze für Kinder ab 6 Jahren, Dauer ca. eine Stunde. Das Angebot ist kostenfrei, Anmeldung per E-Mail unter stadtgeschichte@recklinghausen.de erforderlich.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de"
+    },
+    {
+        "name": "Bienenwachskerzen selber herstellen - Workshop",
+        "datum": "2026-10-30",
+        "uhrzeit": "10:00",
+        "ort": "Institut für Stadtgeschichte, Recklinghausen",
+        "link": "",
+        "beschreibung": "Ferienaktion der Imkerei Keinhörster: Workshop zum Herstellen einer Bienenwachskerze für Kinder ab 6 Jahren, Dauer ca. eine Stunde. Das Angebot ist kostenfrei, Anmeldung per E-Mail unter stadtgeschichte@recklinghausen.de erforderlich.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de"
+    },
+    {
+        "name": "Philosophieseminar: Was ist Rechtspopulismus",
+        "datum": "2026-10-10",
+        "uhrzeit": "10:00",
+        "ort": "Volkshochschule (VHS) Recklinghausen",
+        "link": "",
+        "beschreibung": "Wochenendseminar zum Thema Rechtspopulismus unter Leitung von Prof. Dr. Martin-W. Schnell, das Phänomen analysiert und nach Alternativen fragt. Das Seminar findet an zwei Tagen (10. und 11. Oktober) jeweils von 10 bis 13 Uhr statt, die Teilnahmegebühr beträgt 25 Euro, Anmeldung bei der VHS bis 7. Oktober.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "gmx:14618e0815da43d0b627477bcb7c4057@recklinghausen.de"
+    },
+    {
+        "name": "Familienfest im Emscherland",
+        "datum": "2026-10-10",
+        "uhrzeit": "14:00",
+        "ort": "Natur- und Wasser-Erlebnispark Emscherland, Südliche Festwiese/Eingang Ost, Recklinghausen",
+        "link": "",
+        "beschreibung": "Familienfest im Natur- und Wasser-Erlebnispark Emscherland, Südliche Festwiese/Eingang Ost, mit Walk Act 'Rumbacoustic', Kinder-Animation, Essensständen und kostenfreien 90-minütigen Führungen um 14:30, 15:30 und 16:30 Uhr. Eintritt ist kostenfrei, Anmeldung für die Führungen am Infostand der Emschergenossenschaft.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:6262b3fa20e846838ac206e65a29e2dd@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-15 (ratssitzungen): Sitzung des Ausschusses für Kinder, Jugend und Familie - Datum abweichend?"
+    },
+    {
+        "name": "Theater in der Trauerhalle: \"G. Beine – Bestattungen aller Art\"",
+        "datum": "2026-11-13",
+        "uhrzeit": "19:00",
+        "ort": "Trauerhalle Nordfriedhof, Franz-Bracht-Straße 159, Recklinghausen",
+        "link": "",
+        "beschreibung": "Schauspieler Thomas Deutscher präsentiert in der Trauerhalle am Nordfriedhof das Solo-Stück „G. Beine – Bestattungen aller Art“, Idee und Regie: Eva Fels. Karten kosten zehn Euro und sind bei der Friedhofsverwaltung, Beckbruchweg 33, erhältlich.",
+        "kategorie": "Theater",
+        "freigegeben": false,
+        "hw_mail": "gmx:74a174e2d58d4f55a7da7e05fb60941d@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-11-06 (nlgr): Theater Ex Libris: „Frankenstein” - Datum abweichend?"
+    },
+    {
+        "name": "„Von der Ikone zum Comic“ – medienpädagogischer Workshop",
+        "datum": "2026-10-27",
+        "uhrzeit": "09:00",
+        "ort": "Ikonen-Museum Recklinghausen, Kirchplatz 2a",
+        "link": "",
+        "beschreibung": "Dreitägiger medienpädagogischer Workshop für Kinder und Jugendliche von 10 bis 14 Jahren, der Parallelen zwischen Ikonen und Comics erkundet. Der Workshop läuft bis zum 29. Oktober, jeweils von 9 bis 15 Uhr, ist kostenlos und erfordert Anmeldung bis zum 23. Oktober per E-Mail oder Telefon.",
+        "kategorie": "Bildung",
+        "freigegeben": false,
+        "hw_mail": "gmx:ddd31e9df2c64aaa8bf3d6ef4ec0b9da@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-07 (stadt-re): Digitale Medien und Kinder: Chancen nutzen, Risiken erkennen - Datum abweichend?"
+    },
+    {
+        "name": "Verbraucherforum 60+: Selbstbestimmt handeln im Alter",
+        "datum": "2026-10-22",
+        "uhrzeit": "09:30",
+        "ort": "Volkshaus Röhlinghausen, Am Alten Hof 28, Herne",
+        "link": "",
+        "beschreibung": "Die Seniorenbeiräte der Städte Recklinghausen und Herne laden gemeinsam mit der Verbraucher Initiative e.V. zu einem kostenfreien Verbraucherforum für Menschen ab 60 Jahren ein. In drei Vortragsblöcken informieren Experten zu Finanzen im Alter, Pflege- und Betreuungsangeboten sowie digitalen Assistenzsystemen. Anmeldung ist bis zum 19. Oktober erforderlich.",
+        "kategorie": "Vortrag",
+        "freigegeben": false,
+        "hw_mail": "gmx:194294f67dcb459dbb084656b1ff9cba@recklinghausen.de",
+        "hinweis": "Ort nicht (sicher) in Recklinghausen"
     }
 ]
