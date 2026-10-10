@@ -9,6 +9,14 @@ echo "=========================================="
 echo "Aktualisierung gestartet: $(date)"
 echo "=========================================="
 
+# Repo muss sauber auf main stehen. Ein hängender Rebase (Konflikt in einem früheren Lauf)
+# würde sonst Commits auf einen detached HEAD erzeugen, die nie gepusht werden (08.-10.10.2026).
+if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] || [ "$(git branch --show-current)" != "main" ]; then
+    echo "FEHLER: Git-Repo nicht auf main oder Rebase hängt – kein Lauf. Bitte von Hand lösen (git status)."
+    exit 1
+fi
+EXIT_CODE=0
+
 # Alte Event-Anzahl aus bestehenden HTML-Dateien auslesen
 ALTE_ANZAHL=0
 for html in termine_re_*.html; do
@@ -86,14 +94,19 @@ else
     git commit -m "$COMMIT_MSG" 2>&1
 
     # Rebase auf Remote-Stand, falls divergiert (Code-Pushes aus dev/termine/re)
-    git pull --rebase --autostash 2>&1
-
-    if git push 2>&1; then
+    if ! git pull --rebase --autostash 2>&1; then
+        # Konflikt (meist manuelle_termine.json): Rebase zurückrollen, lokaler Commit bleibt auf main
+        git rebase --abort 2>&1
+        echo "Rebase fehlgeschlagen – abgebrochen, kein Push. Konflikt von Hand lösen."
+        PUSH_STATUS="Rebase-Konflikt, kein Push!"
+        EXIT_CODE=1
+    elif git push 2>&1; then
         echo "Push erfolgreich!"
         PUSH_STATUS="GitHub aktualisiert"
     else
         echo "Push fehlgeschlagen!"
         PUSH_STATUS="Push fehlgeschlagen!"
+        EXIT_CODE=1
     fi
 fi
 
@@ -136,3 +149,4 @@ fi
 
 echo ""
 echo "Fertig: $(date)"
+exit $EXIT_CODE
