@@ -3182,6 +3182,104 @@ def hole_facebook(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
+# Eventim — via Apify-Actor (eventim.de selbst sperrt per Akamai)
+# ---------------------------------------------------------------------------
+
+# Gastspiele von Agenturen (Ruhrfestspielhaus, Ratskeller …) stehen oft nur bei Eventim.
+# Der Actor zen-studio~eventim-scraper filtert per Stadtname; techforce kennt nur 50
+# Großstädte, lentic ignorierte den Stadt-Slug, abotapi kam im Free-Plan nicht durch
+# den Proxy (Tests 10.10.2026). Kosten ca. 0,007 $ pro Event, Stand 10/2026 ~5 Events.
+EVENTIM_ACTOR_ID = "zen-studio~eventim-scraper"
+_EVENTIM_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.eventim_cache.json')
+_EVENTIM_CACHE_TAGE = 7
+_eventim_fehlgeschlagen = False  # pro Prozess nur ein Versuch, nicht einer pro Monat
+
+
+def _lade_eventim_cache() -> list[dict] | None:
+    try:
+        with open(_EVENTIM_CACHE) as f:
+            data = json.load(f)
+        if datetime.now().timestamp() - data.get('timestamp', 0) < _EVENTIM_CACHE_TAGE * 86400:
+            return data['events']
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        pass
+    return None
+
+
+def _eventim_zu_terminen(events: list[dict], jahr: int, monat: int) -> list[Termin]:
+    """Wandelt Actor-Datensätze in Termine um (nur Veranstaltungsort Recklinghausen)."""
+    tz_berlin = ZoneInfo('Europe/Berlin')
+    termine = []
+    for ev in events:
+        venue = ev.get('venue') or {}
+        if (venue.get('city') or '').strip().lower() != 'recklinghausen':
+            continue
+        if 'cancel' in (ev.get('status') or '').lower():
+            continue
+        name = (ev.get('eventName') or '').strip()
+        start = ev.get('startDate') or ''
+        if not name or not start:
+            continue
+        try:
+            dt = datetime.fromisoformat(start)
+        except ValueError:
+            continue
+        if dt.tzinfo:
+            dt = dt.astimezone(tz_berlin).replace(tzinfo=None)
+        if not _im_monat(dt, jahr, monat):
+            continue
+
+        ort = (venue.get('name') or '').strip()
+        if ort.isupper():
+            ort = ort.title()  # "RUHRFESTSPIELHAUS" → "Ruhrfestspielhaus"
+        kategorien = {(k or {}).get('name') for k in (ev.get('categories') or [])}
+
+        termine.append(Termin(
+            name=unescape(name)[:150],
+            datum=dt,
+            uhrzeit=dt.strftime('%H:%M Uhr') if (dt.hour or dt.minute) else 'siehe Website',
+            ort=(ort or 'Recklinghausen')[:150],
+            link=ev.get('eventUrl') or '',
+            beschreibung=unescape(ev.get('description') or '')[:800],
+            quelle='eventim',
+            kategorie='Konzert' if 'Konzerte' in kategorien else 'Kultur',
+        ))
+    return termine
+
+
+def hole_eventim(jahr: int, monat: int) -> list[Termin]:
+    """Eventim-Termine in Recklinghausen via Apify (max. 1x pro Woche, sonst Cache)."""
+    global _eventim_fehlgeschlagen
+    events = _lade_eventim_cache()
+
+    if events is None:
+        token = _lese_apify_token()
+        if not token or _eventim_fehlgeschlagen:
+            return []
+        url = (f"https://api.apify.com/v2/acts/{EVENTIM_ACTOR_ID}/run-sync-get-dataset-items"
+               f"?timeout=300")
+        payload = {"city": "Recklinghausen", "maxResults": 100, "includeCategoryPricing": False}
+        try:
+            response = requests.post(url, json=payload, timeout=360,
+                                     headers={'Authorization': f'Bearer {token}'})
+            response.raise_for_status()
+            events = response.json()
+            if not isinstance(events, list):
+                raise ValueError('Antwort ist keine Liste')
+        except Exception as e:
+            _eventim_fehlgeschlagen = True
+            print(f"  [Eventim] Fehler: {str(e).replace(token, 'REDACTED')}")
+            return []
+        try:
+            with open(_EVENTIM_CACHE, 'w') as f:
+                json.dump({'timestamp': datetime.now().timestamp(), 'events': events}, f)
+        except OSError:
+            pass
+
+    return _eventim_zu_terminen(events, jahr, monat)
+
+
+# ---------------------------------------------------------------------------
 # 35. Campus Emscherland — kalender.digital JSON-API
 # ---------------------------------------------------------------------------
 

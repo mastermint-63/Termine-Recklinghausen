@@ -1,0 +1,264 @@
+[
+ {
+  "eventId": "22132159",
+  "eventName": "Peter Orloff & Schwarzmeer Kosaken-Chor - Abschiedskonzert",
+  "eventUrl": "https://www.eventim.de/event/peter-orloff-schwarzmeer-kosaken-chor-die-abschiedstournee-kath-kirche-st-antonius-22132159/",
+  "description": "Peter Orloff auf letzter großer Tournee! Eine Legende nimmt Abschied",
+  "startDate": "2026-11-26T18:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Schlager & Volksmusik",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "Kath. Kirche St. Antonius",
+   "city": "Recklinghausen",
+   "streetAddress": null,
+   "postalCode": "45663",
+   "country": "DE",
+   "latitude": 51.61669999918886,
+   "longitude": 7.199999991772799
+  }
+ },
+ {
+  "eventId": "21714670",
+  "eventName": "Meet & Greet Upgrade - Heino - Made in Germany Solo-Tour",
+  "eventUrl": "https://www.eventim.de/event/heino-made-in-germany-solo-tour-stadthalle-oer-erkenschwick-20502685/",
+  "description": null,
+  "startDate": "2026-11-07T18:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Schlager & Volksmusik",
+    "parent": "Konzerte"
+   },
+   {
+    "name": "VIP & Extras"
+   },
+   {
+    "name": "VIP & Specials",
+    "parent": "VIP & Extras"
+   }
+  ],
+  "venue": {
+   "name": "Stadthalle Oer-Erkenschwick",
+   "city": "Oer-Erkenschwick",
+   "streetAddress": null,
+   "postalCode": "45739",
+   "country": "DE",
+   "latitude": 51.63330001890829,
+   "longitude": 7.250000013201585
+  }
+ },
+ {
+  "eventId": "20502685",
+  "eventName": "Heino - Made in Germany Solo Tour 2026",
+  "eventUrl": "https://www.eventim.de/event/heino-made-in-germany-solo-tour-stadthalle-oer-erkenschwick-20502685/",
+  "description": null,
+  "startDate": "2026-11-07T18:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Schlager & Volksmusik",
+    "parent": "Konzerte"
+   },
+   {
+    "name": "VIP & Extras"
+   },
+   {
+    "name": "VIP & Specials",
+    "parent": "VIP & Extras"
+   }
+  ],
+  "venue": {
+   "name": "Stadthalle Oer-Erkenschwick",
+   "city": "Oer-Erkenschwick",
+   "streetAddress": null,
+   "postalCode": "45739",
+   "country": "DE",
+   "latitude": 51.63330001890829,
+   "longitude": 7.250000013201585
+  }
+ },
+ {
+  "eventId": "21624852",
+  "eventName": "Bounce - Bon Jovi Tributeband",
+  "eventUrl": "https://www.eventim.de/event/bounce-bon-jovi-tributeband-maschinenhalle-sued-zeche-ewald-21624852/",
+  "description": "Seit 25 Jahren bringt die Bon-Jovi-Tributeband BOUNCE mit kraftvoller Stimme und energiegeladener Show den Sound von Bon Jovi nach Verden.",
+  "startDate": "2026-12-05T20:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Rock & Pop",
+    "parent": "Konzerte"
+   },
+   {
+    "name": "VIP & Extras"
+   },
+   {
+    "name": "VIP & Specials",
+    "parent": "VIP & Extras"
+   }
+  ],
+  "venue": {
+   "name": "Maschinenhalle Süd / Zeche Ewald",
+   "city": "Herten",
+   "streetAddress": null,
+   "postalCode": "45699",
+   "country": "DE",
+   "latitude": 51.599999998334184,
+   "longitude": 7.133329992477803
+  }
+ },
+ {
+  "eventId": "21961235",
+  "eventName": "Danceperados of Ireland - Life, love and lore of the Irish Travellers Tour",
+  "eventUrl": "https://www.eventim.de/event/danceperados-of-ireland-life-love-and-lore-of-the-irish-travellers-tour-stadthalle-oer-erkenschwick-21961235/",
+  "description": null,
+  "startDate": "2027-02-24T20:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Weitere Konzerte",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "Stadthalle Oer-Erkenschwick",
+   "city": "Oer-Erkenschwick",
+   "streetAddress": null,
+   "postalCode": "45739",
+   "country": "DE",
+   "latitude": 51.63330001890829,
+   "longitude": 7.250000013201585
+  }
+ },
+ {
+  "eventId": "21729360",
+  "eventName": "Mamma Mia - The Ultimative Abba Night",
+  "eventUrl": "https://www.eventim.de/event/mamma-mia-the-ultimative-abba-night-son-thai-ratskeller-recklinghausen-21729360/",
+  "description": "Die spektakuläre Mamma Mia - Abba Tour in deiner Stadt! Schnell Tickets sichern, bevor sie ausverkauft sind!",
+  "startDate": "2026-11-20T20:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Freizeit"
+   },
+   {
+    "name": "Party",
+    "parent": "Freizeit"
+   },
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Clubkonzerte",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "Ratskeller Recklinghausen",
+   "city": "Recklinghausen",
+   "streetAddress": null,
+   "postalCode": "45657",
+   "country": "DE",
+   "latitude": 51.61669999918886,
+   "longitude": 7.199999991772799
+  }
+ },
+ {
+  "eventId": "21659272",
+  "eventName": "Die Hommage an Udo Jürgens - Das Konzert mit Alex Parker",
+  "eventUrl": "https://www.eventim.de/event/die-hommage-an-udo-juergens-das-konzert-die-hommage-an-udo-juergens-das-konzert-mit-alex-parker-ruhrfestspielhaus-21659272/",
+  "description": "Die Tribute-Konzerte mit Alex Parker und einem musikalischen Weggefährten des unvergessenen Entertainers!",
+  "startDate": "2027-01-13T19:30:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Schlager & Volksmusik",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "RUHRFESTSPIELHAUS",
+   "city": "Recklinghausen",
+   "streetAddress": null,
+   "postalCode": "45657",
+   "country": "DE",
+   "latitude": 51.61669999918886,
+   "longitude": 7.199999991772799
+  }
+ },
+ {
+  "eventId": "22078313",
+  "eventName": "Get Back - A Tribute to The Beatles",
+  "eventUrl": "https://www.eventim.de/event/get-back-a-tribute-to-the-beatles-ratskeller-recklinghausen-22078313/",
+  "description": "Spricht man über die Beatles, kommt man an Superlativen nicht vorbei.",
+  "startDate": "2026-11-28T21:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Clubkonzerte",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "Ratskeller Recklinghausen",
+   "city": "Recklinghausen",
+   "streetAddress": null,
+   "postalCode": "45657",
+   "country": "DE",
+   "latitude": 51.61669999918886,
+   "longitude": 7.199999991772799
+  }
+ },
+ {
+  "eventId": "21700501",
+  "eventName": "Gymmick - Die große Gymmick Show",
+  "eventUrl": "https://www.eventim.de/event/gymmick-solo-ratskeller-recklinghausen-21700501/",
+  "description": "Skurrile Gedanken, scharfe Songs und messerscharfe Cartoons. Ein intim witziger Abend mit Gymmick, der zwischen Lachen und Rührung die Welt neu zusammensetzt.",
+  "startDate": "2027-03-18T20:00:00+01:00",
+  "status": "Available",
+  "categories": [
+   {
+    "name": "Konzerte"
+   },
+   {
+    "name": "Weitere Konzerte",
+    "parent": "Konzerte"
+   }
+  ],
+  "venue": {
+   "name": "Ratskeller Recklinghausen",
+   "city": "Recklinghausen",
+   "streetAddress": null,
+   "postalCode": "45657",
+   "country": "DE",
+   "latitude": 51.61669999918886,
+   "longitude": 7.199999991772799
+  }
+ }
+]

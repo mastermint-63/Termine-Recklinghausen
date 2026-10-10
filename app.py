@@ -34,7 +34,7 @@ from scraper import (
     hole_moondock, hole_facebook, hole_campus_emscherland,
     hole_agenda21, hole_selbsthilfegruppen_re, hole_katholisch_netzwerk,
     hole_holzwurm, hole_selbsthilfe_kontaktstelle, hole_genial_re,
-    hole_demokratie_werkstadt, hole_attac_re, Termin,
+    hole_demokratie_werkstadt, hole_attac_re, hole_eventim, Termin,
 )
 
 
@@ -85,6 +85,7 @@ QUELLEN = {
     'genial-re': 'ge·ni·al e.V.',
     'demokratie-werkstadt': 'Demokratie-Werkstadt',
     'attac-re': 'Attac Recklinghausen',
+    'eventim': 'Eventim',
 }
 
 # Footer-Quellenlinks (Anzeigename, URL). Werden im Footer per sorted() alphabetisch
@@ -100,6 +101,7 @@ FOOTER_QUELLEN = [
     ('ge·ni·al e.V.', 'https://genial.re/all-events/'),
     ('Demokratie-Werkstadt', 'https://www.demokratie-werkstadt-re.de/termine/'),
     ('Attac Recklinghausen', 'https://www.attac-netzwerk.de/recklinghausen/termine'),
+    ('Eventim', 'https://www.eventim.de/city/recklinghausen-83/'),
     ('Selbsthilfe-Kontaktstelle', 'https://www.paritaetischer-recklinghausen.de/netzwerk-buergerengagement/selbsthilfe-kontaktstelle/aktuelles-und-termine'),
     ('Atelierhaus', 'https://atelierhaus-recklinghausen.de/kalendar/'),
     ('Campus Emscherland', 'https://www.campus-emscherland.eu/'),
@@ -196,6 +198,7 @@ SCRAPER = [
     (hole_genial_re, 'ge·ni·al e.V.'),
     (hole_demokratie_werkstadt, 'Demokratie-Werkstadt'),
     (hole_attac_re, 'Attac Recklinghausen'),
+    (hole_eventim, 'Eventim'),
     (hole_ratssitzungen, 'Ratssitzungen'),
     (hole_moondock, 'mOOndock'),
     (hole_facebook, 'Facebook'),
@@ -219,6 +222,7 @@ _QUELLEN_TIER: dict[str, int] = {
     'vesterleben': 2,
     'recklinghaeuser': 2,
     'facebook': 2,
+    'eventim': 2,
     # 'regioactive': 2,  # blockiert seit 2026-03; bei Reaktivierung aktivieren
 }
 
@@ -600,6 +604,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 'genial-re': 'badge-genial-re',
                 'demokratie-werkstadt': 'badge-demokratie-werkstadt',
                 'attac-re': 'badge-attac-re',
+                'eventim': 'badge-eventim',
             }
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
@@ -1363,6 +1368,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         }}
         .badge-attac-re {{
             background: linear-gradient(135deg, #cc5500 0%, #a84500 100%);
+            color: white;
+        }}
+
+        .badge-eventim {{
+            background: linear-gradient(135deg, #3a5a8c 0%, #2a4470 100%);
             color: white;
         }}
 

@@ -10,3 +10,4 @@ hw_state.db
 hw_pruefliste.md
 hw_neue_quellen.md
 .venv/
+.eventim_cache.json
