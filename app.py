@@ -270,6 +270,8 @@ _STOPPWOERTER = {
     'alltag', 'beruf', 'beruflichen', 'frau', 'frauen', 'mann', 'männer',
     'treffen', 'gruppe', 'trauer', 'trauergruppe',
     'reise', 'familienfragen',
+    # Fehlalarme 10.10.2026: Pflegegrad/Lichterlauf "kinder", Ausschüsse "sitzung"
+    'kinder', 'jugendliche', 'öffentlich', 'öffentliche', 'öffentlicher', 'sitzung', 'grundkurs',
 }
 
 
@@ -282,16 +284,34 @@ def _hat_markantes_schluesselwort(name_a: str, name_b: str) -> bool:
     for wort in woerter_a & woerter_b:
         if len(wort) >= 5:
             return True
-    # Zusammenschreibung: ganzer Name ohne Leerzeichen enthält Wort aus dem anderen
-    # z.B. "discofox" in "disco fox night" → kompakt_b = "discofoxnight"
-    kompakt_a = name_a.replace(' ', '')
-    kompakt_b = name_b.replace(' ', '')
+    # Zusammenschreibung: "discofox" ≈ "disco fox night". Der Treffer muss an Wortgrenzen
+    # beginnen und enden, sonst trifft "gustav" in "gustave" oder "sterne" in "sternenhimmel".
     for wort in woerter_a:
-        if len(wort) >= 6 and wort in kompakt_b:
+        if len(wort) >= 6 and _an_wortgrenzen(wort, name_b):
             return True
     for wort in woerter_b:
-        if len(wort) >= 6 and wort in kompakt_a:
+        if len(wort) >= 6 and _an_wortgrenzen(wort, name_a):
             return True
+    return False
+
+
+_BEUGUNG = ('', 'e', 'n', 's', 'en', 'es', 'er')
+
+
+def _an_wortgrenzen(wort: str, name: str) -> bool:
+    """True, wenn wort eine Folge ganzer Wörter von name ergibt (ohne Leerzeichen).
+    Lange Wörter (≥8) dürfen am Ende gebeugt sein: "seniorenbeirat" ≈ "seniorenbeirates"."""
+    teile = name.split()
+    for i in range(len(teile)):
+        kette = ''
+        for teil in teile[i:]:
+            kette += teil
+            if kette == wort:
+                return True
+            if len(wort) >= 8 and kette.startswith(wort) and kette[len(wort):] in _BEUGUNG:
+                return True
+            if len(kette) >= len(wort) + 2:
+                break
     return False
 
 
@@ -419,9 +439,13 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
             ist_duplikat = False
             for vorhandener in behalten:
                 norm_v = _normalisiere(vorhandener.name)
+                # Eine Quelle listet verschiedene Termine; unscharfe Stufen nur quellenübergreifend
+                gleiche_quelle = kandidat.quelle == vorhandener.quelle
                 # Stufe 1: Exakt gleich oder einer ist Teilstring des anderen
                 if norm_k == norm_v or norm_k in norm_v or norm_v in norm_k:
                     ist_duplikat = True
+                elif gleiche_quelle:
+                    continue
                 # Stufe 2: Fuzzy-Match + kompatible Uhrzeit
                 elif _ist_fuzzy_duplikat(norm_k, norm_v) and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit):
                     ist_duplikat = True
