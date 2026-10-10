@@ -615,7 +615,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
             # Name als Link oder aufklappbar
             if link_safe:
-                name_html = f'<a href="{link_safe}" target="_blank" rel="noopener noreferrer">{name_esc}</a>'
+                name_html = f'<a href="{_html.escape(link_safe)}" target="_blank" rel="noopener noreferrer">{name_esc}</a>'
             else:
                 name_html = f'<span class="termin-toggle" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{name_esc}</span>'
 
