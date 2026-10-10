@@ -339,6 +339,21 @@ def _hole_altstadtschmiede_beschreibung(url: str) -> str:
     return '\n'.join(texte)
 
 
+# Beginn einer Uhrzeit oder Zeitspanne: "18 Uhr", "19.30 Uhr", "14-16 Uhr", "14:00 bis 16:00 Uhr".
+# Ohne den optionalen Spannen-Teil träfe die Suche bei "14-16 Uhr" die Endzeit.
+_ALTSTADTSCHMIEDE_ZEIT_RE = re.compile(
+    r'(\d{1,2})(?:[.:](\d{2}))?(?:\s*(?:-|–|bis)\s*\d{1,2}(?:[.:]\d{2})?)?\s*Uhr')
+
+
+def _altstadtschmiede_uhrzeit(text: str) -> tuple[int, int] | None:
+    """Erste Uhrzeit im Text als (Stunde, Minute); bei Zeitspannen der Beginn."""
+    for m in _ALTSTADTSCHMIEDE_ZEIT_RE.finditer(text):
+        h, mi = int(m.group(1)), int(m.group(2) or 0)
+        if h < 24 and mi < 60:
+            return h, mi
+    return None
+
+
 def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von der Altstadtschmiede via JSON-LD + Beschreibungen von Detailseiten."""
     try:
@@ -394,17 +409,11 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
         # Uhrzeit aus der JSON-LD-Beschreibung extrahieren (z.B. "09.02. / 18 Uhr")
         beschreibung_html = data.get('description', '')
         beschreibung_kurz = _html_zu_text(beschreibung_html)
-        uhrzeit_match = re.search(r'(\d{1,2}(?:[.:]\d{2})?)\s*Uhr', beschreibung_kurz)
-        if uhrzeit_match:
-            zeit = uhrzeit_match.group(1).replace('.', ':')
-            if ':' not in zeit:
-                zeit += ':00'
-            uhrzeit = f"{zeit} Uhr"
-            try:
-                h, m = map(int, zeit.split(':'))
-                datum = datum.replace(hour=h, minute=m)
-            except ValueError:
-                pass
+        zeit = _altstadtschmiede_uhrzeit(beschreibung_kurz)
+        if zeit:
+            h, m = zeit
+            uhrzeit = f"{h:02d}:{m:02d} Uhr"
+            datum = datum.replace(hour=h, minute=m)
         else:
             uhrzeit = 'siehe Website'
 
