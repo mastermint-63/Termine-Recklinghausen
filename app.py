@@ -720,6 +720,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             "itemListElement": events_ld[:50]
         }
     }, ensure_ascii=False)
+    # Gescrapte Texte dürfen den <script>-Block nicht beenden ("</script>" im Titel)
+    jsonld = jsonld.replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
 
     html = f'''<!DOCTYPE html>
 <html lang="de">
