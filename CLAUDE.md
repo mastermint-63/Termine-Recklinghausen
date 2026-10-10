@@ -150,7 +150,7 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 | `hole_adfc()` | recklinghausen.adfc.de | JSON-API `api-touren-termine.adfc.de`, unitKey 164420 (Termine) + 16442006 (Radtouren), Stadtfilter "Recklinghausen", ein Request für alle Events |
 | `hole_atelierhaus()` | atelierhaus-recklinghausen.de | ICS-Feed (ai1ec Plugin); mehrtägige Ausstellungen erscheinen in jedem überlappenden Monat mit `kategorie='Ausstellung'`; iCal DTEND bei Ganztages-Events = exklusiver Folgetag (−1 Tag korrigieren) |
 | `hole_zu_gast_in_re()` | zu-gast-in-re.de/programm | Text-Parsing: Website-Builder (DM), Datum-Spans per Regex, ein Termin pro Festival-Tag; Seite enthält nur Vorjahresprogramm bis neues veröffentlicht wird |
-| `hole_re_leuchtet()` | re-leuchtet.de/programm | TEC REST-API (`wp-json/tribe/events/v1/events`); Jahresfestival, meist nur wenige Termine |
+| `hole_re_leuchtet()` | re-leuchtet.de/programm | Seit 10/2026 **ohne** The Events Calendar (REST-Route 404). Programmseite mit `article.rel-card`; jedes Vorkommen als JSON im Attribut `data-events` (`start` ISO mit Zeitzone, `venue`), Titel `h3 a`, Link `?rel_event=<slug>`, Kurztext `[data-excerpt]`. Ein Termin pro Vorkommen, Seite wird pro Lauf nur einmal geholt. Festival 23.10.-08.11.2026 (ca. 100 Vorkommen). Tests: `tests/test_re_leuchtet.py` |
 | `hole_frauenforum()` | — (kein Scraping) | Programmatisch: 3. Dienstag/Monat, 17 Uhr, Familienbüro Große Geldstraße 19; Pause Juli + Dezember |
 | `hole_josefeich()` | josefeich.de | JSON-LD `Event` (The Events Calendar Plugin); Kirchenmusik-Termine |
 | `hole_recklinghaeuser()` | der-recklinghaeuser.de | Fließtext-Parsing: deutsche Datumsformate ("Sa. 14. März 2026"), Titel + Uhrzeit aus Folgezeilen |

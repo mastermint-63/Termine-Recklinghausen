@@ -59,7 +59,6 @@ ADFC_API_URL = "https://api-touren-termine.adfc.de/api/eventItems/search"
 ADFC_UNIT_TERMINE = "164420"
 ADFC_UNIT_RADTOUREN = "16442006"
 ADFC_RE_URL = "https://recklinghausen.adfc.de/"
-RE_LEUCHTET_API = "https://re-leuchtet.de/wp-json/tribe/events/v1/events"
 RE_LEUCHTET_URL = "https://re-leuchtet.de/programm"
 ZU_GAST_URL = "https://www.zu-gast-in-re.de/programm"
 ATELIERHAUS_ICS = "https://atelierhaus-recklinghausen.de/?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events"
@@ -2080,48 +2079,63 @@ def hole_zu_gast_in_re(jahr: int, monat: int) -> list[Termin]:
 
 
 # ---------------------------------------------------------------------------
-# 23. RE-leuchtet — TEC REST-API
+# 23. RE-leuchtet — Programmseite (Kartenliste mit data-events-JSON)
 # ---------------------------------------------------------------------------
 
-def hole_re_leuchtet(jahr: int, monat: int) -> list[Termin]:
-    """Holt Events von RE-leuchtet via The Events Calendar REST-API."""
-    letzter_tag = monthrange(jahr, monat)[1]
-    params = {
-        'start_date': f'{jahr}-{monat:02d}-01',
-        'end_date': f'{jahr}-{monat:02d}-{letzter_tag}',
-        'per_page': 50,
-    }
-    try:
-        response = _request_mit_retry(RE_LEUCHTET_API, params=params, headers=HEADERS, timeout=30)
-        data = response.json()
-    except (requests.RequestException, ValueError) as e:
-        print(f"  Fehler beim Abrufen (re-leuchtet): {e}")
-        return []
+# Seit 10/2026 kein The Events Calendar mehr (REST-Route 404). Die Programmseite
+# listet alle Veranstaltungen als article.rel-card; jedes Vorkommen steht als JSON
+# im Attribut data-events (start als ISO mit Zeitzone, venue). Eine Seite, kein Blättern.
+_re_leuchtet_html: str | None = None
 
+
+def _re_leuchtet_parse(html: str, jahr: int, monat: int) -> list[Termin]:
+    """Ein Termin pro Vorkommen (data-events) im Zielmonat."""
+    soup = BeautifulSoup(html, 'html.parser')
+    tz_berlin = ZoneInfo('Europe/Berlin')
     termine = []
-    for event in data.get('events', []):
-        name = unescape(event.get('title', '').strip())
+    for karte in soup.select('article.rel-card'):
+        titel_a = karte.select_one('h3 a')
+        name = titel_a.get_text(strip=True) if titel_a else ''
         if not name:
             continue
-
-        start = event.get('start_date', '')
+        link = titel_a.get('href') or RE_LEUCHTET_URL
+        if not link.startswith(('http://', 'https://')):
+            link = RE_LEUCHTET_URL
+        excerpt = karte.select_one('[data-excerpt]')
+        beschreibung = excerpt.get_text(' ', strip=True)[:300] if excerpt else ''
         try:
-            datum = datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
-        except ValueError:
+            vorkommen = json.loads(karte.get('data-events') or '[]')
+        except json.JSONDecodeError:
             continue
-
-        uhrzeit = datum.strftime('%H:%M Uhr') if datum.hour or datum.minute else 'siehe Website'
-        ort = _tec_ort(event)
-        link = event.get('url', '') or RE_LEUCHTET_URL
-        beschreibung = _html_zu_text(event.get('description', ''))[:200]
-
-        termine.append(Termin(
-            name=name[:150], datum=datum, uhrzeit=uhrzeit,
-            ort=ort[:150], link=link, beschreibung=beschreibung,
-            quelle='re-leuchtet', kategorie='Kultur',
-        ))
-
+        for v in vorkommen:
+            try:
+                dt = datetime.fromisoformat(v.get('start') or '')
+            except ValueError:
+                continue
+            if dt.tzinfo:
+                dt = dt.astimezone(tz_berlin).replace(tzinfo=None)
+            if not _im_monat(dt, jahr, monat):
+                continue
+            termine.append(Termin(
+                name=name[:150], datum=dt,
+                uhrzeit=dt.strftime('%H:%M Uhr') if dt.hour or dt.minute else 'siehe Website',
+                ort=(v.get('venue') or 'Recklinghausen')[:150], link=link,
+                beschreibung=beschreibung, quelle='re-leuchtet', kategorie='Kultur',
+            ))
     return termine
+
+
+def hole_re_leuchtet(jahr: int, monat: int) -> list[Termin]:
+    """Holt das Programm von Recklinghausen leuchtet (Seite einmal pro Lauf)."""
+    global _re_leuchtet_html
+    if _re_leuchtet_html is None:
+        try:
+            response = _request_mit_retry(RE_LEUCHTET_URL, headers=HEADERS, timeout=30)
+            _re_leuchtet_html = response.text
+        except requests.RequestException as e:
+            print(f"  Fehler beim Abrufen (re-leuchtet): {e}")
+            _re_leuchtet_html = ''
+    return _re_leuchtet_parse(_re_leuchtet_html, jahr, monat) if _re_leuchtet_html else []
 
 
 # ---------------------------------------------------------------------------
