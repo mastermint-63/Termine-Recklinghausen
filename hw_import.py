@@ -86,7 +86,7 @@ ENV_PFAD = Path(os.environ.get("HW_ENV_FILE") or HIER / ".env")
 
 MODELLE = [m for m in [os.environ.get("HW_MODEL"), "claude-sonnet-5", "claude-haiku-4-5-20251001"] if m]
 MAX_MAILS_PRO_LAUF = 15
-MAX_UNBEKANNTE_PRO_LAUF = 5  # Kalender-Eingang: Mails von Absendern außerhalb der Redaktionsliste
+MAX_UNBEKANNTE_PRO_LAUF = 5  # Kalender-Eingang: Mails nicht authentifizierter oder unbekannter Absender
 MAX_TERMINE_PRO_MAIL = 30
 MAX_TEXT_ZEICHEN = 15000
 MAX_BILDER = 4  # Grenzen greifen VOR der Umwandlung (sips), nicht danach
@@ -1173,9 +1173,9 @@ def main():
     vorher_json = json.dumps(eintraege, sort_keys=True)
     vorher_korr = json.dumps(korrekturen, sort_keys=True)
     betreffs, summe = {}, {"auto": 0, "pruefen": 0, "verwerfen": 0}
-    fehler, verarbeitet, unbekannte = 0, 0, 0
+    fehler, verarbeitet, versuche, unbekannte = 0, 0, 0, 0
     for kandidat in kandidaten:
-        if verarbeitet >= args.max:
+        if versuche >= args.max:  # Fehlschläge zählen mit, sonst unbegrenzt viele Modellaufrufe
             log.warning("Limit von %d Mails pro Lauf erreicht", args.max)
             break
         if kandidat[0] == "kalender":
@@ -1189,9 +1189,10 @@ def main():
                 if not args.dry_run and not args.mail:
                     markiere_verarbeitet(con, ke.baue_mail(msg, uid, redaktion, mit_inhalt=False), "massenmail")
                 continue
-            if ke.vertrauensstufe(msg, redaktion)[0] == "unbekannt":
+            # Limit für alle nicht vertrauten Absender: auch gefälschte Redaktionsadressen (redaktion_unauth)
+            if ke.vertrauensstufe(msg, redaktion)[0] != "vertraut":
                 if unbekannte >= MAX_UNBEKANNTE_PRO_LAUF:
-                    log.warning("Limit von %d Mails unbekannter Absender erreicht, Rest im nächsten Lauf",
+                    log.warning("Limit von %d Mails nicht vertrauter Absender erreicht, Rest im nächsten Lauf",
                                 MAX_UNBEKANNTE_PRO_LAUF)
                     continue
                 unbekannte += 1
@@ -1210,6 +1211,7 @@ def main():
                 continue
         log.info("Verarbeite %s | %s | %s | %s", mail.schluessel, mail.datum.date(), mail.vertrauen,
                  mail.betreff[:70])
+        versuche += 1
         try:
             res = verarbeite_mail(client, mail, heute, args.dry_run, eintraege, korrekturen, bericht)
         except Exception as e:

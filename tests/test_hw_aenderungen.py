@@ -305,3 +305,44 @@ def test_verworfene_aus_presse_mails_stehen_nicht_im_bericht():
     bericht = hw.neuer_bericht()
     hw.verarbeite_mail(_Client(antwort), mail, HEUTE, True, [], [], bericht)
     assert bericht["verworfen"] == []
+
+
+# --------------------------------------------------------------------------- Grenzen im Hauptablauf
+
+def _lauf(monkeypatch, tmp_path, absender, auth, analysiere, anzahl=30):
+    from email.message import EmailMessage
+    import sys
+    mails = []
+    for i in range(anzahl):
+        m = EmailMessage()
+        for k, v in auth:
+            m[k] = v
+        m["From"] = absender
+        m["Subject"] = f"Mail {i}"
+        m["Message-ID"] = f"<m{i}@x.example>"
+        m.set_content("Am Freitag, 23.10.2026 um 19 Uhr Lesung.")
+        mails.append((i, m, False))
+    aufrufe = []
+    monkeypatch.setattr(hw, "STATE_PFAD", tmp_path / "state.db")
+    monkeypatch.setattr(hw, "_env", lambda n: "r@x.example" if n == "HW_REDAKTION" else "test")
+    monkeypatch.setattr(hw, "hole_kalender_mails", lambda heute, bericht, uid=None: mails)
+    monkeypatch.setattr(hw, "analysiere", lambda c, m, h: aufrufe.append(m.betreff) or analysiere())
+    monkeypatch.setattr(sys, "argv", ["hw_import.py", "--dry-run", "--nur-kalender"])
+    hw.main()
+    return aufrufe
+
+
+def test_gefaelschter_redaktionsabsender_faellt_unter_das_limit(monkeypatch, tmp_path):
+    aufrufe = _lauf(monkeypatch, tmp_path, "R <r@x.example>", [], lambda: {"termine": [], "aenderungen": [],
+                                                                         "terminseiten": []})
+    assert len(aufrufe) == hw.MAX_UNBEKANNTE_PRO_LAUF
+
+
+def test_fehlgeschlagene_auswertungen_zaehlen_zum_limit(monkeypatch, tmp_path):
+    auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=x.example"),
+            ("Authentication-Results", "spf.icloud.com; spf=pass")]
+
+    def kaputt():
+        raise RuntimeError("API-Fehler")
+    aufrufe = _lauf(monkeypatch, tmp_path, "R <r@x.example>", auth, kaputt)
+    assert len(aufrufe) == hw.MAX_MAILS_PRO_LAUF
