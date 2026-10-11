@@ -89,6 +89,8 @@ MAX_MAILS_PRO_LAUF = 15
 MAX_UNBEKANNTE_PRO_LAUF = 5  # Kalender-Eingang: Mails von Absendern außerhalb der Redaktionsliste
 MAX_TERMINE_PRO_MAIL = 30
 MAX_TEXT_ZEICHEN = 15000
+MAX_BILDER = 4  # Grenzen greifen VOR der Umwandlung (sips), nicht danach
+MAX_PDFS = 2
 MAX_HORIZONT_TAGE = 548  # ca. 18 Monate; darüber -> zur Prüfung
 
 KATEGORIEN = ["Konzert", "Vortrag", "Lesung", "Kunst", "Film", "Party", "Theater", "Ehrenamt", "Treffen",
@@ -243,7 +245,7 @@ def werte_teile_aus(teile: list, preview: str = "") -> tuple[str, list, list]:
         elif ct_l.startswith("text/calendar"):
             ics.append(_dekodiere(body, ct))
         elif (ct_l.startswith("image/") or ct_l.startswith("application/octet-stream")) \
-                and isinstance(body, bytes) and len(body) >= 20_000:
+                and isinstance(body, bytes) and len(body) >= 20_000 and len(bilder) < MAX_BILDER:
             typ = _bildtyp(body)
             if typ == "image/heic":
                 jpeg = _heic_zu_jpeg(body)
@@ -251,23 +253,24 @@ def werte_teile_aus(teile: list, preview: str = "") -> tuple[str, list, list]:
                     bilder.append(("image/jpeg", jpeg))
             elif typ and ct_l.startswith("image/"):
                 bilder.append((typ, _verkleinere(body, typ)))
-        elif ct_l.startswith("application/pdf") and isinstance(body, bytes) and len(body) <= 4_000_000:
+        elif ct_l.startswith("application/pdf") and isinstance(body, bytes) and len(body) <= 4_000_000 \
+                and len(pdfs) < MAX_PDFS:
             pdfs.append(body)
         elif ct_l.startswith("application/vnd.openxmlformats-officedocument.wordprocessingml.document") \
-                and isinstance(body, bytes) and len(body) <= 5_000_000:
+                and isinstance(body, bytes) and len(body) <= 5_000_000 and len(docx_dateien) < 2:
             docx_dateien.append(body)
 
     text = max(plain, key=len, default="")
     if len(text.strip()) < 40:
         text = max(html_txt, key=len, default=text)
-    docx_texte = [t for t in (_docx_zu_text(b) for b in docx_dateien[:2]) if t.strip()]
+    docx_texte = [t for t in (_docx_zu_text(b) for b in docx_dateien) if t.strip()]
     if docx_texte:
         text = (text + "\n\n[Angehängtes Word-Dokument]\n" + "\n\n---\n\n".join(docx_texte)).strip()
     if ics:
         text += "\n\n[Kalendereinladung im Anhang]\n" + "\n".join(ics)[:4000]
     if len(text.strip()) < 40 and preview:
         text = preview
-    return text[:MAX_TEXT_ZEICHEN], bilder[:4], pdfs[:2]
+    return text[:MAX_TEXT_ZEICHEN], bilder, pdfs
 
 
 def lade_mail(konto: str, mail_id: int) -> Mail:
@@ -1107,18 +1110,20 @@ def _env(name: str) -> str:
     return os.environ.get(name) or dotenv_values(ENV_PFAD).get(name) or ""
 
 
-def hole_kalender_mails(heute: date, bericht: dict, uid: int | None = None) -> list[tuple[Mail, bool]]:
-    """Quelle 1: IMAP-Ordner Kalender-Eingang. Fehler landen im Bericht, der Lauf geht weiter."""
+def hole_kalender_mails(heute: date, bericht: dict, uid: int | None = None) -> list[tuple[int, object, bool]]:
+    """Quelle 1: IMAP-Ordner Kalender-Eingang -> [(uid, msg, ist_massenmail)], noch nicht zerlegt.
+
+    Fehler landen im Bericht, der Lauf geht weiter.
+    """
     import kalender_eingang as ke
     try:
-        mails = ke.hole_mails(_env("ICLOUD_USER"), _env("ICLOUD_APP_PASSWORD"), ke.lese_redaktion(_env("HW_REDAKTION")),
-                              heute)
+        mails = ke.hole_mails(_env("ICLOUD_USER"), _env("ICLOUD_APP_PASSWORD"), heute)
     except ke.EingangFehler as e:
         log.error("Kalender-Eingang: %s", e)
         bericht["fehler"].append(f"Kalender-Eingang: {e}")
         return []
     if uid is not None:
-        mails = [(m, bulk) for m, bulk in mails if m.id == uid]
+        mails = [m for m in mails if m[0] == uid]
     log.info("Kalender-Eingang: %d Mail(s) im Fenster", len(mails))
     return mails
 
@@ -1144,17 +1149,19 @@ def main():
     con = state_db()
     bericht = neuer_bericht()
 
-    # Kandidaten: ("mail", Mail, ist_massenmail) aus dem Kalender-Eingang, ("em", (konto, id)) HW-markiert
-    # oder per --mail, ("presse", (konto, id)) automatisch erkannte Presse-Mails aus eM Client
+    # Kandidaten: ("kalender", (uid, msg, ist_massenmail)) aus dem Kalender-Eingang (erst bei Bedarf zerlegt),
+    # ("em", (konto, id)) HW-markiert oder per --mail, ("presse", (konto, id)) erkannte Presse-Mails aus eM Client
+    import kalender_eingang as ke
+    redaktion = ke.lese_redaktion(_env("HW_REDAKTION"))
     kandidaten = []
     if args.mail:
         konto, mid = args.mail.split(":", 1)
         if konto == "kalender":
-            kandidaten = [("mail", m, bulk) for m, bulk in hole_kalender_mails(heute, bericht, int(mid))]
+            kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht, int(mid))]
         else:
             kandidaten = [("em", (konto, int(mid)))]
     else:
-        kandidaten = [("mail", m, bulk) for m, bulk in hole_kalender_mails(heute, bericht)]
+        kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht)]
         if not args.nur_kalender:
             em = finde_hw_mail_ids()
             vorhandene = set(em)
@@ -1171,11 +1178,26 @@ def main():
         if verarbeitet >= args.max:
             log.warning("Limit von %d Mails pro Lauf erreicht", args.max)
             break
-        if kandidat[0] == "mail":
-            _, mail, massenmail = kandidat
+        if kandidat[0] == "kalender":
+            # Billige Prüfungen (State, Massenmail, Limit unbekannter Absender) VOR der Zerlegung der Anhänge
+            uid, msg, massenmail = kandidat[1]
+            schluessel = ke.schluessel(msg, uid)
+            if not args.mail and not args.force and ist_verarbeitet(con, schluessel):
+                continue
+            if massenmail:
+                log.info("Übersprungen (Massenmail): %s", schluessel)
+                if not args.dry_run and not args.mail:
+                    markiere_verarbeitet(con, ke.baue_mail(msg, uid, redaktion, mit_inhalt=False), "massenmail")
+                continue
+            if ke.vertrauensstufe(msg, redaktion)[0] == "unbekannt":
+                if unbekannte >= MAX_UNBEKANNTE_PRO_LAUF:
+                    log.warning("Limit von %d Mails unbekannter Absender erreicht, Rest im nächsten Lauf",
+                                MAX_UNBEKANNTE_PRO_LAUF)
+                    continue
+                unbekannte += 1
+            mail = ke.baue_mail(msg, uid, redaktion)
         else:
             konto, mid = kandidat[1]
-            massenmail = False
             try:
                 mail = lade_mail(konto, mid)
                 mail.presse_auto = kandidat[0] == "presse"
@@ -1184,19 +1206,8 @@ def main():
                 bericht["fehler"].append(f"{konto}:{mid} nicht lesbar")
                 fehler += 1
                 continue
-        if not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel):
-            continue
-        if massenmail:
-            log.info("Übersprungen (Massenmail): %s", mail.schluessel)
-            if not args.dry_run and not args.mail:
-                markiere_verarbeitet(con, mail, "massenmail")
-            continue
-        if mail.vertrauen == "unbekannt":
-            if unbekannte >= MAX_UNBEKANNTE_PRO_LAUF:
-                log.warning("Limit von %d Mails unbekannter Absender erreicht, Rest im nächsten Lauf",
-                            MAX_UNBEKANNTE_PRO_LAUF)
+            if not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel):
                 continue
-            unbekannte += 1
         log.info("Verarbeite %s | %s | %s | %s", mail.schluessel, mail.datum.date(), mail.vertrauen,
                  mail.betreff[:70])
         try:

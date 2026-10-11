@@ -155,10 +155,19 @@ def _datum(msg) -> datetime:
         return datetime.now()
 
 
-def baue_mail(msg, uid: int, redaktion: set[str]) -> hw.Mail:
-    text, bilder, pdfs = hw.werte_teile_aus(mime_teile(msg))
+def _message_id(msg) -> str:
+    return str(msg.get("Message-ID", "")).strip().strip("<> ")
+
+
+def schluessel(msg, uid: int) -> str:
+    """State-Schlüssel wie Mail.schluessel, ohne die Anhänge zu zerlegen."""
+    return f"{KONTO}:{_message_id(msg) or 'id-' + str(uid)}"
+
+
+def baue_mail(msg, uid: int, redaktion: set[str], mit_inhalt: bool = True) -> hw.Mail:
+    text, bilder, pdfs = hw.werte_teile_aus(mime_teile(msg)) if mit_inhalt else ("", [], [])
     stufe, grund = vertrauensstufe(msg, redaktion)
-    return hw.Mail(konto=KONTO, id=uid, message_id=str(msg.get("Message-ID", "")).strip().strip("<> "),
+    return hw.Mail(konto=KONTO, id=uid, message_id=_message_id(msg),
                    datum=_datum(msg), betreff=" ".join(str(msg.get("Subject", "")).split()),
                    absender=" ".join(str(msg.get("From", "")).split()), text=text, bilder=bilder, pdfs=pdfs,
                    vertrauen=stufe, vertrauen_grund=grund)
@@ -170,9 +179,13 @@ def parse(roh: bytes):
 
 # --------------------------------------------------------------------------- IMAP
 
-def hole_mails(user: str, passwort: str, redaktion: set[str], heute: date | None = None,
-               ordner: str = ORDNER) -> list[tuple[hw.Mail, bool]]:
-    """Alle Mails der letzten FENSTER_TAGE Tage -> [(Mail, ist_massenmail)]. Wirft EingangFehler."""
+def hole_mails(user: str, passwort: str, heute: date | None = None,
+               ordner: str = ORDNER) -> list[tuple[int, object, bool]]:
+    """Alle Mails der letzten FENSTER_TAGE Tage -> [(uid, msg, ist_massenmail)]. Wirft EingangFehler.
+
+    Die Anhänge werden hier noch nicht zerlegt (baue_mail()), damit bereits verarbeitete Mails,
+    Massenmails und unbekannte Absender über dem Limit keine Umwandlungen (sips) auslösen.
+    """
     if not user or not passwort:
         raise EingangFehler("ICLOUD_USER/ICLOUD_APP_PASSWORD nicht gesetzt")
     seit = (heute or date.today()) - timedelta(days=FENSTER_TAGE)
@@ -199,7 +212,7 @@ def hole_mails(user: str, passwort: str, redaktion: set[str], heute: date | None
                 log.error("Kalender-Eingang: Mail UID %s nicht lesbar", uid.decode())
                 continue
             msg = parse(roh)
-            ergebnis.append((baue_mail(msg, int(uid), redaktion), ist_massenmail(msg)))
+            ergebnis.append((int(uid), msg, ist_massenmail(msg)))
         return ergebnis
     except (imaplib.IMAP4.error, OSError) as e:
         raise EingangFehler(f"IMAP-Fehler ({type(e).__name__})") from None

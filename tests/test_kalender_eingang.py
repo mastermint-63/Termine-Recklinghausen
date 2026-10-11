@@ -261,3 +261,31 @@ def test_heic_als_octet_stream_wird_erkannt(tmp_path):
     m.add_attachment(heic, maintype="application", subtype="octet-stream", filename="IMG_0001.HEIC")
     _, bilder, _ = hw.werte_teile_aus(ke.mime_teile(m))
     assert len(bilder) == 1 and bilder[0][0] == "image/jpeg"
+
+
+# --------------------------------------------------------------------------- Grenzen vor der teuren Arbeit
+
+def test_bildumwandlung_hoechstens_vier_mal(monkeypatch):
+    aufrufe = []
+    monkeypatch.setattr(hw, "_heic_zu_jpeg", lambda b: aufrufe.append(1) or JPEG)
+    monkeypatch.setattr(hw, "_verkleinere", lambda b, t: aufrufe.append(1) or b)
+    heic = b"\x00\x00\x00\x18ftypheic" + b"\x00" * 25_000
+    teile = [("image/heic", heic)] * 50 + [("image/jpeg", JPEG)] * 50
+    _, bilder, _ = hw.werte_teile_aus(teile)
+    assert len(bilder) == 4 and len(aufrufe) == 4
+
+
+def test_docx_hoechstens_zwei_mal_gelesen(monkeypatch):
+    aufrufe = []
+    monkeypatch.setattr(hw, "_docx_zu_text", lambda b: aufrufe.append(1) or "Text")
+    ct = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    hw.werte_teile_aus([(ct, b"x" * 100)] * 20)
+    assert len(aufrufe) == 2
+
+
+def test_schluessel_ohne_zerlegung():
+    m = _mail(auth=_auth_pass())
+    assert ke.schluessel(m, uid=7) == "kalender:abc123@mailer.example"
+    del m["Message-ID"]
+    assert ke.schluessel(m, uid=7) == "kalender:id-7"
+    assert ke.schluessel(m, uid=7) == ke.baue_mail(m, 7, REDAKTION).schluessel
