@@ -62,9 +62,25 @@ launchctl start de.termine-re.update       # Manuell auslösen
 tail -f launchd.log                        # Live-Log
 ```
 
-## HW-Import (Mails mit eM-Client-Kategorie „HW" + automatische Presse-Erkennung)
+## HW-Import (Kalender-Eingang, eM-Client-Kategorie „HW" und automatische Presse-Erkennung)
 
-Die Redaktion (Ralf, Erich, Klaus) schickt Termine, Plakatfotos und Terminseiten per Mail. Frank markiert relevante Mails in eM Client mit der Kategorie **„HW"**. `hw_import.py` liest sie nachts aus und pflegt sie ein.
+Die Redaktion (FS, Ralf, Erich, Klaus) schickt Termine, Korrekturen, Absagen, Plakatfotos und Terminseiten per Mail. `hw_import.py` liest sie nachts aus und pflegt sie ein. Drei Quellen:
+
+1. **Kalender-Eingang (seit 10/2026, Spec `docs/superpowers/specs/2026-10-10-kalender-eingang-design.md`):** Die Redaktion schreibt an einen iCloud-Alias von FS. Eine iCloud-Serverregel verschiebt diese Mails in den IMAP-Ordner `Kalender-Eingang`. Merkmal ist der **Ordner**, nicht die Empfängerzeile (iCloud setzt kein `Delivered-To`). Gelesen wird direkt per IMAP (`kalender_eingang.py`, eigenes `imaplib`-Modul, keine Abhängigkeit von `prod/mail`), weil eM Client Ordner außerhalb des Posteingangs teils tagelang verspätet synchronisiert. Strikt lesend: `SELECT … readonly`, `BODY.PEEK[]` (iCloud liefert bei `RFC822` leer), Fenster 30 Tage, State-Schlüssel `kalender:<Message-ID>`. Der Mail-Organizer arbeitet nur im Posteingang und fasst den Ordner nicht an.
+2. **eM Client, Kategorie „HW":** FS markiert Mails anderer Absender (Vereine, externe Veranstalter) in eM Client.
+3. **eM Client, Presse-Erkennung:** siehe unten.
+
+> **Öffentliches Repo:** Alias und Absenderadressen stehen **nur** in `prod/termine/secrets/termine-hw.env` (`ICLOUD_USER`, `ICLOUD_APP_PASSWORD` = eigenes app-spezifisches Passwort nur für diesen Job, `HW_REDAKTION` = kommagetrennte Absenderliste). Nie in Code, Tests, Fixtures, Commits oder diese Datei.
+
+**Vertrauensstufen im Kalender-Eingang** (`kalender_eingang.vertrauensstufe()`):
+
+| Stufe | Bedingung | Folge |
+|---|---|---|
+| `vertraut` | Absender in `HW_REDAKTION` **und** `dkim=pass` (`header.d` = Absenderdomain) oder `dmarc=pass` (`header.from` = Absenderdomain) laut iCloud | automatisch, wie HW-Mails |
+| `redaktion_unauth` | in der Liste, aber ohne DKIM/DMARC-Pass | alles zur Prüfung |
+| `unbekannt` | nicht in der Liste (oder mehrere From-Adressen) | alles zur Prüfung, max. 5 pro Lauf; Massenmails (`List-Id`/`List-Unsubscribe`) werden übersprungen |
+
+Gewertet werden nur die Prüfergebnisse von iCloud (`dkim-verifier.icloud.com`, `dmarc.icloud.com`), und je Prüfart nur der erste Eintrag bis zum ersten `spf.icloud.com`. iCloud setzt seinen Block oberhalb der Absender-Header; ein vom Absender eingeschmuggelter `dkim=pass`-Header stünde darunter und zählt nicht (Test mit echten Headern am 11.10.2026: GMX `dkim=pass`, `dmarc=pass`). Die VestReporter-Domain hat kein SPF/DKIM/DMARC, FS schreibt den Alias deshalb von GMX an. HW-markierte und Presse-Mails gelten weiter als `vertraut`.
 
 **Seit 26.09.2026 zusätzlich automatische Erkennung** von Pressemitteilungen der Pressestellen von Stadt und Kreis Recklinghausen (`_ist_presse_mail()`, `finde_presse_mail_ids()`) — **ohne** manuelle „HW"-Markierung. Hintergrund: Die manuelle Markierung war der eigentliche Flaschenhals (der Import selbst funktionierte, bekam aber tagelang keine Mails zugewiesen). Kriterium: Absenderadresse `PressestelleRecklinghausen@recklinghausen.de`, Anzeigename exakt „Kreis Recklinghausen" (die Adresse `info@presse-service.de` ist eine geteilte Presseservice-Adresse, die auch andere Kommunen wie Hamm nutzen — deshalb zählt dort nur der Anzeigename, nicht die Adresse), oder eine beliebige `@recklinghausen.de`-Adresse mit Betreff `PM:`/`PT:`/`Pressemitteilung:` (deckt einzelne Pressesprecher wie Hermann Böckmann ab). Rückblickfenster `AUTO_PRESSE_TAGE` (21 Tage). Die „HW"-Kategorie bleibt für alle anderen Absender (Vereine, externe Veranstalter) der Weg.
 
@@ -73,25 +89,39 @@ Bewusst **kein regelbasierter (KI-freier) Filter** für „ist das ein echter Te
 **Reine Presse-Fototermine ausgeschlossen:** Termine, die im Mailtext ausdrücklich als „Fototermin" bezeichnet sind (z.B. die wöchentliche Übersicht „Pressetermine für die Woche …"), meldet das Modell nicht (SYSTEM-Prompt-Regel 6) — das sind Zugangstermine für Fotografen, keine Publikumsveranstaltungen.
 
 ```
-05:30 launchd (de.holzwurm-hw-import) → hw_import.sh → hw_import.py → manuelle_termine.json
-06:30 launchd (de.termine-re.update)  → update.sh → HTML → git push (Veröffentlichung)
+00:30 launchd (termine-holzwurm) → hw_import.sh → hw_import.py → manuelle_termine.json, korrekturen.json, hw_bericht.json
+06:30 launchd (termine-re)       → update.sh → HTML → git push → Signal-Bericht (hw_bericht.py)
 ```
 
-- **Lesen:** eM-Client-SQLite, nur lesend (`MailCategoryNames.categoryName = 'HW'` ODER automatische Presse-Erkennung, alle 5 Konten). Bilder/PDFs werden dem Modell mitgegeben, große Fotos per `sips` auf 2000 px verkleinert. **Word-Anhänge (`.docx`)** werden per `python-docx` in Text umgewandelt und an den Mailtext angehängt — ca. 1 von 6 Presse-Mails der Stadt liefert den eigentlichen Text nur als `.docx`-Anhang, nicht im Mailbody (der Body enthält oft nur eine kurze Weiterleitungsnotiz).
-- **Extraktion:** ein Modellaufruf pro Mail (`claude-sonnet-5`, Fallback Haiku 4.5; `HW_MODEL` überschreibt) mit **erzwungenem Tool-Schema**. Mailinhalt gilt als Daten. API-Key aus `mail/.env` (wird nie geloggt).
-- **Validierung im Code, nicht im Modell:** gültiges Datum, nicht vergangen, **Beleg-Zitat muss im Mailtext stehen** (oder „BILD"/„PDF" bei Anhang), Wochentag im Beleg muss zum Datum passen, Link nur wenn im Mailtext, AfD-Filter (`app._AUSGESCHLOSSENE_MUSTER`), Ort in Recklinghausen, Ort oder Uhrzeit vorhanden.
+Die Uhrzeit des Imports steht im Manifest `~/ki/infra/launchd/jobs.toml` (Umstellung von 05:30 auf 00:30 mit der Einführung des Kalender-Eingangs). Folge von 00:30: Mails zwischen 00:30 und 06:30 warten einen Tag länger, auch Pressemitteilungen.
+
+- **Lesen:** Kalender-Eingang per IMAP (siehe oben); eM-Client-SQLite nur lesend (`MailCategoryNames.categoryName = 'HW'` ODER automatische Presse-Erkennung, alle 5 Konten). Beide Wege zerlegen die Mailteile mit derselben Funktion `werte_teile_aus()` (Text, HTML, ICS, Bilder, PDF, `.docx`). Bilder/PDFs werden dem Modell mitgegeben, große Fotos per `sips` auf 2000 px verkleinert. **Word-Anhänge (`.docx`)** werden per `python-docx` in Text umgewandelt und an den Mailtext angehängt — ca. 1 von 6 Presse-Mails der Stadt liefert den eigentlichen Text nur als `.docx`-Anhang, nicht im Mailbody (der Body enthält oft nur eine kurze Weiterleitungsnotiz).
+- **Extraktion:** ein Modellaufruf pro Mail (`claude-sonnet-5`, Fallback Haiku 4.5; `HW_MODEL` überschreibt) mit **erzwungenem Tool-Schema** (`termine`, `aenderungen`, `terminseiten`). Mailinhalt gilt als Daten; für den Kalender-Eingang ergänzt `SYSTEM_KALENDER` den Hinweis, dass weitergeleitete fremde Inhalte darin stecken können. API-Key aus der Env (`HW_ENV_FILE`, wird nie geloggt).
+- **Validierung im Code, nicht im Modell:** gültiges Datum, nicht vergangen, **Beleg-Zitat muss im Mailtext stehen** (oder „BILD"/„PDF" bei Anhang), Wochentag im Beleg muss zum Datum passen, Link nur wenn im Mailtext, AfD-Filter (`app._AUSGESCHLOSSENE_MUSTER`), Ort in Recklinghausen, Ort oder Uhrzeit vorhanden, Vertrauensstufe `vertraut`.
 - **Dubletten:** gegen die zuletzt generierten Monatsseiten mit `app.entferne_duplikate()`. **Konflikt-Check:** ähnlicher Termin einer Scraper-Quelle an anderem Tag (±60 Tage) → zur Prüfung (fängt widersprüchliche Daten, z.B. Mail 24.10. vs. Website 20.10.). Manuelle Serien sind ausgenommen.
-- **Ergebnis:** eindeutig → `freigegeben: true`; sonst `freigegeben: false` + `hinweis` + Eintrag in `hw_pruefliste.md`. Zum Freigeben `freigegeben` auf `true` setzen oder Eintrag löschen. Jeder Eintrag trägt `hw_mail` (Konto:Message-ID).
-- **Neue Terminseiten** landen in `hw_neue_quellen.md` mit Vorab-Befund (JSON-LD, ICS, TEC, EventPrime …). **Es wird bewusst kein Scraper automatisch geschrieben** — Entwicklung mit Claude Code an echten Daten. Bereits bekannte Hosts (Scraper-URLs + in dieser Doku erwähnte, z.B. verworfene Seiten) werden nicht erneut gemeldet.
-- **iMessage** (`IMESSAGE_TARGET` aus `mail/.env`) nur, wenn etwas eingetragen, zu prüfen, neu oder fehlerhaft ist.
-- **State:** `hw_state.db` (verarbeitete Mails, nach Message-ID). Erneut verarbeiten: `--force`; Einzeltest ohne Flag/State: `--mail konto:id`; nichts schreiben: `--dry-run`. `hw_state.db`, `hw_pruefliste.md`, `hw_neue_quellen.md` sind git-ignoriert (enthalten Mail-Betreffs).
-- **Grenzen:** max. 15 Mails pro Lauf; wird eine Mail nicht verarbeitet (API-Fehler), bleibt sie unmarkiert und kommt in der nächsten Nacht erneut. Die Modellantwort ist nicht deterministisch (gleiche Mail kann unterschiedlich viele Termine liefern) — deshalb die Code-Validierung und der State.
-- `update.sh` committet `manuelle_termine.json` mit (seit 21.09.2026), damit automatisch eingetragene Termine versioniert werden.
+- **Ergebnis neue Termine:** eindeutig → `freigegeben: true`; sonst `freigegeben: false` + `hinweis` + Eintrag in `hw_pruefliste.md`. Zum Freigeben `freigegeben` auf `true` setzen oder Eintrag löschen. Jeder Eintrag trägt `hw_mail` (Konto:Message-ID).
+- **Korrekturen und Absagen** (`aenderungen`, `bewerte_aenderung()`): Ziel ist genau **ein** Termin am bisherigen Datum, gesucht unter den freigegebenen Einträgen in `manuelle_termine.json` und den Scraper-Terminen der zuletzt generierten Monatsseite (`finde_ziele()`, Logik der Dublettenprüfung; Gleichheit/Teilstring hat Vorrang vor markantem Schlüsselwort). Kein oder mehrere Treffer, Beleg nicht im Text, Absender nicht vertraut → Prüfliste. Verteilung:
+
+  | Ziel | Uhrzeit/Ort | Datum verschoben | Absage |
+  |---|---|---|---|
+  | manueller Eintrag | direkt im Eintrag | direkt im Eintrag | `"abgesagt": true` |
+  | Scraper-Termin | Eintrag in `korrekturen.json` | **immer Prüfliste** | Eintrag in `korrekturen.json` |
+
+  Jede automatische Änderung an einem manuellen Eintrag hinterlässt `hw_aenderungen: [{mail, feld, alt, neu}]`. `quellfehler: true` (Mail sagt, eine Website hat falsche Angaben) → Hinweis im Bericht, der Scraper wird **nicht** angefasst.
+- **`korrekturen.json`** (versioniert, `update.sh` committet sie mit): `{datum, name, name_norm, quelle, aenderung: {uhrzeit|ort}, absage, hw_mail, freigegeben, angelegt}`, zur Prüfung zusätzlich `bezug_name` und `hinweis`. `app.wende_korrekturen_an()` wendet freigegebene Einträge **nach dem Scrapen und vor `entferne_duplikate()`** an, auf alle Termine des Tages, deren normalisierter Name gleich ist oder den anderen enthält (erwischt so die Dublette eines Aggregators). Datumsänderungen wendet der Generator nie an. Greift ein Eintrag nicht, druckt `app.py` „[Korrektur] nicht angewendet“, und der nächste Import meldet ihn im Bericht („Korrektur greift nicht mehr“). Einträge mit Datum älter als 14 Tage räumt der Import ab.
+- **Darstellung von Absagen:** Termin bleibt sichtbar, `data-abgesagt="1"` am `.termin`-Element, Badge **„Abgesagt“** (`.badge-abgesagt`), Titel und Uhrzeit durchgestrichen. Nicht im JSON-LD. Bei der Dublettenprüfung geht eine Absage nicht verloren (`Termin.abgesagt` wird auf den behaltenen Termin übertragen).
+- **Neue Terminseiten** landen in `hw_neue_quellen.md` mit Vorab-Befund (JSON-LD, ICS, TEC, EventPrime …). **Es wird bewusst kein Scraper automatisch geschrieben** — Entwicklung mit Claude Code an echten Daten (Spur B, später). Bereits bekannte Hosts (Scraper-URLs + in dieser Doku erwähnte, z.B. verworfene Seiten) werden nicht erneut gemeldet.
+- **Bericht per Signal:** `hw_import.py` schreibt `hw_bericht.json` (eingetragen, geändert, abgesagt, zur Prüfung, neue Seiten, Quellfehler, verwaiste Korrekturen, Kalender-Mails ohne Ergebnis, Fehler). `update.sh` ruft nach dem Push `hw_bericht.py --status live|unveraendert|fehler` auf, das per `hermes send --to signal` an FS schickt (Muster `mail_meldung.py`): nur Titel und Datum, bereinigt und gekürzt, keine Mailtexte, kein Versand ohne Inhalt, danach als `gesendet` markiert. Bei Push-Fehler kommt der Bericht mit „NICHT live“. Hermes-Pfad: `HW_HERMES_BIN`, sonst `~/.local/bin/hermes`. Die frühere iMessage entfällt. Mails aus dem Kalender-Eingang, aus denen das Modell nichts erkannt hat, stehen unter „Ohne Ergebnis“ (Aussetzer des Modells fallen so auf, im Test ca. 1 von 4 Läufen bei einer kurzen Absage).
+- **State:** `hw_state.db` (verarbeitete Mails, nach Message-ID). Erneut verarbeiten: `--force`; Einzeltest ohne Flag/State: `--mail konto:id` bzw. `--mail kalender:<IMAP-UID>`; nur Kalender-Eingang: `--nur-kalender`; nichts schreiben: `--dry-run`. `hw_state.db`, `hw_pruefliste.md`, `hw_neue_quellen.md`, `hw_bericht.json` sind git-ignoriert (enthalten Mail-Betreffs).
+- **Grenzen:** max. 15 Mails pro Lauf (davon max. 5 unbekannte Absender); wird eine Mail nicht verarbeitet (API-Fehler), bleibt sie unmarkiert und kommt in der nächsten Nacht erneut. IMAP-Fehler (Login, Ordner) brechen den Lauf nicht ab, die eM-Client-Quellen laufen weiter, der Fehler steht im Bericht. Die Modellantwort ist nicht deterministisch (gleiche Mail kann unterschiedlich viele Termine liefern) — deshalb die Code-Validierung und der State.
+- `update.sh` committet `manuelle_termine.json` (seit 21.09.2026) und `korrekturen.json` mit. Beide werden in prod nachts geschrieben: **in dev vor jeder Änderung daran erst `git pull`**.
 
 ```bash
-python3 hw_import.py --dry-run                    # HW-Mails prüfen, nichts schreiben
-python3 hw_import.py --dry-run --mail gmx:16529   # gezielt eine Mail testen
-tail -f ~/Library/Logs/holzwurm-hw-import/holzwurm-hw-import.log
+python3 hw_import.py --dry-run                    # alle Quellen prüfen, nichts schreiben
+python3 hw_import.py --dry-run --nur-kalender     # nur den Kalender-Eingang
+python3 hw_import.py --dry-run --mail gmx:16529   # gezielt eine eM-Client-Mail testen
+python3 hw_bericht.py --status live --dry-run     # Signal-Text zeigen, nicht senden
+tail -f ~/Library/Logs/ki/termine/holzwurm.log
 ```
 
 ## Tests
@@ -102,6 +132,8 @@ tail -f ~/Library/Logs/holzwurm-hw-import/holzwurm-hw-import.log
 ```
 
 `tests/test_dedup.py` — testet `_termin_score()` und `entferne_duplikate()` aus `app.py`. Kein Mock-Framework nötig; Termin-Objekte werden direkt instanziiert.
+
+Kalender-Eingang: `tests/test_kalender_eingang.py` (MIME-Zerlegung, Vertrauensstufen inkl. gefälschter Header), `tests/test_hw_aenderungen.py` (Zielsuche, Korrekturen, Absagen), `tests/test_korrekturen_app.py` (Generator: Korrektur vor Dedup, Absage-Darstellung, JSON-LD), `tests/test_hw_bericht.py` (Signal-Text). Ohne Netz und ohne echte Adressen (nur `.example`/`.test`).
 
 ## Abhängigkeiten
 

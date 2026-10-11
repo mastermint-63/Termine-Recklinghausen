@@ -33,6 +33,7 @@ echo "$OUTPUT"
 
 if [ $PYTHON_EXIT -ne 0 ]; then
     echo "FEHLER: app.py mit Exit-Code $PYTHON_EXIT abgebrochen – kein Push"
+    "${PYTHON:-python3}" hw_bericht.py --status fehler --grund "app.py Exit-Code $PYTHON_EXIT, kein Push"
     /opt/homebrew/bin/terminal-notifier \
         -title "❌ Termine RE – Skriptfehler" \
         -subtitle "Termine Recklinghausen" \
@@ -80,6 +81,7 @@ done
 PUSH_STATUS=""
 HAT_AENDERUNGEN=false
 git diff --quiet termine_re_*.html 2>/dev/null || HAT_AENDERUNGEN=true
+git diff --quiet manuelle_termine.json korrekturen.json 2>/dev/null || HAT_AENDERUNGEN=true
 [ -n "$(git ls-files -o --exclude-standard termine_re_*.html 2>/dev/null)" ] && HAT_AENDERUNGEN=true
 git diff --cached --quiet 2>/dev/null || HAT_AENDERUNGEN=true
 
@@ -88,7 +90,7 @@ if [ "$HAT_AENDERUNGEN" = false ]; then
     PUSH_STATUS="Keine Änderungen"
 else
     echo "Änderungen gefunden - pushe zu GitHub..."
-    git add termine_re_*.html index.html sitemap.xml manuelle_termine.json 2>/dev/null
+    git add termine_re_*.html index.html sitemap.xml manuelle_termine.json korrekturen.json 2>/dev/null
     COMMIT_MSG="Termine RE aktualisiert $DATUM"
     [ ${#GELOESCHT[@]} -gt 0 ] && COMMIT_MSG="$COMMIT_MSG (${#GELOESCHT[@]} alte Datei(en) gelöscht)"
     git commit -m "$COMMIT_MSG" 2>&1
@@ -108,6 +110,15 @@ else
         PUSH_STATUS="Push fehlgeschlagen!"
         EXIT_CODE=1
     fi
+fi
+
+# Bericht des HW-Imports (00:30) per Signal, erst jetzt: "ist live" statt "wird live"
+if [ "$PUSH_STATUS" = "GitHub aktualisiert" ]; then
+    "${PYTHON:-python3}" hw_bericht.py --status live
+elif [ "$PUSH_STATUS" = "Keine Änderungen" ]; then
+    "${PYTHON:-python3}" hw_bericht.py --status unveraendert
+else
+    "${PYTHON:-python3}" hw_bericht.py --status fehler --grund "$PUSH_STATUS"
 fi
 
 # Benachrichtigungs-Text

@@ -455,6 +455,9 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                     ist_duplikat = True
                     print(f"[Keyword-Dedup] '{kandidat.name}' ({kandidat.quelle}) ≈ '{vorhandener.name}' ({vorhandener.quelle})")
                 if ist_duplikat:
+                    # Eine Absage geht beim Zusammenführen nicht verloren
+                    if kandidat.abgesagt:
+                        vorhandener.abgesagt = True
                     # Fehlende Felder aus dem Duplikat ergänzen
                     if not vorhandener.beschreibung and kandidat.beschreibung:
                         vorhandener.beschreibung = kandidat.beschreibung
@@ -470,6 +473,60 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
         ergebnis.extend(behalten)
 
     return ergebnis
+
+
+KORREKTUREN_PFAD = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'korrekturen.json')
+
+
+def lade_korrekturen(pfad: str = KORREKTUREN_PFAD) -> list[dict]:
+    """Korrekturen und Absagen für Scraper-Termine (gepflegt von hw_import.py)."""
+    try:
+        with open(pfad, encoding='utf-8') as f:
+            return _json.load(f)
+    except (FileNotFoundError, ValueError):
+        return []
+
+
+def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: int, monat: int) -> list[dict]:
+    """Wendet freigegebene Korrekturen auf die Termine des Monats an (vor entferne_duplikate()).
+
+    Trifft alle Termine des Tages, deren normalisierter Name gleich ist oder den Namen enthält
+    (bzw. darin enthalten ist): so wird auch die Dublette eines Aggregators mitkorrigiert.
+    Datumsänderungen werden bewusst nicht angewendet (Verschiebungen löst die Redaktion von Hand).
+    Gibt die Korrekturen dieses Monats zurück, die keinen Termin gefunden haben.
+    """
+    verwaist = []
+    for k in korrekturen:
+        if not k.get('freigegeben') or not k.get('name_norm'):
+            continue
+        try:
+            tag = datetime.strptime(k['datum'], '%Y-%m-%d').date()
+        except (KeyError, ValueError):
+            continue
+        if (tag.year, tag.month) != (jahr, monat):
+            continue
+        norm_k = k['name_norm']
+        treffer = []
+        for t in termine:
+            norm_t = _normalisiere(t.name)
+            if t.datum.date() == tag and (norm_t == norm_k or norm_k in norm_t or norm_t in norm_k):
+                treffer.append(t)
+        if not treffer:
+            verwaist.append(k)
+            print(f"  [Korrektur] nicht angewendet, kein Termin gefunden: {k['datum']} {norm_k}")
+            continue
+        aenderung = k.get('aenderung') or {}
+        for t in treffer:
+            if k.get('absage'):
+                t.abgesagt = True
+            uhrzeit = aenderung.get('uhrzeit', '')
+            if re.fullmatch(r'\d{2}:\d{2}', uhrzeit):
+                h, m = map(int, uhrzeit.split(':'))
+                t.uhrzeit = f"{uhrzeit} Uhr"
+                t.datum = t.datum.replace(hour=h, minute=m)
+            if aenderung.get('ort'):
+                t.ort = aenderung['ort'][:150]
+    return verwaist
 
 
 def dateiname_fuer_monat(jahr: int, monat: int) -> str:
@@ -633,6 +690,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             badge_class = badge_classes.get(t.quelle, 'badge-default')
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
             badge_html = f'<span class="badge {badge_class}">{quelle_label}</span>'
+            if t.abgesagt:
+                badge_html = '<span class="badge badge-abgesagt">Abgesagt</span> ' + badge_html
 
             if t.kategorie:
                 badge_html += f' <span class="badge badge-kategorie">{_html.escape(t.kategorie)}</span>'
@@ -652,7 +711,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                 beschreibung_html = ''
 
             termine_html += f'''
-                <div class="termin" data-quelle="{t.quelle}">
+                <div class="termin" data-quelle="{t.quelle}"{' data-abgesagt="1"' if t.abgesagt else ''}>
                     <div class="termin-zeit">{uhrzeit_esc}</div>
                     <div class="termin-info">
                         <div class="termin-name">
@@ -716,6 +775,8 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     # JSON-LD: CollectionPage + einzelne Events
     events_ld = []
     for t in termine:
+        if t.abgesagt:  # keine Events für Suchmaschinen, die nicht stattfinden
+            continue
         event_obj = {
             "@type": "Event",
             "name": t.name,
@@ -1179,6 +1240,20 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
         .termin-name a:hover {{
             color: var(--accent-color);
             text-decoration: underline;
+        }}
+
+        /* Abgesagt: bleibt sichtbar, Titel und Uhrzeit durchgestrichen */
+        .termin[data-abgesagt] .termin-name > a,
+        .termin[data-abgesagt] .termin-name > .termin-toggle,
+        .termin[data-abgesagt] .termin-zeit {{
+            text-decoration: line-through;
+            opacity: 0.6;
+        }}
+
+        .badge-abgesagt {{
+            background: linear-gradient(135deg, #c0392b 0%, #b0291b 100%);
+            color: white;
+            font-weight: 700;
         }}
 
         .badge {{
@@ -1753,6 +1828,7 @@ def main():
     print("=" * 50)
 
     basis_pfad = os.path.dirname(__file__)
+    korrekturen = lade_korrekturen()
     erster_dateiname = None
     erster_monat_termine = None
 
@@ -1779,6 +1855,8 @@ def main():
         werbung = vor_werbung - len(alle_termine)
         if werbung:
             print(f"  -> {werbung} Termin(e) ausgeschlossen (kommerzielle Werbung)")
+
+        wende_korrekturen_an(alle_termine, korrekturen, j, m)
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)

@@ -119,6 +119,8 @@ class Termin:
     # Highlight-Key für redaktionelle Spotlight-Karten (z.B. 'holzwurm50');
     # wird nur über manuelle_termine.json gesetzt, Rendering in app.py
     highlight: str = ''
+    # Abgesagt (manuelle_termine.json "abgesagt": true oder korrekturen.json): bleibt sichtbar, durchgestrichen
+    abgesagt: bool = False
 
     def datum_formatiert(self) -> str:
         tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
@@ -2913,6 +2915,7 @@ def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
             quelle='manuell',
             kategorie=e.get('kategorie', ''),
             highlight=e.get('highlight', ''),
+            abgesagt=bool(e.get('abgesagt')),
         ))
 
     return termine

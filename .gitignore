@@ -9,5 +9,7 @@ launchd.log
 hw_state.db
 hw_pruefliste.md
 hw_neue_quellen.md
+hw_bericht.json
+*.json.tmp
 .venv/
 .eventim_cache.json

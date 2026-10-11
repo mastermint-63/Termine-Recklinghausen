@@ -1,6 +1,6 @@
 #!/bin/bash
-# HW-Import: mit "HW" markierte Mails aus eM Client in den Kalender übernehmen.
-# Läuft nachts (05:30) per launchd, VOR dem Kalender-Lauf (06:30, update.sh), der veröffentlicht.
+# HW-Import: Kalender-Eingang (IMAP), "HW"-markierte Mails und Presse-PMs in den Kalender übernehmen.
+# Läuft nachts (00:30) per launchd, VOR dem Kalender-Lauf (06:30, update.sh), der veröffentlicht.
 cd "$(dirname "$0")" || exit 1
 echo "=========================================="
 echo "HW-Import gestartet: $(date)"
