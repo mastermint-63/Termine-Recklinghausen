@@ -844,5 +844,87 @@
         "freigegeben": false,
         "hw_mail": "gmx:194294f67dcb459dbb084656b1ff9cba@recklinghausen.de",
         "hinweis": "Ort nicht (sicher) in Recklinghausen"
+    },
+    {
+        "name": "Bundesweiter Vorlesetag: Lesung mit Gamze Kubaşık und Christine Werner",
+        "datum": "2026-11-20",
+        "uhrzeit": "10:00",
+        "ort": "Stadtbibliothek Recklinghausen, Augustinessenstraße 3",
+        "link": "",
+        "beschreibung": "Lesung für Schulklassen aus dem Jugendsachbuch 'Unser Schmerz ist unsere Kraft' über die Morde des NSU, mit den Autorinnen Gamze Kubaşık und Christine Werner. Die Lesung findet um 10 Uhr und um 12.30 Uhr statt, Teilnahme ist kostenfrei. Anmeldung für Schulklassen bis 13. November per Mail oder Telefon.",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "gmx:938e150c28e64c27a4fc7b4fff353c07@recklinghausen.de"
+    },
+    {
+        "name": "RE leuchtet 2026 - Eröffnung mit Drohnenshow",
+        "datum": "2026-10-23",
+        "uhrzeit": "19:30",
+        "ort": "Altstadt/Rathaus Recklinghausen",
+        "link": "http://www.re-leuchtet.de",
+        "beschreibung": "Eröffnung der 20. Auflage von Recklinghausen leuchtet mit Rathausshow und Drohnenshow (150 Drohnen) über dem Rathaus. Das Festival läuft bis zum 8. November mit vielseitigem Rahmenprogramm in der Altstadt.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "RE leuchtet - Rathausshow (täglich)",
+        "datum": "2026-10-24",
+        "uhrzeit": "18:00",
+        "ort": "Rathaus Recklinghausen, Rathausplatz",
+        "link": "http://www.re-leuchtet.de",
+        "beschreibung": "Tägliche Lichtshow am Rathaus im Rahmen von Recklinghausen leuchtet, von 18 bis 21 Uhr zur halben und vollen Stunde.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-23 (re-leuchtet): Eröffnung von Recklinghausen leuchtet 2026 - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Highliner über dem Altstadtmarkt",
+        "datum": "2026-11-07",
+        "uhrzeit": "",
+        "ort": "Altstadtmarkt, zwischen MarktQuartier und Kirchturm St. Peter, Recklinghausen",
+        "link": "http://www.re-leuchtet.de",
+        "beschreibung": "Akteure des Vereins Slackline Köln balancieren über dem Altstadtmarkt zwischen MarktQuartier und Kirchturm St. Peter im Rahmen von Recklinghausen leuchtet.",
+        "kategorie": "Sonstiges",
+        "freigegeben": false,
+        "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
+        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Highliner über dem Altstadtmarkt (2. Tag)",
+        "datum": "2026-11-08",
+        "uhrzeit": "",
+        "ort": "Altstadtmarkt, zwischen MarktQuartier und Kirchturm St. Peter, Recklinghausen",
+        "link": "http://www.re-leuchtet.de",
+        "beschreibung": "Akteure des Vereins Slackline Köln balancieren über dem Altstadtmarkt zwischen MarktQuartier und Kirchturm St. Peter im Rahmen von Recklinghausen leuchtet.",
+        "kategorie": "Sonstiges",
+        "freigegeben": false,
+        "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
+        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "RE leuchtet - Finale mit Drohnenshow",
+        "datum": "2026-11-08",
+        "uhrzeit": "20:00",
+        "ort": "Rathaus Recklinghausen",
+        "link": "http://www.re-leuchtet.de",
+        "beschreibung": "Finale von Recklinghausen leuchtet mit Drohnenshow (150 Drohnen) über dem Rathaus.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+    },
+    {
+        "name": "Ferienworkshop für Kinder: „Deine Geschichte in Stoff“",
+        "datum": "2026-10-22",
+        "uhrzeit": "10:00",
+        "ort": "Kunsthalle Recklinghausen, Große-Perdekamp-Straße 25-27",
+        "link": "",
+        "beschreibung": "Die Kunsthalle Recklinghausen bietet einen Ferienworkshop für Kinder zwischen acht und zwölf Jahren an, bei dem im Rahmen der Ausstellung „What Lies Below Is Another Above“ ein Kunstwerk aus Stoff gestaltet wird. Die Teilnahme kostet acht Euro pro Person inklusive Materialkosten. Anmeldungen sind unter Tel. 02361/50-1935 oder per Mail an info@kunst-re.de möglich.",
+        "kategorie": "Kunst",
+        "freigegeben": true,
+        "hw_mail": "gmx:8e1c86fd19594e50b44ff9660221ce1e@recklinghausen.de"
     }
 ]
