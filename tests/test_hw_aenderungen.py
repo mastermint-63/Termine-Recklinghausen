@@ -271,3 +271,37 @@ def test_terminseite_aus_presse_automatik_wird_nicht_abgerufen(monkeypatch):
     mail.presse_auto = True
     hw.melde_neue_seiten([{"url": "https://verein.example/termine", "beschreibung": "Verein"}], mail, True)
     assert aufrufe == []
+
+
+# --------------------------------------------------------------------------- Bericht: nicht übernommen
+
+class _Client:
+    """Ersatz für den API-Client: liefert eine feste Tool-Antwort."""
+    def __init__(self, antwort):
+        self.antwort = antwort
+        self.messages = self
+
+    def create(self, **kw):
+        from types import SimpleNamespace
+        return SimpleNamespace(content=[SimpleNamespace(type="tool_use", input=self.antwort)])
+
+
+def test_verworfene_aus_kalender_eingang_stehen_im_bericht():
+    antwort = {"termine": [{"name": "SkF-Infostand", "datum": "2026-10-10", "eindeutig": True,
+                            "in_recklinghausen": True, "beleg": "PDF"}],
+               "aenderungen": [_aend(bezug_datum="2026-10-01")], "terminseiten": []}
+    bericht = hw.neuer_bericht()
+    hw.verarbeite_mail(_Client(antwort), _mail(), HEUTE, True, [], [], bericht)
+    assert [(v["datum"], v["name"]) for v in bericht["verworfen"]] == [("2026-10-10", "SkF-Infostand"),
+                                                                      ("2026-10-01", "Offene Schmiede")]
+    assert all("Vergangenheit" in v["grund"] for v in bericht["verworfen"])
+
+
+def test_verworfene_aus_presse_mails_stehen_nicht_im_bericht():
+    antwort = {"termine": [{"name": "Alt", "datum": "2026-10-10", "eindeutig": True, "in_recklinghausen": True,
+                            "beleg": "x"}], "aenderungen": [], "terminseiten": []}
+    mail = _mail()
+    mail.konto = "gmx"
+    bericht = hw.neuer_bericht()
+    hw.verarbeite_mail(_Client(antwort), mail, HEUTE, True, [], [], bericht)
+    assert bericht["verworfen"] == []

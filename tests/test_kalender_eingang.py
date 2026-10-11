@@ -217,3 +217,47 @@ def test_dkim_mit_passendem_postfach_ist_vertraut():
                                        "header.i=ralf@redaktion.example header.b=xyz"),
             ("Authentication-Results", "spf.icloud.com; spf=pass")]
     assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "vertraut"
+
+
+# --------------------------------------------------------------------------- HEIC (iPhone-Fotos)
+
+def _heic_bytes(tmp_path) -> bytes:
+    """Echtes HEIC per sips aus einem gerenderten Bild (macOS)."""
+    import shutil
+    import subprocess
+
+    import fitz
+    import pytest
+    if not shutil.which("sips"):
+        pytest.skip("sips nicht vorhanden")
+    doc = fitz.open()
+    seite = doc.new_page(width=1200, height=1600)
+    seite.insert_text((100, 200), "Konzert am Samstag, 24.10.2026, 20 Uhr", fontsize=40)
+    png = tmp_path / "plakat.png"
+    seite.get_pixmap(dpi=150).save(png)
+    heic = tmp_path / "plakat.heic"
+    r = subprocess.run(["sips", "-s", "format", "heic", str(png), "--out", str(heic)], capture_output=True)
+    if r.returncode != 0 or not heic.exists():
+        pytest.skip("sips kann kein HEIC schreiben")
+    return heic.read_bytes()
+
+
+def test_heic_wird_erkannt():
+    assert hw._bildtyp(b"\x00\x00\x00\x18ftypheic" + b"\x00" * 20) == "image/heic"
+    assert hw._bildtyp(b"\x00\x00\x00\x18ftypmif1" + b"\x00" * 20) == "image/heic"
+
+
+def test_heic_anhang_wird_als_jpeg_mitgegeben(tmp_path):
+    heic = _heic_bytes(tmp_path)
+    m = _mail()
+    m.add_attachment(heic, maintype="image", subtype="heic", filename="IMG_0001.HEIC")
+    _, bilder, _ = hw.werte_teile_aus(ke.mime_teile(m))
+    assert len(bilder) == 1 and bilder[0][0] == "image/jpeg" and bilder[0][1][:3] == b"\xff\xd8\xff"
+
+
+def test_heic_als_octet_stream_wird_erkannt(tmp_path):
+    heic = _heic_bytes(tmp_path)
+    m = _mail()
+    m.add_attachment(heic, maintype="application", subtype="octet-stream", filename="IMG_0001.HEIC")
+    _, bilder, _ = hw.werte_teile_aus(ke.mime_teile(m))
+    assert len(bilder) == 1 and bilder[0][0] == "image/jpeg"

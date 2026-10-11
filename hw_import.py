@@ -169,6 +169,8 @@ def _bildtyp(b: bytes) -> str | None:
         return "image/webp"
     if b[:4] == b"GIF8":
         return "image/gif"
+    if b[4:8] == b"ftyp" and b[8:12] in (b"heic", b"heix", b"hevc", b"hevx", b"heim", b"heis", b"mif1", b"msf1"):
+        return "image/heic"  # iPhone-Fotos; das Modell kennt HEIC nicht -> _heic_zu_jpeg()
     return None
 
 
@@ -185,6 +187,22 @@ def _verkleinere(b: bytes, media_type: str) -> bytes:
         if r.returncode == 0 and ziel.exists():
             return ziel.read_bytes()
     return b
+
+
+def _heic_zu_jpeg(b: bytes) -> bytes | None:
+    """HEIC (iPhone) per sips in JPEG umwandeln, max. 2000 px Kantenlänge."""
+    with tempfile.TemporaryDirectory() as tmp:
+        quelle, ziel = Path(tmp) / "in.heic", Path(tmp) / "out.jpg"
+        quelle.write_bytes(b)
+        try:
+            r = subprocess.run(["sips", "-s", "format", "jpeg", "-Z", "2000", str(quelle), "--out", str(ziel)],
+                               capture_output=True, timeout=60)
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        if r.returncode == 0 and ziel.exists() and _bildtyp(ziel.read_bytes()[:12]) == "image/jpeg":
+            return ziel.read_bytes()
+    log.warning("HEIC-Bild konnte nicht umgewandelt werden")
+    return None
 
 
 def _docx_zu_text(b: bytes) -> str:
@@ -224,9 +242,14 @@ def werte_teile_aus(teile: list, preview: str = "") -> tuple[str, list, list]:
             html_txt.append(html_zu_text(_dekodiere(body, ct)))
         elif ct_l.startswith("text/calendar"):
             ics.append(_dekodiere(body, ct))
-        elif ct_l.startswith("image/") and isinstance(body, bytes) and len(body) >= 20_000:
+        elif (ct_l.startswith("image/") or ct_l.startswith("application/octet-stream")) \
+                and isinstance(body, bytes) and len(body) >= 20_000:
             typ = _bildtyp(body)
-            if typ:
+            if typ == "image/heic":
+                jpeg = _heic_zu_jpeg(body)
+                if jpeg:
+                    bilder.append(("image/jpeg", jpeg))
+            elif typ and ct_l.startswith("image/"):
                 bilder.append((typ, _verkleinere(body, typ)))
         elif ct_l.startswith("application/pdf") and isinstance(body, bytes) and len(body) <= 4_000_000:
             pdfs.append(body)
@@ -1013,7 +1036,7 @@ def melde_neue_seiten(seiten: list, mail: Mail, dry_run: bool) -> list[str]:
 def neuer_bericht() -> dict:
     return {"erstellt": datetime.now().isoformat(timespec="seconds"), "mails": 0, "eingetragen": [],
             "geaendert": [], "abgesagt": [], "pruefen": [], "neue_seiten": [], "quellfehler": [],
-            "verwaist": [], "ohne_ergebnis": [], "fehler": []}
+            "verwaist": [], "ohne_ergebnis": [], "verworfen": [], "fehler": []}
 
 
 def speichere_bericht(bericht: dict):
@@ -1034,6 +1057,9 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
         zaehler[status] += 1
         log.info("  [%s] %s %s - %s (%s) | Beleg: %s", status.upper(), t.get("datum"), t.get("uhrzeit", ""),
                  t.get("name", "")[:70], grund, (t.get("beleg") or "")[:90])
+        if status == "verwerfen" and mail.konto == "kalender":
+            bericht["verworfen"].append({"datum": t.get("datum", ""), "name": (t.get("name") or "")[:150],
+                                         "grund": grund})
         if eintrag:
             vorher = len(eintraege)
             haenge_an(eintraege, [eintrag])
@@ -1046,6 +1072,9 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
         zaehler[status] += 1
         log.info("  [%s] %s %s - %s (%s) | Beleg: %s", status.upper(), a.get("art", "?").upper(),
                  a.get("bezug_datum"), (a.get("bezug_name") or "")[:70], grund, (a.get("beleg") or "")[:90])
+        if status == "verwerfen" and mail.konto == "kalender":
+            bericht["verworfen"].append({"datum": a.get("bezug_datum", ""), "name": (a.get("bezug_name") or "")[:150],
+                                         "grund": f"{a.get('art', 'Änderung')}: {grund}"})
         if not aktion:
             continue
         was = wende_aenderung_an(aktion, eintraege, korrekturen, mail, heute,

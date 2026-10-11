@@ -54,7 +54,7 @@ def _abschnitt(titel: str, eintraege: list, zeile, zusatz: str = "") -> list[str
 
 def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     teile = ("eingetragen", "geaendert", "abgesagt", "pruefen", "neue_seiten", "quellfehler", "verwaist",
-             "ohne_ergebnis", "fehler")
+             "ohne_ergebnis", "verworfen", "fehler")
     if not any(bericht.get(k) for k in teile):
         return None
     try:
@@ -79,6 +79,8 @@ def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     zeilen += _abschnitt("Neue Terminseiten", bericht.get("neue_seiten", []), lambda e: f"- {bereinige(e, 80)}")
     zeilen += _abschnitt("Quellen prüfen", bericht.get("quellfehler", []), lambda e: f"- {bereinige(e, 120)}")
     zeilen += _abschnitt("Korrektur greift nicht mehr", bericht.get("verwaist", []), termin)
+    zeilen += _abschnitt("Nicht übernommen", bericht.get("verworfen", []),
+                         lambda e: f"{termin(e)} ({bereinige(e.get('grund'), 60)})")
     zeilen += _abschnitt("Ohne Ergebnis, Mail von Hand ansehen", bericht.get("ohne_ergebnis", []),
                          lambda e: f"- {bereinige(e, 80)}")
     zeilen += _abschnitt("Fehler", bericht.get("fehler", []), lambda e: f"- {bereinige(e, 100)}")

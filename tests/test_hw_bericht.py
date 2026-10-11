@@ -87,3 +87,9 @@ def test_main_versandfehler_markiert_nicht(tmp_path, monkeypatch):
 def test_mail_ohne_ergebnis_wird_gemeldet():
     text = hb.baue_nachricht(_bericht(ohne_ergebnis=["Stammtisch fällt aus"]), "unveraendert")
     assert "Ohne Ergebnis, Mail von Hand ansehen (1):\n- Stammtisch fällt aus" in text
+
+
+def test_nicht_uebernommene_werden_gemeldet():
+    text = hb.baue_nachricht(_bericht(verworfen=[{"datum": "2026-10-10", "name": "SkF-Infostand",
+                                                  "grund": "Termin liegt in der Vergangenheit"}]), "unveraendert")
+    assert "Nicht übernommen (1):\n- 10.10. SkF-Infostand (Termin liegt in der Vergangenheit)" in text
