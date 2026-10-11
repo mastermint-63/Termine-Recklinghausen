@@ -261,3 +261,13 @@ def test_terminseite_von_nicht_vertrautem_absender_wird_nicht_abgerufen(monkeypa
     mail = _mail("Neue Terminseite: https://verein.example/termine", vertrauen="unbekannt")
     gemeldet = hw.melde_neue_seiten([{"url": "https://verein.example/termine", "beschreibung": "Verein"}], mail, True)
     assert aufrufe == [] and gemeldet and "nicht abgerufen" in gemeldet[0]
+
+
+def test_terminseite_aus_presse_automatik_wird_nicht_abgerufen(monkeypatch):
+    aufrufe = []
+    monkeypatch.setattr(hw, "pruefe_terminseite", lambda url: aufrufe.append(url) or "x")
+    monkeypatch.setattr(hw, "bekannte_hosts", lambda: set())
+    mail = _mail("Neue Terminseite: https://verein.example/termine")
+    mail.presse_auto = True
+    hw.melde_neue_seiten([{"url": "https://verein.example/termine", "beschreibung": "Verein"}], mail, True)
+    assert aufrufe == []

@@ -989,8 +989,13 @@ def melde_neue_seiten(seiten: list, mail: Mail, dry_run: bool) -> list[str]:
             continue
         if url in vorhanden_text:
             continue
-        # Seiten aus Mails nicht vertrauter Absender nicht abrufen (beliebige Absender können den Eingang erreichen)
-        befund = pruefe_terminseite(url) if mail.vertrauen == "vertraut" else "nicht abgerufen (Absender nicht vertraut)"
+        # Seiten nur abrufen, wenn der Absender geprüft ist (Kalender-Eingang und Presse-Erkennung erreicht jeder).
+        # Restrisiko DNS-Rebinding zwischen _url_erlaubt() und Abruf bewusst in Kauf genommen: blinder GET,
+        # die Antwort fließt nur als Format-Einschätzung in den Bericht.
+        if mail.vertrauen == "vertraut" and not mail.presse_auto:
+            befund = pruefe_terminseite(url)
+        else:
+            befund = "nicht abgerufen (Absender nicht geprüft)"
         block = (f"\n## {host}\n\n- **URL:** {url}\n- **Gefunden:** {datetime.now():%Y-%m-%d} in Mail "
                  f"\"{mail.betreff[:80]}\"\n- **Was:** {s.get('beschreibung', '')}\n- **Vorab-Befund:** {befund}\n"
                  f"- **Status:** offen (Scraper mit Claude Code entwickeln)\n")

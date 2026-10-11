@@ -193,3 +193,27 @@ def test_ohne_icloud_spf_zeile_wird_nichts_gewertet():
     auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example"),
             ("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example")]
     assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+
+
+def test_dkim_mit_laengenbegrenzung_ist_nicht_vertraut():
+    """l=-Tag: Signatur deckt nur den Anfang des Texts ab, angehängter Text wäre ungeprüft."""
+    auth = _auth_pass() + [("DKIM-Signature", "v=1; a=rsa-sha256; d=redaktion.example; s=s1; l=120; h=from:to; "
+                                              "bh=abc; b=def")]
+    stufe, grund = ke.vertrauensstufe(_mail(auth=auth), REDAKTION)
+    assert stufe == "redaktion_unauth" and "Teil" in grund
+
+
+def test_dkim_fuer_anderes_postfach_derselben_domain_ist_nicht_vertraut():
+    """header.i nennt ein anderes Postfach (z.B. fremdes GMX-Konto mit gefälschtem From)."""
+    auth = [("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example"),
+            ("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example "
+                                       "header.i=fremd@redaktion.example header.b=xyz"),
+            ("Authentication-Results", "spf.icloud.com; spf=pass smtp.mailfrom=fremd@redaktion.example")]
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+
+
+def test_dkim_mit_passendem_postfach_ist_vertraut():
+    auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example "
+                                       "header.i=ralf@redaktion.example header.b=xyz"),
+            ("Authentication-Results", "spf.icloud.com; spf=pass")]
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "vertraut"

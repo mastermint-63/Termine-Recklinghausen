@@ -89,13 +89,36 @@ def _passt_zur_domain(ergebnis: str, methode: str, schluessel: str, domain: str)
     return domain == d or domain.endswith("." + d) and d.count(".") >= 1
 
 
+def _hat_laengenbegrenzung(msg) -> bool:
+    """DKIM-Signatur mit l=-Tag: signiert nur den Anfang des Texts, Angehängtes wäre ungeprüft."""
+    return any(re.search(r"(?:^|;)\s*l\s*=\s*\d+", " ".join(str(v).split()))
+               for v in msg.get_all("DKIM-Signature") or [])
+
+
+def _fremdes_postfach(dkim_ergebnis: str, adresse: str) -> bool:
+    """header.i nennt ein anderes Postfach als From (z.B. fremdes Konto derselben Freemail-Domain)."""
+    m = re.search(r"\bheader\.i=([^\s;]+)", dkim_ergebnis or "", re.I)
+    if not m or "@" not in m.group(1):
+        return False
+    lokal = m.group(1).split("@", 1)[0]
+    return bool(lokal) and m.group(1).lower() != adresse
+
+
 def vertrauensstufe(msg, redaktion: set[str]) -> tuple[str, str]:
-    """-> (stufe, grund). Stufen: "vertraut", "redaktion_unauth", "unbekannt"."""
+    """-> (stufe, grund). Stufen: "vertraut", "redaktion_unauth", "unbekannt".
+
+    DKIM/DMARC belegen nur die Domain. Zusätzlich darf header.i kein anderes Postfach nennen,
+    und keine Signatur darf per l=-Tag nur einen Teil des Texts abdecken.
+    """
     adresse = _absender_adresse(msg)
     if not adresse or adresse not in redaktion:
         return "unbekannt", "Absender nicht in der Redaktionsliste"
     domain = adresse.rsplit("@", 1)[1]
+    if _hat_laengenbegrenzung(msg):
+        return "redaktion_unauth", "DKIM-Signatur deckt nur einen Teil der Mail ab (l=-Tag)"
     ergebnisse = _icloud_ergebnisse(msg)
+    if _fremdes_postfach(ergebnisse.get("dkim", ""), adresse):
+        return "redaktion_unauth", "DKIM-Signatur gehört zu einem anderen Postfach als der Absender"
     if _passt_zur_domain(ergebnisse.get("dkim", ""), "dkim", "header.d", domain):
         return "vertraut", "Redaktion, DKIM bestanden"
     if _passt_zur_domain(ergebnisse.get("dmarc", ""), "dmarc", "header.from", domain):
