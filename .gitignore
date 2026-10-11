@@ -13,3 +13,4 @@ hw_bericht.json
 *.json.tmp
 .venv/
 .eventim_cache.json
+.DS_Store
