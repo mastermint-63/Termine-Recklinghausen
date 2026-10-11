@@ -107,3 +107,16 @@ def test_monatsseite_mit_absage_bleibt_fuer_import_lesbar(tmp_path, monkeypatch)
         hw._lese_monatsseite.cache_clear()
     assert sorted(t.name for t in termine) == ["Lesung Müller", "Offene Schmiede"]
     assert {t.quelle for t in termine} == {"altstadtschmiede", "nlgr"}
+
+
+def test_korrektur_trifft_keinen_kurzen_fremden_titel():
+    """Teilstring nur ab einer Mindestlänge: 'Party' ist nicht 'Halloween-Party im Moondock'."""
+    termine = [_t("Halloween-Party im Moondock", "moondock"), _t("Party", "facebook")]
+    app.wende_korrekturen_an(termine, [_k(name_norm="halloween party im moondock", absage=True)], 2026, 10)
+    assert [t.abgesagt for t in termine] == [True, False]
+
+
+def test_korrektur_trifft_aggregator_mit_praefix():
+    termine = [_t("Offene Schmiede", "altstadtschmiede"), _t("Altstadtschmiede: Offene Schmiede", "stadt-re")]
+    app.wende_korrekturen_an(termine, [_k(absage=True)], 2026, 10)
+    assert [t.abgesagt for t in termine] == [True, True]

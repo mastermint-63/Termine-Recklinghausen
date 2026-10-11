@@ -62,6 +62,7 @@ def _icloud_ergebnisse(msg) -> dict[str, str]:
     iCloud setzt seinen Block oberhalb der Absender-Header und schließt ihn mit dem SPF-Ergebnis.
     Gewertet wird je Prüfart nur der erste Eintrag bis einschließlich des ersten SPF-Eintrags.
     Ein Absender kann so keinen eigenen "dkim=pass"-Header unterschieben: Er stünde darunter.
+    Fehlt die SPF-Zeile, ist die Grenze unklar: dann wird nichts gewertet.
     """
     ergebnisse: dict[str, str] = {}
     for wert in msg.get_all("Authentication-Results") or []:
@@ -73,8 +74,8 @@ def _icloud_ergebnisse(msg) -> dict[str, str]:
         elif kennung == _ICLOUD_DMARC:
             ergebnisse.setdefault("dmarc", rest.strip())
         elif kennung == _ICLOUD_SPF:
-            break
-    return ergebnisse
+            return ergebnisse
+    return {}
 
 
 def _passt_zur_domain(ergebnis: str, methode: str, schluessel: str, domain: str) -> bool:

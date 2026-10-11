@@ -186,3 +186,10 @@ def test_massenmail_wird_erkannt():
     assert ke.ist_massenmail(_mail(extra_header=[("List-Unsubscribe", "<https://x.example/u>")]))
     assert ke.ist_massenmail(_mail(extra_header=[("List-Id", "<news.x.example>")]))
     assert not ke.ist_massenmail(_mail())
+
+
+def test_ohne_icloud_spf_zeile_wird_nichts_gewertet():
+    """Ohne iClouds SPF-Zeile ist die Blockgrenze unklar: dann zählt kein Prüfergebnis."""
+    auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example"),
+            ("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example")]
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"

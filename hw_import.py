@@ -35,10 +35,12 @@ import base64
 import contextlib
 import functools
 import io
+import ipaddress
 import json
 import logging
 import os
 import re
+import socket
 import sqlite3
 import subprocess
 import sys
@@ -112,6 +114,9 @@ class Mail:
     # "redaktion_unauth" oder "unbekannt" (nur Kalender-Eingang) -> alles zur Prüfung
     vertrauen: str = "vertraut"
     vertrauen_grund: str = ""
+    # Automatisch erkannte Presse-Mail (nur Absender/Anzeigename geprüft, fälschbar):
+    # neue Termine wie bisher, Änderungen an bestehenden Terminen nie automatisch
+    presse_auto: bool = False
 
     @property
     def schluessel(self) -> str:
@@ -720,6 +725,8 @@ def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
 
     if mail.vertrauen != "vertraut":
         probleme.append(mail.vertrauen_grund or "Absender nicht vertrauenswürdig")
+    if mail.presse_auto:
+        probleme.append("Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung")
     if not ziele:
         probleme.append(f"kein passender Termin am {d.isoformat()} gefunden")
     elif len(ziele) > 1:
@@ -790,7 +797,7 @@ def finde_verwaiste_korrekturen(korrekturen: list, heute: date, bestehende=None)
     """Freigegebene Korrekturen, die bei der letzten Generierung keinen Termin mehr gefunden haben.
 
     Nur Einträge, die vor heute angelegt wurden (neue sind noch nicht generiert).
-    Gleiche Namenslogik wie app.wende_korrekturen_an (gleich oder Teilstring).
+    Gleiche Namenslogik wie app.wende_korrekturen_an (app.korrektur_name_passt).
     """
     import app
     bestehende = bestehende or lade_bestehende
@@ -804,7 +811,7 @@ def finde_verwaiste_korrekturen(korrekturen: list, heute: date, bestehende=None)
             continue
         if d < heute:
             continue
-        if not any(_name_treffer(k["name_norm"], app._normalisiere(t.name)) == 2 for t in bestehende(d)):
+        if not any(app.korrektur_name_passt(k["name_norm"], app._normalisiere(t.name)) for t in bestehende(d)):
             verwaist.append(k)
     return verwaist
 
@@ -908,12 +915,44 @@ def _host(url: str) -> str:
     return re.sub(r"^https?://(www\.)?", "", url.lower()).split("/")[0]
 
 
+def _url_erlaubt(url: str) -> bool:
+    """Nur http(s) zu öffentlichen Adressen (SSRF-Schutz: URLs stammen aus Mails)."""
+    from urllib.parse import urlsplit
+    try:
+        teile = urlsplit(url)
+        host = teile.hostname
+    except ValueError:
+        return False
+    if teile.scheme not in ("http", "https") or not host:
+        return False
+    try:
+        adressen = [ipaddress.ip_address(host)]
+    except ValueError:
+        try:
+            adressen = [ipaddress.ip_address(a[4][0].split("%")[0])
+                        for a in socket.getaddrinfo(host, teile.port or 443, proto=socket.IPPROTO_TCP)]
+        except (OSError, ValueError):
+            return False
+    return bool(adressen) and all(a.is_global for a in adressen)
+
+
 def pruefe_terminseite(url: str) -> str:
     """Grobe Vorab-Einschätzung, wie gut sich die Seite scrapen ließe."""
-    try:
-        r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0 (Holzwurm-Kalender)"})
-    except requests.RequestException as e:
-        return f"nicht abrufbar ({type(e).__name__})"
+    for _ in range(4):  # Weiterleitungen von Hand folgen, jedes Ziel prüfen
+        if not _url_erlaubt(url):
+            return "nicht abgerufen (keine öffentliche Adresse)"
+        try:
+            r = requests.get(url, timeout=15, allow_redirects=False,
+                             headers={"User-Agent": "Mozilla/5.0 (Holzwurm-Kalender)"})
+        except requests.RequestException as e:
+            return f"nicht abrufbar ({type(e).__name__})"
+        if r.is_redirect and r.headers.get("Location"):
+            from urllib.parse import urljoin
+            url = urljoin(url, r.headers["Location"])
+            continue
+        break
+    else:
+        return "zu viele Weiterleitungen"
     if r.status_code != 200:
         return f"HTTP {r.status_code}"
     s = r.text
@@ -950,7 +989,8 @@ def melde_neue_seiten(seiten: list, mail: Mail, dry_run: bool) -> list[str]:
             continue
         if url in vorhanden_text:
             continue
-        befund = pruefe_terminseite(url)
+        # Seiten aus Mails nicht vertrauter Absender nicht abrufen (beliebige Absender können den Eingang erreichen)
+        befund = pruefe_terminseite(url) if mail.vertrauen == "vertraut" else "nicht abgerufen (Absender nicht vertraut)"
         block = (f"\n## {host}\n\n- **URL:** {url}\n- **Gefunden:** {datetime.now():%Y-%m-%d} in Mail "
                  f"\"{mail.betreff[:80]}\"\n- **Was:** {s.get('beschreibung', '')}\n- **Vorab-Befund:** {befund}\n"
                  f"- **Status:** offen (Scraper mit Claude Code entwickeln)\n")
@@ -1070,7 +1110,8 @@ def main():
     con = state_db()
     bericht = neuer_bericht()
 
-    # Kandidaten: ("mail", Mail, ist_massenmail) aus dem Kalender-Eingang, ("em", (konto, id)) aus eM Client
+    # Kandidaten: ("mail", Mail, ist_massenmail) aus dem Kalender-Eingang, ("em", (konto, id)) HW-markiert
+    # oder per --mail, ("presse", (konto, id)) automatisch erkannte Presse-Mails aus eM Client
     kandidaten = []
     if args.mail:
         konto, mid = args.mail.split(":", 1)
@@ -1083,8 +1124,8 @@ def main():
         if not args.nur_kalender:
             em = finde_hw_mail_ids()
             vorhandene = set(em)
-            em += [k for k in finde_presse_mail_ids() if k not in vorhandene]
             kandidaten += [("em", k) for k in em]
+            kandidaten += [("presse", k) for k in finde_presse_mail_ids() if k not in vorhandene]
     log.info("%d Mail(s) gefunden (Kalender-Eingang, HW-markiert oder als Pressestelle erkannt)", len(kandidaten))
 
     eintraege, korrekturen = lade_json(), lade_korrekturen()
@@ -1103,6 +1144,7 @@ def main():
             massenmail = False
             try:
                 mail = lade_mail(konto, mid)
+                mail.presse_auto = kandidat[0] == "presse"
             except (LookupError, sqlite3.Error) as e:
                 log.error("%s:%s nicht lesbar: %s", konto, mid, e)
                 bericht["fehler"].append(f"{konto}:{mid} nicht lesbar")

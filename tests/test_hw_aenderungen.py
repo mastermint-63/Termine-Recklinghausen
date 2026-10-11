@@ -226,3 +226,38 @@ def test_verwaiste_korrektur_wird_erkannt():
            "angelegt": "2026-10-11"}]
     verwaist = hw.finde_verwaiste_korrekturen(ks, HEUTE, _seite(("Offene Schmiede", "altstadtschmiede", "14:00 Uhr")))
     assert [k["name"] for k in verwaist] == ["Weg"]
+
+
+def test_aenderung_aus_presse_automatik_geht_zur_pruefung():
+    """Presse-Mails werden nur an Absender/Anzeigename erkannt (fälschbar): Änderungen nie automatisch."""
+    mail = _mail()
+    mail.presse_auto = True
+    status, grund, _ = _bewerte(_aend(), mail=mail)
+    assert status == "pruefen" and "Presse" in grund
+
+
+# --------------------------------------------------------------------------- SSRF-Schutz Terminseiten
+
+def test_interne_adressen_werden_nicht_abgerufen():
+    for url in ["http://127.0.0.1:8100/", "http://localhost/x", "http://192.168.1.10/", "http://10.0.0.1/",
+                "http://[::1]/", "http://169.254.169.254/latest", "ftp://example.org/", "http://0.0.0.0/"]:
+        assert not hw._url_erlaubt(url), url
+
+
+def test_oeffentliche_adresse_ist_erlaubt(monkeypatch):
+    monkeypatch.setattr(hw.socket, "getaddrinfo", lambda *a, **k: [(2, 1, 6, "", ("93.184.215.14", 0))])
+    assert hw._url_erlaubt("https://verein.example/termine")
+
+
+def test_hostname_der_intern_aufloest_ist_gesperrt(monkeypatch):
+    monkeypatch.setattr(hw.socket, "getaddrinfo", lambda *a, **k: [(2, 1, 6, "", ("192.168.1.5", 0))])
+    assert not hw._url_erlaubt("https://intern.example/")
+
+
+def test_terminseite_von_nicht_vertrautem_absender_wird_nicht_abgerufen(monkeypatch):
+    aufrufe = []
+    monkeypatch.setattr(hw, "pruefe_terminseite", lambda url: aufrufe.append(url) or "x")
+    monkeypatch.setattr(hw, "bekannte_hosts", lambda: set())
+    mail = _mail("Neue Terminseite: https://verein.example/termine", vertrauen="unbekannt")
+    gemeldet = hw.melde_neue_seiten([{"url": "https://verein.example/termine", "beschreibung": "Verein"}], mail, True)
+    assert aufrufe == [] and gemeldet and "nicht abgerufen" in gemeldet[0]

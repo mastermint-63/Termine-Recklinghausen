@@ -475,6 +475,22 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
     return ergebnis
 
 
+_KORREKTUR_MIN_TEILSTRING = 10
+
+
+def korrektur_name_passt(norm_k: str, norm_t: str) -> bool:
+    """Gleich, oder der kürzere Name (ab 10 Zeichen) steckt im längeren.
+
+    Die Mindestlänge verhindert, dass kurze fremde Titel ("Party") mit erfasst werden.
+    """
+    if not norm_k or not norm_t:
+        return False
+    if norm_k == norm_t:
+        return True
+    kurz, lang = sorted((norm_k, norm_t), key=len)
+    return len(kurz) >= _KORREKTUR_MIN_TEILSTRING and kurz in lang
+
+
 KORREKTUREN_PFAD = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'korrekturen.json')
 
 
@@ -491,7 +507,8 @@ def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: i
     """Wendet freigegebene Korrekturen auf die Termine des Monats an (vor entferne_duplikate()).
 
     Trifft alle Termine des Tages, deren normalisierter Name gleich ist oder den Namen enthält
-    (bzw. darin enthalten ist): so wird auch die Dublette eines Aggregators mitkorrigiert.
+    (bzw. darin enthalten ist, siehe korrektur_name_passt()): so wird auch die Dublette eines
+    Aggregators mitkorrigiert.
     Datumsänderungen werden bewusst nicht angewendet (Verschiebungen löst die Redaktion von Hand).
     Gibt die Korrekturen dieses Monats zurück, die keinen Termin gefunden haben.
     """
@@ -508,8 +525,7 @@ def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: i
         norm_k = k['name_norm']
         treffer = []
         for t in termine:
-            norm_t = _normalisiere(t.name)
-            if t.datum.date() == tag and (norm_t == norm_k or norm_k in norm_t or norm_t in norm_k):
+            if t.datum.date() == tag and korrektur_name_passt(norm_k, _normalisiere(t.name)):
                 treffer.append(t)
         if not treffer:
             verwaist.append(k)
