@@ -427,6 +427,20 @@
             text-decoration: underline;
         }
 
+        /* Abgesagt: bleibt sichtbar, Titel und Uhrzeit durchgestrichen */
+        .termin[data-abgesagt] .termin-name > a,
+        .termin[data-abgesagt] .termin-name > .termin-toggle,
+        .termin[data-abgesagt] .termin-zeit {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .badge-abgesagt {
+            background: linear-gradient(135deg, #c0392b 0%, #b0291b 100%);
+            color: white;
+            font-weight: 700;
+        }
+
         .badge {
             display: inline-block;
             padding: 2px 8px;
@@ -2133,15 +2147,15 @@ globalen Religions-, Geistes- und Sozialgeschichte. Sein „Laudato Si, o mio Si
             <h2 class="datum-header">Sa 07.11.2026</h2>
             <div class="termine-liste">
         
-                <div class="termin" data-quelle="manuell">
+                <div class="termin" data-quelle="nlgr">
                     <div class="termin-zeit">10:30 Uhr</div>
                     <div class="termin-info">
                         <div class="termin-name">
-                            <a href="https://www.samira-klaho.de/die-verlorene-sprache-film/" target="_blank" rel="noopener noreferrer">Die verlorene Sprache</a>
-                            <span class="badge badge-manuell">Redaktion</span> <span class="badge badge-kategorie">Film</span>
+                            <a href="https://nlgr.de/veranstaltung/film-die-verlorene-sprache-von-samira-klaho/" target="_blank" rel="noopener noreferrer">Film „Die verlorene Sprache” von Samira Klaho</a>
+                            <span class="badge badge-nlgr">Neue Lit. Gesellschaft</span> <span class="badge badge-kategorie">Literatur</span>
                         </div>
-                        <div class="termin-ort">Cineworld Recklinghausen, Kemnastr. 3, 45657 Recklinghausen</div>
-                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">Künstlerisch-dokumentarischer Film über Aphasie und ihre Auswirkungen auf Kommunikation, Selbstbild und soziales Umfeld. Einlass 10:00 Uhr, Film 115 Minuten, anschließend Gesprächsrunde mit Regisseurin Samira Klaho. Eintritt 12 €. Karten im Vorverkauf u.a. bei Kapitel Zwei, Attatroll Buchladen, Britts Bücherforum, Lotto Brast.</div>
+                        <div class="termin-ort">Cineworld, Kemnastr. 3</div>
+                        <div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest('.termin').classList.toggle('expanded')">&lt;p&gt;„Die verlorene Sprache&quot; von Samira Klaho Der Dokumentarfilm „Die verlorene Sprache“ begleitet vier Menschen mit Aphasie, dem teilweisen oder vollständigen Verlust von Sprache, Lesen und Schreiben nach einem neurologischen Ereignis, meist einem Schlaganfall. Aphasie betrifft allein in Deutschland </div>
                     </div>
                 </div>
             
@@ -4967,7 +4981,7 @@ Was wird repariert? Alles, was sich mit vertretbarem Aufwand tragen und vor Ort 
         </div>
 
         <footer>
-            Generiert am 11.10.2026 um 06:33 Uhr<br>
+            Generiert am 12.10.2026 um 06:33 Uhr<br>
             Quellen:
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;

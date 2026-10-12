@@ -427,6 +427,20 @@
             text-decoration: underline;
         }
 
+        /* Abgesagt: bleibt sichtbar, Titel und Uhrzeit durchgestrichen */
+        .termin[data-abgesagt] .termin-name > a,
+        .termin[data-abgesagt] .termin-name > .termin-toggle,
+        .termin[data-abgesagt] .termin-zeit {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .badge-abgesagt {
+            background: linear-gradient(135deg, #c0392b 0%, #b0291b 100%);
+            color: white;
+            font-weight: 700;
+        }
+
         .badge {
             display: inline-block;
             padding: 2px 8px;
@@ -2565,7 +2579,7 @@ Wir freuen uns auf euch!</div>
         </div>
 
         <footer>
-            Generiert am 11.10.2026 um 06:34 Uhr<br>
+            Generiert am 12.10.2026 um 06:34 Uhr<br>
             Quellen:
             <a href="https://recklinghausen.adfc.de/" target="_blank" rel="noopener noreferrer">ADFC Recklinghausen</a> &middot;
             <a href="https://www.altstadtschmiede.de/aktuelle-veranstaltungen" target="_blank" rel="noopener noreferrer">Altstadtschmiede</a> &middot;
