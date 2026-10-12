@@ -542,6 +542,9 @@ def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: i
                 t.datum = t.datum.replace(hour=h, minute=m)
             if aenderung.get('ort'):
                 t.ort = aenderung['ort'][:150]
+            link = aenderung.get('link', '')
+            if re.fullmatch(r'https?://[^\s"\'<>]{3,500}', link):
+                t.link = link
     return verwaist
 
 

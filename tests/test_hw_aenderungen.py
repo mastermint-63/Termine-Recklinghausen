@@ -346,3 +346,33 @@ def test_fehlgeschlagene_auswertungen_zaehlen_zum_limit(monkeypatch, tmp_path):
         raise RuntimeError("API-Fehler")
     aufrufe = _lauf(monkeypatch, tmp_path, "R <r@x.example>", auth, kaputt)
     assert len(aufrufe) == hw.MAX_MAILS_PRO_LAUF
+
+
+# --------------------------------------------------------------------------- Link-Korrektur
+
+def _link_mail():
+    return _mail("Offene Schmiede am Freitag, 23.10.2026. Richtige Quelle ist aber: https://www.demokratie-werkstadt-re.de/termine/")
+
+
+def test_link_korrektur_wird_uebernommen():
+    a = _aend(neu_uhrzeit="", neu_link="https://www.demokratie-werkstadt-re.de/termine/",
+              beleg="Richtige Quelle ist aber: https://www.demokratie-werkstadt-re.de/termine/")
+    status, grund, aktion = hw.bewerte_aenderung(a, _link_mail(), HEUTE, [],
+                                                _seite(("Offene Schmiede", "altstadtschmiede", "10:00 Uhr")))
+    assert status == "auto", grund
+    assert aktion["aenderung"] == {"link": "https://www.demokratie-werkstadt-re.de/termine/"}
+
+
+def test_link_korrektur_ungueltiger_link_zur_pruefung():
+    a = _aend(neu_uhrzeit="", neu_link="javascript:alert(1)", beleg="Richtige Quelle ist aber")
+    status, grund, _ = hw.bewerte_aenderung(a, _link_mail(), HEUTE, [],
+                                           _seite(("Offene Schmiede", "altstadtschmiede", "10:00 Uhr")))
+    assert status == "pruefen" and "Link ungültig" in grund
+
+
+def test_link_korrektur_gleicher_link_manuell_wird_verworfen():
+    e = dict(MANUELL, link="https://www.demokratie-werkstadt-re.de/termine/")
+    a = _aend(neu_uhrzeit="", neu_link="https://www.demokratie-werkstadt-re.de/termine/",
+              beleg="Richtige Quelle ist aber: https://www.demokratie-werkstadt-re.de/termine/")
+    status, grund, _ = hw.bewerte_aenderung(a, _link_mail(), HEUTE, [e], _seite())
+    assert status == "verwerfen" and "bereits" in grund

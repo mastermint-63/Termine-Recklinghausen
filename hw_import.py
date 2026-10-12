@@ -413,6 +413,7 @@ TOOL = {
                         "neu_datum": {"type": "string", "description": "Neues Datum YYYY-MM-DD bei Verschiebung, sonst leer"},
                         "neu_uhrzeit": {"type": "string", "description": "Neue Uhrzeit HH:MM, sonst leer"},
                         "neu_ort": {"type": "string", "description": "Neuer Ort, sonst leer"},
+                        "neu_link": {"type": "string", "description": "Neuer Link (URL) zur Veranstaltung, wenn die Mail eine andere/richtige Quelle nennt, sonst leer"},
                         "beleg": {"type": "string", "description": "Wörtliches, kurzes Zitat aus dem Mailtext, das die Änderung belegt"},
                         "eindeutig": {"type": "boolean", "description": "true nur, wenn Termin und Änderung sicher sind"},
                         "unklar_grund": {"type": "string", "description": "Warum nicht eindeutig (sonst leer)"},
@@ -450,7 +451,7 @@ sind (z.B. "weitere Terminseite: https://..."). Keine einzelnen Veranstaltungsli
 keine Social-Media-Profile.
 9. Beschreibung: sachlich, ohne Werbesprache, höchstens 3 Sätze. Kategorie aus der vorgegebenen Liste.
 10. `aenderungen`: nur, wenn die Mail ausdrücklich sagt, dass ein bereits angekündigter Termin anders stattfindet \
-(andere Uhrzeit, anderer Ort, anderes Datum: art "korrektur") oder ausfällt (art "absage"). `bezug_name` und \
+(andere Uhrzeit, anderer Ort, anderes Datum, anderer/richtiger Link zur Veranstaltung: art "korrektur") oder ausfällt (art "absage"). `bezug_name` und \
 `bezug_datum` beschreiben den Termin, wie er bisher angekündigt war. Bei einer Korrektur nur die geänderten \
 `neu_*`-Felder füllen, die übrigen leer lassen; eine Verschiebung ist eine Korrektur mit `neu_datum`. Einen geänderten \
 oder abgesagten Termin meldest du NICHT zusätzlich unter `termine`. `beleg` ist ein wörtliches Zitat der Änderung.
@@ -691,13 +692,17 @@ def finde_ziele(bezug_name: str, d: date, eintraege: list, bestehende=None) -> l
     bestehende = bestehende or lade_bestehende
     norm_k = app._normalisiere(bezug_name or "")
     kandidaten = [{"typ": "manuell", "index": i, "name": e.get("name", ""), "quelle": "manuell",
-                   "uhrzeit": e.get("uhrzeit", ""), "ort": e.get("ort", "")}
+                   "uhrzeit": e.get("uhrzeit", ""), "ort": e.get("ort", ""), "link": e.get("link", "")}
                   for i, e in enumerate(eintraege) if e.get("freigegeben") and e.get("datum") == d.isoformat()]
     kandidaten += [{"typ": "scraper", "name": t.name, "quelle": t.quelle, "uhrzeit": t.uhrzeit, "ort": t.ort}
                    for t in bestehende(d) if t.quelle != "manuell"]
     stufen = [(k, _name_treffer(norm_k, app._normalisiere(k["name"]))) for k in kandidaten]
     beste = max((st for _k, st in stufen), default=0)
     return [k for k, st in stufen if beste and st == beste]
+
+
+# Neuer Link aus einer Korrektur: nur http(s), keine Leerzeichen, Anführungszeichen oder spitzen Klammern
+LINK_MUSTER = re.compile(r"https?://[^\s\"'<>]{3,500}")
 
 
 def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
@@ -733,13 +738,20 @@ def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
         ort = re.sub(r"\s+", " ", a.get("neu_ort") or "").strip()[:150]
         if ort:
             aenderung["ort"] = ort
+        link = (a.get("neu_link") or "").strip()
+        if link:
+            if LINK_MUSTER.fullmatch(link):
+                aenderung["link"] = link
+            else:
+                probleme.append(f"neuer Link ungültig ({link[:60]!r})")
         if not aenderung and not probleme:
             return "verwerfen", "Korrektur ohne neue Angabe", None
 
     ziele = finde_ziele(bezug_name, d, eintraege, bestehende)
     ziel = ziele[0] if len(ziele) == 1 else None
     if ziel and art == "korrektur":
-        alt = {"datum": d.isoformat(), "uhrzeit": normalisiere_uhrzeit(ziel["uhrzeit"]), "ort": ziel["ort"]}
+        alt = {"datum": d.isoformat(), "uhrzeit": normalisiere_uhrzeit(ziel["uhrzeit"]), "ort": ziel["ort"],
+               "link": ziel.get("link", "")}
         aenderung = {k: v for k, v in aenderung.items() if _norm(alt.get(k, "")) != _norm(v)}
         if not aenderung and not probleme:
             return "verwerfen", "Angaben stehen bereits so im Kalender", None

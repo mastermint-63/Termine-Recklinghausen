@@ -120,3 +120,15 @@ def test_korrektur_trifft_aggregator_mit_praefix():
     termine = [_t("Offene Schmiede", "altstadtschmiede"), _t("Altstadtschmiede: Offene Schmiede", "stadt-re")]
     app.wende_korrekturen_an(termine, [_k(absage=True)], 2026, 10)
     assert [t.abgesagt for t in termine] == [True, True]
+
+
+def test_korrektur_link():
+    termine = [_t("Offene Schmiede", "altstadtschmiede", link="https://alt.example/x")]
+    app.wende_korrekturen_an(termine, [_k(aenderung={"link": "https://neu.example/termine/"})], 2026, 10)
+    assert termine[0].link == "https://neu.example/termine/"
+
+
+def test_korrektur_link_unsicher_wird_ignoriert():
+    termine = [_t("Offene Schmiede", "altstadtschmiede", link="https://alt.example/x")]
+    app.wende_korrekturen_an(termine, [_k(aenderung={"link": 'https://x.example/"onmouseover=1'})], 2026, 10)
+    assert termine[0].link == "https://alt.example/x"
