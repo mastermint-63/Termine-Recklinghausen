@@ -40,6 +40,9 @@ MAX_MAILS_PRO_LAUF = 10
 MAX_ZEILEN = 10
 MAX_VERSUCHE = 3
 VERFALL_TAGE = 7
+# FS 13.10.2026: Absender, Betreff und zweite Zeile machen klar, dass ein Programm schreibt
+HINWEIS_AUTOMATIK = "Diese Mail hat ein Programm geschrieben und verschickt, kein Mensch."
+BETREFF_ZUSATZ = " (automatische Rückmeldung)"
 
 log = logging.getLogger("rueckmeldung")
 
@@ -106,9 +109,9 @@ def baue_text(inhalte: list[dict], vorname: str = "") -> str:
     ]
     mehrere = len(inhalte) > 1
     vorname = hw_bericht.bereinige(vorname, 40)
-    zeilen = [ke.MARKER, "", f"Hallo {vorname}," if vorname else "Hallo,", "",
-              f"danke für deine Mail{'s' if mehrere else ''} an den Holzwurm-Kalender. "
-              f"{'Sie sind' if mehrere else 'Sie ist'} bearbeitet:", ""]
+    zeilen = [ke.MARKER, HINWEIS_AUTOMATIK, "", f"Hallo {vorname}," if vorname else "Hallo,", "",
+              f"deine Mail{'s' if mehrere else ''} an den Holzwurm-Kalender "
+              f"{'sind' if mehrere else 'ist'} automatisch ausgewertet. Das Ergebnis:", ""]
     for titel, schluessel, zeile in abschnitte:
         eintraege = [e for i in inhalte for e in i.get(schluessel, [])]
         if not eintraege:
@@ -124,15 +127,16 @@ def baue_text(inhalte: list[dict], vorname: str = "") -> str:
 
 def betreff_fuer(betreffs: list[str]) -> str:
     if len(betreffs) > 1:
-        return "Holzwurm-Kalender: Rückmeldung zu deinen Mails"
-    rest = hw_bericht.bereinige(_PRAEFIX.sub("", betreffs[0] if betreffs else ""), 120)
-    return f"Re: {rest or 'deine Mail an den Holzwurm-Kalender'}"
+        return "Holzwurm-Kalender: automatische Rückmeldung zu deinen Mails"
+    rest = _PRAEFIX.sub("", betreffs[0] if betreffs else "").replace(BETREFF_ZUSATZ, "")
+    rest = hw_bericht.bereinige(rest, 120)
+    return f"Re: {rest or 'deine Mail an den Holzwurm-Kalender'}{BETREFF_ZUSATZ}"
 
 
 def baue_mail(alias: str, adresse: str, zeilen: list[tuple], vorname: str = "") -> EmailMessage:
     """zeilen: [(schluessel, message_id, betreff, inhalt)], aufsteigend nach angelegt."""
     msg = EmailMessage(policy=email.policy.SMTP)  # lehnt CR/LF in Kopfzeilen ab
-    msg["From"] = formataddr(("Holzwurm-Kalender", alias))
+    msg["From"] = formataddr(("Holzwurm-Kalender (automatisch)", alias))
     msg["To"] = adresse
     msg["Subject"] = betreff_fuer([b for _s, _m, b, _i in zeilen])
     msg["Date"] = formatdate(localtime=True)

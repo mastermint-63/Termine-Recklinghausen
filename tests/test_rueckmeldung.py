@@ -74,7 +74,7 @@ def test_eine_sammelmail_je_adresse(tmp_path):
     text = an_ralf.get_content()
     assert "Lesung 1" in text and "Lesung 2" in text and "deine Mails" in text
     assert an_ralf["In-Reply-To"] == "<m2@redaktion.example>"  # jüngste Mail
-    assert an_ralf["Subject"] == "Holzwurm-Kalender: Rückmeldung zu deinen Mails"
+    assert an_ralf["Subject"] == "Holzwurm-Kalender: automatische Rückmeldung zu deinen Mails"
     assert all(g and g[0].startswith("2026-10-13") for g in _status(con).values())
 
 
@@ -84,7 +84,7 @@ def test_kopfzeilen_und_betreff(tmp_path):
     _sende(con, smtp)
     msg, von, an = smtp.gesendet[0]
     assert von == ALIAS and an == [RALF]
-    assert msg["Subject"] == "Re: Lesung im Café"
+    assert msg["Subject"] == "Re: Lesung im Café (automatische Rückmeldung)"
     assert msg["Auto-Submitted"] == "auto-replied"
     assert msg["X-Auto-Response-Suppress"] == "All"
     assert msg[ke.KOPF_RUECKMELDUNG] == "1"
@@ -209,7 +209,9 @@ def test_titel_werden_bereinigt():
 
 
 @pytest.mark.parametrize("betreff,erwartet", [
-    ("AW: Re: Termin", "Re: Termin"), ("Fwd: WG: X", "Re: X"), ("", "Re: deine Mail an den Holzwurm-Kalender"),
+    ("AW: Re: Termin", "Re: Termin (automatische Rückmeldung)"), ("Fwd: WG: X", "Re: X (automatische Rückmeldung)"),
+    ("", "Re: deine Mail an den Holzwurm-Kalender (automatische Rückmeldung)"),
+    ("Re: Kalender (automatische Rückmeldung)", "Re: Kalender (automatische Rückmeldung)"),  # Antwort auf Antwort
 ])
 def test_betreff(betreff, erwartet):
     assert rm.betreff_fuer([betreff]) == erwartet
@@ -262,3 +264,16 @@ def test_sammelmail_nutzt_vorname(tmp_path):
     smtp = FakeSMTP()
     _sende(con, smtp, vornamen={RALF: "Ralf"})
     assert "\nHallo Ralf,\n" in smtp.gesendet[0][0].get_content()
+
+
+def test_automatik_ist_erkennbar(tmp_path):
+    """FS 13.10.2026: Es muss klar sein, dass ein Programm schreibt, kein Mensch."""
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"})
+    msg = smtp.gesendet[0][0]
+    assert "(automatisch)" in msg["From"]
+    assert msg["Subject"].endswith("(automatische Rückmeldung)")
+    zeilen = msg.get_content().splitlines()
+    assert zeilen[0] == ke.MARKER and "Programm" in zeilen[1] and "kein Mensch" in zeilen[1]
+    assert "automatisch ausgewertet" in msg.get_content()
