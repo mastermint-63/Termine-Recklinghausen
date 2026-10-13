@@ -129,6 +129,9 @@ class Termin:
         self.name = bereinige_text(self.name, einzeilig=True)
         self.ort = bereinige_text(self.ort, einzeilig=True)
         self.beschreibung = bereinige_text(self.beschreibung)
+        if not self.abgesagt and ist_absage_text(self.name, self.beschreibung):
+            self.abgesagt = True
+            print(f"  [Absage erkannt] {self.datum:%d.%m.%Y} {self.name[:60]}")
 
     def uhrzeit_anzeige(self) -> str:
         """Uhrzeit für die Seite: „siehe Website“ ohne Link führt ins Leere (z.B. Termine aus Mails)."""
@@ -170,6 +173,33 @@ def bereinige_text(text: str, einzeilig: bool = False) -> str:
     text = re.sub(r' *\n *', '\n', text)
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
+
+
+# Absage im Text: nur wenn eindeutig der Termin selbst gemeint ist.
+# „Der Eintritt entfällt“, „Bei Regen fällt die Führung aus“ oder „im letzten
+# Jahr abgesagt wurde“ sind keine Absagen. Regressionstests: tests/test_absage_erkennung.py
+_ABSAGE_NOMEN = (r'(?:termin|veranstaltung|vortrag|konzert|kurs|lesung|führung|vorstellung|workshop|'
+                 r'abend|treffen|aufführung|sitzung|event|show|seminar|exkursion|gottesdienst|fahrt|'
+                 r'wanderung|tour|vernissage|party|stammtisch|café|cafe|gespräch|sprechstunde)')
+_ABSAGE_VERB = (r'(?:muss\s+(?:leider\s+)?(?:entfallen|ausfallen|abgesagt\s+werden)'
+                r'|entfällt|fällt\s+(?:\w+\s+)?aus'
+                r'|(?:ist|wurde|wird)\s+(?:leider\s+)?(?:\w+\s+)?abgesagt'
+                r'|findet\s+(?:leider\s+)?(?:\w+\s+)?nicht\s+statt)')
+_ABSAGE_SATZ = re.compile(
+    r'\b(?:der|die|das|dieser|diese|dieses|unser|unsere|unseren)\s+(?:[\w-]+\s+)?[\w-]*' + _ABSAGE_NOMEN
+    + r'\b(?:\s+[^\s.!?]+){0,3}?\s+' + _ABSAGE_VERB + r'\b')
+_ABSAGE_ANFANG = re.compile(r'^\W*(?:abgesagt|entfällt|fällt\s+aus|ausgefallen|ausfall)\b')
+_ABSAGE_ENDE = re.compile(r'[(\[–—:|-]\s*(?:abgesagt|entfällt|fällt\s+aus)\W*$')
+_ABSAGE_GRUND = re.compile(r'\b(?:krankheitsbedingt|kurzfristig|wetterbedingt)\s+(?:abgesagt|ausgefallen)\b')
+
+
+def ist_absage_text(name: str, beschreibung: str = '') -> bool:
+    """True, wenn Titel oder Beschreibung den Termin ausdrücklich absagen."""
+    titel = (name or '').casefold()
+    text = (beschreibung or '').casefold()
+    if _ABSAGE_ANFANG.search(titel) or _ABSAGE_ENDE.search(titel) or _ABSAGE_ANFANG.search(text):
+        return True
+    return any(m.search(f'{titel}. {text}') for m in (_ABSAGE_SATZ, _ABSAGE_GRUND))
 
 
 def _html_zu_text(html: str) -> str:
@@ -474,6 +504,65 @@ def hole_altstadtschmiede(jahr: int, monat: int) -> list[Termin]:
 # 4. Vesterleben.de — HTML-Scraping mit Stadtfilter
 # ---------------------------------------------------------------------------
 
+_VESTERLEBEN_PLATZHALTER = re.compile(
+    r'\s*(?:Vollständiger Titel:.*?\.(?=\s|$))?\s*Öffentliche Veranstaltung;\s*weitere Details siehe angegebene Webseite\.?',
+    re.DOTALL)
+# Vesterleben übernimmt die Geschäftsadresse aus den Daten des Veranstalters
+_VESTERLEBEN_ORTE = {'Der Recklinghäuser, Königswall 14': 'Der Recklinghäuser, Herrenstraße 12'}
+_vesterleben_cache: dict[str, dict] = {}
+
+
+def _parse_vesterleben_detail(html: str) -> dict:
+    """Ort (Name, Straße), vollen Titel und Beschreibung aus einer Vesterleben-Detailseite.
+
+    Die Übersicht kennt nur die Stadt und kürzt lange Titel. Bei gekürzten Titeln
+    steht der volle in der Beschreibung („Vollständiger Titel: …“).
+    """
+    soup = BeautifulSoup(html, 'html.parser')
+    ort = ''
+    for li in soup.select('ul.termininfos li'):
+        rubrik = li.find('span', class_='info-rubrik')
+        if not rubrik or not rubrik.get_text(strip=True).startswith('Wo'):
+            continue
+        rubrik.extract()
+        zeilen = [z.strip() for z in li.get_text('\n').split('\n') if z.strip()]
+        zeilen = [z for z in zeilen if not re.match(r'^\d{5}\s*\|', z)]
+        if zeilen:
+            ort = zeilen[0]
+            if len(zeilen) > 1 and zeilen[1] not in ort:
+                ort = f'{ort}, {zeilen[1]}'
+        break
+    ort = _VESTERLEBEN_ORTE.get(ort, ort)
+
+    titel = beschreibung = ''
+    artikel = soup.find('article')
+    if artikel:
+        # nur Absätze: im selben Block stehen Karte und Buttons („Termin speichern“, „Artikel teilen“);
+        # verschachtelte <p><p>…</p></p> nur einmal
+        absaetze = [p.get_text(' ') for p in artikel.find_all('p') if not p.find('p')]
+        text = bereinige_text('\n'.join(absaetze))
+        m = re.search(r'Vollständiger Titel:\s*(.+?)\.(?:\s|$)', text)
+        if m:
+            titel = m.group(1).strip()
+        beschreibung = _VESTERLEBEN_PLATZHALTER.sub('', text).strip()
+        # bei gekürztem Titel steht in der Beschreibung oft nur dessen Rest
+        if titel and beschreibung and beschreibung in titel:
+            beschreibung = ''
+    return {'ort': ort, 'titel': titel, 'beschreibung': beschreibung}
+
+
+def _vesterleben_details(url: str) -> dict:
+    """Detailseite einmal pro Lauf holen (die Übersicht wird für jeden Monat neu gelesen)."""
+    if url not in _vesterleben_cache:
+        try:
+            response = _request_mit_retry(url, headers=HEADERS, timeout=20)
+            _vesterleben_cache[url] = _parse_vesterleben_detail(response.text)
+        except requests.RequestException as e:
+            print(f"  Fehler beim Abrufen (vesterleben Detail): {e}")
+            _vesterleben_cache[url] = {'ort': '', 'titel': '', 'beschreibung': ''}
+    return _vesterleben_cache[url]
+
+
 def hole_vesterleben(jahr: int, monat: int) -> list[Termin]:
     """Holt Events von vesterleben.de, gefiltert auf Recklinghausen."""
     try:
@@ -562,9 +651,18 @@ def hole_vesterleben(jahr: int, monat: int) -> list[Termin]:
                 }
                 kategorie = kat_map.get(kat_match.group(1), kat_match.group(1).title())
 
+        ort = stadt or 'Recklinghausen'
+        beschreibung = ''
+        if href:
+            details = _vesterleben_details(href)
+            if details['titel'].startswith(name):
+                name = details['titel']
+            ort = details['ort'] or ort
+            beschreibung = details['beschreibung'][:800]
+
         termine.append(Termin(
             name=name[:150], datum=datum, uhrzeit=uhrzeit,
-            ort=stadt or 'Recklinghausen', link=href,
+            ort=ort, link=href, beschreibung=beschreibung,
             quelle='vesterleben', kategorie=kategorie,
         ))
 
