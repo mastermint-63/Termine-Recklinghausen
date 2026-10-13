@@ -131,6 +131,10 @@ python3 rueckmeldung.py --status live --bis "$(date +%Y-%m-%dT%H:%M:%S)" --dry-r
 tail -f ~/Library/Logs/ki/termine/holzwurm.log
 ```
 
+## Suche (Branch `auffindbarkeit`, seit 13.10.2026)
+
+`suche.html` durchsucht alle kommenden Termine ohne Kino (Titel, Ort, Veranstalter, Art, Beschreibung; mehrere Wörter = UND, Umlaute und Groß-/Kleinschreibung egal), Filter Art/Veranstalter/Zeitraum, Zustand in der URL (`?q=…&art=…&quelle=…&zeit=7`). Daten aus `suche-daten.js` (`generiere_suchdaten()`, `window.HW_SUCHE`), **nicht** JSON per `fetch`: Die Vorschau auf dem Seminarserver hat eine CSP ohne `connect-src`. Treffer werden nur per `textContent` in die Seite geschrieben, nie per `innerHTML` (Test prüft das). `noindex`, nicht in der Sitemap. Größe 10/2026: ca. 300 KB, gzip ca. 70 KB. Tests: `tests/test_suche.py`.
+
 ## Tests
 
 ```bash

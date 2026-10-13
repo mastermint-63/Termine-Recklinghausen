@@ -1867,6 +1867,14 @@ ZUSATZ_CSS = r"""
         .kopf-neu .header-text { flex-shrink: 1; min-width: min-content; }
         .kopf-neu .hebbert { flex-shrink: 1; min-width: 0; }
         .nav-unten { margin: 24px 0 0; }
+        .suchformular { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 10px 14px; margin-bottom: 14px; }
+        .suche-feld { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--text-secondary); }
+        .suche-feld input, .suche-feld select { font: inherit; font-size: 1rem; padding: 8px 10px; color: var(--text-color);
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; min-width: 0;
+            width: 100%; box-sizing: border-box; }
+        .suche-feld input:focus, .suche-feld select:focus { outline: 2px solid var(--accent-color); outline-offset: 1px; }
+        .suche-info { font-weight: 600; margin: 0 0 12px; }
+        @media (max-width: 800px) { .suchformular { grid-template-columns: repeat(2, minmax(0, 1fr)); } .suche-text { grid-column: 1 / -1; } }
         .start-abschnitt > h2 a { color: inherit; text-decoration: none; }
         .start-abschnitt > h2 a::after { content: " \2192"; color: var(--accent-color); }
         .start-abschnitt > h2 a:hover { color: var(--accent-color); }
@@ -2020,6 +2028,7 @@ def _schnellnav(prefix: str) -> str:
             f'<a href="{prefix}morgen.html">Morgen</a>'
             f'<a href="{prefix}wochenende.html">Wochenende</a>'
             f'<a href="{prefix}index.html">Startseite</a>'
+            f'<a href="{prefix}suche.html">Suche</a>'
             f'</nav>')
 
 
@@ -2459,6 +2468,173 @@ def schreibe_wenn_geaendert(pfad: str, inhalt: str) -> bool:
     return True
 
 
+def generiere_suchdaten(termine_nach_tag: dict, heute) -> str:
+    """Alle kommenden Termine ohne Kino als Skriptdatei für suche.html.
+
+    Bewusst .js statt .json: Die Vorschau auf dem Seminarserver erlaubt Skripte vom
+    eigenen Server, aber keine Abrufe (CSP ohne connect-src).
+    """
+    eintraege = []
+    for tag in sorted(d for d in termine_nach_tag if d >= heute):
+        for t in _sortierte_termine([t for t in termine_nach_tag[tag] if not ist_kino(t)]):
+            link = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''
+            eintrag = {'d': tag.isoformat(), 'z': t.uhrzeit_anzeige(), 'n': t.name, 'o': t.ort or '',
+                       'q': QUELLEN.get(t.quelle, t.quelle), 'c': BADGE_KLASSEN.get(t.quelle, 'badge-default'),
+                       'k': t.kategorie or '', 'b': (t.beschreibung or '')[:500], 'l': link}
+            if t.abgesagt:
+                eintrag['a'] = 1
+            eintraege.append(eintrag)
+    daten = {'stand': heute.strftime('%d.%m.%Y'), 'termine': eintraege}
+    json_text = _json.dumps(daten, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
+    return f'window.HW_SUCHE = {json_text};\n'
+
+
+_SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
+<script>
+(function () {
+    var daten = window.HW_SUCHE;
+    var form = document.getElementById('suche-form');
+    var feldQ = document.getElementById('suche-q');
+    var feldArt = document.getElementById('suche-art');
+    var feldQuelle = document.getElementById('suche-quelle');
+    var feldZeit = document.getElementById('suche-zeit');
+    var ziel = document.getElementById('suche-ergebnis');
+    var info = document.getElementById('suche-info');
+    if (!daten || !form) { return; }
+    var MAX = 150;
+    var WT = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+    var MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September',
+               'Oktober', 'November', 'Dezember'];
+    function norm(s) {
+        return (s || '').toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+    function iso(d) {
+        var m = d.getMonth() + 1, t = d.getDate();
+        return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (t < 10 ? '0' : '') + t;
+    }
+    function el(tag, klasse, text) {
+        var e = document.createElement(tag);
+        if (klasse) { e.className = klasse; }
+        if (text) { e.textContent = text; }
+        return e;
+    }
+    daten.termine.forEach(function (t) { t.s = norm([t.n, t.o, t.q, t.k, t.b].join(' ')); });
+    function fuelle(select, werte) {
+        werte.sort(function (a, b) { return a.localeCompare(b, 'de'); }).forEach(function (w) {
+            var o = el('option', '', w); o.value = w; select.appendChild(o);
+        });
+    }
+    function einzeln(feld) {
+        var s = {}; daten.termine.forEach(function (t) { if (t[feld]) { s[t[feld]] = 1; } });
+        return Object.keys(s);
+    }
+    fuelle(feldArt, einzeln('k'));
+    fuelle(feldQuelle, einzeln('q'));
+    var p = new URLSearchParams(location.search);
+    feldQ.value = p.get('q') || '';
+    feldArt.value = p.get('art') || '';
+    feldQuelle.value = p.get('quelle') || '';
+    feldZeit.value = p.get('zeit') || '';
+    document.getElementById('suche-stand').textContent = daten.stand;
+
+    function karte(t) {
+        var k = el('div', 'termin');
+        if (t.a) { k.setAttribute('data-abgesagt', '1'); }
+        k.appendChild(el('div', 'termin-zeit', t.z));
+        var info = el('div', 'termin-info');
+        var kopf = el('div', 'termin-name');
+        var name = t.l ? el('a', '', t.n) : el('span', '', t.n);
+        if (t.l) { name.href = t.l; name.target = '_blank'; name.rel = 'noopener noreferrer'; }
+        kopf.appendChild(name);
+        kopf.appendChild(document.createTextNode(' '));
+        if (t.a) { kopf.appendChild(el('span', 'badge badge-abgesagt', 'Abgesagt')); kopf.appendChild(document.createTextNode(' ')); }
+        kopf.appendChild(el('span', 'badge ' + t.c, t.q));
+        if (t.k) { kopf.appendChild(document.createTextNode(' ')); kopf.appendChild(el('span', 'badge badge-kategorie', t.k)); }
+        info.appendChild(kopf);
+        if (t.o) { info.appendChild(el('div', 'termin-ort', t.o)); }
+        if (t.b) { info.appendChild(el('div', 'termin-beschreibung', t.b.length > 220 ? t.b.slice(0, 220) + '…' : t.b)); }
+        k.appendChild(info);
+        return k;
+    }
+
+    function suche() {
+        var woerter = norm(feldQ.value).split(/\s+/).filter(Boolean);
+        var art = feldArt.value, quelle = feldQuelle.value, zeit = feldZeit.value;
+        var params = new URLSearchParams();
+        if (feldQ.value.trim()) { params.set('q', feldQ.value.trim()); }
+        if (art) { params.set('art', art); }
+        if (quelle) { params.set('quelle', quelle); }
+        if (zeit) { params.set('zeit', zeit); }
+        history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : ''));
+        ziel.replaceChildren();
+        if (!woerter.length && !art && !quelle) {
+            info.textContent = 'Suchbegriff eingeben oder eine Art oder einen Veranstalter wählen.';
+            return;
+        }
+        var heute = new Date(); heute.setHours(0, 0, 0, 0);
+        var von = iso(heute), bis = '9999-12-31';
+        if (zeit) { var e = new Date(heute); e.setDate(e.getDate() + parseInt(zeit, 10) - 1); bis = iso(e); }
+        var treffer = daten.termine.filter(function (t) {
+            return t.d >= von && t.d <= bis && (!art || t.k === art) && (!quelle || t.q === quelle) &&
+                woerter.every(function (w) { return t.s.indexOf(w) !== -1; });
+        });
+        info.textContent = treffer.length === 0 ? 'Keine Treffer.' :
+            (treffer.length === 1 ? '1 Treffer' : treffer.length + ' Treffer') +
+            (treffer.length > MAX ? ', die ersten ' + MAX + ' werden gezeigt. Suche genauer eingrenzen.' : '.');
+        var gruppe = null, liste = null;
+        treffer.slice(0, MAX).forEach(function (t) {
+            if (!gruppe || gruppe !== t.d) {
+                gruppe = t.d;
+                var d = new Date(t.d + 'T12:00:00');
+                var block = el('div', 'datum-gruppe');
+                var h = el('h2', 'datum-header');
+                var a = el('a', '', WT[d.getDay()] + ', ' + d.getDate() + '. ' + MON[d.getMonth()] + ' ' + d.getFullYear());
+                a.href = 'tag/' + t.d + '.html';
+                h.appendChild(a); block.appendChild(h);
+                liste = el('div', 'termine-liste'); block.appendChild(liste);
+                ziel.appendChild(block);
+            }
+            liste.appendChild(karte(t));
+        });
+    }
+    var warte = null;
+    feldQ.addEventListener('input', function () { clearTimeout(warte); warte = setTimeout(suche, 150); });
+    [feldArt, feldQuelle, feldZeit].forEach(function (f) { f.addEventListener('change', suche); });
+    form.addEventListener('submit', function (ev) { ev.preventDefault(); suche(); });
+    suche();
+})();
+</script>"""
+
+
+def generiere_suchseite(*, tracking: bool = True) -> str:
+    """suche.html: Suche über alle kommenden Termine (ohne Kino), Daten aus suche-daten.js."""
+    inhalt = '''<form id="suche-form" class="suchformular" role="search" action="suche.html" method="get">
+    <label class="suche-feld suche-text"><span>Suchbegriff</span>
+        <input id="suche-q" name="q" type="search" placeholder="z. B. Altstadtschmiede, Lesung, Semsrott" autocomplete="off"></label>
+    <label class="suche-feld"><span>Art</span>
+        <select id="suche-art" name="art"><option value="">alle</option></select></label>
+    <label class="suche-feld"><span>Veranstalter</span>
+        <select id="suche-quelle" name="quelle"><option value="">alle</option></select></label>
+    <label class="suche-feld"><span>Zeitraum</span>
+        <select id="suche-zeit" name="zeit"><option value="">alle kommenden</option>
+            <option value="1">heute</option><option value="7">die nächsten 7 Tage</option>
+            <option value="31">die nächsten 31 Tage</option></select></label>
+</form>
+<p class="tag-intro">Durchsucht Titel, Ort, Veranstalter und Beschreibung aller kommenden Termine (ohne Kino).
+Stand der Daten: <span id="suche-stand"></span>.</p>
+<noscript><p class="tag-intro">Die Suche braucht JavaScript. Alle Termine stehen auch im
+<a href="index.html">Kalender</a>.</p></noscript>
+<p id="suche-info" class="suche-info" aria-live="polite"></p>
+<div id="suche-ergebnis"></div>'''
+    return _seitenrahmen(
+        titel="Termine suchen: Veranstaltungen in Recklinghausen | Holzwurm",
+        beschreibung="Suche im Veranstaltungskalender Recklinghausen nach Ort, Veranstalter, Art oder Name.",
+        canonical=f"{BASIS_URL}/suche.html", jsonld='', h1="Termine suchen",
+        claim="Veranstaltungskalender Recklinghausen &middot; powered by HOLZWURM",
+        nav_html='', inhalt=inhalt, prefix='', tracking=tracking, script=_SUCHE_SCRIPT,
+        robots='noindex, follow')
+
+
 def generiere_auffindbarkeit(basis_pfad: str, termine_je_monat: dict, monate: list[tuple[int, int]],
                              heute, *, tracking: bool = True) -> list[str]:
     """Tagesseiten, heute/morgen/wochenende, Startseite, stil.css, kalender/*.ics, llms.txt.
@@ -2513,6 +2689,8 @@ def generiere_auffindbarkeit(basis_pfad: str, termine_je_monat: dict, monate: li
                 entfernt += 1
     print(f"Kalender-Dateien: {len(soll)} ({neu} geändert, {entfernt} entfernt)")
     schreibe_wenn_geaendert(os.path.join(basis_pfad, 'llms.txt'), generiere_llms_txt(monate))
+    schreibe_wenn_geaendert(os.path.join(basis_pfad, 'suche-daten.js'), generiere_suchdaten(termine_nach_tag, heute))
+    schreibe_wenn_geaendert(os.path.join(basis_pfad, 'suche.html'), generiere_suchseite(tracking=tracking))
     print("Startseite, heute/morgen/wochenende, stil.css, llms.txt generiert")
     return tag_pfade
 
