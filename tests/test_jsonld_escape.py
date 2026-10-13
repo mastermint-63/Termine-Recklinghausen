@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from scraper import Termin
-from app import generiere_html
+from app import generiere_html, generiere_tagesseite
 
 
 def test_jsonld_kein_script_ausbruch():
@@ -10,6 +10,10 @@ def test_jsonld_kein_script_ausbruch():
                quelle='altstadtschmiede', kategorie='Kultur')
     html = generiere_html([t], 2026, 10, [(2026, 10)], dateiname='termine_re_2026_10.html')
     ld = html.split('<script type="application/ld+json">', 1)[1].split('</script>', 1)[0]
+    assert '<' not in ld
+    # Die Events selbst stehen im JSON-LD der Tagesseite
+    tagesseite = generiere_tagesseite(date(2026, 10, 10), [t], date(2026, 10, 1), date(2026, 10, 31))
+    ld = tagesseite.split('<script type="application/ld+json">', 1)[1].split('</script>', 1)[0]
     assert '<' not in ld
     assert '\\u003c/script' in ld
 

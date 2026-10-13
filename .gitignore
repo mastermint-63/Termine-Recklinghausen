@@ -14,3 +14,7 @@ hw_bericht.json
 .venv/
 .eventim_cache.json
 .DS_Store
+
+# Vorschau der Auffindbarkeits-Seiten (nur lokal)
+vorschau/
+vorschau.zip

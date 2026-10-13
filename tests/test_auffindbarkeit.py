@@ -1,0 +1,206 @@
+"""Tests für Tagesseiten, Startseite, JSON-LD, iCal und llms.txt (Auffindbarkeit, Plan 13.10.2026)."""
+import json
+import re
+from datetime import date, datetime
+
+import pytest
+
+import app
+from scraper import Termin
+
+TAG = date(2026, 10, 13)
+ERSTER, LETZTER = date(2026, 10, 1), date(2026, 10, 31)
+
+
+def _t(name, quelle="nlgr", uhrzeit="19:30 Uhr", tag=TAG, **kw):
+    return Termin(name=name, datum=datetime(tag.year, tag.month, tag.day, 19, 30), uhrzeit=uhrzeit,
+                  ort=kw.pop("ort", "Altstadtschmiede, Kellerstraße 10, 45657 Recklinghausen"),
+                  link=kw.pop("link", "https://example.test/x"), quelle=quelle, **kw)
+
+
+def _jsonld(html):
+    return [json.loads(b) for b in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+
+
+# --- Uhrzeiten -------------------------------------------------------------
+
+@pytest.mark.parametrize("uhrzeit, erwartet", [
+    ("19:30 Uhr", ("19:30", None)),
+    ("19:30–21:00 Uhr", ("19:30", "21:00")),
+    ("14.00 - 17.00 Uhr", ("14:00", "17:00")),
+    ("von 9:30 bis 12 Uhr", ("09:30", "12:00")),
+    ("19 Uhr", ("19:00", None)),
+    ("14:00 / 19:30 Uhr", ("14:00", None)),          # Kino: mehrere Vorstellungen
+    ("22:00–02:00 Uhr", ("22:00", None)),             # über Mitternacht: kein Ende raten
+    ("ganztägig", (None, None)),
+    ("siehe Website", (None, None)),
+    ("", (None, None)),
+])
+def test_zeitspanne(uhrzeit, erwartet):
+    assert app.zeitspanne(uhrzeit) == erwartet
+
+
+# --- JSON-LD ------------------------------------------------------------------
+
+def test_event_jsonld_zeitzone_status_adresse():
+    e = app.event_jsonld(_t("Konzert", uhrzeit="19:30–21:00 Uhr"))
+    assert e["startDate"] == "2026-10-13T19:30:00+02:00"
+    assert e["endDate"] == "2026-10-13T21:00:00+02:00"
+    assert e["eventStatus"] == "https://schema.org/EventScheduled"
+    assert e["location"]["address"]["streetAddress"] == "Kellerstraße 10"
+    assert e["location"]["address"]["postalCode"] == "45657"
+
+
+def test_event_jsonld_winterzeit_und_ganztaegig():
+    e = app.event_jsonld(_t("Markt", uhrzeit="10:00 Uhr", tag=date(2026, 11, 7)))
+    assert e["startDate"] == "2026-11-07T10:00:00+01:00"
+    g = app.event_jsonld(_t("Ausstellung", uhrzeit="ganztägig"))
+    assert g["startDate"] == "2026-10-13" and "endDate" not in g
+
+
+def test_event_jsonld_absage_und_eintritt_frei():
+    e = app.event_jsonld(_t("Vortrag", abgesagt=True, beschreibung="Eintritt frei, Anmeldung erbeten"))
+    assert e["eventStatus"] == "https://schema.org/EventCancelled"
+    assert e["isAccessibleForFree"] is True
+    assert "isAccessibleForFree" not in app.event_jsonld(_t("Konzert", beschreibung="Eintritt 10 Euro"))
+
+
+def test_monatsseite_jsonld_listet_tagesseiten_statt_kinofilme():
+    termine = [_t(f"Film {i}", quelle="cineworld") for i in range(60)] + [_t("Lesung", tag=date(2026, 10, 14))]
+    html = app.generiere_html(termine, 2026, 10, [(2026, 10)], "termine_re_2026_10.html")
+    ld = _jsonld(html)[0]
+    urls = [e["url"] for e in ld["mainEntity"]["itemListElement"]]
+    assert urls == ["https://termine.holzwurm-recklinghausen.de/tag/2026-10-13.html",
+                    "https://termine.holzwurm-recklinghausen.de/tag/2026-10-14.html"]
+    assert '<h2 class="datum-header"><a href="tag/2026-10-13.html">' in html
+
+
+# --- Tagesseiten --------------------------------------------------------------
+
+def test_tagesseite_titel_canonical_und_kino_sammelzeile():
+    termine = [_t("Sinfoniekonzert"), _t("Avatar 3", quelle="cineworld", uhrzeit="14:00 / 19:30 Uhr"),
+               _t("Dune", quelle="cineworld", uhrzeit="20:00 Uhr")]
+    html = app.generiere_tagesseite(TAG, termine, ERSTER, LETZTER)
+    assert "<title>Veranstaltungen in Recklinghausen am Dienstag, 13. Oktober 2026 | Holzwurm</title>" in html
+    assert '<link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/tag/2026-10-13.html" />' in html
+    assert 'data-quelle="cineworld"' not in html                 # keine Einzelfilme
+    assert "zeigt an diesem Tag 2 Filme: Avatar 3, Dune." in html
+    events = _jsonld(html)[0]["mainEntity"]["itemListElement"]
+    assert [e["name"] for e in events] == ["Sinfoniekonzert"]
+
+
+def test_tagesseite_relative_pfade_und_nachbartage():
+    html = app.generiere_tagesseite(TAG, [_t("A")], ERSTER, LETZTER)
+    assert 'href="../stil.css"' in html and 'src="../hebbert/1984-01-verkleinert.jpg"' in html
+    assert 'href="2026-10-12.html"' in html and 'href="2026-10-14.html"' in html
+    assert 'href="../termine_re_2026_10.html#datum-2026-10-13"' in html
+    rand = app.generiere_tagesseite(ERSTER, [], ERSTER, LETZTER)
+    assert 'class="nav-btn disabled"' in rand
+    assert "noch keine Termine bekannt" in rand
+
+
+def test_tagesseite_ohne_tracking():
+    assert "umami" in app.generiere_tagesseite(TAG, [], ERSTER, LETZTER)
+    assert "umami" not in app.generiere_tagesseite(TAG, [], ERSTER, LETZTER, tracking=False)
+
+
+def test_tagesseite_kein_script_ausbruch():
+    html = app.generiere_tagesseite(TAG, [_t("Böse</script><script>alert(1)</script>")], ERSTER, LETZTER)
+    for ld in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
+        assert "<" not in ld
+    assert "<script>alert(1)" not in html
+
+
+def test_heute_seite_canonical_und_weiterleitung():
+    html = app.generiere_tagesseite(TAG, [_t("A")], ERSTER, LETZTER, art="heute")
+    assert '<link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/heute.html" />' in html
+    assert "k !== '2026-10-13'" in html and "window.location.replace('tag/' + k + '.html')" in html
+    assert 'href="tag/2026-10-14.html"' in html and 'href="stil.css"' in html
+
+
+@pytest.mark.parametrize("heute, erwartet", [
+    (date(2026, 10, 13), [date(2026, 10, 16), date(2026, 10, 17), date(2026, 10, 18)]),  # Dienstag
+    (date(2026, 10, 16), [date(2026, 10, 16), date(2026, 10, 17), date(2026, 10, 18)]),  # Freitag
+    (date(2026, 10, 18), [date(2026, 10, 18)]),                                          # Sonntag
+])
+def test_wochenend_tage(heute, erwartet):
+    assert app.wochenend_tage(heute) == erwartet
+
+
+def test_startseite_eigener_inhalt():
+    termine = {TAG: [_t("Heute-Termin")], date(2026, 10, 14): [_t("Morgen-Termin", tag=date(2026, 10, 14))]}
+    html = app.generiere_startseite(TAG, termine, [(2026, 10)], ERSTER, LETZTER)
+    assert '<link rel="canonical" href="https://termine.holzwurm-recklinghausen.de/" />' in html
+    assert "<h1>Veranstaltungskalender Recklinghausen</h1>" in html
+    assert "Heute-Termin" in html and "Morgen-Termin" in html
+    assert 'href="tag/2026-10-15.html"' in html and 'href="termine_re_2026_10.html"' in html
+
+
+# --- iCal: Einzeltermine ("In meinen Kalender") ---------------------------------
+
+def test_termin_ics_ein_termin_mit_zeitzone_und_gefaltet():
+    lang = "Sehr " * 40 + "lange Beschreibung; mit Komma, und Ümläuten"
+    ics = app.generiere_termin_ics(_t("Konzert", uhrzeit="19:30–21:00 Uhr", beschreibung=lang))
+    assert ics.startswith("BEGIN:VCALENDAR\r\n") and ics.endswith("END:VCALENDAR\r\n")
+    assert ics.count("BEGIN:VEVENT") == 1
+    assert "DTSTART;TZID=Europe/Berlin:20261013T193000" in ics
+    assert "DTEND;TZID=Europe/Berlin:20261013T210000" in ics
+    assert "BEGIN:VTIMEZONE" in ics and "URL:https://example.test/x" in ics
+    assert "X-WR-CALNAME" not in ics and "REFRESH-INTERVAL" not in ics   # kein Abo
+    for zeile in ics.split("\r\n"):
+        assert len(zeile.encode("utf-8")) <= 75
+    entfaltet = ics.replace("\r\n ", "")
+    assert "lange Beschreibung\\; mit Komma\\, und Ümläuten" in entfaltet
+
+
+def test_termin_ics_ganztaegig_und_stabil():
+    ics = app.generiere_termin_ics(_t("Ausstellung", uhrzeit="ganztägig"))
+    assert "DTSTART;VALUE=DATE:20261013" in ics and "DTEND;VALUE=DATE:20261014" in ics
+    assert ics == app.generiere_termin_ics(_t("Ausstellung", uhrzeit="ganztägig"))  # kein Zeitstempel des Laufs
+
+
+def test_kalender_link_nicht_bei_kino_und_absage():
+    assert 'href="kalender/' in app._termin_html(_t("Konzert"))
+    assert 'href="../kalender/' in app._termin_html(_t("Konzert"), "../")
+    assert "In meinen Kalender" not in app._termin_html(_t("Film", quelle="cineworld"))
+    assert "In meinen Kalender" not in app._termin_html(_t("Vortrag", abgesagt=True))
+
+
+def test_kalender_link_stoert_hw_import_parser_nicht():
+    """hw_import liest Titel, Ort und Uhrzeit aus den Monatsseiten (termin-ort muss rein bleiben)."""
+    html = app._termin_html(_t("Konzert", ort="Altstadtschmiede"))
+    assert re.search(r'termin-ort">(.*?)</div>', html, re.S).group(1) == "Altstadtschmiede"
+
+
+# --- Schreiben ----------------------------------------------------------------
+
+def test_schreibe_wenn_geaendert(tmp_path):
+    pfad = str(tmp_path / "tag" / "x.html")
+    assert app.schreibe_wenn_geaendert(pfad, "a") is True
+    assert app.schreibe_wenn_geaendert(pfad, "a") is False
+    assert app.schreibe_wenn_geaendert(pfad, "b") is True
+
+
+def test_generiere_auffindbarkeit_schreibt_alle_dateien(tmp_path):
+    termine = {(2026, 10): [_t("Konzert"), _t("Film", quelle="cineworld")]}
+    pfade = app.generiere_auffindbarkeit(str(tmp_path), termine, [(2026, 10)], TAG, tracking=False)
+    assert len(pfade) == 31 and pfade[12] == "tag/2026-10-13.html"
+    for datei in ("stil.css", "index.html", "heute.html", "morgen.html", "wochenende.html",
+                  "llms.txt", "tag/2026-10-13.html", f"kalender/{app.termin_uid(_t('Konzert'))}.ics"):
+        assert (tmp_path / datei).exists(), datei
+    assert not (tmp_path / "termine.ics").exists()
+    assert len(list((tmp_path / "kalender").iterdir())) == 1          # Kino ohne Datei
+    assert "umami" not in (tmp_path / "index.html").read_text()
+    # zweiter Lauf mit gleichen Daten ändert keine Tagesseite
+    vorher = (tmp_path / "tag/2026-10-13.html").stat().st_mtime_ns
+    app.generiere_auffindbarkeit(str(tmp_path), termine, [(2026, 10)], TAG, tracking=False)
+    assert (tmp_path / "tag/2026-10-13.html").stat().st_mtime_ns == vorher
+    # verwaiste Kalender-Datei verschwindet, wenn der Termin wegfällt
+    app.generiere_auffindbarkeit(str(tmp_path), {(2026, 10): [_t("Lesung")]}, [(2026, 10)], TAG, tracking=False)
+    assert [p.name for p in (tmp_path / "kalender").iterdir()] == [f"{app.termin_uid(_t('Lesung'))}.ics"]
+
+
+def test_sortierung_nach_beginn_nicht_nach_text():
+    termine = [_t("Abend", uhrzeit="19.30 Uhr"), _t("Morgen", uhrzeit="9:00–13:00 Uhr"),
+               _t("Info", uhrzeit="siehe Website"), _t("Ausstellung", uhrzeit="ganztägig")]
+    assert [t.name for t in app._sortierte_termine(termine)] == ["Morgen", "Abend", "Ausstellung", "Info"]

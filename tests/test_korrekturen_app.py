@@ -87,11 +87,14 @@ def test_absage_wird_sichtbar_markiert():
     assert '<span class="badge badge-abgesagt">Abgesagt</span>' in block
 
 
-def test_jsonld_ohne_abgesagte_termine():
-    s = _html([_t("Offene Schmiede", "altstadtschmiede", abgesagt=True), _t("Lesung Müller", "nlgr")])
+def test_jsonld_abgesagte_termine_mit_status():
+    """Absagen stehen im JSON-LD der Tagesseite, aber als EventCancelled (KIs und Suchmaschinen sollen es wissen)."""
+    s = app.generiere_tagesseite(TAG.date(), [_t("Offene Schmiede", "altstadtschmiede", abgesagt=True),
+                                              _t("Lesung Müller", "nlgr")], date(2026, 10, 1), date(2026, 10, 31))
     ld = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', s, re.S).group(1))
-    namen = [e["name"] for e in ld["mainEntity"]["itemListElement"]]
-    assert namen == ["Lesung Müller"]
+    status = {e["name"]: e["eventStatus"] for e in ld["mainEntity"]["itemListElement"]}
+    assert status == {"Offene Schmiede": "https://schema.org/EventCancelled",
+                      "Lesung Müller": "https://schema.org/EventScheduled"}
 
 
 def test_monatsseite_mit_absage_bleibt_fuer_import_lesbar(tmp_path, monkeypatch):
