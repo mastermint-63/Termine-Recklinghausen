@@ -277,3 +277,27 @@ def test_automatik_ist_erkennbar(tmp_path):
     zeilen = msg.get_content().splitlines()
     assert zeilen[0] == ke.MARKER and "Programm" in zeilen[1] and "kein Mensch" in zeilen[1]
     assert "automatisch ausgewertet" in msg.get_content()
+
+
+# --------------------------------------------------------------------------- Eigene Anrede (Hebbert, FS 13.10.2026)
+
+def test_lese_anreden():
+    assert rm.lese_anreden("a@x.example=Hallo Hebbert, alter Wurm,|P.S. Knabbern verboten; kaputt;b@y.example=Moin,") == \
+        {"a@x.example": ("Hallo Hebbert, alter Wurm,", "P.S. Knabbern verboten"), "b@y.example": ("Moin,", "")}
+    assert rm.lese_anreden("") == {}
+
+
+def test_eigene_anrede_und_nachsatz():
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}], vorname="Ralf",
+                        anrede="Hallo Hebbert,\nalter Wurm,", nachsatz="P.S. Nicht am Kalender knabbern.")
+    zeilen = text.splitlines()
+    assert "Hallo Hebbert, alter Wurm," in zeilen and "Hallo Ralf," not in text
+    assert zeilen[-1] == "P.S. Nicht am Kalender knabbern." and zeilen[0] == ke.MARKER
+
+
+def test_sammelmail_nutzt_eigene_anrede(tmp_path):
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"}, anreden={RALF: ("Hallo Hebbert,", "P.S. Knabbern verboten.")})
+    text = smtp.gesendet[0][0].get_content()
+    assert "\nHallo Hebbert,\n" in text and text.rstrip().endswith("P.S. Knabbern verboten.")

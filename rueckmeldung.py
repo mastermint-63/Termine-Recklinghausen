@@ -11,7 +11,8 @@ der Regel "E-Mails niemals selbst senden" (Entscheidung FS 12.10.2026, Spec
 docs/superpowers/specs/2026-10-12-kalender-eingang-rueckmeldung-design.md).
 
 Env (HW_ENV_FILE): ICLOUD_USER, ICLOUD_APP_PASSWORD, KALENDER_ALIAS, HW_REDAKTION,
-optional HW_VORNAMEN ("adresse=Vorname,adresse=Vorname", für die Anrede).
+optional HW_VORNAMEN ("adresse=Vorname,adresse=Vorname", für die Anrede) und HW_ANREDEN
+("adresse=Anrede|Nachsatz;…", eigene Anrede und P.S. für einzelne Adressen, geht vor HW_VORNAMEN).
 """
 
 import argparse
@@ -77,6 +78,18 @@ def lese_vornamen(text: str) -> dict[str, str]:
     return namen
 
 
+def lese_anreden(text: str) -> dict[str, tuple[str, str]]:
+    """HW_ANREDEN "adresse=Anrede|Nachsatz;…" -> {adresse (klein): (Anrede, Nachsatz)}."""
+    anreden = {}
+    for teil in (text or "").split(";"):
+        adresse, _, rest = teil.partition("=")
+        anrede, _, nachsatz = rest.partition("|")
+        adresse = adresse.strip().lower()
+        if "@" in adresse and anrede.strip():
+            anreden[adresse] = (anrede.strip(), nachsatz.strip())
+    return anreden
+
+
 def _link(inhalte: list[dict]) -> str:
     """Monatsseite des ersten Termins, mit Sprung auf den Tag, wenn die Seite ihn enthält."""
     import app
@@ -94,7 +107,7 @@ def _link(inhalte: list[dict]) -> str:
     return BASIS_URL
 
 
-def baue_text(inhalte: list[dict], vorname: str = "") -> str:
+def baue_text(inhalte: list[dict], vorname: str = "", anrede: str = "", nachsatz: str = "") -> str:
     """Inhalte aller Mails einer Adresse -> Mailtext. Erste Zeile ist der MARKER (Zitat-Schnitt)."""
     def termin(e):
         return f"- {_tag(e.get('datum'))} {hw_bericht.bereinige(e.get('name'), 90)}"
@@ -109,7 +122,8 @@ def baue_text(inhalte: list[dict], vorname: str = "") -> str:
     ]
     mehrere = len(inhalte) > 1
     vorname = hw_bericht.bereinige(vorname, 40)
-    zeilen = [ke.MARKER, HINWEIS_AUTOMATIK, "", f"Hallo {vorname}," if vorname else "Hallo,", "",
+    anrede = hw_bericht.bereinige(anrede, 100) or (f"Hallo {vorname}," if vorname else "Hallo,")
+    zeilen = [ke.MARKER, HINWEIS_AUTOMATIK, "", anrede, "",
               f"deine Mail{'s' if mehrere else ''} an den Holzwurm-Kalender "
               f"{'sind' if mehrere else 'ist'} automatisch ausgewertet. Das Ergebnis:", ""]
     for titel, schluessel, zeile in abschnitte:
@@ -122,6 +136,8 @@ def baue_text(inhalte: list[dict], vorname: str = "") -> str:
             zeilen.append(f"... und {len(eintraege) - MAX_ZEILEN} weitere")
     zeilen += ["", f"Zum Kalender: {_link(inhalte)}", "",
                "Neue Termine, Korrekturen und Absagen schickst du einfach wieder an diese Adresse."]
+    if nachsatz:
+        zeilen += ["", hw_bericht.bereinige(nachsatz, 300)]
     return "\n".join(zeilen) + "\n"
 
 
@@ -133,7 +149,8 @@ def betreff_fuer(betreffs: list[str]) -> str:
     return f"Re: {rest or 'deine Mail an den Holzwurm-Kalender'}{BETREFF_ZUSATZ}"
 
 
-def baue_mail(alias: str, adresse: str, zeilen: list[tuple], vorname: str = "") -> EmailMessage:
+def baue_mail(alias: str, adresse: str, zeilen: list[tuple], vorname: str = "",
+              anrede: tuple[str, str] = ("", "")) -> EmailMessage:
     """zeilen: [(schluessel, message_id, betreff, inhalt)], aufsteigend nach angelegt."""
     msg = EmailMessage(policy=email.policy.SMTP)  # lehnt CR/LF in Kopfzeilen ab
     msg["From"] = formataddr(("Holzwurm-Kalender (automatisch)", alias))
@@ -148,7 +165,7 @@ def baue_mail(alias: str, adresse: str, zeilen: list[tuple], vorname: str = "") 
     msg["Auto-Submitted"] = "auto-replied"  # RFC 3834: Abwesenheitsnotizen antworten nicht
     msg["X-Auto-Response-Suppress"] = "All"
     msg[ke.KOPF_RUECKMELDUNG] = "1"
-    msg.set_content(baue_text([i for _s, _m, _b, i in zeilen], vorname))
+    msg.set_content(baue_text([i for _s, _m, _b, i in zeilen], vorname, *anrede))
     return msg
 
 
@@ -165,7 +182,8 @@ def _verbinde_smtp():
 
 
 def sende_offene(con, bis: str, alias: str, user: str, passwort: str, redaktion: set[str],
-                 verbinde=None, jetzt: datetime | None = None, vornamen: dict[str, str] | None = None) -> dict:
+                 verbinde=None, jetzt: datetime | None = None, vornamen: dict[str, str] | None = None,
+                 anreden: dict[str, tuple[str, str]] | None = None) -> dict:
     """Offene Rückmeldungen (angelegt vor `bis`) senden -> {"gesendet": n, "fehler": m, "fehlertexte": []}.
 
     Verbindungs-, Login- und Absenderfehler sind global: Lauf endet, nichts wird hochgezählt.
@@ -208,7 +226,8 @@ def sende_offene(con, bis: str, alias: str, user: str, passwort: str, redaktion:
             if adresse not in redaktion:
                 _schliesse(con, schluessel, "nicht mehr in der Redaktionsliste")
                 continue
-            msg = baue_mail(alias, adresse, eintraege, (vornamen or {}).get(adresse.lower(), ""))
+            msg = baue_mail(alias, adresse, eintraege, (vornamen or {}).get(adresse.lower(), ""),
+                            (anreden or {}).get(adresse.lower(), ("", "")))
             _schliesse(con, schluessel, "laeuft", msg["Message-ID"])
             try:
                 smtp.send_message(msg, from_addr=alias, to_addrs=[adresse])
@@ -280,10 +299,11 @@ def main(argv=None) -> int:
         gruppen: dict[str, list] = {}
         for a, m, b, i in zeilen:
             gruppen.setdefault(a, []).append(("", m, b, json.loads(i)))
-        vornamen = lese_vornamen(hw._env("HW_VORNAMEN"))
+        vornamen, anreden = lese_vornamen(hw._env("HW_VORNAMEN")), lese_anreden(hw._env("HW_ANREDEN"))
         for nr, (adresse, eintraege) in enumerate(gruppen.items(), 1):
             print(f"--- Rückmeldung {nr} ({len(eintraege)} Mail(s)) | {betreff_fuer([b for _s, _m, b, _i in eintraege])}")
-            print(baue_text([i for _s, _m, _b, i in eintraege], vornamen.get(adresse.lower(), "")))
+            print(baue_text([i for _s, _m, _b, i in eintraege], vornamen.get(adresse.lower(), ""),
+                            *anreden.get(adresse.lower(), ("", ""))))
         if not gruppen:
             print("(keine offenen Rückmeldungen)")
         return 0
@@ -292,7 +312,7 @@ def main(argv=None) -> int:
         return 0
     erg = sende_offene(con, args.bis, hw._env("KALENDER_ALIAS").strip().lower(), hw._env("ICLOUD_USER"),
                        hw._env("ICLOUD_APP_PASSWORD"), ke.lese_redaktion(hw._env("HW_REDAKTION")),
-                       vornamen=lese_vornamen(hw._env("HW_VORNAMEN")))
+                       vornamen=lese_vornamen(hw._env("HW_VORNAMEN")), anreden=lese_anreden(hw._env("HW_ANREDEN")))
     trage_in_bericht_ein(erg, hw.BERICHT_PFAD)
     return 1 if erg["fehler"] and not erg["gesendet"] else 0
 
