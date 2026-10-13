@@ -957,9 +957,8 @@
         "link": "",
         "beschreibung": "Halloween-Party mit Julius, Musik aus den 80ern, 90ern, 00ern und House. Eintritt frei.",
         "kategorie": "Party",
-        "freigegeben": false,
-        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de",
-        "hinweis": "ähnlicher Termin am 2026-12-12 (subergs): GECCO Party – House, Beats & Clubvibes - Datum abweichend?"
+        "freigegeben": true,
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de"
     },
     {
         "name": "„Friedhofsgeflüster“ – Führung „Tod und Begräbnis“ mit der „Schwarzen Witwe“",
