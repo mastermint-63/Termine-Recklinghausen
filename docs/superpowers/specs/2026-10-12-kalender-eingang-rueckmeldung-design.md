@@ -1,6 +1,6 @@
 # Spec: Kalender-Eingang, Ablage und Rückmeldung an die Redaktion
 
-Stand: 12.10.2026 · Status: umgesetzt (v2, Zweitmeinung eingearbeitet), noch nicht deployt · Ergänzt `2026-10-10-kalender-eingang-design.md` und hebt dort in Abschnitt 4 „Strikt lesend … kein Verschieben“ auf.
+Stand: 12.10.2026 · Status: live seit 13.10.2026 (v2, Zweitmeinung eingearbeitet) · Ergänzt `2026-10-10-kalender-eingang-design.md` und hebt dort in Abschnitt 4 „Strikt lesend … kein Verschieben“ auf.
 
 > **Öffentliches Repo:** keine Mailadressen in Spec, Code, Tests, Fixtures. Alias und Redaktion stehen nur in `prod/termine/secrets/termine-hw.env`.
 
