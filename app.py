@@ -657,7 +657,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             beschreibung_escaped = _html.escape(t.beschreibung)[:1000]
 
             name_esc = _html.escape(t.name)
-            uhrzeit_esc = _html.escape(t.uhrzeit)
+            uhrzeit_esc = _html.escape(t.uhrzeit_anzeige())
             ort_esc = _html.escape(t.ort) if t.ort else ''
             link_safe = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''
 

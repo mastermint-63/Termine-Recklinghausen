@@ -124,6 +124,18 @@ class Termin:
     # Verschoben (korrekturen.json "verschoben_auf"): alter Termin bleibt durchgestrichen, Badge nennt den neuen Tag
     verschoben_auf: str = ''
 
+    def __post_init__(self):
+        # HTML-Reste aus allen Quellen an einer Stelle entfernen
+        self.name = bereinige_text(self.name, einzeilig=True)
+        self.ort = bereinige_text(self.ort, einzeilig=True)
+        self.beschreibung = bereinige_text(self.beschreibung)
+
+    def uhrzeit_anzeige(self) -> str:
+        """Uhrzeit für die Seite: „siehe Website“ ohne Link führt ins Leere (z.B. Termine aus Mails)."""
+        if self.uhrzeit == 'siehe Website' and not self.link:
+            return 'Uhrzeit offen'
+        return self.uhrzeit
+
     def datum_formatiert(self) -> str:
         tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
         return f"{tage[self.datum.weekday()]} {self.datum.strftime('%d.%m.%Y')}"
@@ -132,13 +144,37 @@ class Termin:
         return (self.datum, self.uhrzeit, self.name) < (other.datum, other.uhrzeit, other.name)
 
 
+def bereinige_text(text: str, einzeilig: bool = False) -> str:
+    """Entfernt HTML-Reste: auch mehrfach kodierte Entities, Tags, geschützte Leerzeichen.
+
+    The Events Calendar (NLGR, Backyard, Josef Eich) liefert im JSON-LD doppelt
+    kodiertes HTML (`&lt;p&gt;`, `&amp;nbsp;`). Deshalb erst dekodieren, bis sich
+    nichts mehr ändert, dann Tags entfernen. Nur echte Tags (`<` plus Buchstabe),
+    damit „Kinder <3 Musik“ stehen bleibt.
+    """
+    if not text:
+        return text
+    for _ in range(3):
+        dekodiert = unescape(text)
+        if dekodiert == text:
+            break
+        text = dekodiert
+    text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
+    text = re.sub(r'</(?:p|div|li|h[1-6])\s*>', '\n', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?[a-zA-Z][^>]*>', '', text)
+    text = text.replace('\xad', '')  # weiche Trennzeichen (WordPress-Silbentrennung)
+    text = text.replace('\xa0', ' ')
+    if einzeilig:
+        return ' '.join(text.split())
+    text = re.sub(r'[ \t]+', ' ', text)
+    text = re.sub(r' *\n *', '\n', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
+
 def _html_zu_text(html: str) -> str:
     """Konvertiert HTML zu reinem Text."""
-    text = re.sub(r'<br\s*/?>', '\n', html)
-    text = re.sub(r'<[^>]+>', '', text)
-    text = unescape(text)
-    text = text.replace('\xad', '')  # weiche Trennzeichen (WordPress-Silbentrennung)
-    return text.strip()
+    return bereinige_text(html)
 
 
 def _im_monat(datum: datetime, jahr: int, monat: int) -> bool:
@@ -2256,7 +2292,7 @@ def hole_recklinghaeuser(jahr: int, monat: int) -> list[Termin]:
 
         termine.append(Termin(
             name=name[:150], datum=datum, uhrzeit=uhrzeit,
-            ort='Der Recklinghäuser, Königswall 14',
+            ort='Der Recklinghäuser, Herrenstraße 12',  # laut Impressum; Königswall 14 aus dem JSON-LD ist die Geschäftsadresse
             link=RECKLINGHAEUSER_URL,
             beschreibung='',
             quelle='recklinghaeuser', kategorie='',

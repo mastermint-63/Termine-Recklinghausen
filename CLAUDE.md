@@ -192,7 +192,7 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 | `hole_re_leuchtet()` | re-leuchtet.de/programm | Seit 10/2026 **ohne** The Events Calendar (REST-Route 404). Programmseite mit `article.rel-card`; jedes Vorkommen als JSON im Attribut `data-events` (`start` ISO mit Zeitzone, `venue`), Titel `h3 a`, Link `?rel_event=<slug>`, Kurztext `[data-excerpt]`. Ein Termin pro Vorkommen, Seite wird pro Lauf nur einmal geholt. Festival 23.10.-08.11.2026 (ca. 100 Vorkommen). Tests: `tests/test_re_leuchtet.py` |
 | `hole_frauenforum()` | — (kein Scraping) | Programmatisch: 3. Dienstag/Monat, 17 Uhr, Familienbüro Große Geldstraße 19; Pause Juli + Dezember |
 | `hole_josefeich()` | josefeich.de | JSON-LD `Event` (The Events Calendar Plugin); Kirchenmusik-Termine |
-| `hole_recklinghaeuser()` | der-recklinghaeuser.de | Fließtext-Parsing: deutsche Datumsformate ("Sa. 14. März 2026"), Titel + Uhrzeit aus Folgezeilen |
+| `hole_recklinghaeuser()` | der-recklinghaeuser.de | Fließtext-Parsing: deutsche Datumsformate ("Sa. 14. März 2026"), Titel + Uhrzeit aus Folgezeilen; Ort fest „Herrenstraße 12“ (Impressum, geprüft 13.10.2026), **nicht** Königswall 14 aus dem JSON-LD der Seite (Geschäftsadresse, Hinweis Erich) |
 | `hole_subergs()` | subergs.de/events/ | WordPress-Blogposts: Datum im h3-Titel ("DD.MM.YYYY – Titel"), Elementor-Layout |
 | `hole_stadtlabor()` | stadtlabor-re.de | Armadillo-Blog: `div.blog-entry`, Vernissage-Datum/Uhrzeit aus Titel+Body per Regex (DE/EN-Monate, DD.MM.YYYY) |
 | `hole_gegendruck()` | theater-gegendruck.de | ICS-Feed (The Events Calendar Plugin); Theater im Atelierhaus, Königstraße 49a |
@@ -223,6 +223,8 @@ Testskript: `test_apify_facebook.py` — ruft den Actor direkt auf und zeigt Roh
 
 ## Code-Konventionen
 
+- **Textbereinigung zentral in `Termin.__post_init__`** (`scraper.bereinige_text()`, seit 13.10.2026): Name, Ort und Beschreibung werden beim Anlegen jedes Termins von HTML-Resten befreit, auch bei mehrfach kodierten Entities (The Events Calendar liefert `&lt;p&gt;`, `&amp;nbsp;`), echte Tags (`<` plus Buchstabe) entfernt, `\xa0` zu Leerzeichen. Scraper brauchen dafür keine eigene Bereinigung mehr. Folge für Tests: Wer die Escape-Abwehr des Generators prüfen will, setzt das Feld **nach** dem Anlegen (siehe `tests/test_jsonld_escape.py`).
+- **`Termin.uhrzeit_anzeige()`:** „siehe Website“ ohne Link wird als „Uhrzeit offen“ angezeigt (Termine aus Mails). Intern bleibt „siehe Website“, weil Dublettenprüfung und Sortierung diesen generischen Wert kennen.
 - **HTML-Escaping:** `import html as _html` (Alias nötig, weil `generiere_html()` intern eine lokale Variable `html` verwendet — direktes `import html` führt zu `UnboundLocalError`). Alle gescrapten Textfelder werden mit `_html.escape()` escaped.
 - **URL-Validierung:** Externe Links als `link_safe = t.link if t.link and t.link.startswith(('http://', 'https://')) else ''` validieren — nur dann als `<a href>` rendern, sonst `<span>`.
 - **Alle `target="_blank"`-Links** müssen `rel="noopener noreferrer"` tragen.
