@@ -204,3 +204,23 @@ def test_sortierung_nach_beginn_nicht_nach_text():
     termine = [_t("Abend", uhrzeit="19.30 Uhr"), _t("Morgen", uhrzeit="9:00–13:00 Uhr"),
                _t("Info", uhrzeit="siehe Website"), _t("Ausstellung", uhrzeit="ganztägig")]
     assert [t.name for t in app._sortierte_termine(termine)] == ["Morgen", "Abend", "Ausstellung", "Info"]
+
+
+@pytest.mark.parametrize("link", [
+    "https://example.test/a\r\nATTACH:https://boese.test/x",
+    "https://example.test/a\nEND:VEVENT\nBEGIN:VEVENT",
+    "https://example.test/a\rLOCATION:Falsch",
+    "https://example.test/a b",
+    "javascript:alert(1)",
+])
+def test_termin_ics_link_kann_keine_zeilen_einschleusen(link):
+    ics = app.generiere_termin_ics(_t("Konzert", link=link))
+    zeilen = ics.split("\r\n")
+    assert not any(z.startswith(("ATTACH", "LOCATION:Falsch", "URL:")) for z in zeilen)
+    assert ics.count("BEGIN:VEVENT") == 1 and "\r" not in ics.replace("\r\n", "") and "\n" not in ics.replace("\r\n", "")
+
+
+def test_termin_ics_text_ohne_einzelnes_cr():
+    ics = app.generiere_termin_ics(_t("Konzert\rLOCATION:Falsch", ort="Ort\rX-BOESE:1"))
+    assert "\r" not in ics.replace("\r\n", "")
+    assert not any(z.startswith(("LOCATION:Falsch", "X-BOESE")) for z in ics.split("\r\n"))

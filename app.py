@@ -2322,7 +2322,7 @@ END:VTIMEZONE"""
 
 def _ics_text(wert: str) -> str:
     return (wert.replace('\\', '\\\\').replace(';', '\\;').replace(',', '\\,')
-            .replace('\r\n', '\\n').replace('\n', '\\n'))
+            .replace('\r\n', '\\n').replace('\r', '\\n').replace('\n', '\\n'))
 
 
 def _ics_falten(zeile: str) -> str:
@@ -2338,6 +2338,9 @@ def _ics_falten(zeile: str) -> str:
         laenge += b
     teile.append(aktuell)
     return '\r\n '.join(teile)
+
+
+_ICS_URL = re.compile(r'https?://[^\s"<>\\\x00-\x1f\x7f]{3,2000}')
 
 
 def termin_uid(t: Termin) -> str:
@@ -2384,7 +2387,8 @@ def generiere_termin_ics(t: Termin) -> str:
     quelle = QUELLEN.get(t.quelle, t.quelle)
     beschreibung = f"{beschreibung}\n\nQuelle: {quelle}, über den Veranstaltungskalender des Holzwurm".strip()
     ev.append(f'DESCRIPTION:{_ics_text(beschreibung)}')
-    if t.link and t.link.startswith(('http://', 'https://')):
+    # Gescrapter Link: nur ohne Leer- und Steuerzeichen, sonst ließen sich iCal-Zeilen einschleusen
+    if t.link and _ICS_URL.fullmatch(t.link):
         ev.append(f'URL:{t.link}')
     ev.append('END:VEVENT')
     zeilen += ev + ['END:VCALENDAR']
