@@ -937,5 +937,51 @@
         "kategorie": "Fest",
         "freigegeben": true,
         "hw_mail": "kalender:1M8yso-1xKpZo1pkk-001B3o@mrelayeu.kundenserver.de"
+    },
+    {
+        "name": "Mohito Royal (Punkrock unplugged)",
+        "datum": "2026-10-17",
+        "uhrzeit": "21:00",
+        "ort": "Drübbelken, Münsterstr. 5, 45657 Recklinghausen",
+        "link": "",
+        "beschreibung": "Konzert im Rahmen der Reihe 'Herbst im Drüb' mit der Band Mohito Royal (Punkrock unplugged). Eintritt frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de"
+    },
+    {
+        "name": "Halloween mit Julius (80er/90er/00er & House)",
+        "datum": "2026-10-31",
+        "uhrzeit": "21:00",
+        "ort": "Drübbelken, Münsterstr. 5, 45657 Recklinghausen",
+        "link": "",
+        "beschreibung": "Halloween-Party mit Julius, Musik aus den 80ern, 90ern, 00ern und House. Eintritt frei.",
+        "kategorie": "Party",
+        "freigegeben": false,
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de",
+        "hinweis": "ähnlicher Termin am 2026-12-12 (subergs): GECCO Party – House, Beats & Clubvibes - Datum abweichend?"
+    },
+    {
+        "name": "„Friedhofsgeflüster“ – Führung „Tod und Begräbnis“ mit der „Schwarzen Witwe“",
+        "datum": "2026-11-07",
+        "uhrzeit": "16:00",
+        "ort": "Friedhof Suderwich, Frankenweg 14 a, Recklinghausen",
+        "link": "",
+        "beschreibung": "Auf dem Friedhof Suderwich führt die Kunsthistorikerin Dr. Anja Kretschmer in der Rolle der „Schwarzen Witwe“ durch eine Zeitreise ins 19. Jahrhundert zu den Themen Sterben, Tod und Trauer. Die Führung findet in Kooperation mit der Recklinghäuser Friedhofsverwaltung statt. Tickets kosten 17 Euro zuzüglich Vorverkaufsgebühr, Anmeldung unter www.Friedhofsgefluester.de.",
+        "kategorie": "Sonstiges",
+        "freigegeben": false,
+        "hw_mail": "gmx:bcead57c9d874afe9740218f6f3a5e1e@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-11-18 (sternwarte): Grüne Erbsen und Kleine Rote Punkte -Warum Supermassive Schw - Datum abweichend?"
+    },
+    {
+        "name": "Hochlarer Bauernmarkt",
+        "datum": "2026-10-18",
+        "uhrzeit": "10:00",
+        "ort": "Hochlar, Recklinghausen",
+        "link": "",
+        "beschreibung": "Bauernmarkt in Hochlar mit Verkehrssperrungen im Umfeld der Bockholter Straße von etwa 10 bis 19.30 Uhr.",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "gmx:ded3ab09455d440ab140b7e10a9462aa@recklinghausen.de"
     }
 ]
