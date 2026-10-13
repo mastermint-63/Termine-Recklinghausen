@@ -1862,7 +1862,13 @@ ZUSATZ_CSS = r"""
         .schnellnav a:hover { text-decoration: underline; }
         .datum-header a { color: inherit; text-decoration: none; }
         .datum-header a:hover { color: var(--accent-color); }
-        .kopf-neu .header-text { flex-shrink: 1; min-width: 0; }
+        /* längstes Wort der Überschrift nie brechen, stattdessen schrumpfen die Bilder (Rückmeldung Ralf) */
+        .kopf-neu .header-text { flex-shrink: 1; min-width: min-content; }
+        .kopf-neu .hebbert { flex-shrink: 1; min-width: 0; }
+        .nav-unten { margin: 24px 0 0; }
+        .start-abschnitt > h2 a { color: inherit; text-decoration: none; }
+        .start-abschnitt > h2 a::after { content: " \2192"; color: var(--accent-color); }
+        .start-abschnitt > h2 a:hover { color: var(--accent-color); }
         h1.h1-lang { font-size: 1.6rem; }
         a.monat-titel { color: var(--accent-color); text-decoration: none; }
         a.monat-titel:hover { text-decoration: underline; }
@@ -2201,7 +2207,10 @@ def generiere_tagesseite(tag, termine: list[Termin], erster, letzter, *, art: st
     verb = 'steht' if sum(1 for t in termine if not ist_kino(t)) == 1 else 'stehen'
     intro = (f'<p class="tag-intro">Am {_html.escape(datum_text)} {verb} {_html.escape(_anzahl_text(termine))} im Kalender. '
              f'Alle Termine des Monats stehen im <a href="{prefix}{monat_datei}#datum-{tag.isoformat()}">Monatskalender</a>.</p>')
-    inhalt = intro + '\n' + _tag_block(tag, termine, prefix)
+    # Navigation auch am Seitenende (Rückmeldung Erich): wer unten ankommt, blättert direkt weiter
+    nav_unten = nav_html.replace('<nav class="nav" aria-label="Tagesnavigation">',
+                                 '<nav class="nav nav-unten" aria-label="Tagesnavigation unten">', 1)
+    inhalt = intro + '\n' + _tag_block(tag, termine, prefix) + '\n' + nav_unten
     claim = "Veranstaltungskalender Recklinghausen &middot; powered by HOLZWURM"
     if art != 'tag':
         claim = f"{_html.escape(datum_text)} &middot; powered by HOLZWURM"
@@ -2250,9 +2259,8 @@ def generiere_startseite(heute, termine_nach_tag: dict, monate: list[tuple[int, 
         if erster <= d <= letzter:
             termine = termine_nach_tag.get(d, [])
             abschnitte.append(
-                f'<section class="start-abschnitt"><h2>{wort}, {_html.escape(datum_lang(d))}</h2>\n'
-                f'<p class="tag-intro">{_html.escape(_anzahl_text(termine))}. '
-                f'<a href="{tagesseite_pfad(d)}">Eigene Seite für diesen Tag</a></p>\n'
+                f'<section class="start-abschnitt"><h2><a href="{tagesseite_pfad(d)}">{wort}, {_html.escape(datum_lang(d))}</a></h2>\n'
+                f'<p class="tag-intro">{_html.escape(_anzahl_text(termine))}.</p>\n'
                 f'{_tag_block(d, termine, "").replace(chr(10) + "<h2 class=" + chr(34) + "datum-header", chr(10) + "<h2 hidden class=" + chr(34) + "datum-header", 1)}</section>')
     naechste = []
     for i in range(2, 9):

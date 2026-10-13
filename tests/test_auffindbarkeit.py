@@ -1,7 +1,7 @@
 """Tests für Tagesseiten, Startseite, JSON-LD, iCal und llms.txt (Auffindbarkeit, Plan 13.10.2026)."""
 import json
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import pytest
 
@@ -234,3 +234,24 @@ def test_verschobener_termin_im_jsonld_nicht_abgesagt():
     assert obj['eventStatus'] == 'https://schema.org/EventRescheduled'
     assert obj['startDate'] == '2026-10-30'
     assert obj['previousStartDate'].startswith('2026-10-20')
+
+
+def test_tagesseite_navigation_auch_am_seitenende():
+    """Rückmeldung Erich: am Ende einer Tagesseite direkt zum nächsten Tag."""
+    html = app.generiere_tagesseite(TAG, [_t("A")], ERSTER, LETZTER)
+    folgetag = (TAG + timedelta(days=1)).isoformat()
+    assert html.count(f'href="{folgetag}.html"') == 2
+    assert html.index('aria-label="Tagesnavigation unten"') > html.index('termin-name')
+
+
+def test_startseite_datum_verlinkt_statt_eigene_seite():
+    """Rückmeldung Ralf: „Eigene Seite für diesen Tag“ ist überflüssig, die Überschrift verlinkt."""
+    html = app.generiere_startseite(TAG, {TAG: [_t("A")]}, [(TAG.year, TAG.month)], ERSTER, LETZTER)
+    assert 'Eigene Seite für diesen Tag' not in html
+    assert f'<h2><a href="tag/{TAG.isoformat()}.html">Heute,' in html
+
+
+def test_kopf_neue_seiten_bricht_langes_wort_nicht():
+    """Rückmeldung Ralf: „Veranstaltungskalender“ lief am Desktop ins rechte Bild."""
+    assert '.kopf-neu .header-text { flex-shrink: 1; min-width: min-content; }' in app.ZUSATZ_CSS
+    assert '.kopf-neu .hebbert' in app.ZUSATZ_CSS
