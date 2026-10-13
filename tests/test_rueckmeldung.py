@@ -213,3 +213,52 @@ def test_titel_werden_bereinigt():
 ])
 def test_betreff(betreff, erwartet):
     assert rm.betreff_fuer([betreff]) == erwartet
+
+
+# --------------------------------------------------------------------------- Anrede, Tageslink, Schluss (13.10.2026)
+
+def test_anrede_mit_vorname():
+    inhalt = {"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}
+    assert "\nHallo Erich,\n" in rm.baue_text([inhalt], vorname="Erich")
+    assert "\nHallo,\n" in rm.baue_text([inhalt])
+    assert "\nHallo Er ich,\n" in rm.baue_text([inhalt], vorname="Er\nich")  # kein Zeilenumbruch im Namen
+
+
+def test_lese_vornamen():
+    assert rm.lese_vornamen("a@x.example=Erich, B@Y.example = Ralf ,kaputt,=leer,c@z.example=") == \
+        {"a@x.example": "Erich", "b@y.example": "Ralf"}
+    assert rm.lese_vornamen("") == {}
+
+
+def test_link_springt_zum_tag(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text('<div class="datum-gruppe" id="datum-2026-10-24">')
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "termine_re_2026_10.html#datum-2026-10-24\n" in text
+
+
+def test_link_ohne_tag_auf_der_seite_nur_monat(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text("x")
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "termine_re_2026_10.html\n" in text
+
+
+def test_link_auch_bei_absage(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text('id="datum-2026-10-23"')
+    text = rm.baue_text([{"abgesagt": [{"datum": "2026-10-23", "name": "Konzert"}]}])
+    assert "termine_re_2026_10.html#datum-2026-10-23\n" in text
+
+
+def test_schlusssatz_laedt_zu_neuen_mails_ein():
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "nicht direkt" not in text
+    assert "Neue Termine, Korrekturen und Absagen schickst du einfach wieder an diese Adresse." in text
+
+
+def test_sammelmail_nutzt_vorname(tmp_path):
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"})
+    assert "\nHallo Ralf,\n" in smtp.gesendet[0][0].get_content()
