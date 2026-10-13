@@ -135,3 +135,23 @@ def test_korrektur_link_unsicher_wird_ignoriert():
     termine = [_t("Offene Schmiede", "altstadtschmiede", link="https://alt.example/x")]
     app.wende_korrekturen_an(termine, [_k(aenderung={"link": 'https://x.example/"onmouseover=1'})], 2026, 10)
     assert termine[0].link == "https://alt.example/x"
+
+
+def test_verschiebung_markiert_alten_termin():
+    termine = [_t("Offene Schmiede", "altstadtschmiede")]
+    app.wende_korrekturen_an(termine, [_k(verschoben_auf="2026-10-30")], 2026, 10)
+    assert termine[0].abgesagt is True and termine[0].verschoben_auf == "2026-10-30"
+
+
+def test_verschiebung_wird_sichtbar_markiert_statt_abgesagt():
+    s = _html([_t("Offene Schmiede", "altstadtschmiede", abgesagt=True, verschoben_auf="2026-10-30")])
+    block = s.split('data-quelle="altstadtschmiede" data-abgesagt="1">')[1]
+    assert '<span class="badge badge-abgesagt">Verschoben auf 30.10.</span>' in block
+    assert ">Abgesagt<" not in block
+
+
+def test_verschiebung_ueberlebt_dublettenpruefung():
+    termine = [_t("Offene Schmiede", "manuell", abgesagt=True, verschoben_auf="2026-10-30"),
+               _t("Offene Schmiede", "altstadtschmiede", link="https://x.example/s", beschreibung="lang")]
+    ergebnis = app.entferne_duplikate(termine)
+    assert len(ergebnis) == 1 and ergebnis[0].verschoben_auf == "2026-10-30"

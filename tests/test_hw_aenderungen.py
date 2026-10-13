@@ -8,8 +8,9 @@ HEUTE = date(2026, 10, 11)
 TAG = date(2026, 10, 23)  # Freitag
 
 
-def _mail(text="Die Offene Schmiede am Freitag, 23.10.2026 beginnt erst um 14 Uhr.", vertrauen="vertraut"):
-    return hw.Mail(konto="kalender", id=1, message_id="m1@x", datum=datetime(2026, 10, 11, 10, 0),
+def _mail(text="Die Offene Schmiede am Freitag, 23.10.2026 beginnt erst um 14 Uhr.", vertrauen="vertraut",
+          konto="kalender"):
+    return hw.Mail(konto=konto, id=1, message_id="m1@x", datum=datetime(2026, 10, 11, 10, 0),
                    betreff="Korrektur", absender="R <r@x.example>", text=text, vertrauen=vertrauen,
                    vertrauen_grund="" if vertrauen == "vertraut" else "Absender nicht authentifiziert")
 
@@ -87,8 +88,13 @@ def test_absage_scraper_termin_automatisch():
     assert status == "auto" and aktion["absage"] is True
 
 
+# Ab hier "HW" = eM-Client-Mail mit HW-Markierung: dort gilt die Prüfliste weiter. Kalender-Mails vertrauter
+# Redaktionsmitglieder laufen ohne Prüfliste (tests/test_redaktion_direkt.py).
+HW = "gmx"
+
+
 def test_verschiebung_scraper_termin_immer_pruefen():
-    mail = _mail("Die Offene Schmiede wird vom 23.10.2026 auf den 30.10.2026 verschoben.")
+    mail = _mail("Die Offene Schmiede wird vom 23.10.2026 auf den 30.10.2026 verschoben.", konto=HW)
     status, grund, _ = _bewerte(_aend(neu_datum="2026-10-30", neu_uhrzeit="", beleg="auf den 30.10.2026 verschoben"),
                                 mail=mail)
     assert status == "pruefen" and "Verschiebung" in grund
@@ -102,19 +108,19 @@ def test_verschiebung_manueller_termin_automatisch():
 
 
 def test_kein_ziel_geht_zur_pruefung():
-    status, grund, aktion = _bewerte(_aend(), seite=_seite(("Lesung Müller", "nlgr", "19:00 Uhr")))
+    status, grund, aktion = _bewerte(_aend(), mail=_mail(konto=HW), seite=_seite(("Lesung Müller", "nlgr", "19:00 Uhr")))
     assert status == "pruefen" and "kein passender Termin" in grund and aktion is not None
 
 
 def test_mehrere_ziele_gehen_zur_pruefung():
-    status, grund, _ = _bewerte(_aend(bezug_name="Schmiede"),
+    status, grund, _ = _bewerte(_aend(bezug_name="Schmiede"), mail=_mail(konto=HW),
                                 seite=_seite(("Offene Schmiede", "altstadtschmiede", "10:00 Uhr"),
                                              ("Schmiede-Konzert", "facebook", "20:00 Uhr")))
     assert status == "pruefen" and "mehrere" in grund
 
 
 def test_beleg_nicht_im_text_geht_zur_pruefung():
-    status, grund, _ = _bewerte(_aend(beleg="beginnt um 15 Uhr"))
+    status, grund, _ = _bewerte(_aend(beleg="beginnt um 15 Uhr"), mail=_mail(konto=HW))
     assert status == "pruefen" and "Beleg" in grund
 
 
@@ -124,7 +130,7 @@ def test_nicht_authentifiziert_geht_zur_pruefung():
 
 
 def test_unklar_geht_zur_pruefung():
-    status, grund, _ = _bewerte(_aend(eindeutig=False, unklar_grund="welcher Termin?"))
+    status, grund, _ = _bewerte(_aend(eindeutig=False, unklar_grund="welcher Termin?"), mail=_mail(konto=HW))
     assert status == "pruefen" and "welcher Termin?" in grund
 
 
@@ -143,7 +149,7 @@ def test_korrektur_ohne_wirkung_wird_verworfen():
 
 
 def test_wochentag_im_beleg_muss_passen():
-    mail = _mail("Die Offene Schmiede am Samstag, 23.10.2026 beginnt erst um 14 Uhr.")
+    mail = _mail("Die Offene Schmiede am Samstag, 23.10.2026 beginnt erst um 14 Uhr.", konto=HW)
     status, grund, _ = _bewerte(_aend(beleg="Samstag, 23.10.2026 beginnt erst um 14 Uhr"), mail=mail)
     assert status == "pruefen" and "Wochentag" in grund
 
@@ -177,7 +183,7 @@ def test_anwenden_auf_scraper_termin_schreibt_korrektur():
 
 def test_pruefen_schreibt_nicht_freigegebene_korrektur_mit_hinweis():
     eintraege, korrekturen = [], []
-    _, grund, aktion = _bewerte(_aend(), seite=_seite(("Lesung Müller", "nlgr", "19:00 Uhr")))
+    _, grund, aktion = _bewerte(_aend(), mail=_mail(konto=HW), seite=_seite(("Lesung Müller", "nlgr", "19:00 Uhr")))
     hw.wende_aenderung_an(aktion, eintraege, korrekturen, _mail(), HEUTE, freigegeben=False, hinweis=grund)
     k = korrekturen[0]
     assert k["freigegeben"] is False and k["name_norm"] == "" and k["bezug_name"] == "Offene Schmiede"
@@ -367,7 +373,9 @@ def test_link_korrektur_wird_uebernommen():
 
 def test_link_korrektur_ungueltiger_link_zur_pruefung():
     a = _aend(neu_uhrzeit="", neu_link="javascript:alert(1)", beleg="Richtige Quelle ist aber")
-    status, grund, _ = hw.bewerte_aenderung(a, _link_mail(), HEUTE, [],
+    mail = _link_mail()
+    mail.konto = HW
+    status, grund, _ = hw.bewerte_aenderung(a, mail, HEUTE, [],
                                            _seite(("Offene Schmiede", "altstadtschmiede", "10:00 Uhr")))
     assert status == "pruefen" and "Link ungültig" in grund
 

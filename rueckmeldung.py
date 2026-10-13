@@ -10,7 +10,9 @@ Eine Sammelmail je Adresse, fester Text (kein Modell), per iCloud-SMTP vom Alias
 der Regel "E-Mails niemals selbst senden" (Entscheidung FS 12.10.2026, Spec
 docs/superpowers/specs/2026-10-12-kalender-eingang-rueckmeldung-design.md).
 
-Env (HW_ENV_FILE): ICLOUD_USER, ICLOUD_APP_PASSWORD, KALENDER_ALIAS, HW_REDAKTION.
+Env (HW_ENV_FILE): ICLOUD_USER, ICLOUD_APP_PASSWORD, KALENDER_ALIAS, HW_REDAKTION,
+optional HW_VORNAMEN ("adresse=Vorname,adresse=Vorname", für die Anrede) und HW_ANREDEN
+("adresse=Anrede|Nachsatz;…", eigene Anrede und P.S. für einzelne Adressen, geht vor HW_VORNAMEN).
 """
 
 import argparse
@@ -39,6 +41,9 @@ MAX_MAILS_PRO_LAUF = 10
 MAX_ZEILEN = 10
 MAX_VERSUCHE = 3
 VERFALL_TAGE = 7
+# FS 13.10.2026: Absender, Betreff und zweite Zeile machen klar, dass ein Programm schreibt
+HINWEIS_AUTOMATIK = "Diese Mail hat ein Programm geschrieben und verschickt, kein Mensch."
+BETREFF_ZUSATZ = " (automatische Rückmeldung)"
 
 log = logging.getLogger("rueckmeldung")
 
@@ -62,21 +67,47 @@ def _was(was: str) -> str:
     return re.sub(r"(^|, )([a-z]+)\b", lambda m: m.group(1) + _FELDER.get(m.group(2), m.group(2)), was or "")
 
 
+def lese_vornamen(text: str) -> dict[str, str]:
+    """HW_VORNAMEN "adresse=Vorname,…" -> {adresse (klein): Vorname}. Kaputte Einträge werden übersprungen."""
+    namen = {}
+    for teil in (text or "").split(","):
+        adresse, _, vorname = teil.partition("=")
+        adresse, vorname = adresse.strip().lower(), vorname.strip()
+        if "@" in adresse and vorname:
+            namen[adresse] = vorname
+    return namen
+
+
+def lese_anreden(text: str) -> dict[str, tuple[str, str]]:
+    """HW_ANREDEN "adresse=Anrede|Nachsatz;…" -> {adresse (klein): (Anrede, Nachsatz)}."""
+    anreden = {}
+    for teil in (text or "").split(";"):
+        adresse, _, rest = teil.partition("=")
+        anrede, _, nachsatz = rest.partition("|")
+        adresse = adresse.strip().lower()
+        if "@" in adresse and anrede.strip():
+            anreden[adresse] = (anrede.strip(), nachsatz.strip())
+    return anreden
+
+
 def _link(inhalte: list[dict]) -> str:
+    """Monatsseite des ersten Termins, mit Sprung auf den Tag, wenn die Seite ihn enthält."""
     import app
     for i in inhalte:
-        for e in i.get("eingetragen", []):
+        for e in i.get("eingetragen", []) + i.get("geaendert", []) + i.get("abgesagt", []) + i.get("bekannt", []):
             try:
                 d = datetime.strptime(e.get("datum", ""), "%Y-%m-%d")
             except ValueError:
                 continue
             datei = app.dateiname_fuer_monat(d.year, d.month)
             if (HIER / datei).exists():
-                return BASIS_URL + datei
+                anker = f"datum-{d:%Y-%m-%d}"
+                seite = (HIER / datei).read_text(encoding="utf-8", errors="replace")
+                return BASIS_URL + datei + (f"#{anker}" if f'id="{anker}"' in seite else "")
     return BASIS_URL
 
 
-def baue_text(inhalte: list[dict]) -> str:
+def baue_text(inhalte: list[dict], vorname: str = "", anrede: str = "", nachsatz: str = "") -> str:
     """Inhalte aller Mails einer Adresse -> Mailtext. Erste Zeile ist der MARKER (Zitat-Schnitt)."""
     def termin(e):
         return f"- {_tag(e.get('datum'))} {hw_bericht.bereinige(e.get('name'), 90)}"
@@ -90,9 +121,11 @@ def baue_text(inhalte: list[dict]) -> str:
         ("Nicht übernommen", "verworfen", lambda e: f"{termin(e)} ({hw_bericht.bereinige(e.get('grund'), 60)})"),
     ]
     mehrere = len(inhalte) > 1
-    zeilen = [ke.MARKER, "", "Hallo,", "",
-              f"danke für deine Mail{'s' if mehrere else ''} an den Holzwurm-Kalender. "
-              f"{'Sie sind' if mehrere else 'Sie ist'} bearbeitet:", ""]
+    vorname = hw_bericht.bereinige(vorname, 40)
+    anrede = hw_bericht.bereinige(anrede, 100) or (f"Hallo {vorname}," if vorname else "Hallo,")
+    zeilen = [ke.MARKER, HINWEIS_AUTOMATIK, "", anrede, "",
+              f"deine Mail{'s' if mehrere else ''} an den Holzwurm-Kalender "
+              f"{'sind' if mehrere else 'ist'} automatisch ausgewertet. Das Ergebnis:", ""]
     for titel, schluessel, zeile in abschnitte:
         eintraege = [e for i in inhalte for e in i.get(schluessel, [])]
         if not eintraege:
@@ -102,21 +135,25 @@ def baue_text(inhalte: list[dict]) -> str:
         if len(eintraege) > MAX_ZEILEN:
             zeilen.append(f"... und {len(eintraege) - MAX_ZEILEN} weitere")
     zeilen += ["", f"Zum Kalender: {_link(inhalte)}", "",
-               "Bitte nicht direkt auf diese Mail antworten, außer du hast einen neuen Hinweis."]
+               "Neue Termine, Korrekturen und Absagen schickst du einfach wieder an diese Adresse."]
+    if nachsatz:
+        zeilen += ["", hw_bericht.bereinige(nachsatz, 300)]
     return "\n".join(zeilen) + "\n"
 
 
 def betreff_fuer(betreffs: list[str]) -> str:
     if len(betreffs) > 1:
-        return "Holzwurm-Kalender: Rückmeldung zu deinen Mails"
-    rest = hw_bericht.bereinige(_PRAEFIX.sub("", betreffs[0] if betreffs else ""), 120)
-    return f"Re: {rest or 'deine Mail an den Holzwurm-Kalender'}"
+        return "Holzwurm-Kalender: automatische Rückmeldung zu deinen Mails"
+    rest = _PRAEFIX.sub("", betreffs[0] if betreffs else "").replace(BETREFF_ZUSATZ, "")
+    rest = hw_bericht.bereinige(rest, 120)
+    return f"Re: {rest or 'deine Mail an den Holzwurm-Kalender'}{BETREFF_ZUSATZ}"
 
 
-def baue_mail(alias: str, adresse: str, zeilen: list[tuple]) -> EmailMessage:
+def baue_mail(alias: str, adresse: str, zeilen: list[tuple], vorname: str = "",
+              anrede: tuple[str, str] = ("", "")) -> EmailMessage:
     """zeilen: [(schluessel, message_id, betreff, inhalt)], aufsteigend nach angelegt."""
     msg = EmailMessage(policy=email.policy.SMTP)  # lehnt CR/LF in Kopfzeilen ab
-    msg["From"] = formataddr(("Holzwurm-Kalender", alias))
+    msg["From"] = formataddr(("Holzwurm-Kalender (automatisch)", alias))
     msg["To"] = adresse
     msg["Subject"] = betreff_fuer([b for _s, _m, b, _i in zeilen])
     msg["Date"] = formatdate(localtime=True)
@@ -128,7 +165,7 @@ def baue_mail(alias: str, adresse: str, zeilen: list[tuple]) -> EmailMessage:
     msg["Auto-Submitted"] = "auto-replied"  # RFC 3834: Abwesenheitsnotizen antworten nicht
     msg["X-Auto-Response-Suppress"] = "All"
     msg[ke.KOPF_RUECKMELDUNG] = "1"
-    msg.set_content(baue_text([i for _s, _m, _b, i in zeilen]))
+    msg.set_content(baue_text([i for _s, _m, _b, i in zeilen], vorname, *anrede))
     return msg
 
 
@@ -145,7 +182,8 @@ def _verbinde_smtp():
 
 
 def sende_offene(con, bis: str, alias: str, user: str, passwort: str, redaktion: set[str],
-                 verbinde=None, jetzt: datetime | None = None) -> dict:
+                 verbinde=None, jetzt: datetime | None = None, vornamen: dict[str, str] | None = None,
+                 anreden: dict[str, tuple[str, str]] | None = None) -> dict:
     """Offene Rückmeldungen (angelegt vor `bis`) senden -> {"gesendet": n, "fehler": m, "fehlertexte": []}.
 
     Verbindungs-, Login- und Absenderfehler sind global: Lauf endet, nichts wird hochgezählt.
@@ -188,7 +226,8 @@ def sende_offene(con, bis: str, alias: str, user: str, passwort: str, redaktion:
             if adresse not in redaktion:
                 _schliesse(con, schluessel, "nicht mehr in der Redaktionsliste")
                 continue
-            msg = baue_mail(alias, adresse, eintraege)
+            msg = baue_mail(alias, adresse, eintraege, (vornamen or {}).get(adresse.lower(), ""),
+                            (anreden or {}).get(adresse.lower(), ("", "")))
             _schliesse(con, schluessel, "laeuft", msg["Message-ID"])
             try:
                 smtp.send_message(msg, from_addr=alias, to_addrs=[adresse])
@@ -260,9 +299,11 @@ def main(argv=None) -> int:
         gruppen: dict[str, list] = {}
         for a, m, b, i in zeilen:
             gruppen.setdefault(a, []).append(("", m, b, json.loads(i)))
-        for nr, eintraege in enumerate(gruppen.values(), 1):
+        vornamen, anreden = lese_vornamen(hw._env("HW_VORNAMEN")), lese_anreden(hw._env("HW_ANREDEN"))
+        for nr, (adresse, eintraege) in enumerate(gruppen.items(), 1):
             print(f"--- Rückmeldung {nr} ({len(eintraege)} Mail(s)) | {betreff_fuer([b for _s, _m, b, _i in eintraege])}")
-            print(baue_text([i for _s, _m, _b, i in eintraege]))
+            print(baue_text([i for _s, _m, _b, i in eintraege], vornamen.get(adresse.lower(), ""),
+                            *anreden.get(adresse.lower(), ("", ""))))
         if not gruppen:
             print("(keine offenen Rückmeldungen)")
         return 0
@@ -270,7 +311,8 @@ def main(argv=None) -> int:
         log.info("Veröffentlichung fehlgeschlagen: Rückmeldungen warten auf den nächsten Lauf")
         return 0
     erg = sende_offene(con, args.bis, hw._env("KALENDER_ALIAS").strip().lower(), hw._env("ICLOUD_USER"),
-                       hw._env("ICLOUD_APP_PASSWORD"), ke.lese_redaktion(hw._env("HW_REDAKTION")))
+                       hw._env("ICLOUD_APP_PASSWORD"), ke.lese_redaktion(hw._env("HW_REDAKTION")),
+                       vornamen=lese_vornamen(hw._env("HW_VORNAMEN")), anreden=lese_anreden(hw._env("HW_ANREDEN")))
     trage_in_bericht_ein(erg, hw.BERICHT_PFAD)
     return 1 if erg["fehler"] and not erg["gesendet"] else 0
 

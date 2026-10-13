@@ -957,9 +957,8 @@
         "link": "",
         "beschreibung": "Halloween-Party mit Julius, Musik aus den 80ern, 90ern, 00ern und House. Eintritt frei.",
         "kategorie": "Party",
-        "freigegeben": false,
-        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de",
-        "hinweis": "ähnlicher Termin am 2026-12-12 (subergs): GECCO Party – House, Beats & Clubvibes - Datum abweichend?"
+        "freigegeben": true,
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de"
     },
     {
         "name": "„Friedhofsgeflüster“ – Führung „Tod und Begräbnis“ mit der „Schwarzen Witwe“",
@@ -983,5 +982,51 @@
         "kategorie": "Fest",
         "freigegeben": true,
         "hw_mail": "gmx:ded3ab09455d440ab140b7e10a9462aa@recklinghausen.de"
+    },
+    {
+        "name": "\"Blickpunkt Auge\"-Beratung",
+        "datum": "2026-10-15",
+        "uhrzeit": "14:00",
+        "ort": "Rathaus, Raum 2.16, Recklinghausen",
+        "link": "",
+        "beschreibung": "Der Blinden- und Sehbehindertenverein Recklinghausen bietet eine kostenlose Beratung für Menschen mit Sehverlust an. Betroffene und Angehörige erhalten Informationen zu Hilfsmitteln, Alltagshilfen, Arbeitsplatz, Freizeit sowie zu Fragen rund um Behindertenausweis, Blinden- und Sehbehindertengeld. Die Beratung findet von 14 bis 17 Uhr statt.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:00c301dd5aed$08fa6700$1aef3500$@imkmedia.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Frauenforum - Sitzung",
+        "datum": "2026-10-22",
+        "uhrzeit": "17:00",
+        "ort": "Familienbüro, Große Geldstraße 19, Recklinghausen",
+        "link": "",
+        "beschreibung": "Das Frauenforum, ein Zusammenschluss engagierter Frauen aus Verbänden, Institutionen, Beratungsstellen und Parteien, trifft sich zu seiner monatlichen Sitzung. Teilnehmen kann jede interessierte Frau.",
+        "kategorie": "Treffen",
+        "freigegeben": false,
+        "hw_mail": "gmx:7ad84201d5c046a48194dc026ea0a95d@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-10-20 (frauenforum): Frauenforum Recklinghausen - Datum abweichend?"
+    },
+    {
+        "name": "Sparkassen-Erlebnisland",
+        "datum": "2026-10-19",
+        "uhrzeit": "11:00",
+        "ort": "Sporthalle der Bernard-Overberg-Realschule, Overbergstraße 99, Recklinghausen",
+        "link": "https://www.ssv-re.de/sparkassen-erlebnisland/",
+        "beschreibung": "Spiel- und Sportangebot für Kinder in den Herbstferien mit Hallenhockey, Tischtennis, Badminton, Kleinspielgeräten, Balancierstationen, Hüpfburgen und Bullriding-Anlage. Täglich von 11 bis 13.45 Uhr sowie von 14.15 bis 17 Uhr, Kosten 1 Euro pro Kind (mit RE-Pass kostenfrei). Anmeldung vorher über die Webseite des Stadtsportverbandes erforderlich.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de"
+    },
+    {
+        "name": "Sparkassen-Erlebnisland",
+        "datum": "2026-10-26",
+        "uhrzeit": "11:00",
+        "ort": "Sporthalle der Bernard-Overberg-Realschule, Overbergstraße 99, Recklinghausen",
+        "link": "https://www.ssv-re.de/sparkassen-erlebnisland/",
+        "beschreibung": "Spiel- und Sportangebot für Kinder in den Herbstferien mit Hallenhockey, Tischtennis, Badminton, Kleinspielgeräten, Balancierstationen, Hüpfburgen und Bullriding-Anlage. Täglich von 11 bis 13.45 Uhr sowie von 14.15 bis 17 Uhr, Kosten 1 Euro pro Kind (mit RE-Pass kostenfrei). Anmeldung vorher über die Webseite des Stadtsportverbandes erforderlich.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de"
     }
 ]

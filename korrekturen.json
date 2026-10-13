@@ -11,5 +11,18 @@
         "hw_mail": "kalender:004101dd5976$eb431d00$c1c95700$@holzwurm-recklinghausen.de",
         "freigegeben": true,
         "angelegt": "2026-10-12"
+    },
+    {
+        "datum": "2026-10-13",
+        "name": "ArtLab",
+        "name_norm": "artlab",
+        "quelle": "kunsthalle",
+        "aenderung": {},
+        "absage": true,
+        "hw_mail": "gmx:2bd4c4ba217f4bbd9bfc7f076896a574@recklinghausen.de",
+        "freigegeben": false,
+        "angelegt": "2026-10-13",
+        "bezug_name": "„ArtLab“-Exkursion nach Düsseldorf",
+        "hinweis": "Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung; Beleg-Zitat nicht im Mailtext gefunden"
     }
 ]

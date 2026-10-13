@@ -74,7 +74,7 @@ def test_eine_sammelmail_je_adresse(tmp_path):
     text = an_ralf.get_content()
     assert "Lesung 1" in text and "Lesung 2" in text and "deine Mails" in text
     assert an_ralf["In-Reply-To"] == "<m2@redaktion.example>"  # jüngste Mail
-    assert an_ralf["Subject"] == "Holzwurm-Kalender: Rückmeldung zu deinen Mails"
+    assert an_ralf["Subject"] == "Holzwurm-Kalender: automatische Rückmeldung zu deinen Mails"
     assert all(g and g[0].startswith("2026-10-13") for g in _status(con).values())
 
 
@@ -84,7 +84,7 @@ def test_kopfzeilen_und_betreff(tmp_path):
     _sende(con, smtp)
     msg, von, an = smtp.gesendet[0]
     assert von == ALIAS and an == [RALF]
-    assert msg["Subject"] == "Re: Lesung im Café"
+    assert msg["Subject"] == "Re: Lesung im Café (automatische Rückmeldung)"
     assert msg["Auto-Submitted"] == "auto-replied"
     assert msg["X-Auto-Response-Suppress"] == "All"
     assert msg[ke.KOPF_RUECKMELDUNG] == "1"
@@ -209,7 +209,95 @@ def test_titel_werden_bereinigt():
 
 
 @pytest.mark.parametrize("betreff,erwartet", [
-    ("AW: Re: Termin", "Re: Termin"), ("Fwd: WG: X", "Re: X"), ("", "Re: deine Mail an den Holzwurm-Kalender"),
+    ("AW: Re: Termin", "Re: Termin (automatische Rückmeldung)"), ("Fwd: WG: X", "Re: X (automatische Rückmeldung)"),
+    ("", "Re: deine Mail an den Holzwurm-Kalender (automatische Rückmeldung)"),
+    ("Re: Kalender (automatische Rückmeldung)", "Re: Kalender (automatische Rückmeldung)"),  # Antwort auf Antwort
 ])
 def test_betreff(betreff, erwartet):
     assert rm.betreff_fuer([betreff]) == erwartet
+
+
+# --------------------------------------------------------------------------- Anrede, Tageslink, Schluss (13.10.2026)
+
+def test_anrede_mit_vorname():
+    inhalt = {"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}
+    assert "\nHallo Erich,\n" in rm.baue_text([inhalt], vorname="Erich")
+    assert "\nHallo,\n" in rm.baue_text([inhalt])
+    assert "\nHallo Er ich,\n" in rm.baue_text([inhalt], vorname="Er\nich")  # kein Zeilenumbruch im Namen
+
+
+def test_lese_vornamen():
+    assert rm.lese_vornamen("a@x.example=Erich, B@Y.example = Ralf ,kaputt,=leer,c@z.example=") == \
+        {"a@x.example": "Erich", "b@y.example": "Ralf"}
+    assert rm.lese_vornamen("") == {}
+
+
+def test_link_springt_zum_tag(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text('<div class="datum-gruppe" id="datum-2026-10-24">')
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "termine_re_2026_10.html#datum-2026-10-24\n" in text
+
+
+def test_link_ohne_tag_auf_der_seite_nur_monat(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text("x")
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "termine_re_2026_10.html\n" in text
+
+
+def test_link_auch_bei_absage(tmp_path, monkeypatch):
+    monkeypatch.setattr(rm, "HIER", tmp_path)
+    (tmp_path / "termine_re_2026_10.html").write_text('id="datum-2026-10-23"')
+    text = rm.baue_text([{"abgesagt": [{"datum": "2026-10-23", "name": "Konzert"}]}])
+    assert "termine_re_2026_10.html#datum-2026-10-23\n" in text
+
+
+def test_schlusssatz_laedt_zu_neuen_mails_ein():
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}])
+    assert "nicht direkt" not in text
+    assert "Neue Termine, Korrekturen und Absagen schickst du einfach wieder an diese Adresse." in text
+
+
+def test_sammelmail_nutzt_vorname(tmp_path):
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"})
+    assert "\nHallo Ralf,\n" in smtp.gesendet[0][0].get_content()
+
+
+def test_automatik_ist_erkennbar(tmp_path):
+    """FS 13.10.2026: Es muss klar sein, dass ein Programm schreibt, kein Mensch."""
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"})
+    msg = smtp.gesendet[0][0]
+    assert "(automatisch)" in msg["From"]
+    assert msg["Subject"].endswith("(automatische Rückmeldung)")
+    zeilen = msg.get_content().splitlines()
+    assert zeilen[0] == ke.MARKER and "Programm" in zeilen[1] and "kein Mensch" in zeilen[1]
+    assert "automatisch ausgewertet" in msg.get_content()
+
+
+# --------------------------------------------------------------------------- Eigene Anrede (Hebbert, FS 13.10.2026)
+
+def test_lese_anreden():
+    assert rm.lese_anreden("a@x.example=Hallo Hebbert, alter Wurm,|P.S. Knabbern verboten; kaputt;b@y.example=Moin,") == \
+        {"a@x.example": ("Hallo Hebbert, alter Wurm,", "P.S. Knabbern verboten"), "b@y.example": ("Moin,", "")}
+    assert rm.lese_anreden("") == {}
+
+
+def test_eigene_anrede_und_nachsatz():
+    text = rm.baue_text([{"eingetragen": [{"datum": "2026-10-24", "name": "Lesung"}]}], vorname="Ralf",
+                        anrede="Hallo Hebbert,\nalter Wurm,", nachsatz="P.S. Nicht am Kalender knabbern.")
+    zeilen = text.splitlines()
+    assert "Hallo Hebbert, alter Wurm," in zeilen and "Hallo Ralf," not in text
+    assert zeilen[-1] == "P.S. Nicht am Kalender knabbern." and zeilen[0] == ke.MARKER
+
+
+def test_sammelmail_nutzt_eigene_anrede(tmp_path):
+    con = _db(tmp_path, [_eintrag(1)])
+    smtp = FakeSMTP()
+    _sende(con, smtp, vornamen={RALF: "Ralf"}, anreden={RALF: ("Hallo Hebbert,", "P.S. Knabbern verboten.")})
+    text = smtp.gesendet[0][0].get_content()
+    assert "\nHallo Hebbert,\n" in text and text.rstrip().endswith("P.S. Knabbern verboten.")

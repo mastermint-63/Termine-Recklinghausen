@@ -224,3 +224,13 @@ def test_termin_ics_text_ohne_einzelnes_cr():
     ics = app.generiere_termin_ics(_t("Konzert\rLOCATION:Falsch", ort="Ort\rX-BOESE:1"))
     assert "\r" not in ics.replace("\r\n", "")
     assert not any(z.startswith(("LOCATION:Falsch", "X-BOESE")) for z in ics.split("\r\n"))
+
+
+def test_verschobener_termin_im_jsonld_nicht_abgesagt():
+    from app import event_jsonld
+    t = Termin(name='Lesung', datum=datetime(2026, 10, 20, 19), uhrzeit='19:00 Uhr', ort='Stadtbibliothek',
+               link='', abgesagt=True, verschoben_auf='2026-10-30')
+    obj = event_jsonld(t)
+    assert obj['eventStatus'] == 'https://schema.org/EventRescheduled'
+    assert obj['startDate'] == '2026-10-30'
+    assert obj['previousStartDate'].startswith('2026-10-20')
