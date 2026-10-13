@@ -1269,6 +1269,59 @@ def _parse_vhs_seite(soup: BeautifulSoup, jahr: int, monat: int,
     return termine
 
 
+_vhs_cache: dict[str, dict] = {}
+
+
+def _parse_vhs_detail(html: str) -> dict:
+    """Zahl der Termine („Dauer“) und Beschreibung einer KuferWeb-Detailseite.
+
+    „7 Termine“ oder „5 Tage“ = Kurs, leeres Feld oder „1 Tag“ = Einzelveranstaltung.
+    None, wenn die Seite kein Dauer-Feld hat (dann bleibt der Termin unverändert).
+    """
+    soup = BeautifulSoup(html, 'html.parser')
+    for b in soup.find_all('b'):
+        if b.get_text(strip=True) != 'Dauer':
+            continue
+        zeile = b.find_parent('div', class_='row')
+        werte = zeile.find_all('div') if zeile else []
+        dauer = ' '.join(werte[-1].get_text(' ', strip=True).split()) if werte else ''
+        m = re.search(r'(\d+)\s*(?:Termin|Tag)', dauer)
+        spalte = b.find_parent('div', class_='col-md-3')
+        text = spalte.find_next_sibling('div', class_='col-md-9') if spalte else None
+        return {'termine': int(m.group(1)) if m else 1, 'dauer': dauer,
+                'beschreibung': bereinige_text(text.get_text(' ')) if text else ''}
+    return {'termine': None, 'dauer': '', 'beschreibung': ''}
+
+
+def _vhs_ergaenze(t: Termin, details: dict) -> None:
+    """Beschreibung ergänzen und Kurse (ab 2 Terminen) als Kurs kennzeichnen."""
+    beschreibung = details['beschreibung']
+    if (details['termine'] or 0) >= 2:
+        t.kategorie = 'Kurs'
+        if 'Tag' in details['dauer']:
+            hinweis = f"Kurs über {details['termine']} Tage, Anmeldung über die VHS."
+        else:
+            hinweis = f"Kurs mit {details['termine']} Terminen, Anmeldung über die VHS."
+        beschreibung = f'{hinweis} {beschreibung}'.strip()
+    t.beschreibung = beschreibung[:800]
+    # die Beschreibung kommt erst nach dem Anlegen, Termin.__post_init__ hat sie nicht gesehen
+    if not t.abgesagt and ist_absage_text(t.name, t.beschreibung):
+        t.abgesagt = True
+        print(f"  [Absage erkannt] {t.datum:%d.%m.%Y} {t.name[:60]}")
+
+
+def _vhs_details(url: str) -> dict:
+    """Detailseite einmal pro Lauf holen (die Kategorieseiten werden für jeden Monat neu gelesen)."""
+    if url not in _vhs_cache:
+        try:
+            response = _request_mit_retry(url, headers=HEADERS, timeout=20)
+            _vhs_cache[url] = _parse_vhs_detail(response.text)
+        except requests.RequestException as e:
+            print(f"  Fehler beim Abrufen (VHS Detail): {e}")
+            _vhs_cache[url] = {'termine': None, 'dauer': '', 'beschreibung': ''}
+    return _vhs_cache[url]
+
+
 def hole_vhs(jahr: int, monat: int) -> list[Termin]:
     """Holt Events der VHS Recklinghausen.
 
@@ -1296,6 +1349,10 @@ def hole_vhs(jahr: int, monat: int) -> list[Termin]:
 
             next_link = soup.find('a', href=lambda h: h and 'browse/forward' in h)
             url = next_link['href'] if next_link else None
+
+    for t in termine:
+        if t.link.startswith(('http://', 'https://')):
+            _vhs_ergaenze(t, _vhs_details(t.link))
 
     return termine
 

@@ -1707,7 +1707,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             <select id="quelle-filter" onchange="filterTermine()">
                 {quellen_filter}
             </select>
-            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS einblenden</button>
+            <button id="vhs-toggle" class="vhs-toggle" onclick="toggleVHS()">VHS ausblenden</button>
             <button id="kino-toggle" class="vhs-toggle" onclick="toggleKino()">Kino einblenden</button>
             <div class="stats">
                 <span id="termine-count">{len(termine)}</span> Termine
@@ -1758,8 +1758,9 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             }}
         }})();
 
-        // VHS und Kino sind beim Seitenaufruf immer ausgeblendet
-        let vhsAusgeblendet = true;
+        // Kino ist beim Seitenaufruf ausgeblendet, VHS seit 13.10.2026 sichtbar
+        // (meist Einzelveranstaltungen; Kurse sind als „Kurs“ gekennzeichnet)
+        let vhsAusgeblendet = false;
         let kinoAusgeblendet = true;
 
         function _aktualisiereBtns() {{
