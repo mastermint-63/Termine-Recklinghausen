@@ -1914,6 +1914,9 @@ ZUSATZ_CSS = r"""
             .header-text { order: -1; flex-basis: 100%; }
             .hebbert { width: calc(50% - 5px); }
             h1, h1.h1-lang { font-size: 1.45rem; }
+            /* Handy: Luft unter den Bildern, Schnellzugriff als 3 + 2 statt 4 + 1 (Wunsch FS) */
+            .header-inner { margin-bottom: 1.5em; }
+            .schnellnav { max-width: 270px; margin: 0 auto 18px; gap: 10px 22px; }
         }
 """
 
