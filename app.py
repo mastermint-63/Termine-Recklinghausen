@@ -458,6 +458,7 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                     # Eine Absage geht beim Zusammenführen nicht verloren
                     if kandidat.abgesagt:
                         vorhandener.abgesagt = True
+                        vorhandener.verschoben_auf = vorhandener.verschoben_auf or kandidat.verschoben_auf
                     # Fehlende Felder aus dem Duplikat ergänzen
                     if not vorhandener.beschreibung and kandidat.beschreibung:
                         vorhandener.beschreibung = kandidat.beschreibung
@@ -509,7 +510,8 @@ def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: i
     Trifft alle Termine des Tages, deren normalisierter Name gleich ist oder den Namen enthält
     (bzw. darin enthalten ist, siehe korrektur_name_passt()): so wird auch die Dublette eines
     Aggregators mitkorrigiert.
-    Datumsänderungen werden bewusst nicht angewendet (Verschiebungen löst die Redaktion von Hand).
+    Datumsänderungen werden nicht angewendet: Eine Verschiebung ("verschoben_auf") markiert den alten Termin,
+    den neuen legt hw_import als manuellen Eintrag an.
     Gibt die Korrekturen dieses Monats zurück, die keinen Termin gefunden haben.
     """
     verwaist = []
@@ -535,6 +537,9 @@ def wende_korrekturen_an(termine: list[Termin], korrekturen: list[dict], jahr: i
         for t in treffer:
             if k.get('absage'):
                 t.abgesagt = True
+            if k.get('verschoben_auf'):
+                t.abgesagt = True
+                t.verschoben_auf = k['verschoben_auf']
             uhrzeit = aenderung.get('uhrzeit', '')
             if re.fullmatch(r'\d{2}:\d{2}', uhrzeit):
                 h, m = map(int, uhrzeit.split(':'))
@@ -710,7 +715,11 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             quelle_label = QUELLEN.get(t.quelle, t.quelle)
             badge_html = f'<span class="badge {badge_class}">{quelle_label}</span>'
             if t.abgesagt:
-                badge_html = '<span class="badge badge-abgesagt">Abgesagt</span> ' + badge_html
+                try:
+                    absage_text = f"Verschoben auf {datetime.strptime(t.verschoben_auf, '%Y-%m-%d'):%d.%m.}"
+                except ValueError:
+                    absage_text = 'Abgesagt'
+                badge_html = f'<span class="badge badge-abgesagt">{absage_text}</span> ' + badge_html
 
             if t.kategorie:
                 badge_html += f' <span class="badge badge-kategorie">{_html.escape(t.kategorie)}</span>'

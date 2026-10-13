@@ -556,6 +556,16 @@ def normalisiere_uhrzeit(u: str) -> str:
     return f"{h:02d}:{mi:02d}" if h < 24 and mi < 60 else ""
 
 
+def ist_redaktion_direkt(mail: Mail) -> bool:
+    """Vertraute Redaktionsmail an den Kalender-Eingang (DKIM/DMARC belegt, Alias in To/Cc).
+
+    Entscheidung FS (13.10.2026): Was die Redaktion so schickt, wird ohne Prüfliste umgesetzt. Verworfen wird
+    nur, was vergangen ist, schon im Kalender steht oder ausgeschlossen ist. Anzeichen für einen Modellfehler
+    (Beleg-Zitat fehlt, Wochentag passt nicht) werden eingetragen und im Bericht markiert.
+    """
+    return mail.konto == "kalender" and mail.vertrauen == "vertraut" and not mail.presse_auto
+
+
 def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublette,
                    konflikt=lambda e: None) -> tuple[str, str, dict | None]:
     """Gibt (status, grund, eintrag) zurück. status: 'auto' | 'pruefen' | 'verwerfen'."""
@@ -585,7 +595,7 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
     if ist_dublette(eintrag):
         return "verwerfen", "steht schon im Kalender", None
 
-    probleme = []
+    probleme, warnungen = [], []
     if mail.vertrauen != "vertraut":
         probleme.append(mail.vertrauen_grund or "Absender nicht vertrauenswürdig")
     k = konflikt(eintrag)
@@ -598,12 +608,18 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
     if not (eintrag["ort"] or eintrag["uhrzeit"]):
         probleme.append("weder Ort noch Uhrzeit erkannt")
     if not beleg_ok(t.get("beleg", ""), mail.text, mail.hat_anhang):
-        probleme.append("Beleg-Zitat nicht im Mailtext gefunden")
+        warnungen.append("Beleg-Zitat nicht im Mailtext gefunden")
     if not wochentag_passt(t.get("beleg", ""), d):
-        probleme.append("Wochentag im Beleg passt nicht zum Datum")
+        warnungen.append("Wochentag im Beleg passt nicht zum Datum")
     if (d - heute).days > MAX_HORIZONT_TAGE:
         probleme.append("Datum sehr weit in der Zukunft")
 
+    if ist_redaktion_direkt(mail):
+        if warnungen:
+            eintrag["hw_warnung"] = "; ".join(warnungen)
+        eintrag["freigegeben"] = True
+        return "auto", "; ".join(["Redaktion"] + probleme + warnungen), eintrag
+    probleme += warnungen
     if probleme:
         eintrag["hinweis"] = "; ".join(probleme)
         return "pruefen", eintrag["hinweis"], eintrag
@@ -785,6 +801,9 @@ def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
     aktion = {"art": art, "bezug_name": bezug_name, "bezug_datum": d.isoformat(), "ziel": ziel,
               "aenderung": aenderung, "absage": art == "absage", "quellfehler": bool(a.get("quellfehler"))}
 
+    direkt = ist_redaktion_direkt(mail)
+    harte = list(probleme)  # Angaben der Mail selbst unbrauchbar (neues Datum, Link)
+    warnungen = []
     if mail.vertrauen != "vertraut":
         probleme.append(mail.vertrauen_grund or "Absender nicht vertrauenswürdig")
     if mail.presse_auto:
@@ -794,16 +813,24 @@ def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
     elif len(ziele) > 1:
         probleme.append(f"mehrere mögliche Termine am {d.isoformat()}: "
                         + ", ".join(z["name"][:40] for z in ziele[:3]))
-    if ziel and ziel["typ"] == "scraper" and "datum" in aenderung:
+    if ziel and ziel["typ"] == "scraper" and "datum" in aenderung and not direkt:
         probleme.append("Verschiebung eines Scraper-Termins: von Hand prüfen (Quelle zieht oft nach)")
     if not a.get("eindeutig"):
         probleme.append(a.get("unklar_grund") or "vom Modell als unklar eingestuft")
     if not beleg_ok(a.get("beleg", ""), mail.text, mail.hat_anhang):
-        probleme.append("Beleg-Zitat nicht im Mailtext gefunden")
+        warnungen.append("Beleg-Zitat nicht im Mailtext gefunden")
     beleg = a.get("beleg", "")
     if not (wochentag_passt(beleg, d) or (neu_d and wochentag_passt(beleg, neu_d))):
-        probleme.append("Wochentag im Beleg passt nicht zum Datum")
+        warnungen.append("Wochentag im Beleg passt nicht zum Datum")
 
+    if direkt:
+        # Ohne eindeutiges Ziel lässt sich nichts ausführen: verworfen, der Absender erfährt es per Rückmeldung
+        if not ziel or harte:
+            return "verwerfen", "; ".join(harte + [p for p in probleme if p.startswith(("kein passender",
+                                                                                         "mehrere mögliche"))]), None
+        aktion["warnung"] = "; ".join(warnungen)
+        return "auto", "; ".join(["Redaktion"] + probleme[len(harte):] + warnungen), aktion
+    probleme += warnungen
     if probleme:
         return "pruefen", "; ".join(probleme), aktion
     return "auto", "eindeutig", aktion
@@ -811,7 +838,7 @@ def bewerte_aenderung(a: dict, mail: Mail, heute: date, eintraege: list,
 
 def _korrektur_schluessel(k: dict) -> tuple:
     return (k.get("hw_mail"), k.get("datum"), _norm(k.get("bezug_name") or k.get("name", "")),
-            bool(k.get("absage")), json.dumps(k.get("aenderung", {}), sort_keys=True))
+            bool(k.get("absage")), json.dumps(k.get("aenderung", {}), sort_keys=True), k.get("verschoben_auf", ""))
 
 
 def wende_aenderung_an(aktion: dict, eintraege: list, korrekturen: list, mail: Mail, heute: date,
@@ -835,12 +862,25 @@ def wende_aenderung_an(aktion: dict, eintraege: list, korrekturen: list, mail: M
             e[feld] = neu
         return was
 
+    verschoben_auf = ""
+    if freigegeben and ziel and ziel["typ"] == "scraper" and "datum" in aktion["aenderung"]:
+        # Der Generator verschiebt keine Scraper-Termine: alten Tag markieren, neuen als manuellen Eintrag anlegen
+        aend = aktion["aenderung"]
+        verschoben_auf = aend["datum"]
+        haenge_an(eintraege, [{
+            "name": ziel["name"][:150], "datum": verschoben_auf,
+            "uhrzeit": aend.get("uhrzeit") or normalisiere_uhrzeit(ziel["uhrzeit"]),
+            "ort": aend.get("ort") or ziel["ort"], "link": aend.get("link", ""), "beschreibung": "",
+            "kategorie": "Sonstiges", "freigegeben": True, "hw_mail": mail.schluessel}])
+
     k = {"datum": aktion["bezug_datum"], "name": ziel["name"] if ziel else aktion["bezug_name"],
          "name_norm": app._normalisiere(ziel["name"]) if ziel else "",
          "quelle": ziel["quelle"] if ziel else "",
-         "aenderung": {} if aktion["absage"] else dict(aktion["aenderung"]),
+         "aenderung": {} if aktion["absage"] or verschoben_auf else dict(aktion["aenderung"]),
          "absage": aktion["absage"], "hw_mail": mail.schluessel, "freigegeben": freigegeben,
          "angelegt": heute.isoformat()}
+    if verschoben_auf:
+        k["verschoben_auf"] = verschoben_auf
     if not freigegeben:
         k["bezug_name"] = aktion["bezug_name"]
         k["hinweis"] = hinweis
@@ -866,6 +906,8 @@ def finde_verwaiste_korrekturen(korrekturen: list, heute: date, bestehende=None)
     verwaist = []
     for k in korrekturen:
         if not (k.get("freigegeben") and k.get("name_norm")) or k.get("angelegt", "") >= heute.isoformat():
+            continue
+        if k.get("verschoben_auf"):  # zieht die Quelle nach, verschwindet der alte Termin, das ist erwartet
             continue
         try:
             d = datetime.strptime(k["datum"], "%Y-%m-%d").date()
@@ -1092,6 +1134,8 @@ _KURZGRUENDE = [
     ("bereits so im kalender", "steht schon so im Kalender"),
     ("bereits als abgesagt", "steht schon so im Kalender"),
     ("ausgeschlossene gruppierung", "wird nach den Regeln des Kalenders nicht aufgenommen"),
+    ("kein passender termin", "Termin nicht gefunden, bitte Titel und Datum genauer angeben"),
+    ("mehrere mögliche termine", "mehrere Termine passen, bitte genauer angeben"),
 ]
 
 
@@ -1142,7 +1186,8 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
             if len(eintraege) > vorher:
                 ziel = "eingetragen" if status == "auto" else "pruefen"
                 bericht[ziel].append({"datum": eintrag["datum"], "name": eintrag["name"],
-                                      **({"grund": grund} if status == "pruefen" else {})})
+                                      **({"grund": grund} if status == "pruefen" else {}),
+                                      **({"warnung": eintrag["hw_warnung"]} if eintrag.get("hw_warnung") else {})})
             else:
                 bericht["bekannt"].append({"datum": eintrag["datum"], "name": eintrag["name"]})
     for a in ergebnis.get("aenderungen", [])[:MAX_TERMINE_PRO_MAIL]:
@@ -1158,7 +1203,8 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
         was = wende_aenderung_an(aktion, eintraege, korrekturen, mail, heute,
                                  freigegeben=status == "auto", hinweis=grund)
         name = aktion["ziel"]["name"] if aktion["ziel"] else aktion["bezug_name"]
-        zeile = {"datum": aktion["bezug_datum"], "name": name}
+        zeile = {"datum": aktion["bezug_datum"], "name": name,
+                 **({"warnung": aktion["warnung"]} if aktion.get("warnung") else {})}
         if status == "pruefen":
             bericht["pruefen"].append({**zeile, "grund": f"{aktion['art']}: {grund}"})
         elif aktion["absage"]:

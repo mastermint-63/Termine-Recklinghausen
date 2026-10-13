@@ -121,6 +121,8 @@ class Termin:
     highlight: str = ''
     # Abgesagt (manuelle_termine.json "abgesagt": true oder korrekturen.json): bleibt sichtbar, durchgestrichen
     abgesagt: bool = False
+    # Verschoben (korrekturen.json "verschoben_auf"): alter Termin bleibt durchgestrichen, Badge nennt den neuen Tag
+    verschoben_auf: str = ''
 
     def datum_formatiert(self) -> str:
         tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']

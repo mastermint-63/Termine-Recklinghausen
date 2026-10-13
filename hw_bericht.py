@@ -71,10 +71,13 @@ def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     def termin(e):
         return f"- {_tag(e.get('datum'))} {bereinige(e.get('name'), 70)}"
 
-    zeilen += _abschnitt("Eingetragen", bericht.get("eingetragen", []), termin)
+    def warnung(e):  # Redaktion direkt: eingetragen, aber Anzeichen für einen Modellfehler
+        return f" - bitte ansehen: {bereinige(e['warnung'], 60)}" if e.get("warnung") else ""
+
+    zeilen += _abschnitt("Eingetragen", bericht.get("eingetragen", []), lambda e: termin(e) + warnung(e))
     zeilen += _abschnitt("Geändert", bericht.get("geaendert", []),
-                         lambda e: f"{termin(e)}: {bereinige(e.get('was'), 40)}")
-    zeilen += _abschnitt("Abgesagt", bericht.get("abgesagt", []), termin)
+                         lambda e: f"{termin(e)}: {bereinige(e.get('was'), 40)}{warnung(e)}")
+    zeilen += _abschnitt("Abgesagt", bericht.get("abgesagt", []), lambda e: termin(e) + warnung(e))
     zeilen += _abschnitt("Zur Prüfung", bericht.get("pruefen", []),
                          lambda e: f"{termin(e)} ({bereinige(e.get('grund'), 60)})", ", hw_pruefliste.md")
     zeilen += _abschnitt("Neue Terminseiten", bericht.get("neue_seiten", []), lambda e: f"- {bereinige(e, 80)}")
