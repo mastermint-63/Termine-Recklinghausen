@@ -9,6 +9,7 @@ import hw_import as hw
 import kalender_eingang as ke
 
 REDAKTION = {"ralf@redaktion.example", "fs@mailer.example"}
+ALIAS = "sammeladresse@empfang.example"
 
 JPEG = b"\xff\xd8\xff\xe0" + b"\x00" * 25_000
 PDF = b"%PDF-1.4\n" + b"0" * 500
@@ -88,7 +89,7 @@ def test_kleine_bilder_werden_ignoriert():
 
 def test_baue_mail_setzt_schluessel_und_felder():
     m = _mail(auth=_auth_pass())
-    mail = ke.baue_mail(m, uid=7, redaktion=REDAKTION)
+    mail = ke.baue_mail(m, uid=7, redaktion=REDAKTION, alias=ALIAS)
     assert mail.schluessel == "kalender:abc123@mailer.example"
     assert mail.konto == "kalender" and mail.betreff == "Termin"
     assert "ralf@redaktion.example" in mail.absender
@@ -99,21 +100,21 @@ def test_baue_mail_setzt_schluessel_und_felder():
 # --------------------------------------------------------------------------- Vertrauensstufen
 
 def test_redaktion_mit_dkim_pass_ist_vertraut():
-    assert ke.vertrauensstufe(_mail(auth=_auth_pass()), REDAKTION)[0] == "vertraut"
+    assert ke.vertrauensstufe(_mail(auth=_auth_pass()), REDAKTION, ALIAS)[0] == "vertraut"
 
 
 def test_redaktion_mit_nur_dmarc_pass_ist_vertraut():
     auth = [("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example"),
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=none"),
             ("Authentication-Results", "spf.icloud.com; spf=pass smtp.mailfrom=x@redaktion.example")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "vertraut"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "vertraut"
 
 
 def test_redaktion_mit_dkim_fail_ist_nicht_authentifiziert():
     auth = [("Authentication-Results", "dmarc.icloud.com; dmarc=fail header.from=redaktion.example"),
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=fail header.d=redaktion.example"),
             ("Authentication-Results", "spf.icloud.com; spf=fail")]
-    stufe, grund = ke.vertrauensstufe(_mail(auth=auth), REDAKTION)
+    stufe, grund = ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)
     assert stufe == "redaktion_unauth" and "nicht authentifiziert" in grund
 
 
@@ -121,11 +122,11 @@ def test_redaktion_ohne_dkim_ist_nicht_authentifiziert():
     auth = [("Authentication-Results", "dmarc.icloud.com; dmarc=none header.from=redaktion.example"),
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=none"),
             ("Authentication-Results", "spf.icloud.com; spf=none")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_ohne_icloud_header_nicht_authentifiziert():
-    assert ke.vertrauensstufe(_mail(), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_gefaelschter_from_mit_fremder_dkim_domain():
@@ -133,7 +134,7 @@ def test_gefaelschter_from_mit_fremder_dkim_domain():
     auth = [("Authentication-Results", "dmarc.icloud.com; dmarc=fail header.from=redaktion.example"),
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=angreifer.test"),
             ("Authentication-Results", "spf.icloud.com; spf=pass smtp.mailfrom=x@angreifer.test")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_eingeschmuggelter_auth_header_unterhalb_von_icloud_zaehlt_nicht():
@@ -143,36 +144,36 @@ def test_eingeschmuggelter_auth_header_unterhalb_von_icloud_zaehlt_nicht():
             # ab hier Header des Absenders
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example"),
             ("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_fremder_auth_server_zaehlt_nicht():
     auth = [("Authentication-Results", "mx.angreifer.test; dkim=pass header.d=redaktion.example; "
                                        "dmarc=pass header.from=redaktion.example"),
             ("Authentication-Results", "spf.icloud.com; spf=none")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_unbekannter_absender():
     m = _mail(von="Fremd <wer@anders.example>", auth=_auth_pass("anders.example"))
-    assert ke.vertrauensstufe(m, REDAKTION)[0] == "unbekannt"
+    assert ke.vertrauensstufe(m, REDAKTION, ALIAS)[0] == "unbekannt"
 
 
 def test_absender_vergleich_ignoriert_gross_klein():
     m = _mail(von="Ralf <Ralf@Redaktion.Example>", auth=_auth_pass())
-    assert ke.vertrauensstufe(m, REDAKTION)[0] == "vertraut"
+    assert ke.vertrauensstufe(m, REDAKTION, ALIAS)[0] == "vertraut"
 
 
 def test_mehrere_from_adressen_sind_unbekannt():
     m = _mail(von="ralf@redaktion.example, wer@anders.example", auth=_auth_pass())
-    assert ke.vertrauensstufe(m, REDAKTION)[0] == "unbekannt"
+    assert ke.vertrauensstufe(m, REDAKTION, ALIAS)[0] == "unbekannt"
 
 
 def test_dkim_der_elterndomain_reicht_nicht_fuer_fremde_subdomain():
     """header.d=example deckt nicht redaktion.example ab (andere Domain)."""
     auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=example"),
             ("Authentication-Results", "spf.icloud.com; spf=none")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_redaktionsliste_aus_env_text():
@@ -192,14 +193,14 @@ def test_ohne_icloud_spf_zeile_wird_nichts_gewertet():
     """Ohne iClouds SPF-Zeile ist die Blockgrenze unklar: dann zählt kein Prüfergebnis."""
     auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example"),
             ("Authentication-Results", "dmarc.icloud.com; dmarc=pass header.from=redaktion.example")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_dkim_mit_laengenbegrenzung_ist_nicht_vertraut():
     """l=-Tag: Signatur deckt nur den Anfang des Texts ab, angehängter Text wäre ungeprüft."""
     auth = _auth_pass() + [("DKIM-Signature", "v=1; a=rsa-sha256; d=redaktion.example; s=s1; l=120; h=from:to; "
                                               "bh=abc; b=def")]
-    stufe, grund = ke.vertrauensstufe(_mail(auth=auth), REDAKTION)
+    stufe, grund = ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)
     assert stufe == "redaktion_unauth" and "Teil" in grund
 
 
@@ -209,14 +210,14 @@ def test_dkim_fuer_anderes_postfach_derselben_domain_ist_nicht_vertraut():
             ("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example "
                                        "header.i=fremd@redaktion.example header.b=xyz"),
             ("Authentication-Results", "spf.icloud.com; spf=pass smtp.mailfrom=fremd@redaktion.example")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "redaktion_unauth"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "redaktion_unauth"
 
 
 def test_dkim_mit_passendem_postfach_ist_vertraut():
     auth = [("Authentication-Results", "dkim-verifier.icloud.com; dkim=pass header.d=redaktion.example "
                                        "header.i=ralf@redaktion.example header.b=xyz"),
             ("Authentication-Results", "spf.icloud.com; spf=pass")]
-    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION)[0] == "vertraut"
+    assert ke.vertrauensstufe(_mail(auth=auth), REDAKTION, ALIAS)[0] == "vertraut"
 
 
 # --------------------------------------------------------------------------- HEIC (iPhone-Fotos)
@@ -288,4 +289,4 @@ def test_schluessel_ohne_zerlegung():
     assert ke.schluessel(m, uid=7) == "kalender:abc123@mailer.example"
     del m["Message-ID"]
     assert ke.schluessel(m, uid=7) == "kalender:id-7"
-    assert ke.schluessel(m, uid=7) == ke.baue_mail(m, 7, REDAKTION).schluessel
+    assert ke.schluessel(m, uid=7) == ke.baue_mail(m, 7, REDAKTION, ALIAS).schluessel

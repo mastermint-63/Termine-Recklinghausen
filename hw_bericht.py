@@ -55,7 +55,8 @@ def _abschnitt(titel: str, eintraege: list, zeile, zusatz: str = "") -> list[str
 def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     teile = ("eingetragen", "geaendert", "abgesagt", "pruefen", "neue_seiten", "quellfehler", "verwaist",
              "ohne_ergebnis", "verworfen", "fehler")
-    if not any(bericht.get(k) for k in teile):
+    rueck = bericht.get("rueckmeldungen") or {}
+    if not any(bericht.get(k) for k in teile) and not (rueck.get("gesendet") or rueck.get("fehler")):
         return None
     try:
         erstellt = datetime.fromisoformat(bericht.get("erstellt", "")).strftime("%d.%m.")
@@ -84,6 +85,9 @@ def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     zeilen += _abschnitt("Ohne Ergebnis, Mail von Hand ansehen", bericht.get("ohne_ergebnis", []),
                          lambda e: f"- {bereinige(e, 80)}")
     zeilen += _abschnitt("Fehler", bericht.get("fehler", []), lambda e: f"- {bereinige(e, 100)}")
+    if rueck.get("gesendet") or rueck.get("fehler"):
+        zeilen.append(f"Rückmeldung an die Redaktion: {int(rueck.get('gesendet') or 0)} Mail(s) gesendet"
+                      + (f", {int(rueck['fehler'])} Fehler (Log prüfen)" if rueck.get("fehler") else ""))
     return "\n".join(zeilen)
 
 

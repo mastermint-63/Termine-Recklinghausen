@@ -93,3 +93,36 @@ def test_nicht_uebernommene_werden_gemeldet():
     text = hb.baue_nachricht(_bericht(verworfen=[{"datum": "2026-10-10", "name": "SkF-Infostand",
                                                   "grund": "Termin liegt in der Vergangenheit"}]), "unveraendert")
     assert "Nicht übernommen (1):\n- 10.10. SkF-Infostand (Termin liegt in der Vergangenheit)" in text
+
+
+def test_rueckmeldungen_im_bericht():
+    b = {"erstellt": "2026-10-13T00:30:00", "rueckmeldungen": {"gesendet": 2, "fehler": 1}}
+    text = hb.baue_nachricht(b, "live")
+    assert "Rückmeldung an die Redaktion: 2 Mail(s) gesendet, 1 Fehler" in text
+
+
+def test_ohne_rueckmeldungen_keine_zeile():
+    b = {"erstellt": "2026-10-13T00:30:00", "eingetragen": [{"datum": "2026-10-23", "name": "X"}],
+         "rueckmeldungen": {"gesendet": 0, "fehler": 0}}
+    assert "Rückmeldung" not in hb.baue_nachricht(b, "live")
+
+
+def test_rueckmeldung_traegt_sich_in_offenen_bericht_ein(tmp_path):
+    import json
+    import rueckmeldung
+    pfad = tmp_path / "b.json"
+    pfad.write_text(json.dumps({"erstellt": "2026-10-13T00:30:00"}))
+    rueckmeldung.trage_in_bericht_ein({"gesendet": 1, "fehler": 0, "fehlertexte": []}, pfad)
+    assert json.loads(pfad.read_text())["rueckmeldungen"] == {"gesendet": 1, "fehler": 0}
+
+
+def test_rueckmeldungsfehler_bei_gesendetem_bericht_kommt_per_signal(tmp_path, monkeypatch):
+    import json
+    import rueckmeldung
+    gesendet = []
+    monkeypatch.setattr(hb, "sende_signal", lambda t: gesendet.append(t) or True)
+    pfad = tmp_path / "b.json"
+    pfad.write_text(json.dumps({"erstellt": "2026-10-13T00:30:00", "gesendet": "2026-10-13T06:31:00"}))
+    rueckmeldung.trage_in_bericht_ein({"gesendet": 0, "fehler": 1, "fehlertexte": ["SMTP-Anmeldung fehlgeschlagen"]},
+                                      pfad)
+    assert gesendet and "SMTP-Anmeldung" in gesendet[0]

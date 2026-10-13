@@ -3,11 +3,14 @@
 Eine iCloud-Serverregel verschiebt Mails an den Alias in den Ordner "Kalender-Eingang".
 Merkmal ist der Ordner, nicht die Empfängerzeile (iCloud setzt kein Delivered-To).
 
-Strikt lesend: SELECT readonly, BODY.PEEK[] (iCloud liefert bei RFC822 leer).
-Keine Flags, kein Verschieben, kein Löschen.
+Lesen: SELECT readonly, BODY.PEEK[] (iCloud liefert bei RFC822 leer), keine Flags.
+Ablage: raeume_eingang() verschiebt ausgewertete Mails nach "Kalender-Eingang/bearbeitet"
+(UID COPY, UID STORE \\Deleted, UID EXPUNGE je Mail; iCloud kennt kein MOVE). Spec:
+docs/superpowers/specs/2026-10-12-kalender-eingang-rueckmeldung-design.md
 
 Adressen (Alias, Redaktion) stehen nur in der Env (HW_ENV_FILE), nie im Repo:
   ICLOUD_USER, ICLOUD_APP_PASSWORD   eigenes app-spezifisches Passwort nur für diesen Job
+  KALENDER_ALIAS                     die Sammeladresse (Pflicht für "vertraut", Absender der Rückmeldung)
   HW_REDAKTION                       kommagetrennte Absenderadressen der Redaktion
 """
 
@@ -16,6 +19,7 @@ import email.policy
 import imaplib
 import logging
 import re
+import ssl
 from datetime import date, datetime, timedelta
 from email.utils import getaddresses, parsedate_to_datetime
 
@@ -24,8 +28,13 @@ import hw_import as hw
 IMAP_HOST = "imap.mail.me.com"
 IMAP_PORT = 993
 ORDNER = "Kalender-Eingang"
+ZIELORDNER = "Kalender-Eingang/bearbeitet"
 FENSTER_TAGE = 30
 KONTO = "kalender"
+# Erste Zeile jeder Rückmeldung (rueckmeldung.py). Ab hier wird der Text eingehender Mails abgeschnitten,
+# damit zitierte Rückmeldungen und das darunter zitierte Original nicht erneut ausgewertet werden.
+MARKER = "Automatische Rückmeldung des Holzwurm-Kalenders"
+KOPF_RUECKMELDUNG = "X-Holzwurm-Rueckmeldung"
 
 # iCloud schreibt seine Prüfergebnisse unter diesen Kennungen (geprüft 11.10.2026)
 _ICLOUD_DKIM = "dkim-verifier.icloud.com"
@@ -104,15 +113,27 @@ def _fremdes_postfach(dkim_ergebnis: str, adresse: str) -> bool:
     return bool(lokal) and m.group(1).lower() != adresse
 
 
-def vertrauensstufe(msg, redaktion: set[str]) -> tuple[str, str]:
+def _an_alias(msg, alias: str) -> bool:
+    empfaenger = getaddresses([str(v) for k in ("To", "Cc") for v in msg.get_all(k) or []])
+    return any(a.strip().lower() == alias for _n, a in empfaenger)
+
+
+def vertrauensstufe(msg, redaktion: set[str], alias: str) -> tuple[str, str]:
     """-> (stufe, grund). Stufen: "vertraut", "redaktion_unauth", "unbekannt".
 
     DKIM/DMARC belegen nur die Domain. Zusätzlich darf header.i kein anderes Postfach nennen,
-    und keine Signatur darf per l=-Tag nur einen Teil des Texts abdecken.
+    und keine Signatur darf per l=-Tag nur einen Teil des Texts abdecken. Der Alias muss in To/Cc
+    stehen: Eine alte, signierte Mail eines Redaktionsmitglieds, an den Alias weitergeschickt
+    (DKIM-Replay), gilt sonst als vertraut.
     """
     adresse = _absender_adresse(msg)
     if not adresse or adresse not in redaktion:
         return "unbekannt", "Absender nicht in der Redaktionsliste"
+    alias = (alias or "").strip().lower()
+    if not alias:
+        return "redaktion_unauth", "KALENDER_ALIAS fehlt in der Env"
+    if not _an_alias(msg, alias):
+        return "redaktion_unauth", "Alias steht nicht in To/Cc (weitergeleitete oder Bcc-Mail)"
     domain = adresse.rsplit("@", 1)[1]
     if _hat_laengenbegrenzung(msg):
         return "redaktion_unauth", "DKIM-Signatur deckt nur einen Teil der Mail ab (l=-Tag)"
@@ -128,6 +149,43 @@ def vertrauensstufe(msg, redaktion: set[str]) -> tuple[str, str]:
 
 def ist_massenmail(msg) -> bool:
     return bool(msg.get("List-Id") or msg.get("List-Unsubscribe"))
+
+
+_AUTO_PRECEDENCE = {"auto_reply", "bulk", "junk", "list"}
+
+
+def ist_automatisch(msg, eigene: set[str]) -> str | None:
+    """Grund, wenn die Mail automatisch erzeugt ist (Abwesenheitsnotiz, Unzustellbar, eigene Rückmeldung).
+
+    Solche Mails gehen nicht ans Modell und werden nie beantwortet (Schleifenschutz).
+    `eigene`: Alias und Login-Adresse in Kleinschreibung.
+    """
+    if msg.get_content_type() == "multipart/report":
+        return "Zustellbericht"
+    adresse = _absender_adresse(msg) or ""
+    if adresse.split("@", 1)[0] in ("mailer-daemon", "postmaster"):
+        return "Zustellbericht"
+    if adresse and adresse in eigene:
+        return "eigene Adresse als Absender"
+    if msg.get(KOPF_RUECKMELDUNG):
+        return "eigene Rückmeldung"
+    auto = str(msg.get("Auto-Submitted", "")).strip().lower()
+    if auto and auto != "no":
+        return "Auto-Submitted"
+    if msg.get("X-Autoreply") or msg.get("X-Autorespond"):
+        return "Abwesenheitsnotiz"
+    if str(msg.get("Precedence", "")).strip().lower() in _AUTO_PRECEDENCE:
+        return "Precedence"
+    return None
+
+
+def schneide_zitat(text: str) -> str:
+    """Text ab der ersten Zeile mit MARKER abschneiden (zitierte Rückmeldung samt Original darunter)."""
+    zeilen = text.split("\n")
+    for i, z in enumerate(zeilen):
+        if MARKER in " ".join(z.split()):
+            return "\n".join(zeilen[:i])
+    return text
 
 
 # --------------------------------------------------------------------------- MIME
@@ -164,9 +222,10 @@ def schluessel(msg, uid: int) -> str:
     return f"{KONTO}:{_message_id(msg) or 'id-' + str(uid)}"
 
 
-def baue_mail(msg, uid: int, redaktion: set[str], mit_inhalt: bool = True) -> hw.Mail:
-    text, bilder, pdfs = hw.werte_teile_aus(mime_teile(msg)) if mit_inhalt else ("", [], [])
-    stufe, grund = vertrauensstufe(msg, redaktion)
+def baue_mail(msg, uid: int, redaktion: set[str], alias: str = "", mit_inhalt: bool = True) -> hw.Mail:
+    text, bilder, pdfs = (hw.werte_teile_aus(mime_teile(msg), schnitt=schneide_zitat) if mit_inhalt
+                          else ("", [], []))
+    stufe, grund = vertrauensstufe(msg, redaktion, alias)
     return hw.Mail(konto=KONTO, id=uid, message_id=_message_id(msg),
                    datum=_datum(msg), betreff=" ".join(str(msg.get("Subject", "")).split()),
                    absender=" ".join(str(msg.get("From", "")).split()), text=text, bilder=bilder, pdfs=pdfs,
@@ -179,6 +238,21 @@ def parse(roh: bytes):
 
 # --------------------------------------------------------------------------- IMAP
 
+def _imap_datum(d: date) -> str:
+    """IMAP-Datum mit englischem Monatsnamen, unabhängig von der Locale."""
+    return f"{d.day:02d}-{_MONATE[d.month - 1]}-{d.year}"
+
+
+_MONATE = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+
+def _verbinde():
+    try:
+        return imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT, ssl_context=ssl.create_default_context(), timeout=60)
+    except OSError as e:
+        raise EingangFehler(f"IMAP nicht erreichbar ({type(e).__name__})") from None
+
+
 def hole_mails(user: str, passwort: str, heute: date | None = None,
                ordner: str = ORDNER) -> list[tuple[int, object, bool]]:
     """Alle Mails der letzten FENSTER_TAGE Tage -> [(uid, msg, ist_massenmail)]. Wirft EingangFehler.
@@ -190,7 +264,7 @@ def hole_mails(user: str, passwort: str, heute: date | None = None,
         raise EingangFehler("ICLOUD_USER/ICLOUD_APP_PASSWORD nicht gesetzt")
     seit = (heute or date.today()) - timedelta(days=FENSTER_TAGE)
     try:
-        conn = imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT, timeout=60)
+        conn = imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT, ssl_context=ssl.create_default_context(), timeout=60)
     except OSError as e:
         raise EingangFehler(f"IMAP nicht erreichbar ({type(e).__name__})") from None
     try:
@@ -201,7 +275,7 @@ def hole_mails(user: str, passwort: str, heute: date | None = None,
         typ, _ = conn.select(f'"{ordner}"', readonly=True)
         if typ != "OK":
             raise EingangFehler(f"Ordner {ordner!r} nicht gefunden")
-        typ, daten = conn.uid("SEARCH", None, "SINCE", seit.strftime("%d-%b-%Y"))
+        typ, daten = conn.uid("SEARCH", None, "UNDELETED", "SINCE", _imap_datum(seit))
         if typ != "OK":
             raise EingangFehler("IMAP-Suche fehlgeschlagen")
         ergebnis = []
@@ -213,6 +287,99 @@ def hole_mails(user: str, passwort: str, heute: date | None = None,
                 continue
             msg = parse(roh)
             ergebnis.append((int(uid), msg, ist_massenmail(msg)))
+        return ergebnis
+    except (imaplib.IMAP4.error, OSError) as e:
+        raise EingangFehler(f"IMAP-Fehler ({type(e).__name__})") from None
+    finally:
+        try:
+            conn.logout()
+        except Exception:
+            pass
+
+
+def _uids(daten) -> list[bytes]:
+    return (daten[0] or b"").split() if daten else []
+
+
+def _message_ids(conn, uids: list[bytes]) -> dict[int, str]:
+    """UID -> Message-ID (ohne <>), nur Kopfzeile, ohne \\Seen zu setzen."""
+    if not uids:
+        return {}
+    typ, teile = conn.uid("FETCH", b",".join(uids).decode(), "(BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])")
+    if typ != "OK":
+        raise EingangFehler("IMAP-Abruf der Kopfzeilen fehlgeschlagen")
+    ergebnis = {}
+    for t in teile or []:
+        if not isinstance(t, tuple) or len(t) < 2:
+            continue
+        m = re.search(rb"UID (\d+)", t[0])
+        if m:
+            ergebnis[int(m.group(1))] = _message_id(parse(t[1]))
+    return ergebnis
+
+
+def _ziel_anlegen(conn):
+    typ, daten = conn.list('""', f'"{ZIELORDNER}"')
+    if typ == "OK" and any(d for d in daten or []):
+        return
+    typ, _ = conn.create(f'"{ZIELORDNER}"')
+    if typ != "OK":
+        raise EingangFehler(f"Ordner {ZIELORDNER!r} nicht anlegbar")
+    conn.subscribe(f'"{ZIELORDNER}"')
+
+
+def raeume_eingang(user: str, passwort: str, ist_erledigt, heute: date | None = None,
+                   dry_run: bool = False, verbinde=None) -> dict:
+    """Ausgewertete Mails nach ZIELORDNER verschieben -> {"verschoben": [schluessel], "zu_alt": n, "fehler": []}.
+
+    Die Mails werden in DIESER Sitzung neu ermittelt (keine UIDs aus dem Lesedurchgang, die zwischen
+    zwei Sitzungen ungültig werden könnten). Verschoben wird, wessen Schlüssel ist_erledigt() bestätigt;
+    Mails ohne Message-ID nie (ihr Schlüssel hinge an der UID).
+
+    Je Mail: UID COPY, nur bei OK UID STORE +FLAGS.SILENT (\\Deleted), nur bei OK UID EXPUNGE <uid>.
+    Nie close() und nie nacktes expunge(): Beides entfernt ALLE \\Deleted-Mails im Ordner, auch fremde.
+    Wirft EingangFehler bei Login/Ordner; Fehler einzelner Mails landen in "fehler".
+    """
+    if not user or not passwort:
+        raise EingangFehler("ICLOUD_USER/ICLOUD_APP_PASSWORD nicht gesetzt")
+    heute = heute or date.today()
+    seit = heute - timedelta(days=FENSTER_TAGE)
+    ergebnis = {"verschoben": [], "zu_alt": 0, "fehler": []}
+    conn = (verbinde or _verbinde)()
+    try:
+        try:
+            conn.login(user, passwort)
+        except imaplib.IMAP4.error:
+            raise EingangFehler("IMAP-Login abgelehnt") from None
+        typ, _ = conn.select(f'"{ORDNER}"', readonly=dry_run)
+        if typ != "OK":
+            raise EingangFehler(f"Ordner {ORDNER!r} nicht gefunden")
+        typ, daten = conn.uid("SEARCH", None, "UNDELETED", "BEFORE", _imap_datum(seit))
+        ergebnis["zu_alt"] = len(_uids(daten)) if typ == "OK" else 0
+        typ, daten = conn.uid("SEARCH", None, "UNDELETED", "SINCE", _imap_datum(seit))
+        if typ != "OK":
+            raise EingangFehler("IMAP-Suche fehlgeschlagen")
+        faellig = [(uid, f"{KONTO}:{mid}") for uid, mid in sorted(_message_ids(conn, _uids(daten)).items())
+                   if mid and ist_erledigt(f"{KONTO}:{mid}")]
+        if dry_run or not faellig:
+            ergebnis["verschoben"] = [s for _u, s in faellig] if dry_run else []
+            return ergebnis
+        _ziel_anlegen(conn)
+        for uid, schl in faellig:
+            typ, daten = conn.uid("COPY", str(uid), f'"{ZIELORDNER}"')
+            if typ != "OK":
+                ergebnis["fehler"].append(f"Kopieren fehlgeschlagen (UID {uid})")
+                continue
+            log.info("Kalender-Eingang: UID %s kopiert %s", uid, (daten[0] or b"")[:60] if daten else b"")
+            typ, _ = conn.uid("STORE", str(uid), "+FLAGS.SILENT", r"(\Deleted)")
+            if typ != "OK":
+                ergebnis["fehler"].append(f"Markieren fehlgeschlagen (UID {uid}), Kopie liegt schon in bearbeitet")
+                continue
+            typ, _ = conn.uid("EXPUNGE", str(uid))
+            if typ != "OK":
+                ergebnis["fehler"].append(f"Entfernen fehlgeschlagen (UID {uid}), Kopie liegt schon in bearbeitet")
+                continue
+            ergebnis["verschoben"].append(schl)
         return ergebnis
     except (imaplib.IMAP4.error, OSError) as e:
         raise EingangFehler(f"IMAP-Fehler ({type(e).__name__})") from None

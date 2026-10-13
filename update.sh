@@ -26,6 +26,9 @@ for html in termine_re_*.html; do
     fi
 done
 
+# Startzeit: Rückmeldungen an die Redaktion bestätigen nur, was hw_import VOR diesem Lauf eingetragen hat
+START=$(date +%Y-%m-%dT%H:%M:%S)
+
 # Termine abrufen
 OUTPUT=$("${PYTHON:-python3}" app.py --no-browser 2>&1)
 PYTHON_EXIT=$?
@@ -112,10 +115,13 @@ else
     fi
 fi
 
-# Bericht des HW-Imports (00:30) per Signal, erst jetzt: "ist live" statt "wird live"
+# Rückmeldung an die Redaktion (Kalender-Eingang) und Bericht des HW-Imports (00:30) per Signal,
+# erst jetzt: "ist live" statt "wird live". Rückmeldung zuerst, ihr Ergebnis steht im Signal-Bericht.
 if [ "$PUSH_STATUS" = "GitHub aktualisiert" ]; then
+    "${PYTHON:-python3}" rueckmeldung.py --status live --bis "$START"
     "${PYTHON:-python3}" hw_bericht.py --status live
 elif [ "$PUSH_STATUS" = "Keine Änderungen" ]; then
+    "${PYTHON:-python3}" rueckmeldung.py --status unveraendert --bis "$START"
     "${PYTHON:-python3}" hw_bericht.py --status unveraendert
 else
     "${PYTHON:-python3}" hw_bericht.py --status fehler --grund "$PUSH_STATUS"

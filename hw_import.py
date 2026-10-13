@@ -227,11 +227,12 @@ def _oeffne(konto: str, datei: str) -> sqlite3.Connection:
     return sqlite3.connect(f"file:{pfad}?mode=ro", uri=True, timeout=10)
 
 
-def werte_teile_aus(teile: list, preview: str = "") -> tuple[str, list, list]:
+def werte_teile_aus(teile: list, preview: str = "", schnitt=None) -> tuple[str, list, list]:
     """Mailteile [(contentType, body)] -> (text, bilder, pdfs).
 
     Gemeinsam für eM Client (LocalMailContents) und IMAP (MIME-Teile), damit beide Wege
-    identisch filtern und kürzen.
+    identisch filtern und kürzen. `schnitt` kürzt Text- und HTML-Teile (Kalender-Eingang: zitierte
+    Rückmeldung abschneiden), bevor Anhänge angehängt werden.
     """
     plain, html_txt, bilder, pdfs, ics, docx_dateien = [], [], [], [], [], []
     for ct, body in teile:
@@ -260,6 +261,8 @@ def werte_teile_aus(teile: list, preview: str = "") -> tuple[str, list, list]:
                 and isinstance(body, bytes) and len(body) <= 5_000_000 and len(docx_dateien) < 2:
             docx_dateien.append(body)
 
+    if schnitt:
+        plain, html_txt = [schnitt(t) for t in plain], [schnitt(t) for t in html_txt]
     text = max(plain, key=len, default="")
     if len(text.strip()) < 40:
         text = max(html_txt, key=len, default=text)
@@ -345,10 +348,15 @@ def finde_presse_mail_ids() -> list[tuple[str, int]]:
 
 # --------------------------------------------------------------------------- State
 
-def state_db() -> sqlite3.Connection:
-    con = sqlite3.connect(STATE_PFAD)
+def state_db(pfad: Path | None = None) -> sqlite3.Connection:
+    # timeout: termine-re (rueckmeldung.py) nutzt dieselbe DB, beide Jobs können nach dem Aufwachen gleichzeitig laufen
+    con = sqlite3.connect(pfad or STATE_PFAD, timeout=30)
     con.execute("create table if not exists verarbeitet (schluessel text primary key, betreff text, "
                 "am text, ergebnis text)")
+    # Rückmeldungen an die Redaktion (Kalender-Eingang), verschickt von rueckmeldung.py nach dem Push
+    con.execute("create table if not exists rueckmeldungen (schluessel text primary key, adresse text, "
+                "message_id text, betreff text, inhalt text, angelegt text, gesendet text, eigene_id text, "
+                "versuche integer default 0)")
     return con
 
 
@@ -360,6 +368,22 @@ def markiere_verarbeitet(con, mail: Mail, ergebnis: str):
     con.execute("insert or replace into verarbeitet values (?,?,?,?)",
                 (mail.schluessel, mail.betreff[:120], datetime.now().isoformat(timespec="seconds"), ergebnis))
     con.commit()
+
+
+def schreibe_state(con, markierungen: list, rueckmeldungen: list):
+    """Verarbeitete Mails und vorgemerkte Rückmeldungen in EINER Transaktion, erst nach dem Speichern.
+
+    markierungen: [(mail, ergebnis)], rueckmeldungen: [(mail, adresse, inhalt)]. Eine vorhandene
+    Rückmeldung wird nie überschrieben (sonst ginge sie nach --force ein zweites Mal raus).
+    """
+    jetzt = datetime.now().isoformat(timespec="seconds")
+    with con:
+        con.executemany("insert or replace into verarbeitet values (?,?,?,?)",
+                        [(m.schluessel, m.betreff[:120], jetzt, e) for m, e in markierungen])
+        con.executemany("insert into rueckmeldungen (schluessel, adresse, message_id, betreff, inhalt, angelegt) "
+                        "values (?,?,?,?,?,?) on conflict(schluessel) do nothing",
+                        [(m.schluessel, a, m.message_id, m.betreff[:200], json.dumps(i, ensure_ascii=False), jetzt)
+                         for m, a, i in rueckmeldungen])
 
 
 # --------------------------------------------------------------------------- LLM
@@ -1062,9 +1086,46 @@ def speichere_bericht(bericht: dict):
 
 # --------------------------------------------------------------------------- Hauptablauf
 
+_KURZGRUENDE = [
+    ("vergangenheit", "liegt in der Vergangenheit"),
+    ("schon im kalender", "steht schon so im Kalender"),
+    ("bereits so im kalender", "steht schon so im Kalender"),
+    ("bereits als abgesagt", "steht schon so im Kalender"),
+    ("ausgeschlossene gruppierung", "wird nach den Regeln des Kalenders nicht aufgenommen"),
+]
+
+
+def kurzgrund(grund: str) -> str:
+    """Rohgrund -> feste Formulierung für die Rückmeldung (Rohgründe können Modelltext enthalten)."""
+    g = (grund or "").lower()
+    return next((kurz for muster, kurz in _KURZGRUENDE if muster in g), "Angaben reichen nicht aus")
+
+
+def rueckmeldung_inhalt(eigen: dict) -> dict | None:
+    """Bericht einer Mail -> Inhalt der Rückmeldung (ohne interne Prüfgründe), None wenn leer."""
+    def kurz(e):
+        return {"datum": e.get("datum", ""), "name": e.get("name", "")}
+    inhalt = {
+        "eingetragen": [kurz(e) for e in eigen.get("eingetragen", [])],
+        "geaendert": [{**kurz(e), "was": e.get("was", "")} for e in eigen.get("geaendert", [])],
+        "abgesagt": [kurz(e) for e in eigen.get("abgesagt", [])],
+        "bekannt": [kurz(e) for e in eigen.get("bekannt", [])],
+        "pruefen": [kurz(e) for e in eigen.get("pruefen", [])],
+        "verworfen": [{**kurz(e), "grund": kurzgrund(e.get("grund", ""))} for e in eigen.get("verworfen", [])],
+    }
+    return inhalt if any(inhalt.values()) else None
+
+
 def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: list, korrekturen: list,
                     bericht: dict) -> dict:
-    """Wertet eine Mail aus. Neue Termine und Änderungen landen direkt in `eintraege`/`korrekturen`."""
+    """Wertet eine Mail aus. Neue Termine und Änderungen landen direkt in `eintraege`/`korrekturen`.
+
+    Das Ergebnis dieser Mail steht zusätzlich in res["bericht"] (für die Rückmeldung an den Absender),
+    inklusive "bekannt" (Wiederholung, von haenge_an() übersprungen), das der Gesamtbericht nicht führt.
+    """
+    gesamt = bericht
+    bericht = {k: [] for k in ("eingetragen", "geaendert", "abgesagt", "bekannt", "pruefen", "neue_seiten",
+                               "quellfehler", "ohne_ergebnis", "verworfen")}
     ergebnis = analysiere(client, mail, heute)
     zaehler = {"auto": 0, "pruefen": 0, "verwerfen": 0}
     for t in ergebnis.get("termine", [])[:MAX_TERMINE_PRO_MAIL]:
@@ -1082,6 +1143,8 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
                 ziel = "eingetragen" if status == "auto" else "pruefen"
                 bericht[ziel].append({"datum": eintrag["datum"], "name": eintrag["name"],
                                       **({"grund": grund} if status == "pruefen" else {})})
+            else:
+                bericht["bekannt"].append({"datum": eintrag["datum"], "name": eintrag["name"]})
     for a in ergebnis.get("aenderungen", [])[:MAX_TERMINE_PRO_MAIL]:
         status, grund, aktion = bewerte_aenderung(a, mail, heute, eintraege)
         zaehler[status] += 1
@@ -1114,7 +1177,10 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
     # damit ein Aussetzer des Modells auffällt (Antworten sind nicht deterministisch)
     if mail.konto == "kalender" and not any(ergebnis.get(k) for k in ("termine", "aenderungen", "terminseiten")):
         bericht["ohne_ergebnis"].append(mail.betreff[:80] or "(ohne Betreff)")
-    return {"zaehler": zaehler, "seiten": seiten, "hinweis": ergebnis.get("hinweis", "")}
+    for k, v in bericht.items():
+        if k in gesamt:
+            gesamt[k] += v
+    return {"zaehler": zaehler, "seiten": seiten, "hinweis": ergebnis.get("hinweis", ""), "bericht": bericht}
 
 
 def _env(name: str) -> str:
@@ -1122,14 +1188,15 @@ def _env(name: str) -> str:
     return os.environ.get(name) or dotenv_values(ENV_PFAD).get(name) or ""
 
 
-def hole_kalender_mails(heute: date, bericht: dict, uid: int | None = None) -> list[tuple[int, object, bool]]:
+def hole_kalender_mails(heute: date, bericht: dict, uid: int | None = None,
+                        ordner: str | None = None) -> list[tuple[int, object, bool]]:
     """Quelle 1: IMAP-Ordner Kalender-Eingang -> [(uid, msg, ist_massenmail)], noch nicht zerlegt.
 
     Fehler landen im Bericht, der Lauf geht weiter.
     """
     import kalender_eingang as ke
     try:
-        mails = ke.hole_mails(_env("ICLOUD_USER"), _env("ICLOUD_APP_PASSWORD"), heute)
+        mails = ke.hole_mails(_env("ICLOUD_USER"), _env("ICLOUD_APP_PASSWORD"), heute, ordner=ordner or ke.ORDNER)
     except ke.EingangFehler as e:
         log.error("Kalender-Eingang: %s", e)
         bericht["fehler"].append(f"Kalender-Eingang: {e}")
@@ -1140,16 +1207,50 @@ def hole_kalender_mails(heute: date, bericht: dict, uid: int | None = None) -> l
     return mails
 
 
+def raeume_eingang(con, heute: date, bericht: dict, dry_run: bool = False) -> list[str]:
+    """Ausgewertete Mails nach Kalender-Eingang/bearbeitet. Fehler landen im Bericht, der Lauf geht weiter."""
+    import kalender_eingang as ke
+    try:
+        erg = ke.raeume_eingang(_env("ICLOUD_USER"), _env("ICLOUD_APP_PASSWORD"),
+                                lambda s: ist_verarbeitet(con, s), heute, dry_run=dry_run)
+    except ke.EingangFehler as e:
+        log.error("Kalender-Eingang räumen: %s", e)
+        bericht["fehler"].append(f"Kalender-Eingang räumen: {e}")
+        return []
+    for f in erg["fehler"]:
+        log.error("Kalender-Eingang räumen: %s", f)
+        bericht["fehler"].append(f"Kalender-Eingang räumen: {f}")
+    if erg["zu_alt"]:
+        bericht["fehler"].append(f"{erg['zu_alt']} Mail(s) älter als {ke.FENSTER_TAGE} Tage im Kalender-Eingang, "
+                                 "von Hand ansehen")
+    log.info("Kalender-Eingang: %d Mail(s) %s", len(erg["verschoben"]),
+             "würden verschoben" if dry_run else "nach bearbeitet verschoben")
+    return erg["verschoben"]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dry-run", action="store_true", help="nichts schreiben, nichts melden")
+    ap.add_argument("--dry-run", action="store_true", help="nichts schreiben, nichts melden, nichts verschieben")
     ap.add_argument("--mail", help="gezielt eine Mail testen, Format konto:id bzw. kalender:<UID> "
                                    "(ignoriert HW-Flag und State)")
+    ap.add_argument("--ordner", choices=["eingang", "bearbeitet"], default="eingang",
+                    help="Kalender-Eingang: Ordner für --mail kalender:<UID> und --force")
     ap.add_argument("--nur-kalender", action="store_true", help="nur den Kalender-Eingang (IMAP) lesen")
+    ap.add_argument("--nur-verschieben", action="store_true",
+                    help="nur ausgewertete Mails nach Kalender-Eingang/bearbeitet verschieben (mit --dry-run: zeigen)")
     ap.add_argument("--force", action="store_true", help="bereits verarbeitete Mails erneut verarbeiten")
     ap.add_argument("--max", type=int, default=MAX_MAILS_PRO_LAUF)
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    heute = date.today()
+    con = state_db()
+    bericht = neuer_bericht()
+    if args.nur_verschieben:
+        verschoben = raeume_eingang(con, heute, bericht, dry_run=args.dry_run)
+        for s_ in verschoben:
+            print(s_)
+        return 1 if bericht["fehler"] and not verschoben else 0
 
     import anthropic
     api_key = _env("ANTHROPIC_API_KEY")
@@ -1157,23 +1258,23 @@ def main():
         log.error("ANTHROPIC_API_KEY nicht gefunden")
         return 1
     client = anthropic.Anthropic(api_key=api_key)
-    heute = date.today()
-    con = state_db()
-    bericht = neuer_bericht()
 
     # Kandidaten: ("kalender", (uid, msg, ist_massenmail)) aus dem Kalender-Eingang (erst bei Bedarf zerlegt),
     # ("em", (konto, id)) HW-markiert oder per --mail, ("presse", (konto, id)) erkannte Presse-Mails aus eM Client
     import kalender_eingang as ke
     redaktion = ke.lese_redaktion(_env("HW_REDAKTION"))
+    alias = _env("KALENDER_ALIAS").strip().lower()
+    eigene = {a for a in (alias, _env("ICLOUD_USER").strip().lower()) if a}
+    ordner = ke.ZIELORDNER if args.ordner == "bearbeitet" else ke.ORDNER
     kandidaten = []
     if args.mail:
         konto, mid = args.mail.split(":", 1)
         if konto == "kalender":
-            kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht, int(mid))]
+            kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht, int(mid), ordner)]
         else:
             kandidaten = [("em", (konto, int(mid)))]
     else:
-        kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht)]
+        kandidaten = [("kalender", m) for m in hole_kalender_mails(heute, bericht, ordner=ordner)]
         if not args.nur_kalender:
             em = finde_hw_mail_ids()
             vorhandene = set(em)
@@ -1186,29 +1287,38 @@ def main():
     vorher_korr = json.dumps(korrekturen, sort_keys=True)
     betreffs, summe = {}, {"auto": 0, "pruefen": 0, "verwerfen": 0}
     fehler, verarbeitet, versuche, unbekannte = 0, 0, 0, 0
+    # Erst nach dem Speichern in den State (schreibe_state), sonst gälte eine Mail nach einem Absturz
+    # als erledigt, ihre Einträge wären aber verloren (und die Mail läge unauffällig in "bearbeitet")
+    schreiben = not args.dry_run and not args.mail
+    markierungen, rueckmeldungen, gesehen = [], [], set()
     for kandidat in kandidaten:
         if versuche >= args.max:  # Fehlschläge zählen mit, sonst unbegrenzt viele Modellaufrufe
             log.warning("Limit von %d Mails pro Lauf erreicht", args.max)
             break
+        adresse = None
         if kandidat[0] == "kalender":
-            # Billige Prüfungen (State, Massenmail, Limit unbekannter Absender) VOR der Zerlegung der Anhänge
+            # Billige Prüfungen (State, Massenmail, Automatik, Limit unbekannter Absender) VOR der Zerlegung
             uid, msg, massenmail = kandidat[1]
             schluessel = ke.schluessel(msg, uid)
-            if not args.mail and not args.force and ist_verarbeitet(con, schluessel):
+            if schluessel in gesehen or (not args.mail and not args.force and ist_verarbeitet(con, schluessel)):
                 continue
-            if massenmail:
-                log.info("Übersprungen (Massenmail): %s", schluessel)
-                if not args.dry_run and not args.mail:
-                    markiere_verarbeitet(con, ke.baue_mail(msg, uid, redaktion, mit_inhalt=False), "massenmail")
+            gesehen.add(schluessel)
+            automatisch = None if massenmail else ke.ist_automatisch(msg, eigene)
+            if massenmail or automatisch:
+                log.info("Übersprungen (%s): %s", automatisch or "Massenmail", schluessel)
+                if schreiben:
+                    markierungen.append((ke.baue_mail(msg, uid, redaktion, alias, mit_inhalt=False),
+                                         "automatisch" if automatisch else "massenmail"))
                 continue
             # Limit für alle nicht vertrauten Absender: auch gefälschte Redaktionsadressen (redaktion_unauth)
-            if ke.vertrauensstufe(msg, redaktion)[0] != "vertraut":
+            if ke.vertrauensstufe(msg, redaktion, alias)[0] != "vertraut":
                 if unbekannte >= MAX_UNBEKANNTE_PRO_LAUF:
                     log.warning("Limit von %d Mails nicht vertrauter Absender erreicht, Rest im nächsten Lauf",
                                 MAX_UNBEKANNTE_PRO_LAUF)
                     continue
                 unbekannte += 1
-            mail = ke.baue_mail(msg, uid, redaktion)
+            mail = ke.baue_mail(msg, uid, redaktion, alias)
+            adresse = ke._absender_adresse(msg)
         else:
             konto, mid = kandidat[1]
             try:
@@ -1219,8 +1329,9 @@ def main():
                 bericht["fehler"].append(f"{konto}:{mid} nicht lesbar")
                 fehler += 1
                 continue
-            if not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel):
+            if mail.schluessel in gesehen or (not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel)):
                 continue
+            gesehen.add(mail.schluessel)
         log.info("Verarbeite %s | %s | %s | %s", mail.schluessel, mail.datum.date(), mail.vertrauen,
                  mail.betreff[:70])
         versuche += 1
@@ -1235,8 +1346,12 @@ def main():
         betreffs[mail.schluessel] = mail.betreff
         for k, v in res["zaehler"].items():
             summe[k] += v
-        if not args.dry_run and not args.mail:
-            markiere_verarbeitet(con, mail, json.dumps(res["zaehler"]))
+        if schreiben:
+            markierungen.append((mail, json.dumps(res["zaehler"])))
+            # Rückmeldung nur an vertraute Absender aus dem Kalender-Eingang, nie bei --force (doppelt)
+            inhalt = rueckmeldung_inhalt(res["bericht"])
+            if mail.konto == ke.KONTO and mail.vertrauen == "vertraut" and adresse and inhalt and not args.force:
+                rueckmeldungen.append((mail, adresse, inhalt))
 
     korrekturen = raeume_korrekturen(korrekturen, heute)
     bericht["verwaist"] = [{"datum": k["datum"], "name": k.get("name", k["name_norm"])}
@@ -1249,6 +1364,11 @@ def main():
         if json.dumps(korrekturen, sort_keys=True) != vorher_korr:
             speichere_korrekturen(korrekturen)
         schreibe_pruefliste(eintraege, korrekturen, betreffs)
+        schreibe_state(con, markierungen, rueckmeldungen)
+        if rueckmeldungen:
+            log.info("%d Rückmeldung(en) an die Redaktion vorgemerkt", len(rueckmeldungen))
+        if not args.mail:
+            raeume_eingang(con, heute, bericht)
         speichere_bericht(bericht)
 
     log.info("Fertig: %d Mail(s), eingetragen=%d, geändert=%d, abgesagt=%d, zu prüfen=%d, verworfen=%d, "
@@ -1257,7 +1377,6 @@ def main():
              len(bericht["pruefen"]), summe["verwerfen"], len(bericht["neue_seiten"]), len(bericht["verwaist"]),
              len(bericht["fehler"]))
     return 1 if fehler and not verarbeitet else 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

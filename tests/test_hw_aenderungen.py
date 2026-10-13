@@ -318,14 +318,16 @@ def _lauf(monkeypatch, tmp_path, absender, auth, analysiere, anzahl=30):
         for k, v in auth:
             m[k] = v
         m["From"] = absender
+        m["To"] = "sammeladresse@empfang.example"
         m["Subject"] = f"Mail {i}"
         m["Message-ID"] = f"<m{i}@x.example>"
         m.set_content("Am Freitag, 23.10.2026 um 19 Uhr Lesung.")
         mails.append((i, m, False))
     aufrufe = []
     monkeypatch.setattr(hw, "STATE_PFAD", tmp_path / "state.db")
-    monkeypatch.setattr(hw, "_env", lambda n: "r@x.example" if n == "HW_REDAKTION" else "test")
-    monkeypatch.setattr(hw, "hole_kalender_mails", lambda heute, bericht, uid=None: mails)
+    env = {"HW_REDAKTION": "r@x.example", "KALENDER_ALIAS": "sammeladresse@empfang.example"}
+    monkeypatch.setattr(hw, "_env", lambda n: env.get(n, "test"))
+    monkeypatch.setattr(hw, "hole_kalender_mails", lambda heute, bericht, uid=None, ordner=None: mails)
     monkeypatch.setattr(hw, "analysiere", lambda c, m, h: aufrufe.append(m.betreff) or analysiere())
     monkeypatch.setattr(sys, "argv", ["hw_import.py", "--dry-run", "--nur-kalender"])
     hw.main()
