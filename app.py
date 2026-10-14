@@ -426,6 +426,55 @@ def entferne_werbung(termine: list[Termin]) -> list[Termin]:
     return [t for t in termine if not ist_werbung(t)]
 
 
+# Nur Termine in Recklinghausen (Entscheidung FS, 14.10.2026): Ausflüge in andere
+# Städte fallen raus, auch wenn der Veranstalter aus Recklinghausen kommt. Geprüft
+# wird nur der Ort. Städtenamen zählen nur an Wortgrenzen, mit Großschreibung und
+# in Ortsstellung (ganzer Ort, am Ende, vor Komma, mit Stadtteil "Essen-Steele",
+# nach "in"/"nach"), damit "Augustinessenstraße", "Mittagessen", "Essen & Trinken",
+# "Bochumer Straße" oder "Hertener Str." nicht treffen.
+_FREMDE_ORTE = (
+    'Essen', 'Bochum', 'Dortmund', 'Gelsenkirchen', 'Herten', 'Marl', 'Datteln',
+    'Castrop-Rauxel', 'Castrop', 'Oer-Erkenschwick', 'Waltrop', 'Haltern', 'Dorsten',
+    'Gladbeck', 'Bottrop', 'Herne', 'Münster', 'Düsseldorf', 'Köln', 'Duisburg',
+    'Oberhausen', 'Mülheim', 'Hamm', 'Lünen',
+    # Ortsteile anderer Städte aus der Gegenprobe (Lembeck = Dorsten)
+    'Lembeck',
+)
+_FREMDE_ORTE_RE = '|'.join(re.escape(o) for o in _FREMDE_ORTE)
+_FREMDE_STADT_MUSTER = re.compile(
+    rf"(?:\b(?:in|nach)\s+(?:{_FREMDE_ORTE_RE})\b"
+    rf"|\b(?:{_FREMDE_ORTE_RE})(?=\s*(?:$|[,;/)]|-[A-ZÄÖÜ]|\s(?:am|an der)\s)))"
+)
+# Postleitzahl vor einem Ortsnamen; Recklinghausen hat 45657 bis 45665.
+# Ohne folgenden Großbuchstaben keine PLZ (Telefonnummern wie "02361- 23134 oder").
+_FREMDE_PLZ_MUSTER = re.compile(r"\b(?!456[56]\d)\d{5}\s+[A-ZÄÖÜ]")
+_RECKLINGHAUSEN_MUSTER = re.compile(
+    r"\bRecklinghausen\b|\b456[56]\d\b|"
+    r"\b(?:Suderwich|Hochlarmark|Hochlar|Speckhorn|Bockholt|Essel|Hillerheide|"
+    r"König-Ludwig|Grullbad|Stuckenbusch|Röllinghausen|Berghausen|Hillen|Paulusviertel)\b"
+)
+_ONLINE_MUSTER = re.compile(r"\bonline\b|\bzoom\b", re.IGNORECASE)
+
+
+def ist_ausserhalb(t: Termin) -> bool:
+    """True, wenn der Ort eine andere Stadt nennt und nicht Recklinghausen."""
+    ort = t.ort or ''
+    if not ort or _ONLINE_MUSTER.search(ort) or _RECKLINGHAUSEN_MUSTER.search(ort):
+        return False
+    return bool(_FREMDE_PLZ_MUSTER.search(ort) or _FREMDE_STADT_MUSTER.search(ort))
+
+
+def entferne_ausserhalb(termine: list[Termin]) -> list[Termin]:
+    """Filtert Termine in anderen Städten heraus, je Treffer eine Logzeile."""
+    ergebnis = []
+    for t in termine:
+        if ist_ausserhalb(t):
+            print(f"  [Ort] ausserhalb: {t.datum.strftime('%d.%m.%Y')} {t.name} ({t.ort})")
+        else:
+            ergebnis.append(t)
+    return ergebnis
+
+
 def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
     """Entfernt Duplikate: gleiches Datum + identischer oder enthaltener Name."""
     # Nach Datum gruppieren
@@ -1977,6 +2026,12 @@ def baue_seiten(stand: dict, monate_liste: list[tuple[int, int]], basis_pfad: st
         werbung = vor_werbung - len(alle_termine)
         if werbung:
             print(f"  -> {werbung} Termin(e) ausgeschlossen (kommerzielle Werbung)")
+
+        vor_ort = len(alle_termine)
+        alle_termine = entferne_ausserhalb(alle_termine)
+        ausserhalb = vor_ort - len(alle_termine)
+        if ausserhalb:
+            print(f"  -> {ausserhalb} Termin(e) ausgeschlossen (Ort außerhalb Recklinghausens)")
 
         wende_korrekturen_an(alle_termine, korrekturen, j, m)
 
