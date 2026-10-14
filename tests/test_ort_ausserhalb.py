@@ -98,3 +98,34 @@ def test_gilt_auch_fuer_manuelle_termine():
 def test_name_allein_entscheidet_nicht():
     # Nur der Ort zählt, ein Städtename im Titel filtert nichts
     assert not ist_ausserhalb(_t('Stadtbibliothek', name='Lesung: Ein Sommer in Essen'))
+
+
+# Ergänzung (FS, 14.10.2026): Ausflüge mit Treffpunkt in Recklinghausen, bei denen das
+# Ziel nur im Titel steht. Nur mit Signalwort (Tagesfahrt, Exkursion, Studienfahrt)
+# UND fremder Stadt im Titel.
+FAHRT_RAUS = [
+    'Tagesfahrt: Folkwang Museum Essen',
+    'Tagesfahrt: Weihnachtsmarkt Köln',
+    'Tagesfahrt: Haus der Geschichte, Bonn',
+    'Exkursion Prag – Die Goldene Stadt im Herzen Europas',
+    'Studienfahrt nach Berlin',
+]
+
+FAHRT_DRIN = [
+    'Ausflug zu den Sternen (ab 5)',                 # Planetarium
+    'Reise durch unser Sonnensystem (ab 5)',         # Planetarium
+    'Lesen und Schreiben im Alltag (Exkursion)',     # VHS-Kurs in RE
+    'Infoveranstaltung zu den Tagesfahrten "Mobil mit dem Deutschlandticket"',
+    'Quer durch Duisburg',                           # ADFC-Radtour ab RE, ohne Signalwort
+    'Exkursion zur Bochumer Straße',                 # Adjektivform, keine Stadt
+]
+
+
+@pytest.mark.parametrize('name', FAHRT_RAUS)
+def test_fahrt_in_andere_stadt_faellt_raus(name):
+    assert ist_ausserhalb(_t('Treffpunkt: Recklinghausen Hauptbahnhof', name=name, quelle='vhs'))
+
+
+@pytest.mark.parametrize('name', FAHRT_DRIN)
+def test_fahrt_ohne_fremde_stadt_bleibt(name):
+    assert not ist_ausserhalb(_t('Recklinghausen', name=name, quelle='vhs'))

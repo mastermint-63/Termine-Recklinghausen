@@ -455,9 +455,25 @@ _RECKLINGHAUSEN_MUSTER = re.compile(
 )
 _ONLINE_MUSTER = re.compile(r"\bonline\b|\bzoom\b", re.IGNORECASE)
 
+# Ausflüge mit Treffpunkt in Recklinghausen, Ziel nur im Titel (Ergänzung FS, 14.10.2026):
+# nur Signalwort UND fremde Stadt im Titel. "Ausflug"/"Reise" bewusst nicht (Planetarium:
+# "Ausflug zu den Sternen"), "Tagesfahrten" (Plural, Infoabend) bewusst nicht.
+_FAHRT_MUSTER = re.compile(r"\b(?:Tagesfahrt|Exkursion|Studienfahrt)\b")
+_FAHRT_ZIELE_RE = '|'.join(re.escape(o) for o in _FREMDE_ORTE + (
+    'Bonn', 'Prag', 'Berlin', 'Hamburg', 'Amsterdam', 'Brüssel', 'Aachen', 'Wuppertal',
+    'Xanten', 'Kevelaer', 'Paris', 'Wien'))
+_FAHRT_ZIEL_MUSTER = re.compile(rf"\b(?:{_FAHRT_ZIELE_RE})\b")
+
+
+def _ist_fahrt_nach_auswaerts(name: str) -> bool:
+    return bool(_FAHRT_MUSTER.search(name) and _FAHRT_ZIEL_MUSTER.search(name))
+
 
 def ist_ausserhalb(t: Termin) -> bool:
-    """True, wenn der Ort eine andere Stadt nennt und nicht Recklinghausen."""
+    """True, wenn der Ort eine andere Stadt nennt und nicht Recklinghausen,
+    oder der Titel eine Tagesfahrt/Exkursion in eine andere Stadt ist."""
+    if _ist_fahrt_nach_auswaerts(t.name or ''):
+        return True
     ort = t.ort or ''
     if not ort or _ONLINE_MUSTER.search(ort) or _RECKLINGHAUSEN_MUSTER.search(ort):
         return False
