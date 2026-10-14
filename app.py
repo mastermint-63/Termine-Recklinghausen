@@ -20,6 +20,8 @@ import dataclasses
 from datetime import datetime
 from difflib import SequenceMatcher
 
+from arten import SONSTIGES, setze_arten
+
 from scraper import (
     # hole_regioactive,  # regioactive.de blockiert seit 2026-03 mit 403
     hole_stadt_re, hole_altstadtschmiede,
@@ -539,6 +541,8 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                     if not vorhandener.ort or vorhandener.ort == 'Recklinghausen':
                         if kandidat.ort and kandidat.ort != 'Recklinghausen':
                             vorhandener.ort = kandidat.ort
+                    if vorhandener.art in ('', SONSTIGES) and kandidat.art not in ('', SONSTIGES):
+                        vorhandener.art = kandidat.art
                     break
             if not ist_duplikat:
                 behalten.append(kandidat)
@@ -1942,6 +1946,8 @@ def _positionsargumente(argv: list[str]) -> list[str]:
 def _termin_zu_dict(t: Termin) -> dict:
     d = dataclasses.asdict(t)
     d['datum'] = t.datum.isoformat()
+    # Art wird beim Bauen neu berechnet, damit Regeländerungen ohne Abruf wirken
+    d.pop('art', None)
     return d
 
 
@@ -2050,6 +2056,7 @@ def baue_seiten(stand: dict, monate_liste: list[tuple[int, int]], basis_pfad: st
             print(f"  -> {ausserhalb} Termin(e) ausgeschlossen (Ort außerhalb Recklinghausens)")
 
         wende_korrekturen_an(alle_termine, korrekturen, j, m)
+        setze_arten(alle_termine)
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)

@@ -123,6 +123,8 @@ class Termin:
     abgesagt: bool = False
     # Verschoben (korrekturen.json "verschoben_auf"): alter Termin bleibt durchgestrichen, Badge nennt den neuen Tag
     verschoben_auf: str = ''
+    # Einheitliche Art (arten.py), erst beim Bauen gesetzt, nicht im Stand gespeichert
+    art: str = ''
 
     def __post_init__(self):
         # HTML-Reste aus allen Quellen an einer Stelle entfernen
