@@ -19,7 +19,7 @@ Zuerst wird **eine Vorschau der Pakete 2-5** gebaut. Erst nach intensiver Beguta
 **Abschottung von der Live-Seite:**
 - Arbeit auf einem Feature-Branch `auffindbarkeit` in `~/ki/dev/termine/re`. `main` und `prod` bleiben unberührt, kein Push auf `main`, kein `deploy`. `update.sh` läuft in `prod` und ist nicht betroffen.
 - `app.py` bekommt die Option `--ausgabe <ordner>`. Ohne Option bleibt das Verhalten exakt wie heute, damit der nächtliche Lauf nach einem späteren Deploy nicht anders reagiert. Die Vorschau landet in `vorschau/` (git-ignoriert). Die versionierten `termine_re_*.html`, `index.html` und `sitemap.xml` im Projekt werden **nicht** überschrieben.
-- Die Option `--termine-cache <datei>` speichert die gescrapten Termine nach dem ersten Lauf und lädt sie bei weiteren Läufen. So kosten Korrekturrunden während der Begutachtung keinen erneuten Abruf von 45 Quellen (und kein Apify-Guthaben).
+- Die Option `--termine-cache <datei>` speichert die gescrapten Termine nach dem ersten Lauf und lädt sie bei weiteren Läufen. So kosten Korrekturrunden während der Begutachtung keinen erneuten Abruf von 45 Quellen (und kein Apify-Guthaben). *Nachtrag 14.10.2026: ersetzt durch `--stand <datei>` aus `main` (Paket 0), weitere Runden mit `--nur-bauen`.*
 
 **Damit die Vorschau auf dem Laptop ohne Server funktioniert:**
 - Flache Dateien statt Ordner-URLs: `heute.html`, `morgen.html`, `wochenende.html`, `tag/2026-10-13.html`. GitHub Pages liefert sie später auch unter `/heute` aus *(beim Livegang verifizieren)*. Ordner-URLs würden lokal nur ein Verzeichnis zeigen.

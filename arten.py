@@ -191,3 +191,34 @@ def bestimme_art(t) -> str:
 def setze_arten(termine: list) -> None:
     for t in termine:
         t.art = bestimme_art(t)
+
+
+# Suche (Paket C): Ein Suchwort trifft auch die Art. Neben den Namen der Arten
+# selbst nur wenige Synonyme; die Volltextsuche bleibt davon unberührt.
+SUCH_SYNONYME = {
+    'musik': 'Konzert', 'livemusik': 'Konzert', 'live-musik': 'Konzert', 'gig': 'Konzert',
+    'kabarett': 'Theater/Kabarett', 'comedy': 'Theater/Kabarett', 'theater': 'Theater/Kabarett',
+    'disco': 'Party', 'tanzen': 'Party',
+    'lesung': 'Lesung/Vortrag', 'vortrag': 'Lesung/Vortrag',
+}
+# Nicht in der Suche: Kino (Suche ist ohne Kino), Sonstiges (kein Suchwort)
+SUCH_ARTEN = [a for a in ARTEN if a != 'Kino']
+
+
+def such_norm(text: str) -> str:
+    """Wie norm() im Browser: klein, ß -> ss, ohne Akzente (ü -> u)."""
+    import unicodedata
+    text = unicodedata.normalize('NFD', text.lower().replace('ß', 'ss'))
+    return ''.join(c for c in text if not 0x300 <= ord(c) <= 0x36f)
+
+
+def such_woerter() -> dict[str, str]:
+    """Normalisiertes Suchwort -> Art, für suche-daten.js."""
+    woerter = {}
+    for art in SUCH_ARTEN:
+        if art == SONSTIGES:
+            continue
+        for teil in art.split('/'):
+            woerter[such_norm(teil)] = art
+    woerter.update(SUCH_SYNONYME)
+    return woerter

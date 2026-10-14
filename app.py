@@ -25,7 +25,7 @@ from datetime import datetime
 from difflib import SequenceMatcher
 from zoneinfo import ZoneInfo
 
-from arten import SONSTIGES, setze_arten
+from arten import SONSTIGES, SUCH_ARTEN, setze_arten, such_woerter
 
 from scraper import (
     # hole_regioactive,  # regioactive.de blockiert seit 2026-03 mit 403
@@ -1315,6 +1315,13 @@ SEITEN_CSS = r"""        :root {
             border: 1px solid var(--border-color);
         }
 
+        .badge-art {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            font-weight: normal;
+        }
+
         .termin-ort {
             font-size: 13px;
             color: var(--text-secondary);
@@ -1571,6 +1578,11 @@ def _spotlight_html(hl_key: str, punkte: list[Termin]) -> str:
 
 
 
+def zeigt_art_etikett(t: Termin) -> bool:
+    """Art als Etikett, außer Sonstiges (sagt nichts) und Kino (dafür gibt es die Sammelzeile)."""
+    return bool(t.art) and t.art not in (SONSTIGES, 'Kino')
+
+
 def _termin_html(t: Termin, prefix: str = '') -> str:
     """HTML eines einzelnen Termins (Monats- und Tagesseiten). prefix: Weg zur Wurzel ('../' auf Tagesseiten)."""
     beschreibung_escaped = _html.escape(t.beschreibung)[:1000]
@@ -1591,8 +1603,8 @@ def _termin_html(t: Termin, prefix: str = '') -> str:
             absage_text = 'Abgesagt'
         badge_html = f'<span class="badge badge-abgesagt">{absage_text}</span> ' + badge_html
 
-    if t.kategorie:
-        badge_html += f' <span class="badge badge-kategorie">{_html.escape(t.kategorie)}</span>'
+    if zeigt_art_etikett(t):
+        badge_html += f' <span class="badge badge-art">{_html.escape(t.art)}</span>'
 
     # Name als Link oder aufklappbar
     if link_safe:
@@ -2049,6 +2061,17 @@ _PLZ = re.compile(r'\b(4\d{4})\b')
 _EINTRITT_FREI = re.compile(r'eintritt\s+(?:ist\s+)?frei|freier\s+eintritt', re.IGNORECASE)
 
 
+# schema.org-Untertyp je Art (alle Typen gibt es unter schema.org/Event, geprüft 14.10.2026).
+# Lesung/Vortrag als EducationEvent, nicht LiteraryEvent: Die Art umfasst vor allem Vorträge
+# (Sternwarte, VHS-Einzelabende, Geschichtsverein), Lesungen sind die Minderheit.
+_JSONLD_TYP = {
+    'Konzert': 'MusicEvent', 'Theater/Kabarett': 'TheaterEvent', 'Party': 'SocialEvent',
+    'Lesung/Vortrag': 'EducationEvent', 'Ausstellung/Kunst': 'ExhibitionEvent',
+    'Kurs/Workshop': 'EducationEvent', 'Fest/Markt': 'Festival', 'Kinder/Familie': 'ChildrensEvent',
+    'Sport/Bewegung': 'SportsEvent', 'Kino': 'ScreeningEvent',
+}
+
+
 def event_jsonld(t: Termin, mit_beschreibung: bool = True) -> dict:
     """schema.org Event mit Zeitzone, Status und Adresse (soweit aus den Daten ablesbar)."""
     tag = t.datum.date()
@@ -2062,7 +2085,7 @@ def event_jsonld(t: Termin, mit_beschreibung: bool = True) -> dict:
         if plz:
             adresse["postalCode"] = plz.group(1)
     obj = {
-        "@type": "Event",
+        "@type": _JSONLD_TYP.get(t.art, "Event"),
         "name": t.name,
         "startDate": _iso_mit_zone(tag, beginn) if beginn else tag.isoformat(),
         "eventStatus": "https://schema.org/EventCancelled" if t.abgesagt else "https://schema.org/EventScheduled",
@@ -2561,17 +2584,50 @@ def generiere_suchdaten(termine_nach_tag: dict, heute) -> str:
             eintrag = {'d': tag.isoformat(), 'z': t.uhrzeit_anzeige(), 'n': t.name, 'o': t.ort or '',
                        'q': QUELLEN.get(t.quelle, t.quelle), 'c': BADGE_KLASSEN.get(t.quelle, 'badge-default'),
                        'k': t.kategorie or '', 'b': (t.beschreibung or '')[:500], 'l': link}
+            if t.art and t.art != SONSTIGES:
+                eintrag['t'] = t.art
             if t.abgesagt:
                 eintrag['a'] = 1
             eintraege.append(eintrag)
-    daten = {'stand': heute.strftime('%d.%m.%Y'), 'termine': eintraege}
+    daten = {'stand': heute.strftime('%d.%m.%Y'), 'artwoerter': such_woerter(), 'termine': eintraege}
     json_text = _json.dumps(daten, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     return f'window.HW_SUCHE = {json_text};\n'
 
 
+# Reine Suchlogik ohne DOM, damit sie sich mit node testen lässt (tests/test_suche.py).
+_SUCHE_LOGIK_JS = r"""function hwNorm(s) {
+    return (s || '').toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+function hwWoerter(anfrage) {
+    return hwNorm(anfrage).split(/\s+/).filter(Boolean);
+}
+// Art zu einem Suchwort: exakt oder mit kurzer Endung (Konzerte, Lesungen, Führungen)
+function hwArtZuWort(w, artwoerter) {
+    if (Object.prototype.hasOwnProperty.call(artwoerter, w)) { return artwoerter[w]; }
+    for (var k in artwoerter) {
+        var rest = w.length - k.length;
+        if (rest > 0 && rest <= 2 && w.indexOf(k) === 0) { return artwoerter[k]; }
+    }
+    return '';
+}
+// Jedes Wort muss im Text stehen oder die Art des Termins benennen
+function hwTrifft(t, woerter, artwoerter) {
+    return woerter.every(function (w) {
+        return t.s.indexOf(w) !== -1 || (!!t.t && hwArtZuWort(w, artwoerter) === t.t);
+    });
+}
+// URL-Parameter art: gültige Art, sonst über die Suchwörter (alte Rohkategorie „Musik“), sonst kein Filter
+function hwArtAusParam(param, werte, artwoerter) {
+    if (!param) { return ''; }
+    if (werte.indexOf(param) !== -1) { return param; }
+    var art = hwArtZuWort(hwNorm(param), artwoerter);
+    return art && werte.indexOf(art) !== -1 ? art : '';
+}
+"""
+
 _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
 <script>
-(function () {
+""" + _SUCHE_LOGIK_JS + r"""(function () {
     var daten = window.HW_SUCHE;
     var form = document.getElementById('suche-form');
     var feldQ = document.getElementById('suche-q');
@@ -2585,9 +2641,7 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
     var WT = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
     var MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September',
                'Oktober', 'November', 'Dezember'];
-    function norm(s) {
-        return (s || '').toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[̀-ͯ]/g, '');
-    }
+    var artwoerter = daten.artwoerter || {};
     function iso(d) {
         var m = d.getMonth() + 1, t = d.getDate();
         return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (t < 10 ? '0' : '') + t;
@@ -2598,7 +2652,7 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
         if (text) { e.textContent = text; }
         return e;
     }
-    daten.termine.forEach(function (t) { t.s = norm([t.n, t.o, t.q, t.k, t.b].join(' ')); });
+    daten.termine.forEach(function (t) { t.s = hwNorm([t.n, t.o, t.q, t.k, t.t, t.b].join(' ')); });
     function fuelle(select, werte) {
         werte.sort(function (a, b) { return a.localeCompare(b, 'de'); }).forEach(function (w) {
             var o = el('option', '', w); o.value = w; select.appendChild(o);
@@ -2608,11 +2662,12 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
         var s = {}; daten.termine.forEach(function (t) { if (t[feld]) { s[t[feld]] = 1; } });
         return Object.keys(s);
     }
-    fuelle(feldArt, einzeln('k'));
+    // Arten stehen fest im Formular (Reihenfolge der Liste in arten.py)
+    var arten = Array.prototype.map.call(feldArt.options, function (o) { return o.value; }).filter(Boolean);
     fuelle(feldQuelle, einzeln('q'));
     var p = new URLSearchParams(location.search);
     feldQ.value = p.get('q') || '';
-    feldArt.value = p.get('art') || '';
+    feldArt.value = hwArtAusParam(p.get('art'), arten, artwoerter);
     feldQuelle.value = p.get('quelle') || '';
     feldZeit.value = p.get('zeit') || '';
     document.getElementById('suche-stand').textContent = daten.stand;
@@ -2629,7 +2684,7 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
         kopf.appendChild(document.createTextNode(' '));
         if (t.a) { kopf.appendChild(el('span', 'badge badge-abgesagt', 'Abgesagt')); kopf.appendChild(document.createTextNode(' ')); }
         kopf.appendChild(el('span', 'badge ' + t.c, t.q));
-        if (t.k) { kopf.appendChild(document.createTextNode(' ')); kopf.appendChild(el('span', 'badge badge-kategorie', t.k)); }
+        if (t.t) { kopf.appendChild(document.createTextNode(' ')); kopf.appendChild(el('span', 'badge badge-art', t.t)); }
         info.appendChild(kopf);
         if (t.o) { info.appendChild(el('div', 'termin-ort', t.o)); }
         if (t.b) { info.appendChild(el('div', 'termin-beschreibung', t.b.length > 220 ? t.b.slice(0, 220) + '…' : t.b)); }
@@ -2638,7 +2693,7 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
     }
 
     function suche() {
-        var woerter = norm(feldQ.value).split(/\s+/).filter(Boolean);
+        var woerter = hwWoerter(feldQ.value);
         var art = feldArt.value, quelle = feldQuelle.value, zeit = feldZeit.value;
         var params = new URLSearchParams();
         if (feldQ.value.trim()) { params.set('q', feldQ.value.trim()); }
@@ -2655,8 +2710,8 @@ _SUCHE_SCRIPT = r"""<script src="suche-daten.js"></script>
         var von = iso(heute), bis = '9999-12-31';
         if (zeit) { var e = new Date(heute); e.setDate(e.getDate() + parseInt(zeit, 10) - 1); bis = iso(e); }
         var treffer = daten.termine.filter(function (t) {
-            return t.d >= von && t.d <= bis && (!art || t.k === art) && (!quelle || t.q === quelle) &&
-                woerter.every(function (w) { return t.s.indexOf(w) !== -1; });
+            return t.d >= von && t.d <= bis && (!art || (t.t || 'Sonstiges') === art) &&
+                (!quelle || t.q === quelle) && hwTrifft(t, woerter, artwoerter);
         });
         info.textContent = treffer.length === 0 ? 'Keine Treffer.' :
             (treffer.length === 1 ? '1 Treffer' : treffer.length + ' Treffer') +
@@ -2690,9 +2745,9 @@ def generiere_suchseite(*, tracking: bool = True) -> str:
     """suche.html: Suche über alle kommenden Termine (ohne Kino), Daten aus suche-daten.js."""
     inhalt = '''<form id="suche-form" class="suchformular" role="search" action="suche.html" method="get">
     <label class="suche-feld suche-text"><span>Suchbegriff</span>
-        <input id="suche-q" name="q" type="search" placeholder="z. B. Altstadtschmiede, Lesung, Semsrott" autocomplete="off"></label>
+        <input id="suche-q" name="q" type="search" placeholder="z. B. Konzert, Altstadtschmiede, Semsrott" autocomplete="off"></label>
     <label class="suche-feld"><span>Art</span>
-        <select id="suche-art" name="art"><option value="">alle</option></select></label>
+        <select id="suche-art" name="art"><option value="">alle</option>ART_OPTIONEN</select></label>
     <label class="suche-feld"><span>Veranstalter</span>
         <select id="suche-quelle" name="quelle"><option value="">alle</option></select></label>
     <label class="suche-feld"><span>Zeitraum</span>
@@ -2700,12 +2755,14 @@ def generiere_suchseite(*, tracking: bool = True) -> str:
             <option value="1">heute</option><option value="7">die nächsten 7 Tage</option>
             <option value="31">die nächsten 31 Tage</option></select></label>
 </form>
-<p class="tag-intro">Durchsucht Titel, Ort, Veranstalter und Beschreibung aller kommenden Termine (ohne Kino).
+<p class="tag-intro">Durchsucht Titel, Ort, Veranstalter, Art und Beschreibung aller kommenden Termine (ohne Kino).
 Stand der Daten: <span id="suche-stand"></span>.</p>
 <noscript><p class="tag-intro">Die Suche braucht JavaScript. Alle Termine stehen auch im
 <a href="index.html">Kalender</a>.</p></noscript>
 <p id="suche-info" class="suche-info" aria-live="polite"></p>
 <div id="suche-ergebnis"></div>'''
+    inhalt = inhalt.replace('ART_OPTIONEN', ''.join(
+        f'<option value="{_html.escape(a)}">{_html.escape(a)}</option>' for a in SUCH_ARTEN))
     return _seitenrahmen(
         titel="Termine suchen: Veranstaltungen in Recklinghausen | Holzwurm",
         beschreibung="Suche im Veranstaltungskalender Recklinghausen nach Ort, Veranstalter, Art oder Name.",

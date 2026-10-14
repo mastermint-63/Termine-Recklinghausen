@@ -255,3 +255,44 @@ def test_kopf_neue_seiten_bricht_langes_wort_nicht():
     """Rückmeldung Ralf: „Veranstaltungskalender“ lief am Desktop ins rechte Bild."""
     assert '.kopf-neu .header-text { flex-shrink: 1; min-width: min-content; }' in app.ZUSATZ_CSS
     assert '.kopf-neu .hebbert' in app.ZUSATZ_CSS
+
+
+# --- Art-Etikett und JSON-LD-Typ nach Art (Paket C, 14.10.2026) -------------
+
+@pytest.mark.parametrize('art, typ', [
+    ('Konzert', 'MusicEvent'), ('Theater/Kabarett', 'TheaterEvent'), ('Party', 'SocialEvent'),
+    ('Lesung/Vortrag', 'EducationEvent'), ('Ausstellung/Kunst', 'ExhibitionEvent'),
+    ('Kurs/Workshop', 'EducationEvent'), ('Fest/Markt', 'Festival'), ('Kinder/Familie', 'ChildrensEvent'),
+    ('Sport/Bewegung', 'SportsEvent'), ('Kino', 'ScreeningEvent'),
+    ('Führung', 'Event'), ('Politik', 'Event'), ('Begegnung/Treffen', 'Event'), ('Sonstiges', 'Event'),
+    ('', 'Event'),
+])
+def test_jsonld_typ_nach_art(art, typ):
+    assert app.event_jsonld(_t("A", art=art))["@type"] == typ
+
+
+def test_art_etikett_am_termin():
+    html = app._termin_html(_t("Jazz", art='Konzert', kategorie='Musik'))
+    assert '<span class="badge badge-art">Konzert</span>' in html
+    assert 'badge-kategorie' not in html  # Art ersetzt die Rohkategorie
+
+
+@pytest.mark.parametrize('art', ['Sonstiges', 'Kino', ''])
+def test_kein_art_etikett_bei_sonstiges_und_kino(art):
+    html = app._termin_html(_t("X", art=art, kategorie='Bildung'))
+    assert 'badge-art' not in html and 'badge-kategorie' not in html
+
+
+def test_art_etikett_und_typ_auf_tagesseite():
+    html = app.generiere_tagesseite(TAG, [_t("A", art='Theater/Kabarett')], ERSTER, LETZTER, tracking=False)
+    assert '<span class="badge badge-art">Theater/Kabarett</span>' in html
+    events = _jsonld(html)[0]["mainEntity"]["itemListElement"]
+    assert [e["@type"] for e in events] == ["TheaterEvent"]
+
+
+def test_art_etikett_im_stil_mit_dunkelmodus():
+    css = app.SEITEN_CSS + app.ZUSATZ_CSS
+    assert '.badge-art' in css
+    regel = css[css.index('.badge-art'):]
+    regel = regel[:regel.index('}')]
+    assert 'var(--' in regel  # Farben aus den Variablen, die der Dunkelmodus umstellt
