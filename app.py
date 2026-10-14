@@ -16,6 +16,7 @@ import os
 import re
 import webbrowser
 import calendar
+import dataclasses
 from datetime import datetime
 from difflib import SequenceMatcher
 
@@ -204,6 +205,12 @@ SCRAPER = [
     (hole_facebook, 'Facebook'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
+
+# Abruf ohne manuelle Termine: die kommen erst beim Bauen dazu (termine_stand.json, --nur-bauen)
+ABRUF_SCRAPER = [s for s in SCRAPER if s[0] is not hole_manuelle_termine]
+
+STAND_PFAD = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'termine_stand.json')
+STAND_MAX_STUNDEN = 36
 
 
 def _normalisiere(name: str) -> str:
@@ -1840,38 +1847,124 @@ def berechne_monate(start_jahr: int, start_monat: int, anzahl: int) -> list[tupl
     return monate
 
 
-def main():
-    import sys
+def _option_wert(argv: list[str], name: str) -> str | None:
+    """Wert einer Option der Form `--name wert` (None, wenn nicht gesetzt)."""
+    if name in argv:
+        i = argv.index(name)
+        if i + 1 < len(argv):
+            return argv[i + 1]
+        raise SystemExit(f"{name} braucht einen Wert")
+    return None
 
-    no_browser = '--no-browser' in sys.argv
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
 
-    jetzt = datetime.now()
-    jahr = int(args[0]) if len(args) > 0 else jetzt.year
-    monat = int(args[1]) if len(args) > 1 else jetzt.month
-    anzahl_monate = int(args[2]) if len(args) > 2 else 5
+_OPTIONEN_MIT_WERT = ('--ausgabe', '--stand')
 
-    monate_liste = berechne_monate(jahr, monat, anzahl_monate)
 
-    print(f"Generiere {anzahl_monate} Monate ab {monat}/{jahr}...")
-    print("=" * 50)
+def _positionsargumente(argv: list[str]) -> list[str]:
+    """Jahr, Monat, Anzahl: alles außer Optionen und deren Werten."""
+    ergebnis = []
+    ueberspringen = False
+    for a in argv:
+        if ueberspringen:
+            ueberspringen = False
+        elif a in _OPTIONEN_MIT_WERT:
+            ueberspringen = True
+        elif not a.startswith('--'):
+            ergebnis.append(a)
+    return ergebnis
 
-    basis_pfad = os.path.dirname(__file__)
-    korrekturen = lade_korrekturen()
+
+def _termin_zu_dict(t: Termin) -> dict:
+    d = dataclasses.asdict(t)
+    d['datum'] = t.datum.isoformat()
+    return d
+
+
+def _termin_aus_dict(d: dict) -> Termin:
+    """Stellt einen Termin exakt wieder her, ohne __post_init__ (Text ist schon bereinigt)."""
+    t = object.__new__(Termin)
+    for feld in dataclasses.fields(Termin):
+        if feld.name in d:
+            setattr(t, feld.name, d[feld.name])
+        elif feld.default is not dataclasses.MISSING:
+            setattr(t, feld.name, feld.default)
+        else:
+            raise ValueError(f"Feld {feld.name} fehlt")
+    t.datum = datetime.fromisoformat(d['datum'])
+    return t
+
+
+class StandFehler(Exception):
+    """termine_stand.json fehlt, ist kaputt, zu alt oder deckt die Monate nicht ab."""
+
+
+def rufe_quellen_ab(monate_liste: list[tuple[int, int]]) -> dict:
+    """Fragt alle Quellen ab (ohne manuelle Termine) und liefert den Stand als JSON-fähiges dict."""
+    monate = {}
+    quellen = {}
+    for idx, (j, m) in enumerate(monate_liste):
+        print(f"\n[Abruf {idx+1}/{len(monate_liste)}] {m:02d}/{j}:")
+        termine = []
+        for scraper_fn, label in ABRUF_SCRAPER:
+            events = scraper_fn(j, m)
+            print(f"  -> {len(events)} {label}")
+            termine.extend(events)
+            q = quellen.setdefault(label, {'anzahl': 0})
+            q['anzahl'] += len(events)
+            q['abgerufen'] = datetime.now().isoformat(timespec='seconds')
+        monate[f"{j}-{m:02d}"] = [_termin_zu_dict(t) for t in termine]
+    return {'format': 1, 'abgerufen': datetime.now().isoformat(timespec='seconds'),
+            'quellen': quellen, 'monate': monate}
+
+
+def speichere_stand(pfad: str, stand: dict) -> None:
+    tmp = pfad + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        _json.dump(stand, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, pfad)
+
+
+def lade_stand(pfad: str, monate_liste: list[tuple[int, int]], jetzt: datetime,
+               max_stunden: int = STAND_MAX_STUNDEN) -> dict:
+    """Liest den Stand für --nur-bauen und prüft Alter und Monate."""
+    try:
+        with open(pfad, encoding='utf-8') as f:
+            stand = _json.load(f)
+    except FileNotFoundError:
+        raise StandFehler(f"Stand {pfad} fehlt, erst einen vollständigen Lauf (ohne --nur-bauen) starten")
+    except ValueError as e:
+        raise StandFehler(f"Stand {pfad} nicht lesbar: {e}")
+    try:
+        abgerufen = datetime.fromisoformat(stand['abgerufen'])
+        monate = stand['monate']
+    except (KeyError, TypeError, ValueError) as e:
+        raise StandFehler(f"Stand {pfad} nicht lesbar: {e!r}")
+    if (jetzt - abgerufen).total_seconds() > max_stunden * 3600:
+        raise StandFehler(f"Stand {pfad} vom {abgerufen:%d.%m.%Y %H:%M} ist älter als {max_stunden} Stunden, "
+                          f"erst einen vollständigen Lauf starten")
+    fehlend = [f"{j}-{m:02d}" for j, m in monate_liste if f"{j}-{m:02d}" not in monate]
+    if fehlend:
+        raise StandFehler(f"Stand {pfad} enthält die Monate {', '.join(fehlend)} nicht, "
+                          f"erst einen vollständigen Lauf starten")
+    return stand
+
+
+def baue_seiten(stand: dict, monate_liste: list[tuple[int, int]], basis_pfad: str,
+                korrekturen: list[dict]) -> str:
+    """Baut alle Seiten aus dem Stand. Manuelle Termine, Korrekturen, Filter und Dubletten erst hier."""
     erster_dateiname = None
     erster_monat_termine = None
 
     for idx, (j, m) in enumerate(monate_liste):
         monatsnamen = ['', 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
                        'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
-        print(f"\n[{idx+1}/{anzahl_monate}] {monatsnamen[m]} {j}:")
+        print(f"\n[{idx+1}/{len(monate_liste)}] {monatsnamen[m]} {j}:")
 
-        alle_termine = []
-
-        for scraper_fn, label in SCRAPER:
-            events = scraper_fn(j, m)
-            print(f"  -> {len(events)} {label}")
-            alle_termine.extend(events)
+        alle_termine = [_termin_aus_dict(d) for d in stand['monate'][f"{j}-{m:02d}"]]
+        print(f"  -> {len(alle_termine)} aus dem Abruf")
+        manuelle = hole_manuelle_termine(j, m)
+        print(f"  -> {len(manuelle)} Redaktion")
+        alle_termine.extend(manuelle)
 
         vor_filter = len(alle_termine)
         alle_termine = entferne_ausgeschlossene(alle_termine)
@@ -1928,6 +2021,50 @@ def main():
     with open(sitemap_pfad, 'w', encoding='utf-8') as f:
         f.write(sitemap_xml)
     print(f"sitemap.xml generiert ({len(monate_liste) + 1} URLs)")
+
+    return erster_dateiname
+
+
+def main():
+    """Ohne Option: alle Quellen abrufen, Stand speichern, Seiten bauen.
+    --nur-bauen: Seiten aus termine_stand.json bauen, keine Quelle abrufen."""
+    import sys
+
+    no_browser = '--no-browser' in sys.argv
+    nur_bauen = '--nur-bauen' in sys.argv
+    ausgabe = _option_wert(sys.argv, '--ausgabe')
+    stand_pfad = _option_wert(sys.argv, '--stand') or STAND_PFAD
+    args = _positionsargumente(sys.argv[1:])
+
+    jetzt = datetime.now()
+    jahr = int(args[0]) if len(args) > 0 else jetzt.year
+    monat = int(args[1]) if len(args) > 1 else jetzt.month
+    anzahl_monate = int(args[2]) if len(args) > 2 else 5
+
+    monate_liste = berechne_monate(jahr, monat, anzahl_monate)
+
+    if nur_bauen:
+        try:
+            stand = lade_stand(stand_pfad, monate_liste, jetzt)
+        except StandFehler as e:
+            print(f"FEHLER: {e}", file=sys.stderr)
+            sys.exit(2)
+        print(f"Baue {anzahl_monate} Monate ab {monat}/{jahr} aus dem Stand vom {stand['abgerufen']} (kein Abruf)...")
+        print("=" * 50)
+    else:
+        print(f"Generiere {anzahl_monate} Monate ab {monat}/{jahr}...")
+        print("=" * 50)
+        stand = rufe_quellen_ab(monate_liste)
+        try:
+            speichere_stand(stand_pfad, stand)
+            print(f"\nStand gespeichert: {stand_pfad}")
+        except OSError as e:
+            # Seiten trotzdem bauen, nur --nur-bauen fehlt dann der aktuelle Stand
+            print(f"\nWARNUNG: Stand nicht gespeichert ({stand_pfad}): {e}")
+
+    basis_pfad = os.path.abspath(ausgabe) if ausgabe else os.path.dirname(os.path.abspath(__file__))
+    os.makedirs(basis_pfad, exist_ok=True)
+    erster_dateiname = baue_seiten(stand, monate_liste, basis_pfad, lade_korrekturen(KORREKTUREN_PFAD))
 
     print("\n" + "=" * 50)
     print(f"Fertig! {anzahl_monate} Dateien generiert.")

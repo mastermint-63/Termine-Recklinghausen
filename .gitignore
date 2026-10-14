@@ -14,3 +14,6 @@ hw_bericht.json
 .venv/
 .eventim_cache.json
 .DS_Store
+
+# Abrufstand für app.py --nur-bauen (Rohdaten der Quellen)
+termine_stand.json

@@ -13,7 +13,11 @@ python3 app.py 2026 2             # 5 Monate ab Februar 2026
 python3 app.py 2026 2 6           # 6 Monate ab Februar 2026
 python3 app.py --no-browser       # Ohne Browser öffnen
 
+python3 app.py --nur-bauen --no-browser   # nur aus termine_stand.json bauen, kein Abruf
+python3 app.py --ausgabe DIR --stand DATEI # anderer Ausgabeordner / anderer Stand
+
 ./update.sh                       # Aktualisieren + Git Push + macOS-Benachrichtigung
+./update.sh --nur-bauen           # nur Bau + Push, kein Abruf, kein Signal-Bericht, keine Rückmeldungen
 ./oeffne_aktuell.sh               # Aktuellen Monat im Browser öffnen
 ```
 
@@ -47,6 +51,13 @@ rund 35 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) �
 **update.sh** — Tägliche Automation: Scraping → Löschroutine für alte Dateien → Event-Count-Diff → bedingter Git Push → macOS-Benachrichtigung via terminal-notifier. Nutzt Python 3.14 Framework-Pfad. Dateien älter als der Vormonat werden automatisch per `git rm` entfernt und im gleichen Commit mitgepusht (1-Monats-Puffer: Vormonat bleibt erhalten).
 
 > ⚠️ **Wichtig:** `update.sh` committet **nur die generierten HTML-Dateien** (`termine_re_*.html`, `index.html`, `sitemap.xml`), **nicht** den Quellcode. Nach Änderungen an `app.py`/`scraper.py`/`CLAUDE.md` diese **separat** committen und pushen — sonst zeigt die Live-Seite zwar den neuen Stand, aber der erzeugende Code bleibt unversioniert (Repo-Drift).
+
+### Abrufen und Bauen (seit 14.10.2026, Plan `docs/termineseite-fassung-3-plan.md`, Paket 0)
+
+- **Normaler Lauf** (`app.py` ohne Option, nächtlich über `update.sh`): erst alle Quellen aus `ABRUF_SCRAPER` abrufen (= `SCRAPER` ohne `hole_manuelle_termine`), Ergebnis nach `termine_stand.json` (git-ignoriert, atomar geschrieben: `abgerufen`, je Quelle `anzahl`/`abgerufen`, Rohtermine je Monat `JJJJ-MM` **vor** Filtern und Dublettenprüfung), dann bauen. Der Bau liest den gerade geschriebenen Stand, deshalb sind beide Modi bei gleichem Stand gleich (Test `tests/test_stand.py`, Probe am 14.10.2026 gegen den alten Code: 7 Dateien identisch).
+- **Nur bauen** (`app.py --nur-bauen`, `update.sh --nur-bauen`): kein Abruf. `manuelle_termine.json` und `korrekturen.json` werden **beim Bauen** frisch gelesen, Inhaltsfilter und Dublettenprüfung laufen ebenfalls erst dort. Eine Absage, ein Handeintrag oder eine Korrektur ist so ohne erneuten Abruf live (Bau unter 1 s, dazu Push und Pages-Deploy). `update.sh --nur-bauen` macht nur Bau, Löschroutine, Commit (Zusatz „(nur Bau)“) und Push mit dem gleichen Rebase-Schutz, aber **kein** `hw_bericht.py` und **kein** `rueckmeldung.py`, auch nicht bei Fehlern.
+- **Schutz:** Fehlt der Stand, ist er kaputt, älter als 36 Stunden (`STAND_MAX_STUNDEN`) oder fehlt ein Zielmonat (Monatswechsel vor dem nächtlichen Lauf), bricht `--nur-bauen` mit Exit 2 und Meldung auf stderr ab, ohne etwas zu schreiben.
+- Termine aus dem Stand werden ohne `__post_init__` wiederhergestellt (`_termin_aus_dict()`), die Bereinigung lief schon beim Abruf.
 
 ### Automatische Aktualisierung
 
