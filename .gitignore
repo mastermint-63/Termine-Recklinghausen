@@ -18,3 +18,7 @@ hw_bericht.json
 # Vorschau der Auffindbarkeits-Seiten (nur lokal)
 vorschau/
 vorschau.zip
+
+# Abrufstand für app.py --nur-bauen (Rohdaten der Quellen)
+termine_stand.json
+.update.lock/

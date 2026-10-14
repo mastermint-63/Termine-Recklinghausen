@@ -8,8 +8,10 @@ Verwendung:
     python3 app.py 2026 2       # Generiert ab Februar 2026 (5 Monate)
     python3 app.py 2026 2 6     # Generiert 6 Monate ab Februar 2026
     python3 app.py --no-browser # Ohne Browser öffnen
-    python3 app.py --ausgabe vorschau --termine-cache vorschau/termine_cache.json --ohne-tracking --no-browser
-                                # Vorschau in eigenen Ordner, Termine nur einmal scrapen
+    python3 app.py --ausgabe vorschau/site --stand vorschau/termine_stand.json --ohne-tracking --no-browser
+                                # Vorschau in eigenen Ordner mit eigenem Abrufstand
+    python3 app.py --nur-bauen --ausgabe vorschau/site --stand vorschau/termine_stand.json --ohne-tracking --no-browser
+                                # weitere Runden ohne Abruf aus dem gespeicherten Stand
 """
 
 import html as _html
@@ -22,6 +24,8 @@ import dataclasses
 from datetime import datetime
 from difflib import SequenceMatcher
 from zoneinfo import ZoneInfo
+
+from arten import SONSTIGES, setze_arten
 
 from scraper import (
     # hole_regioactive,  # regioactive.de blockiert seit 2026-03 mit 403
@@ -208,6 +212,12 @@ SCRAPER = [
     (hole_facebook, 'Facebook'),
     (hole_manuelle_termine, 'Redaktion'),
 ]
+
+# Abruf ohne manuelle Termine: die kommen erst beim Bauen dazu (termine_stand.json, --nur-bauen)
+ABRUF_SCRAPER = [s for s in SCRAPER if s[0] is not hole_manuelle_termine]
+
+STAND_PFAD = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'termine_stand.json')
+STAND_MAX_STUNDEN = 36
 
 
 def _normalisiere(name: str) -> str:
@@ -423,6 +433,71 @@ def entferne_werbung(termine: list[Termin]) -> list[Termin]:
     return [t for t in termine if not ist_werbung(t)]
 
 
+# Nur Termine in Recklinghausen (Entscheidung FS, 14.10.2026): Ausflüge in andere
+# Städte fallen raus, auch wenn der Veranstalter aus Recklinghausen kommt. Geprüft
+# wird nur der Ort. Städtenamen zählen nur an Wortgrenzen, mit Großschreibung und
+# in Ortsstellung (ganzer Ort, am Ende, vor Komma, mit Stadtteil "Essen-Steele",
+# nach "in"/"nach"), damit "Augustinessenstraße", "Mittagessen", "Essen & Trinken",
+# "Bochumer Straße" oder "Hertener Str." nicht treffen.
+_FREMDE_ORTE = (
+    'Essen', 'Bochum', 'Dortmund', 'Gelsenkirchen', 'Herten', 'Marl', 'Datteln',
+    'Castrop-Rauxel', 'Castrop', 'Oer-Erkenschwick', 'Waltrop', 'Haltern', 'Dorsten',
+    'Gladbeck', 'Bottrop', 'Herne', 'Münster', 'Düsseldorf', 'Köln', 'Duisburg',
+    'Oberhausen', 'Mülheim', 'Hamm', 'Lünen',
+    # Ortsteile anderer Städte aus der Gegenprobe (Lembeck = Dorsten)
+    'Lembeck',
+)
+_FREMDE_ORTE_RE = '|'.join(re.escape(o) for o in _FREMDE_ORTE)
+_FREMDE_STADT_MUSTER = re.compile(
+    rf"(?:\b(?:in|nach)\s+(?:{_FREMDE_ORTE_RE})\b"
+    rf"|\b(?:{_FREMDE_ORTE_RE})(?=\s*(?:$|[,;/)]|-[A-ZÄÖÜ]|\s(?:am|an der)\s)))"
+)
+# Postleitzahl vor einem Ortsnamen; Recklinghausen hat 45657 bis 45665.
+# Ohne folgenden Großbuchstaben keine PLZ (Telefonnummern wie "02361- 23134 oder").
+_FREMDE_PLZ_MUSTER = re.compile(r"\b(?!456[56]\d)\d{5}\s+[A-ZÄÖÜ]")
+_RECKLINGHAUSEN_MUSTER = re.compile(
+    r"\bRecklinghausen\b|\b456[56]\d\b|"
+    r"\b(?:Suderwich|Hochlarmark|Hochlar|Speckhorn|Bockholt|Essel|Hillerheide|"
+    r"König-Ludwig|Grullbad|Stuckenbusch|Röllinghausen|Berghausen|Hillen|Paulusviertel)\b"
+)
+_ONLINE_MUSTER = re.compile(r"\bonline\b|\bzoom\b", re.IGNORECASE)
+
+# Ausflüge mit Treffpunkt in Recklinghausen, Ziel nur im Titel (Ergänzung FS, 14.10.2026):
+# nur Signalwort UND fremde Stadt im Titel. "Ausflug"/"Reise" bewusst nicht (Planetarium:
+# "Ausflug zu den Sternen"), "Tagesfahrten" (Plural, Infoabend) bewusst nicht.
+_FAHRT_MUSTER = re.compile(r"\b(?:Tagesfahrt|Exkursion|Studienfahrt)\b")
+_FAHRT_ZIELE_RE = '|'.join(re.escape(o) for o in _FREMDE_ORTE + (
+    'Bonn', 'Prag', 'Berlin', 'Hamburg', 'Amsterdam', 'Brüssel', 'Aachen', 'Wuppertal',
+    'Xanten', 'Kevelaer', 'Paris', 'Wien'))
+_FAHRT_ZIEL_MUSTER = re.compile(rf"\b(?:{_FAHRT_ZIELE_RE})\b")
+
+
+def _ist_fahrt_nach_auswaerts(name: str) -> bool:
+    return bool(_FAHRT_MUSTER.search(name) and _FAHRT_ZIEL_MUSTER.search(name))
+
+
+def ist_ausserhalb(t: Termin) -> bool:
+    """True, wenn der Ort eine andere Stadt nennt und nicht Recklinghausen,
+    oder der Titel eine Tagesfahrt/Exkursion in eine andere Stadt ist."""
+    if _ist_fahrt_nach_auswaerts(t.name or ''):
+        return True
+    ort = t.ort or ''
+    if not ort or _ONLINE_MUSTER.search(ort) or _RECKLINGHAUSEN_MUSTER.search(ort):
+        return False
+    return bool(_FREMDE_PLZ_MUSTER.search(ort) or _FREMDE_STADT_MUSTER.search(ort))
+
+
+def entferne_ausserhalb(termine: list[Termin]) -> list[Termin]:
+    """Filtert Termine in anderen Städten heraus, je Treffer eine Logzeile."""
+    ergebnis = []
+    for t in termine:
+        if ist_ausserhalb(t):
+            print(f"  [Ort] ausserhalb: {t.datum.strftime('%d.%m.%Y')} {t.name} ({t.ort})")
+        else:
+            ergebnis.append(t)
+    return ergebnis
+
+
 def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
     """Entfernt Duplikate: gleiches Datum + identischer oder enthaltener Name."""
     # Nach Datum gruppieren
@@ -471,6 +546,8 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                     if not vorhandener.ort or vorhandener.ort == 'Recklinghausen':
                         if kandidat.ort and kandidat.ort != 'Recklinghausen':
                             vorhandener.ort = kandidat.ort
+                    if vorhandener.art in ('', SONSTIGES) and kandidat.art not in ('', SONSTIGES):
+                        vorhandener.art = kandidat.art
                     break
             if not ist_duplikat:
                 behalten.append(kandidat)
@@ -2720,7 +2797,7 @@ def _option_wert(argv: list[str], name: str) -> str | None:
     return None
 
 
-_OPTIONEN_MIT_WERT = ('--ausgabe', '--termine-cache')
+_OPTIONEN_MIT_WERT = ('--ausgabe', '--stand')
 
 
 def _positionsargumente(argv: list[str]) -> list[str]:
@@ -2740,77 +2817,96 @@ def _positionsargumente(argv: list[str]) -> list[str]:
 def _termin_zu_dict(t: Termin) -> dict:
     d = dataclasses.asdict(t)
     d['datum'] = t.datum.isoformat()
+    # Art wird beim Bauen neu berechnet, damit Regeländerungen ohne Abruf wirken
+    d.pop('art', None)
     return d
 
 
 def _termin_aus_dict(d: dict) -> Termin:
-    d = dict(d)
-    d['datum'] = datetime.fromisoformat(d['datum'])
-    return Termin(**d)
+    """Stellt einen Termin exakt wieder her, ohne __post_init__ (Text ist schon bereinigt)."""
+    t = object.__new__(Termin)
+    for feld in dataclasses.fields(Termin):
+        if feld.name in d:
+            setattr(t, feld.name, d[feld.name])
+        elif feld.default is not dataclasses.MISSING:
+            setattr(t, feld.name, feld.default)
+        else:
+            raise ValueError(f"Feld {feld.name} fehlt")
+    t.datum = datetime.fromisoformat(d['datum'])
+    return t
 
 
-def lade_termin_cache(pfad: str) -> dict[str, list[Termin]]:
-    """Rohe Scraper-Ergebnisse je Monat ("JJJJ-MM"), damit Vorschau-Läufe nicht neu scrapen."""
+class StandFehler(Exception):
+    """termine_stand.json fehlt, ist kaputt, zu alt oder deckt die Monate nicht ab."""
+
+
+def rufe_quellen_ab(monate_liste: list[tuple[int, int]]) -> dict:
+    """Fragt alle Quellen ab (ohne manuelle Termine) und liefert den Stand als JSON-fähiges dict."""
+    monate = {}
+    quellen = {}
+    for idx, (j, m) in enumerate(monate_liste):
+        print(f"\n[Abruf {idx+1}/{len(monate_liste)}] {m:02d}/{j}:")
+        termine = []
+        for scraper_fn, label in ABRUF_SCRAPER:
+            events = scraper_fn(j, m)
+            print(f"  -> {len(events)} {label}")
+            termine.extend(events)
+            q = quellen.setdefault(label, {'anzahl': 0})
+            q['anzahl'] += len(events)
+            q['abgerufen'] = datetime.now().isoformat(timespec='seconds')
+        monate[f"{j}-{m:02d}"] = [_termin_zu_dict(t) for t in termine]
+    return {'format': 1, 'abgerufen': datetime.now().isoformat(timespec='seconds'),
+            'quellen': quellen, 'monate': monate}
+
+
+def speichere_stand(pfad: str, stand: dict) -> None:
+    tmp = pfad + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        _json.dump(stand, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, pfad)
+
+
+def lade_stand(pfad: str, monate_liste: list[tuple[int, int]], jetzt: datetime,
+               max_stunden: int = STAND_MAX_STUNDEN) -> dict:
+    """Liest den Stand für --nur-bauen und prüft Alter und Monate."""
     try:
         with open(pfad, encoding='utf-8') as f:
-            daten = _json.load(f)
+            stand = _json.load(f)
     except FileNotFoundError:
-        return {}
-    return {k: [_termin_aus_dict(d) for d in v] for k, v in daten.items()}
+        raise StandFehler(f"Stand {pfad} fehlt, erst einen vollständigen Lauf (ohne --nur-bauen) starten")
+    except ValueError as e:
+        raise StandFehler(f"Stand {pfad} nicht lesbar: {e}")
+    try:
+        abgerufen = datetime.fromisoformat(stand['abgerufen'])
+        monate = stand['monate']
+    except (KeyError, TypeError, ValueError) as e:
+        raise StandFehler(f"Stand {pfad} nicht lesbar: {e!r}")
+    if (jetzt - abgerufen).total_seconds() > max_stunden * 3600:
+        raise StandFehler(f"Stand {pfad} vom {abgerufen:%d.%m.%Y %H:%M} ist älter als {max_stunden} Stunden, "
+                          f"erst einen vollständigen Lauf starten")
+    fehlend = [f"{j}-{m:02d}" for j, m in monate_liste if f"{j}-{m:02d}" not in monate]
+    if fehlend:
+        raise StandFehler(f"Stand {pfad} enthält die Monate {', '.join(fehlend)} nicht, "
+                          f"erst einen vollständigen Lauf starten")
+    return stand
 
 
-def speichere_termin_cache(pfad: str, cache: dict[str, list[Termin]]) -> None:
-    os.makedirs(os.path.dirname(os.path.abspath(pfad)), exist_ok=True)
-    with open(pfad, 'w', encoding='utf-8') as f:
-        _json.dump({k: [_termin_zu_dict(t) for t in v] for k, v in cache.items()},
-                   f, ensure_ascii=False, indent=1)
-
-
-def main():
-    import sys
-
-    no_browser = '--no-browser' in sys.argv
-    tracking = '--ohne-tracking' not in sys.argv
-    ausgabe = _option_wert(sys.argv, '--ausgabe')
-    cache_pfad = _option_wert(sys.argv, '--termine-cache')
-    args = _positionsargumente(sys.argv[1:])
-
-    jetzt = datetime.now()
-    jahr = int(args[0]) if len(args) > 0 else jetzt.year
-    monat = int(args[1]) if len(args) > 1 else jetzt.month
-    anzahl_monate = int(args[2]) if len(args) > 2 else 5
-
-    monate_liste = berechne_monate(jahr, monat, anzahl_monate)
-
-    print(f"Generiere {anzahl_monate} Monate ab {monat}/{jahr}...")
-    print("=" * 50)
-
-    basis_pfad = os.path.abspath(ausgabe) if ausgabe else os.path.dirname(__file__)
-    os.makedirs(basis_pfad, exist_ok=True)
-    korrekturen = lade_korrekturen()
-    termin_cache = lade_termin_cache(cache_pfad) if cache_pfad else {}
-    cache_geaendert = False
+def baue_seiten(stand: dict, monate_liste: list[tuple[int, int]], basis_pfad: str,
+                korrekturen: list[dict], *, tracking: bool = True) -> str:
+    """Baut alle Seiten aus dem Stand. Manuelle Termine, Korrekturen, Filter und Dubletten erst hier."""
     erster_dateiname = None
     termine_je_monat = {}
 
     for idx, (j, m) in enumerate(monate_liste):
         monatsnamen = ['', 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
                        'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
-        print(f"\n[{idx+1}/{anzahl_monate}] {monatsnamen[m]} {j}:")
+        print(f"\n[{idx+1}/{len(monate_liste)}] {monatsnamen[m]} {j}:")
 
-        cache_key = f"{j}-{m:02d}"
-        if cache_key in termin_cache:
-            alle_termine = termin_cache[cache_key]
-            print(f"  -> {len(alle_termine)} Termine aus Cache {cache_pfad}")
-        else:
-            alle_termine = []
-            for scraper_fn, label in SCRAPER:
-                events = scraper_fn(j, m)
-                print(f"  -> {len(events)} {label}")
-                alle_termine.extend(events)
-            if cache_pfad:
-                termin_cache[cache_key] = [dataclasses.replace(t) for t in alle_termine]
-                cache_geaendert = True
+        alle_termine = [_termin_aus_dict(d) for d in stand['monate'][f"{j}-{m:02d}"]]
+        print(f"  -> {len(alle_termine)} aus dem Abruf")
+        manuelle = hole_manuelle_termine(j, m)
+        print(f"  -> {len(manuelle)} Redaktion")
+        alle_termine.extend(manuelle)
 
         vor_filter = len(alle_termine)
         alle_termine = entferne_ausgeschlossene(alle_termine)
@@ -2824,7 +2920,14 @@ def main():
         if werbung:
             print(f"  -> {werbung} Termin(e) ausgeschlossen (kommerzielle Werbung)")
 
+        vor_ort = len(alle_termine)
+        alle_termine = entferne_ausserhalb(alle_termine)
+        ausserhalb = vor_ort - len(alle_termine)
+        if ausserhalb:
+            print(f"  -> {ausserhalb} Termin(e) ausgeschlossen (Ort außerhalb Recklinghausens)")
+
         wende_korrekturen_an(alle_termine, korrekturen, j, m)
+        setze_arten(alle_termine)
 
         vor_dedup = len(alle_termine)
         alle_termine = entferne_duplikate(alle_termine)
@@ -2841,10 +2944,6 @@ def main():
         termine_je_monat[(j, m)] = alle_termine
         if idx == 0:
             erster_dateiname = ausgabe_pfad
-
-    if cache_pfad and cache_geaendert:
-        speichere_termin_cache(cache_pfad, termin_cache)
-        print(f"Termin-Cache gespeichert: {cache_pfad}")
 
     # Startseite (eigener Inhalt statt Kopie des Monats), Tagesseiten, Feeds
     tag_pfade = generiere_auffindbarkeit(basis_pfad, termine_je_monat, monate_liste,
@@ -2875,6 +2974,52 @@ def main():
     with open(sitemap_pfad, 'w', encoding='utf-8') as f:
         f.write(sitemap_xml)
     print(f"sitemap.xml generiert ({len(sitemap_urls)} URLs)")
+
+    return erster_dateiname
+
+
+def main():
+    """Ohne Option: alle Quellen abrufen, Stand speichern, Seiten bauen.
+    --nur-bauen: Seiten aus termine_stand.json bauen, keine Quelle abrufen."""
+    import sys
+
+    no_browser = '--no-browser' in sys.argv
+    nur_bauen = '--nur-bauen' in sys.argv
+    tracking = '--ohne-tracking' not in sys.argv
+    ausgabe = _option_wert(sys.argv, '--ausgabe')
+    stand_pfad = _option_wert(sys.argv, '--stand') or STAND_PFAD
+    args = _positionsargumente(sys.argv[1:])
+
+    jetzt = datetime.now()
+    jahr = int(args[0]) if len(args) > 0 else jetzt.year
+    monat = int(args[1]) if len(args) > 1 else jetzt.month
+    anzahl_monate = int(args[2]) if len(args) > 2 else 5
+
+    monate_liste = berechne_monate(jahr, monat, anzahl_monate)
+
+    if nur_bauen:
+        try:
+            stand = lade_stand(stand_pfad, monate_liste, jetzt)
+        except StandFehler as e:
+            print(f"FEHLER: {e}", file=sys.stderr)
+            sys.exit(2)
+        print(f"Baue {anzahl_monate} Monate ab {monat}/{jahr} aus dem Stand vom {stand['abgerufen']} (kein Abruf)...")
+        print("=" * 50)
+    else:
+        print(f"Generiere {anzahl_monate} Monate ab {monat}/{jahr}...")
+        print("=" * 50)
+        stand = rufe_quellen_ab(monate_liste)
+        try:
+            speichere_stand(stand_pfad, stand)
+            print(f"\nStand gespeichert: {stand_pfad}")
+        except OSError as e:
+            # Seiten trotzdem bauen, nur --nur-bauen fehlt dann der aktuelle Stand
+            print(f"\nWARNUNG: Stand nicht gespeichert ({stand_pfad}): {e}")
+
+    basis_pfad = os.path.abspath(ausgabe) if ausgabe else os.path.dirname(os.path.abspath(__file__))
+    os.makedirs(basis_pfad, exist_ok=True)
+    erster_dateiname = baue_seiten(stand, monate_liste, basis_pfad, lade_korrekturen(KORREKTUREN_PFAD),
+                                   tracking=tracking)
 
     print("\n" + "=" * 50)
     print(f"Fertig! {anzahl_monate} Dateien generiert.")

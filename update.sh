@@ -1,5 +1,16 @@
 #!/bin/bash
 # Termine Recklinghausen - Automatische Aktualisierung mit GitHub Push
+#
+#   update.sh              Abruf aller Quellen, Bau, Push, Rückmeldungen und Signal-Bericht (nächtlicher Lauf)
+#   update.sh --nur-bauen  nur Bau aus termine_stand.json, Löschroutine, Commit, Push
+#                          (für Absagen, Handeintrag, Korrektur; kein Abruf, kein Bericht, keine Rückmeldung)
+
+NUR_BAUEN=false
+case "$1" in
+    "") ;;
+    --nur-bauen) NUR_BAUEN=true ;;
+    *) echo "Unbekannte Option: $1 (erlaubt: --nur-bauen)"; exit 2 ;;
+esac
 
 cd "$(dirname "$0")"
 LOGFILE="$(pwd)/launchd.log"
@@ -17,6 +28,20 @@ if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] || [ "$(git branch --sho
 fi
 EXIT_CODE=0
 
+# Sperre gegen zwei gleichzeitige Läufe (z.B. --nur-bauen während des Laufs um 06:30).
+# mkdir ist atomar. Eine Sperre, deren Prozess nicht mehr lebt, wird übernommen.
+SPERRE="$(pwd)/.update.lock"
+if ! mkdir "$SPERRE" 2>/dev/null; then
+    ALTE_PID=$(cat "$SPERRE/pid" 2>/dev/null)
+    if [ -n "$ALTE_PID" ] && kill -0 "$ALTE_PID" 2>/dev/null; then
+        echo "FEHLER: Es läuft schon eine Aktualisierung (PID $ALTE_PID) – kein Lauf."
+        exit 3
+    fi
+    echo "Hinweis: verwaiste Sperre (PID ${ALTE_PID:-unbekannt}) übernommen"
+fi
+echo $$ > "$SPERRE/pid"
+trap 'rm -rf "$SPERRE"' EXIT
+
 # Alte Event-Anzahl aus bestehenden HTML-Dateien auslesen
 ALTE_ANZAHL=0
 for html in termine_re_*.html; do
@@ -29,14 +54,18 @@ done
 # Startzeit: Rückmeldungen an die Redaktion bestätigen nur, was hw_import VOR diesem Lauf eingetragen hat
 START=$(date +%Y-%m-%dT%H:%M:%S)
 
-# Termine abrufen
-OUTPUT=$("${PYTHON:-python3}" app.py --no-browser 2>&1)
+# Termine abrufen (oder nur aus dem gespeicherten Stand bauen)
+if [ "$NUR_BAUEN" = true ]; then
+    OUTPUT=$("${PYTHON:-python3}" app.py --no-browser --nur-bauen 2>&1)
+else
+    OUTPUT=$("${PYTHON:-python3}" app.py --no-browser 2>&1)
+fi
 PYTHON_EXIT=$?
 echo "$OUTPUT"
 
 if [ $PYTHON_EXIT -ne 0 ]; then
     echo "FEHLER: app.py mit Exit-Code $PYTHON_EXIT abgebrochen – kein Push"
-    "${PYTHON:-python3}" hw_bericht.py --status fehler --grund "app.py Exit-Code $PYTHON_EXIT, kein Push"
+    [ "$NUR_BAUEN" = false ] && "${PYTHON:-python3}" hw_bericht.py --status fehler --grund "app.py Exit-Code $PYTHON_EXIT, kein Push"
     /opt/homebrew/bin/terminal-notifier \
         -title "❌ Termine RE – Skriptfehler" \
         -subtitle "Termine Recklinghausen" \
@@ -95,6 +124,7 @@ else
     echo "Änderungen gefunden - pushe zu GitHub..."
     git add termine_re_*.html index.html sitemap.xml manuelle_termine.json korrekturen.json 2>/dev/null
     COMMIT_MSG="Termine RE aktualisiert $DATUM"
+    [ "$NUR_BAUEN" = true ] && COMMIT_MSG="$COMMIT_MSG (nur Bau)"
     [ ${#GELOESCHT[@]} -gt 0 ] && COMMIT_MSG="$COMMIT_MSG (${#GELOESCHT[@]} alte Datei(en) gelöscht)"
     git commit -m "$COMMIT_MSG" 2>&1
 
@@ -117,7 +147,10 @@ fi
 
 # Rückmeldung an die Redaktion (Kalender-Eingang) und Bericht des HW-Imports (00:30) per Signal,
 # erst jetzt: "ist live" statt "wird live". Rückmeldung zuerst, ihr Ergebnis steht im Signal-Bericht.
-if [ "$PUSH_STATUS" = "GitHub aktualisiert" ]; then
+# Im Modus --nur-bauen weder Rückmeldung noch Bericht: die gehören zum nächtlichen Lauf.
+if [ "$NUR_BAUEN" = true ]; then
+    echo "Nur Bau: kein Signal-Bericht, keine Rückmeldungen"
+elif [ "$PUSH_STATUS" = "GitHub aktualisiert" ]; then
     "${PYTHON:-python3}" rueckmeldung.py --status live --bis "$START"
     "${PYTHON:-python3}" hw_bericht.py --status live
 elif [ "$PUSH_STATUS" = "Keine Änderungen" ]; then
@@ -145,6 +178,8 @@ else
     TEXT="$NEUE_ANZAHL Termine (unverändert)"
     SOUND="Glass"
 fi
+
+[ "$NUR_BAUEN" = true ] && TEXT="$TEXT | nur Bau"
 
 # Push-Status anhängen
 if [ -n "$PUSH_STATUS" ]; then
