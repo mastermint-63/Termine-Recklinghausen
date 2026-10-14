@@ -58,6 +58,8 @@ rund 35 Quellen → scraper.py (Termin-Objekte) → app.py (HTML-Generierung) �
 - **Nur bauen** (`app.py --nur-bauen`, `update.sh --nur-bauen`): kein Abruf. `manuelle_termine.json` und `korrekturen.json` werden **beim Bauen** frisch gelesen, Inhaltsfilter und Dublettenprüfung laufen ebenfalls erst dort. Eine Absage, ein Handeintrag oder eine Korrektur ist so ohne erneuten Abruf live (Bau unter 1 s, dazu Push und Pages-Deploy). `update.sh --nur-bauen` macht nur Bau, Löschroutine, Commit (Zusatz „(nur Bau)“) und Push mit dem gleichen Rebase-Schutz, aber **kein** `hw_bericht.py` und **kein** `rueckmeldung.py`, auch nicht bei Fehlern.
 - **Schutz:** Fehlt der Stand, ist er kaputt, älter als 36 Stunden (`STAND_MAX_STUNDEN`) oder fehlt ein Zielmonat (Monatswechsel vor dem nächtlichen Lauf), bricht `--nur-bauen` mit Exit 2 und Meldung auf stderr ab, ohne etwas zu schreiben.
 - Termine aus dem Stand werden ohne `__post_init__` wiederhergestellt (`_termin_aus_dict()`), die Bereinigung lief schon beim Abruf.
+- **Schnell live (Entscheidung FS 14.10.2026, Variante A):** `./schnell_live.sh` aus dev = `deploy termine-re` (mit Tests) und danach in prod `update.sh --nur-bauen` (prod-venv, Env-Datei `termine-re.env`). Kein `git pull` von Code an `deploy` vorbei. Voraussetzung: dev auf `main`, Änderung committet und gepusht. `--dry-run` = nur `deploy --dry-run`. Log: `~/Library/Logs/ki/termine/schnell_live.log`.
+- **Sperre:** `update.sh` legt `.update.lock/` (mit PID, git-ignoriert) an. Läuft schon ein Lauf, bricht ein zweiter mit Exit 3 ab. Eine Sperre ohne lebenden Prozess wird übernommen. In der Sandbox geprüft (14.10.2026).
 
 ### Automatische Aktualisierung
 

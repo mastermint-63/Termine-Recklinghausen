@@ -17,3 +17,4 @@ hw_bericht.json
 
 # Abrufstand für app.py --nur-bauen (Rohdaten der Quellen)
 termine_stand.json
+.update.lock/

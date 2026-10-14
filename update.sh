@@ -28,6 +28,20 @@ if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ] || [ "$(git branch --sho
 fi
 EXIT_CODE=0
 
+# Sperre gegen zwei gleichzeitige Läufe (z.B. --nur-bauen während des Laufs um 06:30).
+# mkdir ist atomar. Eine Sperre, deren Prozess nicht mehr lebt, wird übernommen.
+SPERRE="$(pwd)/.update.lock"
+if ! mkdir "$SPERRE" 2>/dev/null; then
+    ALTE_PID=$(cat "$SPERRE/pid" 2>/dev/null)
+    if [ -n "$ALTE_PID" ] && kill -0 "$ALTE_PID" 2>/dev/null; then
+        echo "FEHLER: Es läuft schon eine Aktualisierung (PID $ALTE_PID) – kein Lauf."
+        exit 3
+    fi
+    echo "Hinweis: verwaiste Sperre (PID ${ALTE_PID:-unbekannt}) übernommen"
+fi
+echo $$ > "$SPERRE/pid"
+trap 'rm -rf "$SPERRE"' EXIT
+
 # Alte Event-Anzahl aus bestehenden HTML-Dateien auslesen
 ALTE_ANZAHL=0
 for html in termine_re_*.html; do
