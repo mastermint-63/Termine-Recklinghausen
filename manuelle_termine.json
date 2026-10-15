@@ -1028,5 +1028,16 @@
         "kategorie": "Familie",
         "freigegeben": true,
         "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-17",
+        "uhrzeit": "",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:em4571f3ff-75f7-4a51-abad-151449ad7b22@gmx.de"
     }
 ]
