@@ -360,8 +360,26 @@ def state_db(pfad: Path | None = None) -> sqlite3.Connection:
     return con
 
 
+def _schluessel_varianten(schluessel: str) -> list[str]:
+    """Derselbe Schlüssel in allen eM-Client-Konten. Mail-Organizer und Kehraus verschieben Mails
+    zwischen Konten, dabei bleibt die Message-ID gleich (Befund 15.10.2026: Presse-Mails doppelt
+    ausgewertet). Kalender-Eingang und Mails ohne Message-ID (id-<eM-ID>, je Konto verschieden)
+    bleiben beim eigenen Schlüssel."""
+    konto, _, rest = schluessel.partition(":")
+    if konto in KONTEN and rest and not (rest.startswith("id-") and rest[3:].isdigit()):
+        return [f"{k}:{rest}" for k in KONTEN]
+    return [schluessel]
+
+
+def lauf_kennung(schluessel: str) -> str:
+    """Kennung für die Dublettenprüfung innerhalb eines Laufs, kontoübergreifend wie ist_verarbeitet()."""
+    return _schluessel_varianten(schluessel)[0]
+
+
 def ist_verarbeitet(con, schluessel: str) -> bool:
-    return con.execute("select 1 from verarbeitet where schluessel=?", (schluessel,)).fetchone() is not None
+    varianten = _schluessel_varianten(schluessel)
+    platzhalter = ",".join("?" * len(varianten))
+    return con.execute(f"select 1 from verarbeitet where schluessel in ({platzhalter})", varianten).fetchone() is not None
 
 
 def markiere_verarbeitet(con, mail: Mail, ergebnis: str):
@@ -1375,9 +1393,10 @@ def main():
                 bericht["fehler"].append(f"{konto}:{mid} nicht lesbar")
                 fehler += 1
                 continue
-            if mail.schluessel in gesehen or (not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel)):
+            kennung = lauf_kennung(mail.schluessel)
+            if kennung in gesehen or (not args.mail and not args.force and ist_verarbeitet(con, mail.schluessel)):
                 continue
-            gesehen.add(mail.schluessel)
+            gesehen.add(kennung)
         log.info("Verarbeite %s | %s | %s | %s", mail.schluessel, mail.datum.date(), mail.vertrauen,
                  mail.betreff[:70])
         versuche += 1
