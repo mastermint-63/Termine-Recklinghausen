@@ -1039,5 +1039,51 @@
         "kategorie": "Familie",
         "freigegeben": true,
         "hw_mail": "kalender:em4571f3ff-75f7-4a51-abad-151449ad7b22@gmx.de"
+    },
+    {
+        "name": "Digitales Erbe - Was passiert mit den Daten, wenn jemand verstirbt?",
+        "datum": "2026-10-23",
+        "uhrzeit": "10:00",
+        "ort": "F@irnet-C@fe, Oerweg 38 (Haus 3), Recklinghausen",
+        "link": "",
+        "beschreibung": "Kostenloser Vortrag des Ehrenamtsprojekts 'RE-Medien' für die Generation 65 plus zum Thema digitales Erbe: Was passiert mit Daten, Zugriff auf digitale Fotos, Videos, Kontaktdaten, E-Mails, Notizen und Dokumenten, wenn jemand verstirbt.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:em04b8c00d-7516-4ca6-96e6-e6ef4cfd12e0@gmx.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "KI = künstliche Intelligenz - Vortrag mit Tipps",
+        "datum": "2026-10-30",
+        "uhrzeit": "10:00",
+        "ort": "F@irnet-C@fe, Oerweg 38 (Haus 3), Recklinghausen",
+        "link": "",
+        "beschreibung": "Kostenloser Vortrag des Ehrenamtsprojekts 'RE-Medien' für die Generation 65 plus zum Thema künstliche Intelligenz, mit Tipps zum Umgang damit.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:em04b8c00d-7516-4ca6-96e6-e6ef4cfd12e0@gmx.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Lateinamerika-Flair im \"Chez AMA\" - Konzert mit COMO",
+        "datum": "2026-10-16",
+        "uhrzeit": "20:00",
+        "ort": "Chez AMA, Löhrhofstraße 7, Recklinghausen",
+        "link": "",
+        "beschreibung": "Die Band 'COMO' tritt mit lateinamerikanischem Flair, Funk und tanzbaren Rhythmen auf. Zum Line-up gehören Pablo (Gesang), Martin F. Herrmann (Bass, Gesang), Björn Korte (Gitarre) und Karsten Reuter (Schlagzeug). Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:004e01dd5c68$63c80530$2b580f90$@imkmedia.de"
+    },
+    {
+        "name": "Katalog und Künstlergespräch - Finissage \"Grund+Boden\"",
+        "datum": "2026-10-18",
+        "uhrzeit": "15:00",
+        "ort": "Atelierhaus Recklinghausen, Königstraße 40",
+        "link": "",
+        "beschreibung": "Das Atelierhaus lädt zur Finissage der Ausstellung „Grund+Boden“ mit Arbeiten von Christiane Gerda Schmidt und Gabriele von Scheidt ein. Zum Abschluss der Schau wird der Katalog präsentiert, außerdem gibt es Gespräche mit den Künstlerinnen.",
+        "kategorie": "Kunst",
+        "freigegeben": true,
+        "hw_mail": "kalender:01fa01dd5c96$a41b1130$ec513390$@imkmedia.de"
     }
 ]
