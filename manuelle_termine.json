@@ -1085,5 +1085,27 @@
         "kategorie": "Kunst",
         "freigegeben": true,
         "hw_mail": "kalender:01fa01dd5c96$a41b1130$ec513390$@imkmedia.de"
+    },
+    {
+        "name": "Handwerkermarkt auf der Zeche",
+        "datum": "2026-11-21",
+        "uhrzeit": "10:00",
+        "ort": "",
+        "link": "",
+        "beschreibung": "Handwerkermarkt mit Bio-Grill von Theos Farm. Findet auch am vorherigen Freitag statt.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de"
+    },
+    {
+        "name": "Offene Ateliers 2026",
+        "datum": "2026-11-21",
+        "uhrzeit": "10:00",
+        "ort": "In der Kaue der Zeche König Ludwig, Alte Grenzstr. 153L, Recklinghausen",
+        "link": "",
+        "beschreibung": "Offene Ateliers in der Kaue der Zeche König Ludwig.",
+        "kategorie": "Kunst",
+        "freigegeben": true,
+        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de"
     }
 ]
