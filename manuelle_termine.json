@@ -1107,5 +1107,61 @@
         "kategorie": "Kunst",
         "freigegeben": true,
         "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de"
+    },
+    {
+        "name": "Informationsveranstaltung: Wärmepumpe beim Stammtisch des AufbruchKlimaVest",
+        "datum": "2026-10-26",
+        "uhrzeit": "19:00",
+        "ort": "Altstadtschmiede Recklinghausen",
+        "link": "",
+        "beschreibung": "Informationsveranstaltung zum Thema Wärmepumpe im Rahmen des Stammtischs von AufbruchKlimaVest, als Auftakt zum deutschlandweiten Tag des offenen Heizungskellers am 21.11. Hausbesitzer berichten von persönlichen Erfahrungen mit klimafreundlichen Heizsystemen.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1N6bPS-1wXoOD0uCs-00rz2K@mrelayeu.kundenserver.de"
+    },
+    {
+        "name": "Workshop: Bienenwachskerze herstellen (Familienimkerei Keinhörster)",
+        "datum": "2026-10-30",
+        "uhrzeit": "10:00",
+        "ort": "Retro Station, Recklinghausen",
+        "link": "",
+        "beschreibung": "Kostenfreier Ferienworkshop für Kinder ab sechs Jahren, bei dem aus einer Bienenwachsplatte eine Kerze gerollt wird. Das Angebot dauert etwa eine Stunde, vorherige Anmeldung ist notwendig unter stadtgeschichte@recklinghausen.de.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:8307e4438f1c42b29a3f177d96156b28@recklinghausen.de"
+    },
+    {
+        "name": "Taschenlampenführung (Recklinghausen leuchtet)",
+        "datum": "2026-11-04",
+        "uhrzeit": "17:30",
+        "ort": "Retro Station, Recklinghausen",
+        "link": "",
+        "beschreibung": "Mit Taschenlampen werden die im Dunkeln liegenden Abteilungen des stadtgeschichtlichen Museums erkundet und Exponate betrachtet, dazu gibt es Geschichten. Teilnehmende sollten eine eigene Taschenlampe mitbringen, die Führung dauert etwa eine Stunde. Vorherige Anmeldung ist notwendig unter stadtgeschichte@recklinghausen.de.",
+        "kategorie": "Familie",
+        "freigegeben": false,
+        "hw_mail": "gmx:8307e4438f1c42b29a3f177d96156b28@recklinghausen.de",
+        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+    },
+    {
+        "name": "Naturerlebnistage für Kinder: Fossilien und Dinosaurier",
+        "datum": "2026-10-26",
+        "uhrzeit": "17:15",
+        "ort": "Westfälische Volkssternwarte Recklinghausen",
+        "link": "",
+        "beschreibung": "Erlebnisnachmittag für Kinder von acht bis zehn Jahren zum Thema Fossilien und Dinosaurier mit praktischem Herstellen von Fossilien. Teilnahme kostet acht Euro zuzüglich drei Euro Materialkosten, Anmeldung erforderlich. Veranstaltung dauert bis 19.15 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de"
+    },
+    {
+        "name": "Experimente für Kinder",
+        "datum": "2026-10-28",
+        "uhrzeit": "17:15",
+        "ort": "Westfälische Volkssternwarte Recklinghausen",
+        "link": "",
+        "beschreibung": "Workshop für Kinder von acht bis zehn Jahren mit einfachen naturwissenschaftlichen Experimenten, die auch zu Hause nachgemacht werden können. Zum Abschluss erhalten alle Teilnehmenden ein Forscherdiplom. Teilnahme kostet acht Euro pro Kind, Anmeldung erforderlich.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de"
     }
 ]
