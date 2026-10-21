@@ -1163,5 +1163,71 @@
         "kategorie": "Familie",
         "freigegeben": true,
         "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de"
+    },
+    {
+        "name": "Flutlicht-Jogging (Sportanlage Maybacher Heide)",
+        "datum": "2026-10-27",
+        "uhrzeit": "19:00",
+        "ort": "Sportanlage Maybacher Heide, Lucia-Grewe-Straße 15, Recklinghausen",
+        "link": "",
+        "beschreibung": "Start der Flutlicht-Jogging-Saison auf der Laufbahn an der Sportanlage Maybacher Heide. Dienstags von 19 bis 21 Uhr können Freizeitjogger*innen und -walker*innen dort trainieren, das Angebot läuft bis zur Zeitumstellung Ende März 2027, an Feiertagen und während der Weihnachtsferien entfällt es.",
+        "kategorie": "Sport",
+        "freigegeben": true,
+        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de"
+    },
+    {
+        "name": "Flutlicht-Jogging (Stadion Hohenhorst)",
+        "datum": "2026-10-29",
+        "uhrzeit": "19:00",
+        "ort": "Stadion Hohenhorst, Am Stadion 1, Recklinghausen",
+        "link": "",
+        "beschreibung": "Flutlicht-Jogging donnerstags von 19 bis 21 Uhr im Stadion Hohenhorst, parallel zum Angebot an der Maybacher Heide. Das Angebot läuft bis zur Zeitumstellung Ende März 2027, an Feiertagen und während der Weihnachtsferien entfällt es.",
+        "kategorie": "Sport",
+        "freigegeben": true,
+        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de"
+    },
+    {
+        "name": "Inklusiver Erste-Hilfe-Kursus",
+        "datum": "2027-04-13",
+        "uhrzeit": "09:00",
+        "ort": "Schulungszentrum des Deutschen Roten Kreuzes, Kölner Straße 20, Recklinghausen",
+        "link": "",
+        "beschreibung": "Inklusiver Erste-Hilfe-Kurs für Menschen mit und ohne Behinderung, organisiert vom Referat für Behindertenangelegenheiten der Stadt Recklinghausen in Kooperation mit dem DRK. Der Kurs findet in einfacher Sprache statt, für gehörlose Teilnehmende stehen Gebärdensprachdolmetscherinnen zur Verfügung.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "gmx:9cb07ecbc47d446695774cce1147ba07@recklinghausen.de"
+    },
+    {
+        "name": "Konzert Hannah Stienen (Akustikband)",
+        "datum": "2026-10-24",
+        "uhrzeit": "19:30",
+        "ort": "Musikschule Recklinghausen, Willy-Brandt-Park 3, Großer Saal",
+        "link": "",
+        "beschreibung": "Hannah Stienen, Singer- und Songwriterin und Lehrkraft für Popgesang an der Musikschule Recklinghausen, tritt mit ihrer Akustik-Band mit Deutsch-Pop auf. Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+    },
+    {
+        "name": "Offener Percussion-Workshop",
+        "datum": "2026-11-02",
+        "uhrzeit": "17:45",
+        "ort": "Musikschule Recklinghausen, Willy-Brandt-Park 3, Raum 110",
+        "link": "",
+        "beschreibung": "Christian Schneider bietet einen offenen Percussion-Workshop an, bei dem Interessierte von 17.45 bis 18.30 Uhr gemeinsam trommeln können. Der Eintritt ist frei.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+    },
+    {
+        "name": "Konzert Blasorchester, Saxophonquintett und Klarinettenquartett",
+        "datum": "2026-11-03",
+        "uhrzeit": "19:00",
+        "ort": "Musikschule Recklinghausen, Willy-Brandt-Park 3, Großer Saal",
+        "link": "",
+        "beschreibung": "Konzert des Blasorchesters, des Saxophonquintetts und des Klarinettenquartetts unter der Leitung von Leopold Mrugalla. Der Eintritt ist frei.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
     }
 ]
