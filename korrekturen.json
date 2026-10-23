@@ -35,5 +35,16 @@
         "hw_mail": "kalender:1MCXhr-1xOrTW16fb-0012zZ@mrelayeu.kundenserver.de",
         "freigegeben": true,
         "angelegt": "2026-10-14"
+    },
+    {
+        "datum": "2026-10-23",
+        "name": "Drohnenshow am Rathaus",
+        "name_norm": "drohnenshow am rathaus",
+        "quelle": "re-leuchtet",
+        "aenderung": {},
+        "absage": true,
+        "hw_mail": "kalender:1MfYgC-1weHd113Em-00kkz0@mrelayeu.kundenserver.de",
+        "freigegeben": true,
+        "angelegt": "2026-10-23"
     }
 ]
