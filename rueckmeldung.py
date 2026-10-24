@@ -112,13 +112,19 @@ def baue_text(inhalte: list[dict], vorname: str = "", anrede: str = "", nachsatz
     def termin(e):
         return f"- {_tag(e.get('datum'))} {hw_bericht.bereinige(e.get('name'), 90)}"
 
+    def grund(e):
+        text = hw_bericht.bereinige(e.get("grund"), 60)
+        if e.get("im_kalender"):  # Titel im Kalender weicht oft von dem in der Mail ab
+            text += f" als: {hw_bericht.bereinige(e['im_kalender'], 90)}"
+        return text
+
     abschnitte = [
         ("Eingetragen", "eingetragen", termin),
         ("Geändert", "geaendert", lambda e: f"{termin(e)}: {hw_bericht.bereinige(_was(e.get('was')), 80)}"),
         ("Abgesagt", "abgesagt", termin),
         ("Stand schon im Kalender", "bekannt", termin),
         ("Wird noch von Hand geprüft", "pruefen", termin),
-        ("Nicht übernommen", "verworfen", lambda e: f"{termin(e)} ({hw_bericht.bereinige(e.get('grund'), 60)})"),
+        ("Nicht übernommen", "verworfen", lambda e: f"{termin(e)} ({grund(e)})"),
     ]
     mehrere = len(inhalte) > 1
     vorname = hw_bericht.bereinige(vorname, 40)

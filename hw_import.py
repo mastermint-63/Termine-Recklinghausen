@@ -419,6 +419,7 @@ TOOL = {
                     "properties": {
                         "name": {"type": "string", "description": "Titel der Veranstaltung"},
                         "datum": {"type": "string", "description": "YYYY-MM-DD"},
+                        "bis": {"type": "string", "description": "Letzter Tag YYYY-MM-DD bei mehrtägigen Veranstaltungen, sonst leer"},
                         "uhrzeit": {"type": "string", "description": "Beginn HH:MM oder leer, wenn nicht genannt"},
                         "ort": {"type": "string", "description": "Ort inkl. Adresse, wie in der Mail genannt"},
                         "beschreibung": {"type": "string", "description": "1-3 sachliche Sätze, inkl. Ende/Preis/Anmeldung falls genannt"},
@@ -484,8 +485,10 @@ Bild oder PDF, schreibe 'BILD' bzw. 'PDF'.
 6. Meldung nur für öffentliche Veranstaltungen. Interne Termine (Redaktionssitzung, Videokonferenz, Absprachen), \
 reine Fototermine für die Presse (im Text ausdrücklich als "Fototermin" bezeichnet, kein Programm für Publikum, \
 z.B. Pressetermin-Übersichten der Stadt Recklinghausen) und bereits vergangene Termine meldest du nicht. Bei Serien \
-(z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. Mehrtägige Ausstellungen: ein Termin am ersten Tag, \
-den Zeitraum nennst du in der Beschreibung.
+(z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. Mehrtägige Veranstaltungen (Ausstellung, Stand, Markt, \
+Festival): ein Termin mit `datum` = erster Tag und `bis` = letzter Tag, Zeitraum und Öffnungszeiten je Tag nennst du \
+in der Beschreibung. Eine mehrtägige Veranstaltung, die noch läuft, ist nicht vergangen: melde sie auch dann, wenn \
+der erste Tag schon vorbei ist.
 7. `in_recklinghausen` = true, wenn der Ort im Stadtgebiet Recklinghausen liegt. Andere Städte (Herten, Marl, Münster, ...) \
 und reine Online-Veranstaltungen: false.
 8. `terminseiten`: URLs, die laut Mail eine Übersicht oder einen Kalender mit mehreren Veranstaltungen eines Veranstalters \
@@ -594,8 +597,16 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         return "verwerfen", f"kein gültiges Datum ({t.get('datum')!r})", None
     if not name:
         return "verwerfen", "kein Titel", None
+    start, laeuft = d, ""
     if d < heute:
-        return "verwerfen", "Termin liegt in der Vergangenheit", None
+        try:
+            bis = datetime.strptime(t.get("bis") or "", "%Y-%m-%d").date()
+        except ValueError:
+            bis = None
+        if not bis or bis < heute:
+            return "verwerfen", "Termin liegt in der Vergangenheit", None
+        # mehrtägig und noch nicht vorbei (Grillstand 23.-25.10., Mail am 23., Import am 24.): ab heute eintragen
+        d, laeuft = heute, f"läuft bis {bis:%d.%m.}, eingetragen ab heute"
 
     link = (t.get("link") or "").strip()
     if not link.startswith(("http://", "https://")) or _norm(link) not in _norm(mail.text):
@@ -614,6 +625,7 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         return "verwerfen", "steht schon im Kalender", None
 
     probleme, warnungen = [], []
+    infos = [laeuft] if laeuft else []
     if mail.vertrauen != "vertraut":
         probleme.append(mail.vertrauen_grund or "Absender nicht vertrauenswürdig")
     k = konflikt(eintrag)
@@ -627,7 +639,7 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         probleme.append("weder Ort noch Uhrzeit erkannt")
     if not beleg_ok(t.get("beleg", ""), mail.text, mail.hat_anhang):
         warnungen.append("Beleg-Zitat nicht im Mailtext gefunden")
-    if not wochentag_passt(t.get("beleg", ""), d):
+    if not wochentag_passt(t.get("beleg", ""), start):
         warnungen.append("Wochentag im Beleg passt nicht zum Datum")
     if (d - heute).days > MAX_HORIZONT_TAGE:
         probleme.append("Datum sehr weit in der Zukunft")
@@ -636,13 +648,13 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         if warnungen:
             eintrag["hw_warnung"] = "; ".join(warnungen)
         eintrag["freigegeben"] = True
-        return "auto", "; ".join(["Redaktion"] + probleme + warnungen), eintrag
+        return "auto", "; ".join(["Redaktion"] + probleme + warnungen + infos), eintrag
     probleme += warnungen
     if probleme:
-        eintrag["hinweis"] = "; ".join(probleme)
+        eintrag["hinweis"] = "; ".join(probleme + infos)
         return "pruefen", eintrag["hinweis"], eintrag
     eintrag["freigegeben"] = True
-    return "auto", "eindeutig", eintrag
+    return "auto", "; ".join(["eindeutig"] + infos), eintrag
 
 
 # --------------------------------------------------------------------------- Abgleich mit bestehendem Kalender
@@ -708,7 +720,12 @@ def finde_konflikt(eintrag: dict) -> str | None:
     return None
 
 
-def ist_dublette_im_kalender(eintrag: dict) -> bool:
+def ist_dublette_im_kalender(eintrag: dict):
+    """Steht der Termin schon im Kalender? -> der passende Termin, True (Treffer nicht eindeutig zuzuordnen) oder None.
+
+    Den Treffer nennt die Rückmeldung, denn der Titel im Kalender weicht oft von dem in der Mail ab
+    ("Oman by Trike": Radreisebericht vs. ROADTRIP OMAN BY TRIKE).
+    """
     import app
     from scraper import Termin
 
@@ -725,7 +742,20 @@ def ist_dublette_im_kalender(eintrag: dict) -> bool:
     with contextlib.redirect_stdout(io.StringIO()):  # entferne_duplikate druckt Debug-Zeilen
         vorher = app.entferne_duplikate([replace(t) for t in bestehende])
         nachher = app.entferne_duplikate([replace(kandidat)] + [replace(t) for t in bestehende])
-    return len(nachher) == len(vorher)
+        if len(nachher) != len(vorher):
+            return None
+        for t in bestehende:
+            if len(app.entferne_duplikate([replace(kandidat), replace(t)])) == 1:
+                return t
+    return True
+
+
+def kalender_zeile(treffer) -> str:
+    """Kalendereintrag für die Rückmeldung: "Titel, 17:00 Uhr" (Uhrzeit nur, wenn eine genannt ist)."""
+    if not hasattr(treffer, "name"):
+        return ""
+    uhrzeit = treffer.uhrzeit if re.search(r"\d", treffer.uhrzeit or "") else ""
+    return ", ".join(x for x in (treffer.name.strip(), uhrzeit.strip()) if x)
 
 
 # --------------------------------------------------------------------------- Korrekturen und Absagen
@@ -1148,7 +1178,7 @@ def speichere_bericht(bericht: dict):
 
 _KURZGRUENDE = [
     ("vergangenheit", "liegt in der Vergangenheit"),
-    ("schon im kalender", "steht schon so im Kalender"),
+    ("schon im kalender", "steht schon im Kalender"),
     ("bereits so im kalender", "steht schon so im Kalender"),
     ("bereits als abgesagt", "steht schon so im Kalender"),
     ("ausgeschlossene gruppierung", "wird nach den Regeln des Kalenders nicht aufgenommen"),
@@ -1173,7 +1203,9 @@ def rueckmeldung_inhalt(eigen: dict) -> dict | None:
         "abgesagt": [kurz(e) for e in eigen.get("abgesagt", [])],
         "bekannt": [kurz(e) for e in eigen.get("bekannt", [])],
         "pruefen": [kurz(e) for e in eigen.get("pruefen", [])],
-        "verworfen": [{**kurz(e), "grund": kurzgrund(e.get("grund", ""))} for e in eigen.get("verworfen", [])],
+        "verworfen": [{**kurz(e), "grund": kurzgrund(e.get("grund", "")),
+                       **({"im_kalender": e["im_kalender"]} if e.get("im_kalender") else {})}
+                      for e in eigen.get("verworfen", [])],
     }
     return inhalt if any(inhalt.values()) else None
 
@@ -1191,13 +1223,22 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
     ergebnis = analysiere(client, mail, heute)
     zaehler = {"auto": 0, "pruefen": 0, "verwerfen": 0}
     for t in ergebnis.get("termine", [])[:MAX_TERMINE_PRO_MAIL]:
-        status, grund, eintrag = bewerte_termin(t, mail, heute, ausgeschlossen, ist_dublette_im_kalender, finde_konflikt)
+        treffer = None
+
+        def dublette(e):
+            nonlocal treffer
+            treffer = ist_dublette_im_kalender(e)
+            return treffer
+
+        status, grund, eintrag = bewerte_termin(t, mail, heute, ausgeschlossen, dublette, finde_konflikt)
         zaehler[status] += 1
+        im_kalender = kalender_zeile(treffer)[:150] if status == "verwerfen" else ""
         log.info("  [%s] %s %s - %s (%s) | Beleg: %s", status.upper(), t.get("datum"), t.get("uhrzeit", ""),
-                 t.get("name", "")[:70], grund, (t.get("beleg") or "")[:90])
+                 t.get("name", "")[:70], grund + (f" als: {im_kalender}" if im_kalender else ""),
+                 (t.get("beleg") or "")[:90])
         if status == "verwerfen" and mail.konto == "kalender":
             bericht["verworfen"].append({"datum": t.get("datum", ""), "name": (t.get("name") or "")[:150],
-                                         "grund": grund})
+                                         "grund": grund, **({"im_kalender": im_kalender} if im_kalender else {})})
         if eintrag:
             vorher = len(eintraege)
             haenge_an(eintraege, [eintrag])

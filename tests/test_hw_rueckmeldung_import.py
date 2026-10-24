@@ -21,7 +21,7 @@ IN_10 = (HEUTE + timedelta(days=10)).isoformat()
 
 @pytest.mark.parametrize("roh,kurz", [
     ("Termin liegt in der Vergangenheit", "liegt in der Vergangenheit"),
-    ("steht schon im Kalender", "steht schon so im Kalender"),
+    ("steht schon im Kalender", "steht schon im Kalender"),
     ("korrektur: Angaben stehen bereits so im Kalender", "steht schon so im Kalender"),
     ("absage: bereits als abgesagt eingetragen", "steht schon so im Kalender"),
     ("ausgeschlossene Gruppierung (AfD-Filter)", "wird nach den Regeln des Kalenders nicht aufgenommen"),
