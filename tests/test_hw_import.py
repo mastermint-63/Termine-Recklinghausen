@@ -116,3 +116,17 @@ def test_konflikt_mit_scraper_quelle_geht_zur_pruefung():
 
 def test_bekannte_hosts_enthalten_dokumentierte_verworfene_seite():
     assert "cityredio.jimdofree.com" in hw.bekannte_hosts()
+
+
+def test_analysiere_nutzt_agy_runner():
+    aufrufe = []
+
+    def fake_runner(prompt, schema, modell, bilder, pdfs):
+        aufrufe.append((prompt, schema, modell))
+        return {"termine": [_termin()], "terminseiten": [], "aenderungen": []}
+
+    res = hw.analysiere(fake_runner, _mail(), HEUTE)
+    assert len(res["termine"]) == 1
+    assert len(aufrufe) == 1
+    assert aufrufe[0][1] == hw.TOOL["input_schema"]
+
