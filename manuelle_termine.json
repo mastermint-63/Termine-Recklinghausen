@@ -1229,5 +1229,77 @@
         "kategorie": "Konzert",
         "freigegeben": true,
         "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+    },
+    {
+        "name": "Rezeptaustausch zur Familiengeschichte",
+        "datum": "2026-10-25",
+        "uhrzeit": "17:30",
+        "ort": "Altstadtschmiede, Kellerstraße 10",
+        "link": "",
+        "beschreibung": "Das Team der Altstadtschmiede lädt zu einem Rezeptaustausch ein, bei dem drei Teilnehmende ihre Lieblingsrezepte zubereiten und Erlebnisse sowie Traditionen teilen, die mit den Gerichten verbunden sind. Moderation durch Himmetullah Caglan. Der Eintritt ist frei.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Stammtisch Bündnis AufbruchKlimaVest: Wärmepumpen stehen im Fokus",
+        "datum": "2026-10-26",
+        "uhrzeit": "19:00",
+        "ort": "Altstadtschmiede, Kellerstraße 10",
+        "link": "",
+        "beschreibung": "Das Bündnis AufbruchKlimaVest lädt zu seinem Stammtisch zum Thema Wärmepumpen in Ein- und Mehrfamilienhäusern ein. Es gibt einen Impulsvortrag von Petra Kerstan (Energieberaterin und Architektin der Verbraucherzentrale) sowie Berichte lokaler Besitzer von Wärmepumpen. Zudem wird auf den 'Tag des offenen Heizungskellers' am Samstag, 21. November, hingewiesen.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Reise führt in die Stadtgeschichte",
+        "datum": "2026-10-28",
+        "uhrzeit": "15:00",
+        "ort": "Institut für Stadtgeschichte, Hohenzollernstraße 12",
+        "link": "",
+        "beschreibung": "Kostenfreier Rundgang der Retro-Station durch die Vergangenheit und das Alltagsleben der Menschen in Recklinghausen in früheren Zeiten. Zahlreiche Exponate zeugen von der Stadtwerdung, der Bergbaugeschichte der Region und den Ereignissen des 20. Jahrhunderts. Anmeldung per E-Mail erforderlich.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Weltladen lädt zur Verkostung ein",
+        "datum": "2026-10-24",
+        "uhrzeit": "15:00",
+        "ort": "Weltladen, Steinstraße 1",
+        "link": "",
+        "beschreibung": "Im Rahmen von 'Recklinghausen leuchtet' bietet der Weltladen eine Verkostung von Wein und Plätzchen aus fairem Handel an, bis 21 Uhr. Von 15 bis 20 Uhr findet außerdem ein Büchermarkt vor der Gastkirche, Heilige-Geist-Straße 7, statt.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Büchermarkt",
+        "datum": "2026-10-24",
+        "uhrzeit": "15:00",
+        "ort": "vor der Gastkirche, Heilige-Geist-Straße 7",
+        "link": "",
+        "beschreibung": "Büchermarkt vor der Gastkirche im Rahmen von 'Recklinghausen leuchtet', von 15 bis 20 Uhr.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Elisabeth Strake dirigiert Haydn und Mendelssohn Bartholdy",
+        "datum": "2026-11-03",
+        "uhrzeit": "19:30",
+        "ort": "Kassiopeia-Saal des Ruhrfestspielhauses, Otto-Burrmeister-Allee 1, Recklinghausen",
+        "link": "",
+        "beschreibung": "Elisabeth Strake, das neue Gesicht des städtischen Chores, dirigiert ihr erstes Konzert mit Werken von Haydn und Mendelssohn Bartholdy.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MScHp-1x8uQI1pNJ-00N3XS@mrelayeu.kundenserver.de",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
     }
 ]
