@@ -425,6 +425,9 @@ TOOL = {
                         "beschreibung": {"type": "string", "description": "1-3 sachliche Sätze, inkl. Ende/Preis/Anmeldung falls genannt"},
                         "link": {"type": "string", "description": "URL der Veranstaltung, nur wenn in der Mail genannt"},
                         "kategorie": {"type": "string", "enum": KATEGORIEN},
+                        "herkunft": {"type": "string", "enum": ["zeitung", "plakat", "sonst"],
+                                     "description": "zeitung = Zeitungsartikel oder Screenshot einer Zeitung/Zeitungs-App, "
+                                                    "plakat = Plakat oder Flyer, sonst = alles andere"},
                         "eindeutig": {"type": "boolean", "description": "true nur, wenn Titel und Datum sicher sind"},
                         "unklar_grund": {"type": "string", "description": "Warum nicht eindeutig (sonst leer)"},
                         "in_recklinghausen": {"type": "boolean"},
@@ -587,6 +590,14 @@ def ist_redaktion_direkt(mail: Mail) -> bool:
     return mail.konto == "kalender" and mail.vertrauen == "vertraut" and not mail.presse_auto
 
 
+def herkunft(t: dict, mail: Mail) -> str:
+    """Herkunft für die Anzeige ohne Link: Pressemitteilung aus dem Absender, sonst Einschätzung des Modells."""
+    if mail.presse_auto:
+        name = mail.absender.split("<")[0].strip().strip('"').lower()
+        return "pressemitteilung_kreis" if name in AUTO_PRESSE_NAMEN else "pressemitteilung_stadt"
+    return t.get("herkunft") if t.get("herkunft") in ("zeitung", "plakat") else "redaktion"
+
+
 def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublette,
                    konflikt=lambda e: None) -> tuple[str, str, dict | None]:
     """Gibt (status, grund, eintrag) zurück. status: 'auto' | 'pruefen' | 'verwerfen'."""
@@ -616,7 +627,7 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         "ort": re.sub(r"\s+", " ", t.get("ort") or "").strip()[:150], "link": link,
         "beschreibung": re.sub(r"\s+", " ", t.get("beschreibung") or "").strip()[:800],
         "kategorie": t.get("kategorie") if t.get("kategorie") in KATEGORIEN else "Sonstiges",
-        "freigegeben": False, "hw_mail": mail.schluessel,
+        "freigegeben": False, "hw_mail": mail.schluessel, "herkunft": herkunft(t, mail),
     }
 
     if ausgeschlossen(eintrag, mail):

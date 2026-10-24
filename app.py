@@ -41,6 +41,15 @@ from scraper import (
 )
 
 
+# Herkunft von Redaktionsterminen ohne Link (manuelle_termine.json "herkunft", gesetzt vom HW-Import)
+HERKUNFT_TEXT = {
+    'pressemitteilung_stadt': 'Pressemitteilung der Stadt Recklinghausen',
+    'pressemitteilung_kreis': 'Pressemitteilung des Kreises Recklinghausen',
+    'zeitung': 'Zeitungsbericht',
+    'plakat': 'Plakat oder Flyer',
+    'redaktion': 'Hinweis der Redaktion',
+}
+
 QUELLEN = {
     # 'regioactive': 'regioactive.de',  # blockiert seit 2026-03 mit 403
     'stadt-re': 'Stadt RE',
@@ -806,6 +815,12 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             else:
                 name_html = f'<span class="termin-toggle" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{name_esc}</span>'
 
+            # Redaktionstermin ohne Link: Herkunft nennen (Wunsch FS, 24.10.2026)
+            herkunft_html = ''
+            if t.quelle == 'manuell' and not link_safe:
+                herkunft = HERKUNFT_TEXT.get(t.herkunft, HERKUNFT_TEXT['redaktion'])
+                herkunft_html = f'<div class="termin-herkunft">Quelle: {herkunft}, kein Link zum Veranstalter</div>'
+
             # Beschreibung: bei Link-Terminen und langer Beschreibung klickbar aufklappbar
             if beschreibung_escaped and link_safe and len(beschreibung_escaped) > 120:
                 beschreibung_html = f'<div class="termin-beschreibung termin-beschreibung-mehr" onclick="this.closest(\'.termin\').classList.toggle(\'expanded\')">{beschreibung_escaped}</div>'
@@ -824,6 +839,7 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
                         </div>
                         {f'<div class="termin-ort">{ort_esc}</div>' if ort_esc else ''}
                         {beschreibung_html}
+                        {herkunft_html}
                     </div>
                 </div>
             '''
@@ -1595,6 +1611,13 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
             color: var(--text-secondary);
         }}
 
+        .termin-herkunft {{
+            font-size: 11px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }}
+
         .termin-beschreibung {{
             font-size: 12px;
             color: var(--text-secondary);
@@ -1948,6 +1971,7 @@ def _termin_zu_dict(t: Termin) -> dict:
     d['datum'] = t.datum.isoformat()
     # Art wird beim Bauen neu berechnet, damit Regeländerungen ohne Abruf wirken
     d.pop('art', None)
+    d.pop('herkunft', None)  # nur Redaktionstermine, die nicht im Stand stehen
     return d
 
 

@@ -125,6 +125,8 @@ class Termin:
     verschoben_auf: str = ''
     # Einheitliche Art (arten.py), erst beim Bauen gesetzt, nicht im Stand gespeichert
     art: str = ''
+    # Herkunft eines Redaktionstermins (manuelle_termine.json "herkunft"), angezeigt, wenn kein Link da ist
+    herkunft: str = ''
 
     def __post_init__(self):
         # HTML-Reste aus allen Quellen an einer Stelle entfernen
@@ -3111,6 +3113,7 @@ def hole_manuelle_termine(jahr: int, monat: int) -> list[Termin]:
             kategorie=e.get('kategorie', ''),
             highlight=e.get('highlight', ''),
             abgesagt=bool(e.get('abgesagt')),
+            herkunft=e.get('herkunft', ''),
         ))
 
     return termine

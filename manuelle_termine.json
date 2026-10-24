@@ -408,7 +408,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "gmx:820053ed7b7b43919a59ad7ae4ad731c@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-09-14 (stadt-re): Ansel Adams und Mond – Fotokunst im Fokus der Astronomie, Ku - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-09-14 (stadt-re): Ansel Adams und Mond – Fotokunst im Fokus der Astronomie, Ku - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgerinformationsveranstaltung: Umgestaltung des Gertrudisplatzes",
@@ -419,7 +420,8 @@
         "beschreibung": "Die Stadtentwicklungsgesellschaft Recklinghausen mbH (SER) lädt Bürger*innen zur Vorstellung des aktuellen Planungsentwurfs für die Umgestaltung des Gertrudisplatzes im Rahmen des ISEK Hillerheide ein. Themen sind unter anderem mehr Grün- und Schattenbereiche, Entsiegelung, zusätzliche Fahrradabstellanlagen und eine neue Eingangssituation an der Herner Straße.",
         "kategorie": "Politik",
         "freigegeben": true,
-        "hw_mail": "gmx:38c9c57e111844e9915e657511696cd6@recklinghausen.de"
+        "hw_mail": "gmx:38c9c57e111844e9915e657511696cd6@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgerkoffer - Mobiler Bürgerservice (Caritashaus Reginalda)",
@@ -430,7 +432,8 @@
         "beschreibung": "Der mobile Bürgerservice der Stadt Recklinghausen (Bürgerkoffer) ist im Caritashaus Reginalda, Weißenburgstraße 20, von 9 bis 12 Uhr im Einsatz. Angeboten werden u.a. Ummeldungen, Personalausweis- und Schwerbehindertenausweis-Anträge; in diesem Stadtteil steht das Angebot allen Bürger*innen offen.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
-        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de"
+        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgerkoffer - Mobiler Bürgerservice (Caritashaus Reginalda)",
@@ -441,7 +444,8 @@
         "beschreibung": "Der mobile Bürgerservice der Stadt Recklinghausen (Bürgerkoffer) ist im Caritashaus Reginalda, Weißenburgstraße 20, von 9 bis 12 Uhr im Einsatz. Angeboten werden u.a. Ummeldungen, Personalausweis- und Schwerbehindertenausweis-Anträge; in diesem Stadtteil steht das Angebot allen Bürger*innen offen.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
-        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de"
+        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgerkoffer - Mobiler Bürgerservice (Altenheim St. Johannes)",
@@ -452,7 +456,8 @@
         "beschreibung": "Der mobile Bürgerservice der Stadt Recklinghausen (Bürgerkoffer) ist im Altenheim St. Johannes, Lülfstraße 17 in Recklinghausen-Suderwich, von 10 bis 12 Uhr im Einsatz. Angeboten werden u.a. Ummeldungen, Personalausweis- und Schwerbehindertenausweis-Anträge für ältere oder mobil eingeschränkte Bürger*innen.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
-        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de"
+        "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgerkoffer - Mobiler Bürgerservice (Bochumer Straße)",
@@ -464,7 +469,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": true,
         "hw_mail": "gmx:fff52e6488a64ce0afae2730ae503991@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-08-26 (stadtbibliothek): Bilderbuchkino in der Augustinessenstraße - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-08-26 (stadtbibliothek): Bilderbuchkino in der Augustinessenstraße - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bürgermeistersprechstunde",
@@ -475,7 +481,8 @@
         "beschreibung": "Bürger*innen können der stellvertretenden Bürgermeisterin Marita Bergmaier Anregungen und Beschwerden vorbringen. Die Sprechstunde findet im Rathaus, Raum 1.23, statt.",
         "kategorie": "Politik",
         "freigegeben": true,
-        "hw_mail": "gmx:6cea6b3078d54119b57e66c29f4c4862@recklinghausen.de"
+        "hw_mail": "gmx:6cea6b3078d54119b57e66c29f4c4862@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Recklinghäuser Hurz 2027",
@@ -486,7 +493,8 @@
         "beschreibung": "Die elfte Ausgabe des Comedypreises 'Recklinghäuser Hurz' findet im Großen Theatersaal des Ruhrfestspielhauses statt. Die Veranstaltung wird zudem live unter www.hurz.de gestreamt.",
         "kategorie": "Party",
         "freigegeben": true,
-        "hw_mail": "gmx:a359da76e49c4dc3a7d1eef4c9c48486@recklinghausen.de"
+        "hw_mail": "gmx:a359da76e49c4dc3a7d1eef4c9c48486@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Rathausführung",
@@ -498,7 +506,8 @@
         "kategorie": "Bildung",
         "freigegeben": true,
         "hw_mail": "gmx:88a4946b59134c27a7db180763cf5e2c@recklinghausen.de",
-        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Abendführung durch die Altstadt",
@@ -510,7 +519,8 @@
         "kategorie": "Bildung",
         "freigegeben": true,
         "hw_mail": "gmx:88a4946b59134c27a7db180763cf5e2c@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-20 (re-leuchtet): Easy Night-Rider in der Altstadt - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "ähnlicher Termin am 2026-10-20 (re-leuchtet): Easy Night-Rider in der Altstadt - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Das Gebäudemodernisierungsgesetz, die kommunale Wärmeplanung – und Ihre Heizung",
@@ -522,7 +532,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "gmx:131a9530273c40ada18888e75f1e9f07@recklinghausen.de",
-        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Energetisch sanieren – vom Keller bis zum Dach",
@@ -534,7 +545,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "gmx:131a9530273c40ada18888e75f1e9f07@recklinghausen.de",
-        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Heizen mit Wärmepumpe – ist mein Haus geeignet?",
@@ -546,7 +558,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "gmx:131a9530273c40ada18888e75f1e9f07@recklinghausen.de",
-        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Fördermitteldschungel der energetischen Sanierung",
@@ -558,7 +571,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "gmx:131a9530273c40ada18888e75f1e9f07@recklinghausen.de",
-        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Ort nicht (sicher) in Recklinghausen; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Schallplatten Kunsthaus (SKH 5.0) - Eröffnung",
@@ -569,7 +583,8 @@
         "beschreibung": "Pop-up-Laden mit Schallplatten, CDs, Bildern, Keramik, Kunsthandwerk und Vintage Fashion, dazu Konzerte, Lesungen und weitere Events. Geöffnet vom 7. Oktober bis 19. Dezember 2026, mittwochs bis freitags 14-18:30 Uhr, samstags 11-18 Uhr sowie an verkaufsoffenen Sonntagen. Ein Teil der Erlöse wird an mehrere caritative Einrichtungen gespendet.",
         "kategorie": "Fest",
         "freigegeben": true,
-        "hw_mail": "gmx:009b01dd527d$a39ba8a0$ead2f9e0$@agentur-prinz.de"
+        "hw_mail": "gmx:009b01dd527d$a39ba8a0$ead2f9e0$@agentur-prinz.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Bilderbuchkino: „Die kleine Hexe – Ausflug mit Abraxas“ und „Philipp im Leuchtturm“",
@@ -581,7 +596,8 @@
         "kategorie": "Familie",
         "freigegeben": false,
         "hw_mail": "gmx:033d912fed9b44e4a1f2a08a862455f6@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-08 (stadtbibliothek): Bilderbuchkino in Süd - Datum abweichend?; Wochentag im Beleg passt nicht zum Datum"
+        "hinweis": "ähnlicher Termin am 2026-10-08 (stadtbibliothek): Bilderbuchkino in Süd - Datum abweichend?; Wochentag im Beleg passt nicht zum Datum",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Deutschlandticket-Kurs der VHS: Sicher unterwegs mit dem Deutschlandticket",
@@ -593,7 +609,8 @@
         "kategorie": "Bildung",
         "freigegeben": false,
         "hw_mail": "gmx:f285a8d10f7b4d229ced6a500220f5e8@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-13 (ratssitzungen): Sitzung des Ausschusses für Ordnung und Sicherheit, Feuerweh - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-10-13 (ratssitzungen): Sitzung des Ausschusses für Ordnung und Sicherheit, Feuerweh - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Mittelaltermarkt an der Drachenbrücke",
@@ -604,7 +621,8 @@
         "beschreibung": "Mittelaltermarkt auf dem ehemaligen Zechengelände an der Drachenbrücke mit mittelalterlichem Handwerk, Händlern, Tavernen, Lagerleben, Musik und Unterhaltung. Veranstaltung läuft von Freitag, 9. Oktober (15-22 Uhr) bis Sonntag, 11. Oktober (11-17 Uhr), am Samstag 11-23 Uhr. Überschüsse kommen dem Ambulanten Kinder- und Jugendhospizdienst Kreis Recklinghausen zugute.",
         "kategorie": "Fest",
         "freigegeben": true,
-        "hw_mail": "gmx:a1a881f611f44fbdb5e0646eaf6f2bab@recklinghausen.de"
+        "hw_mail": "gmx:a1a881f611f44fbdb5e0646eaf6f2bab@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Mezzoforte: Vom Wandern - Konzert mit Marie Borger und Thorsten Töpp",
@@ -615,7 +633,8 @@
         "beschreibung": "Auftaktkonzert der neuen Reihe 'Mezzoforte' mit der Mezzosopranin Marie Borger und dem Konzertgitarristen Thorsten Töpp unter dem Titel 'Vom Wandern'. Gespielt werden Werke von John Dowland und Franz Schubert sowie eine Neukomposition nach Texten von Mascha Kalèko. Der Eintritt ist frei, um eine Spende am Ausgang wird gebeten.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:f133a5f2049e4a8cb38e116264d23080@recklinghausen.de"
+        "hw_mail": "gmx:f133a5f2049e4a8cb38e116264d23080@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Schnupper-Fahrstunde für Senior*innen",
@@ -626,7 +645,8 @@
         "beschreibung": "Der Seniorenbeirat der Stadt Recklinghausen bietet in Zusammenarbeit mit der Fahrschule Flögel eine halbstündige Schnupper-Fahrt durch die Stadt mit einer erfahrenen Fahrlehrerin an. Die Fahrt kann im eigenen Auto oder im Fahrschulwagen stattfinden, Kosten 40 Euro pro Person. Anmeldung bis 10. Oktober per E-Mail an j.herrmann@info-sbre.de.",
         "kategorie": "Bildung",
         "freigegeben": true,
-        "hw_mail": "gmx:500de7e5818c4b5e8f7aea78ed38becc@recklinghausen.de"
+        "hw_mail": "gmx:500de7e5818c4b5e8f7aea78ed38becc@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "RE leuchtet 2026 - Eröffnung mit Rathausshow",
@@ -638,7 +658,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "RE leuchtet - Drohnenshow (Premiere)",
@@ -650,7 +671,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Terrassenglühen",
@@ -661,7 +683,8 @@
         "beschreibung": "Programmpunkt im Rahmen von „RE leuchtet 2026“ auf dem Kirchplatz.",
         "kategorie": "Fest",
         "freigegeben": true,
-        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de"
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Ruhepol-Konzerte der Neuen Philharmonie Westfalen",
@@ -673,7 +696,8 @@
         "kategorie": "Konzert",
         "freigegeben": false,
         "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-11-09 (sternwarte): Online-Vortragsreihe: Kulturastronomie und Archäoastronomie  - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-11-09 (sternwarte): Online-Vortragsreihe: Kulturastronomie und Archäoastronomie  - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Verkaufsoffener Sonntag",
@@ -685,7 +709,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": false,
         "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-09-18 (stadtbibliothek): Literaturtage 2026: Andreas Pietsch – Septembersonntag - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-09-18 (stadtbibliothek): Literaturtage 2026: Andreas Pietsch – Septembersonntag - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Abschlusswochenende mit DJ Moguai",
@@ -696,7 +721,8 @@
         "beschreibung": "Auftritt von DJ Moguai zum Abschlusswochenende von „RE leuchtet 2026“, der den Rathausplatz in eine Tanzfläche verwandelt. An diesem Tag findet keine Rathausshow statt.",
         "kategorie": "Party",
         "freigegeben": true,
-        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de"
+        "hw_mail": "gmx:623a0d32a5344641a613588b5cfe7a03@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "WO BIST DU DENN, und wo bin ich? – Bachmann und Frisch im Zeichen Hans Werner Henzes",
@@ -707,7 +733,8 @@
         "beschreibung": "Ein literarisch-musikalischer Abend mit Briefen, Bühnenszenen und Musik rund um Ingeborg Bachmann und Max Frisch, im Rahmen der Reihe Henze100. Es spielen Monika Bujinski und Michael Kamp, am Klavier Jay J. Wang; Musik von Henze, de Falla, Debussy und Mahler. Karten kosten 15 € und sind an der Abendkasse sowie über www.kultur-kommt-ticket.de erhältlich.",
         "kategorie": "Theater",
         "freigegeben": true,
-        "hw_mail": "gmx:9955473f56bf4f2bac6532c56dc190dc@recklinghausen.de"
+        "hw_mail": "gmx:9955473f56bf4f2bac6532c56dc190dc@recklinghausen.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Jahreskonzert des Akkordeon-Orchesters Recklinghausen e. V.",
@@ -719,7 +746,8 @@
         "kategorie": "Konzert",
         "freigegeben": false,
         "hw_mail": "gmx:89dd31331c8d46a1b7cb4f9d897a6166@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-12-05 (stadt-re): Kaffee- und Kuchenkonzert des Jugendsinfonieorchesters - Datum abweichend?; Mail bezeichnet den Termin als Fototermin für die Presse, es ist unklar, ob das Konzert für die Öffentlichkeit zugänglich ist."
+        "hinweis": "ähnlicher Termin am 2026-12-05 (stadt-re): Kaffee- und Kuchenkonzert des Jugendsinfonieorchesters - Datum abweichend?; Mail bezeichnet den Termin als Fototermin für die Presse, es ist unklar, ob das Konzert für die Öffentlichkeit zugänglich ist.",
+        "herkunft": "redaktion"
     },
     {
         "name": "Konzert: Tallana Gabriel und Boris Rosenthal",
@@ -740,7 +768,8 @@
         "beschreibung": "Klassenvorspiel der Schlagzeugklasse von Christian Schneider im Saal der Musikschule. Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Klassenvorspiel Violine (Bernd Kullack)",
@@ -751,7 +780,8 @@
         "beschreibung": "Klassenvorspiel der Violinenklasse von Bernd Kullack in der Friedhofskapelle (Grüne Kapelle). Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Klassenvorspiel Schlagzeug (Kai Putzke)",
@@ -762,7 +792,8 @@
         "beschreibung": "Klassenvorspiel der Schlagzeugklasse von Kai Putzke im Saal der Musikschule. Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de"
+        "hw_mail": "gmx:a4433f4c53fa4e14aaec3d5aff0f1776@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bienenwachskerzen selber herstellen - Workshop",
@@ -773,7 +804,8 @@
         "beschreibung": "Ferienaktion der Imkerei Keinhörster: Workshop zum Herstellen einer Bienenwachskerze für Kinder ab 6 Jahren, Dauer ca. eine Stunde. Das Angebot ist kostenfrei, Anmeldung per E-Mail unter stadtgeschichte@recklinghausen.de erforderlich.",
         "kategorie": "Bildung",
         "freigegeben": true,
-        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de"
+        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bienenwachskerzen selber herstellen - Workshop",
@@ -784,7 +816,8 @@
         "beschreibung": "Ferienaktion der Imkerei Keinhörster: Workshop zum Herstellen einer Bienenwachskerze für Kinder ab 6 Jahren, Dauer ca. eine Stunde. Das Angebot ist kostenfrei, Anmeldung per E-Mail unter stadtgeschichte@recklinghausen.de erforderlich.",
         "kategorie": "Bildung",
         "freigegeben": true,
-        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de"
+        "hw_mail": "gmx:cf320c399f7c403a9aa255a2a3d1a996@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Philosophieseminar: Was ist Rechtspopulismus",
@@ -795,7 +828,8 @@
         "beschreibung": "Wochenendseminar zum Thema Rechtspopulismus unter Leitung von Prof. Dr. Martin-W. Schnell, das Phänomen analysiert und nach Alternativen fragt. Das Seminar findet an zwei Tagen (10. und 11. Oktober) jeweils von 10 bis 13 Uhr statt, die Teilnahmegebühr beträgt 25 Euro, Anmeldung bei der VHS bis 7. Oktober.",
         "kategorie": "Bildung",
         "freigegeben": true,
-        "hw_mail": "gmx:14618e0815da43d0b627477bcb7c4057@recklinghausen.de"
+        "hw_mail": "gmx:14618e0815da43d0b627477bcb7c4057@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Familienfest im Emscherland",
@@ -807,7 +841,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:6262b3fa20e846838ac206e65a29e2dd@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-15 (ratssitzungen): Sitzung des Ausschusses für Kinder, Jugend und Familie - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-10-15 (ratssitzungen): Sitzung des Ausschusses für Kinder, Jugend und Familie - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Theater in der Trauerhalle: \"G. Beine – Bestattungen aller Art\"",
@@ -819,7 +854,8 @@
         "kategorie": "Theater",
         "freigegeben": false,
         "hw_mail": "gmx:74a174e2d58d4f55a7da7e05fb60941d@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-11-06 (nlgr): Theater Ex Libris: „Frankenstein” - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-11-06 (nlgr): Theater Ex Libris: „Frankenstein” - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "„Von der Ikone zum Comic“ – medienpädagogischer Workshop",
@@ -831,7 +867,8 @@
         "kategorie": "Bildung",
         "freigegeben": false,
         "hw_mail": "gmx:ddd31e9df2c64aaa8bf3d6ef4ec0b9da@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-07 (stadt-re): Digitale Medien und Kinder: Chancen nutzen, Risiken erkennen - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-10-07 (stadt-re): Digitale Medien und Kinder: Chancen nutzen, Risiken erkennen - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Verbraucherforum 60+: Selbstbestimmt handeln im Alter",
@@ -843,7 +880,8 @@
         "kategorie": "Vortrag",
         "freigegeben": false,
         "hw_mail": "gmx:194294f67dcb459dbb084656b1ff9cba@recklinghausen.de",
-        "hinweis": "Ort nicht (sicher) in Recklinghausen"
+        "hinweis": "Ort nicht (sicher) in Recklinghausen",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Bundesweiter Vorlesetag: Lesung mit Gamze Kubaşık und Christine Werner",
@@ -854,7 +892,8 @@
         "beschreibung": "Lesung für Schulklassen aus dem Jugendsachbuch 'Unser Schmerz ist unsere Kraft' über die Morde des NSU, mit den Autorinnen Gamze Kubaşık und Christine Werner. Die Lesung findet um 10 Uhr und um 12.30 Uhr statt, Teilnahme ist kostenfrei. Anmeldung für Schulklassen bis 13. November per Mail oder Telefon.",
         "kategorie": "Lesung",
         "freigegeben": true,
-        "hw_mail": "gmx:938e150c28e64c27a4fc7b4fff353c07@recklinghausen.de"
+        "hw_mail": "gmx:938e150c28e64c27a4fc7b4fff353c07@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "RE leuchtet 2026 - Eröffnung mit Drohnenshow",
@@ -866,7 +905,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "ähnlicher Termin am 2026-10-24 (gastkirche): Recklinghausen leuchtet - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "RE leuchtet - Rathausshow (täglich)",
@@ -878,7 +918,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-23 (re-leuchtet): Eröffnung von Recklinghausen leuchtet 2026 - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "ähnlicher Termin am 2026-10-23 (re-leuchtet): Eröffnung von Recklinghausen leuchtet 2026 - Datum abweichend?; Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Highliner über dem Altstadtmarkt",
@@ -890,7 +931,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": false,
         "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
-        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Highliner über dem Altstadtmarkt (2. Tag)",
@@ -902,7 +944,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": false,
         "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
-        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hinweis": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "RE leuchtet - Finale mit Drohnenshow",
@@ -914,7 +957,8 @@
         "kategorie": "Fest",
         "freigegeben": false,
         "hw_mail": "gmx:6a3e887c59de4daf9c4751b0ce435971@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Ferienworkshop für Kinder: „Deine Geschichte in Stoff“",
@@ -925,7 +969,8 @@
         "beschreibung": "Die Kunsthalle Recklinghausen bietet einen Ferienworkshop für Kinder zwischen acht und zwölf Jahren an, bei dem im Rahmen der Ausstellung „What Lies Below Is Another Above“ ein Kunstwerk aus Stoff gestaltet wird. Die Teilnahme kostet acht Euro pro Person inklusive Materialkosten. Anmeldungen sind unter Tel. 02361/50-1935 oder per Mail an info@kunst-re.de möglich.",
         "kategorie": "Kunst",
         "freigegeben": true,
-        "hw_mail": "gmx:8e1c86fd19594e50b44ff9660221ce1e@recklinghausen.de"
+        "hw_mail": "gmx:8e1c86fd19594e50b44ff9660221ce1e@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Lichterfest Hochlarmark",
@@ -936,7 +981,8 @@
         "beschreibung": "Das 23. Lichterfest Hochlarmark findet erstmals am neuen Standort auf dem Festplatz der ehemaligen Zeche Recklinghausen II an der Karlstraße 75 statt. In diesem Jahr lädt die Stadtteilrunde Hochlarmark auch die 'Aktive Stadtteilrunde Hochlarmark' zur Zusammenarbeit mit örtlichen Vereinen ein; geboten werden Bergbaugeschichte, ein buntes Programm und eine Industriegeschichte-Führung durch das Bergbau- und Industriemuseum.",
         "kategorie": "Fest",
         "freigegeben": true,
-        "hw_mail": "kalender:1M8yso-1xKpZo1pkk-001B3o@mrelayeu.kundenserver.de"
+        "hw_mail": "kalender:1M8yso-1xKpZo1pkk-001B3o@mrelayeu.kundenserver.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Mohito Royal (Punkrock unplugged)",
@@ -947,7 +993,8 @@
         "beschreibung": "Konzert im Rahmen der Reihe 'Herbst im Drüb' mit der Band Mohito Royal (Punkrock unplugged). Eintritt frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de"
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Halloween mit Julius (80er/90er/00er & House)",
@@ -958,7 +1005,8 @@
         "beschreibung": "Halloween-Party mit Julius, Musik aus den 80ern, 90ern, 00ern und House. Eintritt frei.",
         "kategorie": "Party",
         "freigegeben": true,
-        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de"
+        "hw_mail": "kalender:022a01dd5a5e$a70cea10$f526be30$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "„Friedhofsgeflüster“ – Führung „Tod und Begräbnis“ mit der „Schwarzen Witwe“",
@@ -970,7 +1018,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": false,
         "hw_mail": "gmx:bcead57c9d874afe9740218f6f3a5e1e@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-11-18 (sternwarte): Grüne Erbsen und Kleine Rote Punkte -Warum Supermassive Schw - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-11-18 (sternwarte): Grüne Erbsen und Kleine Rote Punkte -Warum Supermassive Schw - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Hochlarer Bauernmarkt",
@@ -981,7 +1030,8 @@
         "beschreibung": "Bauernmarkt in Hochlar mit Verkehrssperrungen im Umfeld der Bockholter Straße von etwa 10 bis 19.30 Uhr.",
         "kategorie": "Fest",
         "freigegeben": true,
-        "hw_mail": "gmx:ded3ab09455d440ab140b7e10a9462aa@recklinghausen.de"
+        "hw_mail": "gmx:ded3ab09455d440ab140b7e10a9462aa@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "\"Blickpunkt Auge\"-Beratung",
@@ -993,7 +1043,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": true,
         "hw_mail": "kalender:00c301dd5aed$08fa6700$1aef3500$@imkmedia.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Frauenforum - Sitzung",
@@ -1005,7 +1056,8 @@
         "kategorie": "Treffen",
         "freigegeben": false,
         "hw_mail": "gmx:7ad84201d5c046a48194dc026ea0a95d@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-10-20 (frauenforum): Frauenforum Recklinghausen - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-10-20 (frauenforum): Frauenforum Recklinghausen - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Sparkassen-Erlebnisland",
@@ -1016,7 +1068,8 @@
         "beschreibung": "Spiel- und Sportangebot für Kinder in den Herbstferien mit Hallenhockey, Tischtennis, Badminton, Kleinspielgeräten, Balancierstationen, Hüpfburgen und Bullriding-Anlage. Täglich von 11 bis 13.45 Uhr sowie von 14.15 bis 17 Uhr, Kosten 1 Euro pro Kind (mit RE-Pass kostenfrei). Anmeldung vorher über die Webseite des Stadtsportverbandes erforderlich.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de"
+        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Sparkassen-Erlebnisland",
@@ -1027,7 +1080,8 @@
         "beschreibung": "Spiel- und Sportangebot für Kinder in den Herbstferien mit Hallenhockey, Tischtennis, Badminton, Kleinspielgeräten, Balancierstationen, Hüpfburgen und Bullriding-Anlage. Täglich von 11 bis 13.45 Uhr sowie von 14.15 bis 17 Uhr, Kosten 1 Euro pro Kind (mit RE-Pass kostenfrei). Anmeldung vorher über die Webseite des Stadtsportverbandes erforderlich.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de"
+        "hw_mail": "gmx:8e84ad3ac9e2436392f87fa831eff87c@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "1. Recklinghäuser Weihnachtscircus",
@@ -1038,7 +1092,8 @@
         "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "kalender:em4571f3ff-75f7-4a51-abad-151449ad7b22@gmx.de"
+        "hw_mail": "kalender:em4571f3ff-75f7-4a51-abad-151449ad7b22@gmx.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Digitales Erbe - Was passiert mit den Daten, wenn jemand verstirbt?",
@@ -1050,7 +1105,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "kalender:em04b8c00d-7516-4ca6-96e6-e6ef4cfd12e0@gmx.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "redaktion"
     },
     {
         "name": "KI = künstliche Intelligenz - Vortrag mit Tipps",
@@ -1062,7 +1118,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "kalender:em04b8c00d-7516-4ca6-96e6-e6ef4cfd12e0@gmx.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "redaktion"
     },
     {
         "name": "Lateinamerika-Flair im \"Chez AMA\" - Konzert mit COMO",
@@ -1073,7 +1130,8 @@
         "beschreibung": "Die Band 'COMO' tritt mit lateinamerikanischem Flair, Funk und tanzbaren Rhythmen auf. Zum Line-up gehören Pablo (Gesang), Martin F. Herrmann (Bass, Gesang), Björn Korte (Gitarre) und Karsten Reuter (Schlagzeug). Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "kalender:004e01dd5c68$63c80530$2b580f90$@imkmedia.de"
+        "hw_mail": "kalender:004e01dd5c68$63c80530$2b580f90$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Katalog und Künstlergespräch - Finissage \"Grund+Boden\"",
@@ -1084,7 +1142,8 @@
         "beschreibung": "Das Atelierhaus lädt zur Finissage der Ausstellung „Grund+Boden“ mit Arbeiten von Christiane Gerda Schmidt und Gabriele von Scheidt ein. Zum Abschluss der Schau wird der Katalog präsentiert, außerdem gibt es Gespräche mit den Künstlerinnen.",
         "kategorie": "Kunst",
         "freigegeben": true,
-        "hw_mail": "kalender:01fa01dd5c96$a41b1130$ec513390$@imkmedia.de"
+        "hw_mail": "kalender:01fa01dd5c96$a41b1130$ec513390$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Handwerkermarkt auf der Zeche",
@@ -1095,7 +1154,8 @@
         "beschreibung": "Handwerkermarkt mit Bio-Grill von Theos Farm. Findet auch am vorherigen Freitag statt.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
-        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de"
+        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Offene Ateliers 2026",
@@ -1106,7 +1166,8 @@
         "beschreibung": "Offene Ateliers in der Kaue der Zeche König Ludwig.",
         "kategorie": "Kunst",
         "freigegeben": true,
-        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de"
+        "hw_mail": "kalender:007a01dd5f09$0878c5e0$196a51a0$@imkmedia.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Informationsveranstaltung: Wärmepumpe beim Stammtisch des AufbruchKlimaVest",
@@ -1117,7 +1178,8 @@
         "beschreibung": "Informationsveranstaltung zum Thema Wärmepumpe im Rahmen des Stammtischs von AufbruchKlimaVest, als Auftakt zum deutschlandweiten Tag des offenen Heizungskellers am 21.11. Hausbesitzer berichten von persönlichen Erfahrungen mit klimafreundlichen Heizsystemen.",
         "kategorie": "Vortrag",
         "freigegeben": true,
-        "hw_mail": "kalender:1N6bPS-1wXoOD0uCs-00rz2K@mrelayeu.kundenserver.de"
+        "hw_mail": "kalender:1N6bPS-1wXoOD0uCs-00rz2K@mrelayeu.kundenserver.de",
+        "herkunft": "redaktion"
     },
     {
         "name": "Workshop: Bienenwachskerze herstellen (Familienimkerei Keinhörster)",
@@ -1128,7 +1190,8 @@
         "beschreibung": "Kostenfreier Ferienworkshop für Kinder ab sechs Jahren, bei dem aus einer Bienenwachsplatte eine Kerze gerollt wird. Das Angebot dauert etwa eine Stunde, vorherige Anmeldung ist notwendig unter stadtgeschichte@recklinghausen.de.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "gmx:8307e4438f1c42b29a3f177d96156b28@recklinghausen.de"
+        "hw_mail": "gmx:8307e4438f1c42b29a3f177d96156b28@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Taschenlampenführung (Recklinghausen leuchtet)",
@@ -1140,7 +1203,8 @@
         "kategorie": "Familie",
         "freigegeben": false,
         "hw_mail": "gmx:8307e4438f1c42b29a3f177d96156b28@recklinghausen.de",
-        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?"
+        "hinweis": "ähnlicher Termin am 2026-11-01 (gastkirche): Recklinghausen leuchtet - Datum abweichend?",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Naturerlebnistage für Kinder: Fossilien und Dinosaurier",
@@ -1151,7 +1215,8 @@
         "beschreibung": "Erlebnisnachmittag für Kinder von acht bis zehn Jahren zum Thema Fossilien und Dinosaurier mit praktischem Herstellen von Fossilien. Teilnahme kostet acht Euro zuzüglich drei Euro Materialkosten, Anmeldung erforderlich. Veranstaltung dauert bis 19.15 Uhr.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de"
+        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Experimente für Kinder",
@@ -1162,7 +1227,8 @@
         "beschreibung": "Workshop für Kinder von acht bis zehn Jahren mit einfachen naturwissenschaftlichen Experimenten, die auch zu Hause nachgemacht werden können. Zum Abschluss erhalten alle Teilnehmenden ein Forscherdiplom. Teilnahme kostet acht Euro pro Kind, Anmeldung erforderlich.",
         "kategorie": "Familie",
         "freigegeben": true,
-        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de"
+        "hw_mail": "gmx:e0a65c565e714b0f80de592b409d9e87@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Flutlicht-Jogging (Sportanlage Maybacher Heide)",
@@ -1173,7 +1239,8 @@
         "beschreibung": "Start der Flutlicht-Jogging-Saison auf der Laufbahn an der Sportanlage Maybacher Heide. Dienstags von 19 bis 21 Uhr können Freizeitjogger*innen und -walker*innen dort trainieren, das Angebot läuft bis zur Zeitumstellung Ende März 2027, an Feiertagen und während der Weihnachtsferien entfällt es.",
         "kategorie": "Sport",
         "freigegeben": true,
-        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de"
+        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Flutlicht-Jogging (Stadion Hohenhorst)",
@@ -1184,7 +1251,8 @@
         "beschreibung": "Flutlicht-Jogging donnerstags von 19 bis 21 Uhr im Stadion Hohenhorst, parallel zum Angebot an der Maybacher Heide. Das Angebot läuft bis zur Zeitumstellung Ende März 2027, an Feiertagen und während der Weihnachtsferien entfällt es.",
         "kategorie": "Sport",
         "freigegeben": true,
-        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de"
+        "hw_mail": "gmx:685eb200d86342b296bbbb79b4119077@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Inklusiver Erste-Hilfe-Kursus",
@@ -1195,7 +1263,8 @@
         "beschreibung": "Inklusiver Erste-Hilfe-Kurs für Menschen mit und ohne Behinderung, organisiert vom Referat für Behindertenangelegenheiten der Stadt Recklinghausen in Kooperation mit dem DRK. Der Kurs findet in einfacher Sprache statt, für gehörlose Teilnehmende stehen Gebärdensprachdolmetscherinnen zur Verfügung.",
         "kategorie": "Bildung",
         "freigegeben": true,
-        "hw_mail": "gmx:9cb07ecbc47d446695774cce1147ba07@recklinghausen.de"
+        "hw_mail": "gmx:9cb07ecbc47d446695774cce1147ba07@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Konzert Hannah Stienen (Akustikband)",
@@ -1206,7 +1275,8 @@
         "beschreibung": "Hannah Stienen, Singer- und Songwriterin und Lehrkraft für Popgesang an der Musikschule Recklinghausen, tritt mit ihrer Akustik-Band mit Deutsch-Pop auf. Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Offener Percussion-Workshop",
@@ -1217,7 +1287,8 @@
         "beschreibung": "Christian Schneider bietet einen offenen Percussion-Workshop an, bei dem Interessierte von 17.45 bis 18.30 Uhr gemeinsam trommeln können. Der Eintritt ist frei.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
-        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Konzert Blasorchester, Saxophonquintett und Klarinettenquartett",
@@ -1228,7 +1299,8 @@
         "beschreibung": "Konzert des Blasorchesters, des Saxophonquintetts und des Klarinettenquartetts unter der Leitung von Leopold Mrugalla. Der Eintritt ist frei.",
         "kategorie": "Konzert",
         "freigegeben": true,
-        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de"
+        "hw_mail": "gmx:d832be8bbc1748859e151fccc99f50d2@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     },
     {
         "name": "Rezeptaustausch zur Familiengeschichte",
@@ -1240,7 +1312,8 @@
         "kategorie": "Familie",
         "freigegeben": true,
         "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Stammtisch Bündnis AufbruchKlimaVest: Wärmepumpen stehen im Fokus",
@@ -1252,7 +1325,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Reise führt in die Stadtgeschichte",
@@ -1264,7 +1338,8 @@
         "kategorie": "Vortrag",
         "freigegeben": true,
         "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Weltladen lädt zur Verkostung ein",
@@ -1276,7 +1351,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": true,
         "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Büchermarkt",
@@ -1288,7 +1364,8 @@
         "kategorie": "Sonstiges",
         "freigegeben": true,
         "hw_mail": "kalender:1MJFpj-1wzWZ63Tat-00MZB6@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Elisabeth Strake dirigiert Haydn und Mendelssohn Bartholdy",
@@ -1300,7 +1377,8 @@
         "kategorie": "Konzert",
         "freigegeben": true,
         "hw_mail": "kalender:1MScHp-1x8uQI1pNJ-00N3XS@mrelayeu.kundenserver.de",
-        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden",
+        "herkunft": "zeitung"
     },
     {
         "name": "Grillstand der Tafel",
@@ -1311,7 +1389,8 @@
         "hw_mail": "kalender:1MScHp-1x8uQI1pNJ-00N3XS@mrelayeu.kundenserver.de",
         "datum": "2026-10-24",
         "uhrzeit": "17:30",
-        "beschreibung": "Zum Auftakt von „Recklinghausen leuchtet“ bietet die Tafel Bratwurst und alkoholfreie Getränke gegen eine freiwillige Spende an, die Einnahmen gehen vollständig an die Tafel. Am Stand gibt es Informationen zur ehrenamtlichen Mitarbeit. Geöffnet am Samstag von 17.30 bis 22 Uhr, am Sonntag von 15 bis 20 Uhr."
+        "beschreibung": "Zum Auftakt von „Recklinghausen leuchtet“ bietet die Tafel Bratwurst und alkoholfreie Getränke gegen eine freiwillige Spende an, die Einnahmen gehen vollständig an die Tafel. Am Stand gibt es Informationen zur ehrenamtlichen Mitarbeit. Geöffnet am Samstag von 17.30 bis 22 Uhr, am Sonntag von 15 bis 20 Uhr.",
+        "herkunft": "zeitung"
     },
     {
         "name": "Grillstand der Tafel",
@@ -1322,6 +1401,7 @@
         "hw_mail": "kalender:1MScHp-1x8uQI1pNJ-00N3XS@mrelayeu.kundenserver.de",
         "datum": "2026-10-25",
         "uhrzeit": "15:00",
-        "beschreibung": "Zum Auftakt von „Recklinghausen leuchtet“ bietet die Tafel Bratwurst und alkoholfreie Getränke gegen eine freiwillige Spende an, die Einnahmen gehen vollständig an die Tafel. Am Stand gibt es Informationen zur ehrenamtlichen Mitarbeit. Geöffnet von 15 bis 20 Uhr."
+        "beschreibung": "Zum Auftakt von „Recklinghausen leuchtet“ bietet die Tafel Bratwurst und alkoholfreie Getränke gegen eine freiwillige Spende an, die Einnahmen gehen vollständig an die Tafel. Am Stand gibt es Informationen zur ehrenamtlichen Mitarbeit. Geöffnet von 15 bis 20 Uhr.",
+        "herkunft": "zeitung"
     }
 ]
