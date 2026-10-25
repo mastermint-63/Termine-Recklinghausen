@@ -86,6 +86,9 @@ ENV_PFAD = Path(os.environ.get("HW_ENV_FILE") or HIER / ".env")
 
 MODELLE = [m for m in [os.environ.get("HW_MODEL"), "gemini-3.8-flash-medium", "claude-sonnet-5-5-medium"] if m]
 AGY_DEFAULT_BIN = str(Path.home() / ".local" / "bin" / "agy")
+# Eigenes HOME ohne Allowlist: agy verweigert dort jede Werkzeugnutzung außer Lesen im Arbeitsverzeichnis
+# (dort liegen nur die Anhänge dieses Laufs). Schutz vor Prompt Injection über Mails und Plakate.
+AGY_HEADLESS_HOME = str(Path.home() / "ki" / "prod" / "agy-headless" / "secrets" / "home")
 MAX_MAILS_PRO_LAUF = 15
 MAX_UNBEKANNTE_PRO_LAUF = 5  # Kalender-Eingang: Mails nicht authentifizierter oder unbekannter Absender
 MAX_TERMINE_PRO_MAIL = 30
@@ -525,9 +528,18 @@ def _pdf_zu_text(b: bytes) -> str:
         return ""
 
 
+def _agy_home() -> str:
+    """HOME für agy: `AGY_HOME` oder der Headless-Ordner. Fehlt er, lieber abbrechen als mit Allowlist laufen."""
+    home = os.environ.get("AGY_HOME") or AGY_HEADLESS_HOME
+    if not (Path(home) / ".gemini" / "antigravity-cli").is_dir():
+        raise RuntimeError(f"agy-Headless-HOME fehlt oder ist unvollständig: {home}")
+    return home
+
+
 def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list) -> dict:
     import shutil
     agy_bin = os.environ.get("AGY_BIN") or shutil.which("agy") or AGY_DEFAULT_BIN
+    env = dict(os.environ, HOME=_agy_home())
     with tempfile.TemporaryDirectory() as tmp:
         anhang_hinweise = []
         for idx, (typ, b) in enumerate(bilder, 1):
@@ -554,7 +566,7 @@ def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list
             "--json-schema", json.dumps(schema, ensure_ascii=False),
             f"--print={full_prompt}",
         ]
-        proc = subprocess.run(cmd, cwd=tmp, capture_output=True, text=True, timeout=180)
+        proc = subprocess.run(cmd, cwd=tmp, capture_output=True, text=True, timeout=180, env=env)
         if proc.returncode != 0:
             err = (proc.stderr or proc.stdout or "").strip()
             raise RuntimeError(f"agy exit {proc.returncode}: {err[:400]}")
@@ -563,7 +575,7 @@ def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list
             raise RuntimeError("agy lieferte leeres stdout")
         payload = json.loads(stdout.splitlines()[-1].strip())
         if payload.get("status") not in (None, "SUCCESS"):
-            raise RuntimeError(f"agy status={payload.get('status')}: {payload.get('response')}")
+            raise RuntimeError(f"agy status={payload.get('status')} ({len(payload.get('response') or '')} Zeichen Antwort)")
         if payload.get("structured_output") is not None:
             return payload["structured_output"]
         raw = (payload.get("response") or "").strip()
