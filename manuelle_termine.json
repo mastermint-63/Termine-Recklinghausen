@@ -1403,5 +1403,41 @@
         "uhrzeit": "15:00",
         "beschreibung": "Zum Auftakt von „Recklinghausen leuchtet“ bietet die Tafel Bratwurst und alkoholfreie Getränke gegen eine freiwillige Spende an, die Einnahmen gehen vollständig an die Tafel. Am Stand gibt es Informationen zur ehrenamtlichen Mitarbeit. Geöffnet von 15 bis 20 Uhr.",
         "herkunft": "zeitung"
+    },
+    {
+        "name": "Konzert des städtischen Chors unter Elisabeth Strake (Haydn und Mendelssohn Bartholdy)",
+        "datum": "2026-11-03",
+        "uhrzeit": "19:30",
+        "ort": "Kassiopeia-Saal des Ruhrfestspielhauses, Otto-Burrmeister-Allee 1, Recklinghausen",
+        "link": "",
+        "beschreibung": "Elisabeth Strake dirigiert als neue Chorleiterin ihr erstes Konzert mit dem städtischen Chor. Auf dem Programm stehen Werke von Joseph Haydn und Felix Mendelssohn Bartholdy.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:009801dd6384$57e91970$07bb4c50$@imkmedia.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Stammtisch Wärmepumpen (Bündnis AufbruchKlimaVest)",
+        "datum": "2026-10-26",
+        "uhrzeit": "19:00",
+        "ort": "Altstadtschmiede, Kellerstraße 10",
+        "link": "",
+        "beschreibung": "Impulsvortrag von Petra Kerstan (Verbraucherzentrale) zum Einsatz von Wärmepumpen in Ein- und Mehrfamilienhäusern, dazu Fragerunde und Erfahrungsberichte lokaler Besitzer.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:00a701dd6384$726138f0$5723aad0$@imkmedia.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Rezeptaustausch (Team der Altstadtschmiede)",
+        "datum": "2026-10-25",
+        "uhrzeit": "17:30",
+        "ort": "Altstadtschmiede, Kellerstraße 10",
+        "link": "",
+        "beschreibung": "Rezeptaustausch, bei dem Teilnehmende Lieblingsrezepte zubereiten und Traditionen erzählen. Von der Sparkassen-Stiftung gefördert, Eintritt frei.",
+        "kategorie": "Treffen",
+        "freigegeben": true,
+        "hw_mail": "kalender:00a701dd6384$726138f0$5723aad0$@imkmedia.de",
+        "herkunft": "zeitung"
     }
 ]
