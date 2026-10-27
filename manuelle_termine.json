@@ -1439,5 +1439,41 @@
         "freigegeben": true,
         "hw_mail": "kalender:00a701dd6384$726138f0$5723aad0$@imkmedia.de",
         "herkunft": "zeitung"
+    },
+    {
+        "name": "Stadtspaziergang durch die Innenstadt: Wo ist mehr Grün möglich?",
+        "datum": "2026-10-30",
+        "uhrzeit": "15:00",
+        "ort": "Busbahnhof Recklinghausen, an der Anzeigetafel",
+        "link": "",
+        "beschreibung": "Der Arbeitskreis Umwelt der Grünen-Fraktion lädt zu einem Stadtspaziergang durch die Innenstadt ein. Es geht um die Frage, wo Entsiegelung und Begrünung im Stadtgebiet möglich wären. Begleitet wird der Rundgang von Beigeordnetem Axel Fritz.",
+        "kategorie": "Politik",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MIyiY-1x0ojF1pV4-00MqAa@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Kräuterspiralen-Workshop",
+        "datum": "2026-10-31",
+        "uhrzeit": "10:00",
+        "ort": "Altes Forsthaus, Hohenhorster Weg 51",
+        "link": "",
+        "beschreibung": "Kostenloser Workshop des NABU Stadt Recklinghausen zum Bau einer Kräuterspirale. Nach einer Einführung durch Mareike Hölscher wird das Wissen im NABU-Garten gemeinsam in die Tat umgesetzt; Getränke sind vorhanden, eigene Verpflegung ist mitzubringen. Anmeldung telefonisch unter 0151/10659351 oder per E-Mail an info@nabu-stadt-recklinghausen.de.",
+        "kategorie": "Bildung",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MFKbB-1xNew70RBZ-000yRR@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Gedenkstunde auf dem jüdischen Friedhof",
+        "datum": "2026-11-01",
+        "uhrzeit": "11:30",
+        "ort": "Jüdischer Friedhof, Nordcharweg, Recklinghausen",
+        "link": "",
+        "beschreibung": "Die Jüdische Gemeinde Recklinghausen erinnert an die während der NS-Herrschaft nach Riga deportierten und ermordeten jüdischen Bürger. Hauptrednerin ist die NRW-Antisemitismusbeauftragte Sylvia Löhrmann.",
+        "kategorie": "Politik",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MsrV2-1wS2Ge0i8e-00vcyH@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
     }
 ]
