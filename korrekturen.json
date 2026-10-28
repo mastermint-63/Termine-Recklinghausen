@@ -13,19 +13,6 @@
         "angelegt": "2026-10-12"
     },
     {
-        "datum": "2026-10-13",
-        "name": "ArtLab",
-        "name_norm": "artlab",
-        "quelle": "kunsthalle",
-        "aenderung": {},
-        "absage": true,
-        "hw_mail": "gmx:2bd4c4ba217f4bbd9bfc7f076896a574@recklinghausen.de",
-        "freigegeben": false,
-        "angelegt": "2026-10-13",
-        "bezug_name": "„ArtLab“-Exkursion nach Düsseldorf",
-        "hinweis": "Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung; Beleg-Zitat nicht im Mailtext gefunden"
-    },
-    {
         "datum": "2026-10-14",
         "name": "Zwangsarbeiter und Zwangsarbeiterinnen in Recklinghausen 1941–45",
         "name_norm": "zwangsarbeiter und zwangsarbeiterinnen in recklinghausen 194145",
@@ -46,5 +33,16 @@
         "hw_mail": "kalender:1MfYgC-1weHd113Em-00kkz0@mrelayeu.kundenserver.de",
         "freigegeben": true,
         "angelegt": "2026-10-23"
+    },
+    {
+        "datum": "2026-10-28",
+        "name": "Als die Bilder laufen lernten",
+        "name_norm": "als die bilder laufen lernten",
+        "quelle": "vesterleben",
+        "aenderung": {},
+        "absage": true,
+        "hw_mail": "kalender:010601dd65f7$be6bdb90$3b4392b0$@imkmedia.de",
+        "freigegeben": true,
+        "angelegt": "2026-10-28"
     }
 ]

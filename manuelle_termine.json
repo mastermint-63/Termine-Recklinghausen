@@ -1475,5 +1475,102 @@
         "freigegeben": true,
         "hw_mail": "kalender:1MsrV2-1wS2Ge0i8e-00vcyH@mrelayeu.kundenserver.de",
         "herkunft": "zeitung"
+    },
+    {
+        "name": "Bücherflohmarkt \"Lisbeths Bücherinsel\"",
+        "datum": "2026-10-31",
+        "uhrzeit": "14:00",
+        "ort": "Roncalli-Haus, Brucknerstraße 4",
+        "link": "",
+        "beschreibung": "Bücherflohmarkt mit Taschenbüchern, Romanen, Kinder- und Bilderbüchern sowie weiteren Medien, Ende 17 Uhr. Der Erlös dient dem Kauf neuer Medien für die Bücherei.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MQMqN-1x8oFE2jB3-00Qdbt@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "2 Stunden Vollgas – Party mit Jetset Jourdain",
+        "datum": "2026-12-11",
+        "uhrzeit": "18:00",
+        "ort": "Ratskeller, Rathausplatz, Recklinghausen",
+        "link": "https://ratskeller-recklinghausen.ticket.io/",
+        "beschreibung": "Einlass samt Warm-up um 18 Uhr, von 20 bis 22 Uhr Trance und Bounce, danach „Chillout & Relax“. Tickets kosten 9 Euro, Einlass ab 18 Jahren, im Ratskeller nur bargeldlose Zahlung.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "kalender:1Macf4-1wp5ca2Vo2-00mR43@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Moguai Aftershow mit Salvatore Mancuso",
+        "datum": "2026-11-07",
+        "uhrzeit": "23:00",
+        "ort": "Ratskeller, Rathausplatz, Recklinghausen",
+        "link": "https://ratskeller-recklinghausen.ticket.io/",
+        "beschreibung": "Salvatore Mancuso legt bei der „Moguai Aftershow“ auf. Eintritt 12 Euro.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "kalender:1Macf4-1wp5ca2Vo2-00mR43@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Mama geht tanzen",
+        "datum": "2026-11-27",
+        "uhrzeit": "",
+        "ort": "Ratskeller, Rathausplatz, Recklinghausen",
+        "link": "https://ratskeller-recklinghausen.ticket.io/",
+        "beschreibung": "Laut Zeitungsartikel im Online-Shop des Ratskellers bereits als ausverkauft markiert. Uhrzeit und Preis nicht genannt.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "kalender:1Macf4-1wp5ca2Vo2-00mR43@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Clubbing nach dem Schneeglühen",
+        "datum": "2026-12-18",
+        "uhrzeit": "",
+        "ort": "Ratskeller, Rathausplatz, Recklinghausen",
+        "link": "https://ratskeller-recklinghausen.ticket.io/",
+        "beschreibung": "Im Artikel kommt das Clubbing nach dem „Schneeglühen“ (18. Dezember) hinzu. Uhrzeit und Preis nicht genannt.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "kalender:1Macf4-1wp5ca2Vo2-00mR43@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "95 Beats – Party in der Kreuzkirche",
+        "datum": "2026-10-30",
+        "uhrzeit": "",
+        "ort": "Kreuzkirche, Henrichenburger Straße 64, Suderwich",
+        "link": "",
+        "beschreibung": "Der Zakk-Jugendtreff organisiert erstmals eine Party im Altarraum der Kreuzkirche. Zwei DJs legen auf, es gibt Tanzfläche und Getränke (Bier, kein hochprozentiger Alkohol). Zugang für Gäste ab 16 Jahren.",
+        "kategorie": "Party",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MJEIl-1x6lmB25cJ-00XVSS@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Der Pflegekinderdienst der Stadt Recklinghausen sucht Pflegefamilien",
+        "datum": "2026-11-21",
+        "uhrzeit": "16:00",
+        "ort": "Familienbüro, Große Geldstraße 19",
+        "link": "",
+        "beschreibung": "Der Pflegekinderdienst informiert über Voraussetzungen und Ablauf bei der Aufnahme von Pflegekindern, ergänzt durch Erfahrungsberichte einer Pflegemutter. Die Teilnahme an dem Informationstreffen ist kostenfrei und dauert bis ca. 17.30 Uhr. Um telefonische Anmeldung unter 02361/50-2262 (Steven Schwermer) wird gebeten.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "gmx:d7af8bde13b2446aa5e397576b2ad61e@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
+    },
+    {
+        "name": "Vestischer Erntedank 2026",
+        "datum": "2026-10-29",
+        "uhrzeit": "",
+        "ort": "",
+        "link": "",
+        "beschreibung": "Der Kreis Recklinghausen und der Landwirtschaftliche Kreisverband laden zum Vestischen Erntedank 2026 ein. Die Mail ist abgeschnitten; Ort, Uhrzeit und Programm sind nicht genannt.",
+        "kategorie": "Fest",
+        "freigegeben": false,
+        "hw_mail": "gmx:20261021092526.3DFF2608E5@mail02.ruhr-connect.de",
+        "herkunft": "pressemitteilung_kreis",
+        "hinweis": "Mailtext bricht nach 'Oktob' ab; Ort und Uhrzeit fehlen, unklar ob öffentlich oder reiner Medientermin. Datum passt zum Wochentag (Donnerstag, 29.10.2026).; Ort nicht (sicher) in Recklinghausen; weder Ort noch Uhrzeit erkannt"
     }
 ]
