@@ -1572,5 +1572,67 @@
         "hw_mail": "gmx:20261021092526.3DFF2608E5@mail02.ruhr-connect.de",
         "herkunft": "pressemitteilung_kreis",
         "hinweis": "Mailtext bricht nach 'Oktob' ab; Ort und Uhrzeit fehlen, unklar ob öffentlich oder reiner Medientermin. Datum passt zum Wochentag (Donnerstag, 29.10.2026).; Ort nicht (sicher) in Recklinghausen; weder Ort noch Uhrzeit erkannt"
+    },
+    {
+        "name": "Annika Joeres: Die Sicherheitslüge",
+        "datum": "2026-11-18",
+        "uhrzeit": "",
+        "ort": "",
+        "link": "https://nlgr.de/veranstaltung/annika-joeres-die-sicherheitsluege/",
+        "beschreibung": "Veranstaltung mit Annika Joeres zu „Die Sicherheitslüge“.",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "kalender:003501dd67b0$ba269a60$2e73cf20$@holzwurm-recklinghausen.de",
+        "herkunft": "redaktion",
+        "hw_warnung": "Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Gedenkveranstaltung zum Jahrestag der Reichspogromnacht",
+        "datum": "2026-11-09",
+        "uhrzeit": "17:30",
+        "ort": "Mahnmal Herzogswall/Ecke Westerholter Weg",
+        "link": "",
+        "beschreibung": "Gedenkveranstaltung anlässlich des Jahrestags der Reichspogromnacht. Das Ende der Gedenkfeier ist für circa 18.45 Uhr vorgesehen.",
+        "kategorie": "Politik",
+        "freigegeben": true,
+        "hw_mail": "gmx:706867b6ac7049f68e0690ec37e9c47d@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
+    },
+    {
+        "name": "Südbad geöffnet an Allerheiligen",
+        "datum": "2026-11-01",
+        "uhrzeit": "07:30",
+        "ort": "Südbad, Pappelallee 58, Recklinghausen",
+        "link": "",
+        "beschreibung": "Das Südbad ist am Feiertag Allerheiligen von 7.30 bis 12 Uhr geöffnet, letzter Einlass um 11.15 Uhr. Das Frauenschwimmen entfällt an diesem Tag. Das Hallenbad Herner Straße bleibt geschlossen.",
+        "kategorie": "Sport",
+        "freigegeben": true,
+        "hw_mail": "gmx:488ba928638e4e2eab92f9f7d7459a41@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
+    },
+    {
+        "name": "Satireabend mit der DISTEL",
+        "datum": "2026-11-16",
+        "uhrzeit": "",
+        "ort": "",
+        "link": "",
+        "beschreibung": "Satireabend mit der DISTEL, laut Betreff einer Pressemitteilung des Instituts für Kulturarbeit. Uhrzeit, Ort und Preis sind in der Mail nicht genannt.",
+        "kategorie": "Sonstiges",
+        "freigegeben": false,
+        "hw_mail": "gmx:35a7974318db4d07b5dc7ffe55556afa@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt",
+        "hinweis": "Datum und Titel stehen nur im Betreff. Der Mailtext enthält keine Details, und die Pressemitteilung selbst fehlt. Ort, Uhrzeit und Kategorie sind unbekannt, und ob die Veranstaltung in Recklinghausen stattfindet, ist nicht bestätigt.; weder Ort noch Uhrzeit erkannt; Beleg-Zitat nicht im Mailtext gefunden"
+    },
+    {
+        "name": "Mitgliederversammlung des Fördervereins des Ikonen-Museums und Bildvortrag",
+        "datum": "2026-10-31",
+        "uhrzeit": "14:00",
+        "ort": "Volkshochschule im Willy-Brandt-Haus, Herzogswall 17",
+        "link": "",
+        "beschreibung": "Der Förderverein des Ikonen-Museums, EIKON, lädt zur Mitgliederversammlung mit Berichten und Vorstandswahlen ein. Im Anschluss hält Dr. Eleftheria Lehmann einen Bildvortrag über byzantinische Fresken auf Kreta. Der Vortrag dauert etwa eine Stunde, der Eintritt ist frei und eine Anmeldung ist nicht erforderlich.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "gmx:e960c7b853bd4fa39644dc769691c9cd@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     }
 ]

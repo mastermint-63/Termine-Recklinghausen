@@ -33,5 +33,46 @@
         "hw_mail": "kalender:010601dd65f7$be6bdb90$3b4392b0$@imkmedia.de",
         "freigegeben": true,
         "angelegt": "2026-10-28"
+    },
+    {
+        "datum": "2026-11-14",
+        "name": "39. Literaturnacht der Autorinnen und Autoren",
+        "name_norm": "39 literaturnacht der autorinnen und autoren",
+        "quelle": "altstadtschmiede",
+        "aenderung": {
+            "link": "https://nlgr.de/veranstaltung/39-recklinghaeuser-literaturnacht-2026/"
+        },
+        "absage": false,
+        "hw_mail": "kalender:003001dd67b0$57d70fc0$07852f40$@holzwurm-recklinghausen.de",
+        "freigegeben": true,
+        "angelegt": "2026-10-30"
+    },
+    {
+        "datum": "2026-10-30",
+        "name": "Kopfkino: Die drei Fragezeichen – Meister des Lichts",
+        "name_norm": "kopfkino die drei fragezeichen meister des lichts",
+        "quelle": "re-leuchtet",
+        "aenderung": {},
+        "absage": true,
+        "hw_mail": "gmx:df1e39cc65a54a8695934d129b7c35d1@recklinghausen.de",
+        "freigegeben": false,
+        "angelegt": "2026-10-30",
+        "bezug_name": "Drei-Fragezeichen-Abend in der Stadtbibliothek",
+        "hinweis": "Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung"
+    },
+    {
+        "datum": "2026-11-08",
+        "name": "Louis Spohrs Oratorium „Die letzten Dinge“",
+        "name_norm": "",
+        "quelle": "",
+        "aenderung": {
+            "datum": "2026-11-07"
+        },
+        "absage": false,
+        "hw_mail": "gmx:90e7fd69ba6547b6a660154417c50474@recklinghausen.de",
+        "freigegeben": false,
+        "angelegt": "2026-10-30",
+        "bezug_name": "Louis Spohrs Oratorium „Die letzten Dinge“",
+        "hinweis": "Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung; kein passender Termin am 2026-11-08 gefunden"
     }
 ]
