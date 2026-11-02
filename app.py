@@ -14,6 +14,7 @@ import html as _html
 import json as _json
 import os
 import re
+import traceback
 import webbrowser
 import calendar
 import dataclasses
@@ -2001,7 +2002,14 @@ def rufe_quellen_ab(monate_liste: list[tuple[int, int]]) -> dict:
         print(f"\n[Abruf {idx+1}/{len(monate_liste)}] {m:02d}/{j}:")
         termine = []
         for scraper_fn, label in ABRUF_SCRAPER:
-            events = scraper_fn(j, m)
+            try:
+                events = scraper_fn(j, m)
+            except Exception as e:
+                # Eine kaputte Quelle darf die übrigen nicht mitreißen. update.sh baut und pusht
+                # trotzdem und endet wegen "Quelle abgestürzt" mit Exit 1, damit die Störung auffällt.
+                print(f"  Fehler beim Abrufen ({label}): Quelle abgestürzt, {type(e).__name__}: {e}")
+                print(traceback.format_exc())
+                events = []
             print(f"  -> {len(events)} {label}")
             termine.extend(events)
             q = quellen.setdefault(label, {'anzahl': 0})

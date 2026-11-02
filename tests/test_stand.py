@@ -76,6 +76,22 @@ def test_abruf_ohne_manuelle_termine():
     assert len(app.ABRUF_SCRAPER) == len(app.SCRAPER) - 1
 
 
+def test_abstuerzende_quelle_stoppt_den_abruf_nicht(monkeypatch, capsys):
+    """Anlass: ein "room": null in den Ratssitzungen legte die Seite vom 31.10. bis 02.11.2026 still."""
+    def stuerzt_ab(jahr, monat):
+        raise AttributeError("'NoneType' object has no attribute 'get'")
+
+    monkeypatch.setattr(app, "ABRUF_SCRAPER", [(stuerzt_ab, "Kaputt"), (_termine_quelle_a, "Quelle A")])
+    stand = app.rufe_quellen_ab([(2026, 10)])
+
+    assert [t["name"] for t in stand["monate"]["2026-10"]] == ["Offene Schmiede", "Lesung Müller"]
+    assert stand["quellen"]["Kaputt"]["anzahl"] == 0
+    ausgabe = capsys.readouterr().out
+    # update.sh zählt beide Texte: "Fehler beim Abrufen" für die Meldung, "Quelle abgestürzt" für Exit 1
+    assert "Fehler beim Abrufen (Kaputt): Quelle abgestürzt, AttributeError" in ausgabe
+    assert "Traceback" in ausgabe
+
+
 def test_normaler_lauf_schreibt_stand(umgebung, monkeypatch):
     stand_pfad = umgebung / "stand.json"
     _lauf(monkeypatch, "--ausgabe", str(umgebung / "site"), "--stand", str(stand_pfad))

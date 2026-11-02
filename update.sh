@@ -77,6 +77,11 @@ fi
 # Prüfe auf Fehler (Timeouts, Connection-Errors)
 FEHLER_COUNT=$(echo "$OUTPUT" | grep -c "Fehler beim Abrufen")
 
+# Abgestürzte Quelle: Seiten werden trotzdem gebaut und gepusht, der Job endet aber mit Exit 1,
+# damit das Dashboard die Störung zeigt. Netzfehler der Scraper bleiben kein Jobfehler.
+ABSTURZ_COUNT=$(echo "$OUTPUT" | grep -c "Quelle abgestürzt")
+[ "$ABSTURZ_COUNT" -gt 0 ] && EXIT_CODE=1
+
 # Neue Event-Anzahl aus Output extrahieren
 NEUE_ANZAHL=0
 while IFS= read -r line; do
