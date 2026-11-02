@@ -1721,16 +1721,38 @@
     },
     {
         "name": "Martinimarkt",
-        "datum": "2026-11-06",
-        "uhrzeit": "",
-        "ort": "Schulstraße und Am Alten Kirchplatz, zwischen Poststraße und Suderwichstraße",
+        "datum": "2026-11-07",
+        "uhrzeit": "12:00",
+        "ort": "Historischer Ortskern, Recklinghausen-Suderwich",
         "link": "",
-        "beschreibung": "In Recklinghausen findet der Martinimarkt statt. Aus diesem Anlass sind die Schulstraße und die Straße Am Alten Kirchplatz zwischen Poststraße und Suderwichstraße gesperrt.",
+        "beschreibung": "Stöbermeile mit Ständen durch den historischen Ortskern: Handgefertigtes, Dekoration, Schmuck, Geschenkideen und Kulinarisches. Geöffnet am Samstag von 12 bis 20 Uhr, am Sonntag von 11 bis 18 Uhr. Am Samstag um 17 Uhr zieht der Martinsumzug mit St. Martin durch den Dorfkern, Kinder können ihre Laternen mitbringen. Veranstalter: Agentur Haas und die Suderwicher Vereine. Straßen im Dorfkern sind teilweise schon ab Freitagnachmittag (6.11.) gesperrt.",
         "kategorie": "Fest",
-        "freigegeben": false,
+        "freigegeben": true,
         "hw_mail": "gmx:3e8b4d9a7c5e400d9ebc7d7379583cf2@recklinghausen.de",
-        "herkunft": "pressemitteilung_stadt",
-        "hinweis": "Aus der Pressemitteilung geht nur der Zeitraum der verkehrlichen Vollsperrung hervor, nicht die genauen Veranstaltungsdaten oder Öffnungszeiten des Martinimarkts."
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Martinsumzug",
+        "datum": "2026-11-07",
+        "uhrzeit": "17:00",
+        "ort": "Dorfkern, Recklinghausen-Suderwich",
+        "link": "",
+        "beschreibung": "Martinsumzug mit St. Martin durch den Dorfkern während des Martinimarkts. Kinder können ihre Laternen mitbringen und den Zug begleiten.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Martinimarkt",
+        "datum": "2026-11-08",
+        "uhrzeit": "11:00",
+        "ort": "Historischer Ortskern, Recklinghausen-Suderwich",
+        "link": "",
+        "beschreibung": "Stöbermeile mit Ständen durch den historischen Ortskern: Handgefertigtes, Dekoration, Schmuck, Geschenkideen und Kulinarisches. Geöffnet am Samstag von 12 bis 20 Uhr, am Sonntag von 11 bis 18 Uhr. Am Samstag um 17 Uhr zieht der Martinsumzug mit St. Martin durch den Dorfkern, Kinder können ihre Laternen mitbringen. Veranstalter: Agentur Haas und die Suderwicher Vereine. Straßen im Dorfkern sind teilweise schon ab Freitagnachmittag (6.11.) gesperrt.",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "gmx:3e8b4d9a7c5e400d9ebc7d7379583cf2@recklinghausen.de",
+        "herkunft": "zeitung"
     },
     {
         "name": "Omas gegen Rechts Recklinghausen",
