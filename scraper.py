@@ -3152,10 +3152,12 @@ def hole_ratssitzungen(jahr: int, monat: int) -> list[Termin]:
             pass
 
         titel = meeting.get("titel", "Sitzung")
-        room = meeting.get("room", {})
-        ort = room.get("name", "")
-        if room.get("address", {}).get("street"):
-            ort = f"{ort}, {room['address']['street']}" if ort else room['address']['street']
+        # Die API liefert "room" und "address" auch als null
+        room = meeting.get("room") or {}
+        ort = room.get("name") or ""
+        strasse = (room.get("address") or {}).get("street")
+        if strasse:
+            ort = f"{ort}, {strasse}" if ort else strasse
         link = meeting.get("full_url", f"{RIS_RE_URL}/meeting?id={meeting.get('nummer', meeting.get('id', ''))}")
 
         termine.append(Termin(
