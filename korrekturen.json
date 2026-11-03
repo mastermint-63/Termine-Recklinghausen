@@ -74,5 +74,17 @@
         "angelegt": "2026-10-30",
         "bezug_name": "Louis Spohrs Oratorium „Die letzten Dinge“",
         "hinweis": "Presse-Mail ohne Absenderprüfung: Änderungen nur nach Prüfung; kein passender Termin am 2026-11-08 gefunden"
+    },
+    {
+        "datum": "2026-11-04",
+        "name": "Medidativer Tanzabend",
+        "name_norm": "medidativer tanzabend",
+        "quelle": "gastkirche",
+        "aenderung": {},
+        "absage": false,
+        "hw_mail": "kalender:1MC2sF-1xEM2r1D01-00EBKb@mrelayeu.kundenserver.de",
+        "freigegeben": true,
+        "angelegt": "2026-11-03",
+        "verschoben_auf": "2026-11-25"
     }
 ]

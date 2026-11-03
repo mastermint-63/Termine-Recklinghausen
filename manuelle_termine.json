@@ -1885,5 +1885,76 @@
         "freigegeben": true,
         "hw_mail": "kalender:01e301dd6a37$618785c0$24969140$@imkmedia.de",
         "herkunft": "plakat"
+    },
+    {
+        "name": "Komm mit, wir wandern",
+        "datum": "2026-11-04",
+        "uhrzeit": "15:00",
+        "ort": "Parkplatz am Café Herzlich, An der Mollbecke 2",
+        "link": "",
+        "beschreibung": "Kleine Wanderung für Menschen mit und ohne Demenz, begleitet von Ehrenamtlichen der Alzheimer-Gesellschaft. Dauer 15 bis 16 Uhr, kostenfrei, keine Anmeldung erforderlich. Veranstalter: Alzheimer-Gesellschaft Vest Recklinghausen.",
+        "kategorie": "Wandern",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MpCz1-1wk6cS31Bf-00nM35@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Gesprächskreis für Angehörige von Menschen mit Demenz",
+        "datum": "2026-11-05",
+        "uhrzeit": "15:00",
+        "ort": "Diakoniestation, Hohenzollernstraße 72, Recklinghausen",
+        "link": "",
+        "beschreibung": "Informationsaustausch für Angehörige von Menschen mit Demenz über Pflegeversicherung, das Krankheitsbild und Umgangstipps bei Kaffee und Kuchen. Dauer bis ca. 16:30 Uhr. Teilnahme kostenfrei, Anmeldung und Info unter Tel. 02361/102010.",
+        "kategorie": "Treffen",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MKKd7-1x5qW22fRn-00MWxZ@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "NABU lädt zur Verkostung",
+        "datum": "2026-11-04",
+        "uhrzeit": "16:00",
+        "ort": "Altes Forsthaus Hohenhorst, Hohenhorster Weg 51",
+        "link": "",
+        "beschreibung": "Der Naturschutzbund präsentiert frisch gepressten Apfelsaft von heimischen Streuobstwiesen, der vor Ort erworben werden kann. Das Angebot gilt von 16 bis 18 Uhr, eine Anmeldung ist nicht erforderlich.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MC2sF-1xEM2r1D01-00EBKb@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Medidativer Tanzabend",
+        "datum": "2026-11-25",
+        "uhrzeit": "20:00",
+        "ort": "Gastkriche",
+        "link": "",
+        "beschreibung": "",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MC2sF-1xEM2r1D01-00EBKb@mrelayeu.kundenserver.de"
+    },
+    {
+        "name": "Kann jüdische Ethik beim Umgang mit künstlicher Intelligenz helfen?",
+        "datum": "2026-11-04",
+        "uhrzeit": "19:00",
+        "ort": "Aula/Mensa der Wolfgang-Borchert-Gesamtschule, Beisinger Weg 80, Recklinghausen",
+        "link": "",
+        "beschreibung": "Vortrag der Gesellschaft für christlich-jüdische Zusammenarbeit mit Referent Abraham de Wolf über die Frage, ob jüdische Ethik beim Umgang mit künstlicher Intelligenz helfen kann. Im Mittelpunkt stehen Verantwortung und Menschenwürde.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1N9MlG-1wTfYM2hgi-012QOP@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Wanderung führt nach Suderwich",
+        "datum": "2026-11-07",
+        "uhrzeit": "13:00",
+        "ort": "Treffpunkt: Hauptbahnhof",
+        "link": "",
+        "beschreibung": "Der Sauerländische Gebirgsverein bietet eine zehn Kilometer lange Streckenwanderung über Essel nach Suderwich mit Zwischenstopp beim Tag der offenen Tür in der Kornbrennerei Dörlemann an. Um Anmeldung bis Freitag, 6. November, unter Tel. 02361/9434496 wird gebeten.",
+        "kategorie": "Wandern",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MI5YH-1xLUr02MOV-00BQRi@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
     }
 ]
