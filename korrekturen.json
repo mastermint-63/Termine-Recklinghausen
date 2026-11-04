@@ -86,5 +86,17 @@
         "freigegeben": true,
         "angelegt": "2026-11-03",
         "verschoben_auf": "2026-11-25"
+    },
+    {
+        "datum": "2026-11-04",
+        "name": "Medidativer Tanzabend",
+        "name_norm": "medidativer tanzabend",
+        "quelle": "gastkirche",
+        "aenderung": {},
+        "absage": false,
+        "hw_mail": "kalender:1MDykM-1xGRlH3PBk-00GAxV@mrelayeu.kundenserver.de",
+        "freigegeben": true,
+        "angelegt": "2026-11-04",
+        "verschoben_auf": "2026-11-25"
     }
 ]
