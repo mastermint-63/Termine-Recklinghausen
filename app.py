@@ -362,13 +362,21 @@ def _gleiche_zeitnah(uhrzeit_a: str, uhrzeit_b: str) -> bool:
     return False
 
 
+def _uhrzeit_minuten(uhrzeit: str) -> int | None:
+    m = re.search(r'(\d{1,2})(?:[:.](\d{2}))?', uhrzeit or '')
+    return int(m.group(1)) * 60 + int(m.group(2) or 0) if m else None
+
+
 def _uhrzeit_weicht_ab(uhrzeit_a: str, uhrzeit_b: str) -> bool:
     """True, wenn beide Angaben eine konkrete Uhrzeit nennen und sich unterscheiden ("19.00 Uhr" = "19:00 Uhr")."""
-    def minuten(u: str) -> int | None:
-        m = re.search(r'(\d{1,2})(?:[:.](\d{2}))?', u or '')
-        return int(m.group(1)) * 60 + int(m.group(2) or 0) if m else None
-    a, b = minuten(uhrzeit_a), minuten(uhrzeit_b)
+    a, b = _uhrzeit_minuten(uhrzeit_a), _uhrzeit_minuten(uhrzeit_b)
     return a is not None and b is not None and a != b
+
+
+def _uhrzeit_gleich(uhrzeit_a: str, uhrzeit_b: str) -> bool:
+    """True, wenn beide Angaben dieselbe konkrete Uhrzeit nennen. Fehlt eine Angabe, ist das keine Gleichheit."""
+    a = _uhrzeit_minuten(uhrzeit_a)
+    return a is not None and a == _uhrzeit_minuten(uhrzeit_b)
 
 
 def _termin_score(t: Termin) -> int:

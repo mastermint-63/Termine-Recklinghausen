@@ -492,10 +492,12 @@ Bild oder PDF, schreibe 'BILD' bzw. 'PDF'.
 6. Meldung nur für öffentliche Veranstaltungen. Interne Termine (Redaktionssitzung, Videokonferenz, Absprachen), \
 reine Fototermine für die Presse (im Text ausdrücklich als "Fototermin" bezeichnet, kein Programm für Publikum, \
 z.B. Pressetermin-Übersichten der Stadt Recklinghausen) und bereits vergangene Termine meldest du nicht. Bei Serien \
-(z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. Mehrtägige Veranstaltungen (Ausstellung, Stand, Markt, \
-Festival): ein Termin mit `datum` = erster Tag und `bis` = letzter Tag, Zeitraum und Öffnungszeiten je Tag nennst du \
-in der Beschreibung. Eine mehrtägige Veranstaltung, die noch läuft, ist nicht vergangen: melde sie auch dann, wenn \
-der erste Tag schon vorbei ist.
+(z.B. jeden Mittwoch) je ein Termin pro Datum, höchstens 30. Mehrtägige Veranstaltungen mit täglichen Vorstellungen \
+oder täglichem Betrieb (Circus, Stand, Markt, Festival) bis 30 Tage: je Tag ein Termin mit der Uhrzeit dieses Tages, \
+weitere Zeiten des Tages und den gesamten Zeitraum nennst du in der Beschreibung, bereits vergangene Tage meldest du \
+nicht. Ausstellungen und alles, was länger als 30 Tage läuft: ein Termin mit `datum` = erster Tag und `bis` = letzter \
+Tag, Zeitraum und Öffnungszeiten nennst du in der Beschreibung. So eine Veranstaltung, die noch läuft, ist nicht \
+vergangen: melde sie auch dann, wenn der erste Tag schon vorbei ist.
 7. `in_recklinghausen` = true, wenn der Ort im Stadtgebiet Recklinghausen liegt. Andere Städte (Herten, Marl, Münster, ...) \
 und reine Online-Veranstaltungen: false.
 8. `terminseiten`: URLs, die laut Mail eine Übersicht oder einen Kalender mit mehreren Veranstaltungen eines Veranstalters \
@@ -862,12 +864,18 @@ def ist_dublette_im_kalender(eintrag: dict):
     uhr = f"{eintrag['uhrzeit']} Uhr" if eintrag["uhrzeit"] else "siehe Website"
     kandidat = Termin(name=eintrag["name"], datum=d, uhrzeit=uhr, ort=eintrag["ort"], link=eintrag["link"],
                       beschreibung=eintrag["beschreibung"], quelle="manuell", kategorie=eintrag["kategorie"])
+    # Redaktionstermine vergleicht der Generator nur über den Titel. Beim Import zählt auch ein gemeinsames Wort
+    # bei gleicher konkreter Uhrzeit ("Feier zur Wintersonnenwende" = "Abend zur Wintersonnenwende", beide 17 Uhr)
+    norm = app._normalisiere(eintrag["name"])
+    for t in bestehende:
+        if (t.quelle == "manuell" and _name_treffer(norm, app._normalisiere(t.name)) == 1
+                and app._uhrzeit_gleich(uhr, t.uhrzeit)):
+            return t
     with contextlib.redirect_stdout(io.StringIO()):  # entferne_duplikate druckt Debug-Zeilen
         vorher = app.entferne_duplikate([replace(t) for t in bestehende])
         nachher = app.entferne_duplikate([replace(kandidat)] + [replace(t) for t in bestehende])
         if len(nachher) != len(vorher):
             # Nur ein gemeinsames Wort bei anderer Uhrzeit: eintragen, aber im Bericht "bitte ansehen"
-            norm = app._normalisiere(eintrag["name"])
             for t in bestehende:
                 if _name_treffer(norm, app._normalisiere(t.name)) == 1 and app._uhrzeit_weicht_ab(uhr, t.uhrzeit):
                     eintrag["_aehnlich"] = kalender_zeile(t)
