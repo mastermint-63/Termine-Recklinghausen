@@ -79,10 +79,15 @@ def test_dublette_liefert_den_kalendereintrag(monkeypatch):
                         link="", quelle="adfc")]
     monkeypatch.setattr(hw, "lade_bestehende", lambda d: list(bestehend))
     monkeypatch.setattr(hw, "lade_json", lambda: [])
-    eintrag = {"name": '"Oman by Trike": Radreisebericht', "datum": "2026-10-28", "uhrzeit": "18:00",
+    eintrag = {"name": '"Oman by Trike": Radreisebericht', "datum": "2026-10-28", "uhrzeit": "17:00",
                "ort": "ADFC-Infoladen", "link": "", "beschreibung": "", "kategorie": "Vortrag"}
     treffer = hw.ist_dublette_im_kalender(eintrag)
     assert treffer and treffer.name == "ROADTRIP OMAN BY TRIKE"
+    # Seit 05.11.2026 (Entscheidung FS): nur ein gemeinsames Wort und andere Uhrzeit ("18:00" in der echten Mail)
+    # -> eintragen und im Bericht "bitte ansehen", lieber doppelt als verloren
+    anders = {**eintrag, "uhrzeit": "18:00"}
+    assert hw.ist_dublette_im_kalender(anders) is None
+    assert anders["_aehnlich"] == "ROADTRIP OMAN BY TRIKE, 17:00 Uhr"
     assert hw.ist_dublette_im_kalender({**eintrag, "name": "Kürbisschnitzen"}) is None
 
 

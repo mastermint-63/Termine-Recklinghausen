@@ -53,7 +53,7 @@ def _abschnitt(titel: str, eintraege: list, zeile, zusatz: str = "") -> list[str
 
 
 def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
-    teile = ("eingetragen", "geaendert", "abgesagt", "pruefen", "neue_seiten", "quellfehler", "verwaist",
+    teile = ("eingetragen", "geaendert", "ergaenzt", "abgesagt", "pruefen", "neue_seiten", "quellfehler", "verwaist",
              "ohne_ergebnis", "verworfen", "fehler")
     rueck = bericht.get("rueckmeldungen") or {}
     if not any(bericht.get(k) for k in teile) and not (rueck.get("gesendet") or rueck.get("fehler")):
@@ -77,6 +77,8 @@ def baue_nachricht(bericht: dict, status: str, grund: str = "") -> str | None:
     zeilen += _abschnitt("Eingetragen", bericht.get("eingetragen", []), lambda e: termin(e) + warnung(e))
     zeilen += _abschnitt("Geändert", bericht.get("geaendert", []),
                          lambda e: f"{termin(e)}: {bereinige(e.get('was'), 40)}{warnung(e)}")
+    zeilen += _abschnitt("Ergänzt", bericht.get("ergaenzt", []),
+                         lambda e: f"{termin(e)}: {bereinige(e.get('was'), 40)}")
     zeilen += _abschnitt("Abgesagt", bericht.get("abgesagt", []), lambda e: termin(e) + warnung(e))
     zeilen += _abschnitt("Zur Prüfung", bericht.get("pruefen", []),
                          lambda e: f"{termin(e)} ({bereinige(e.get('grund'), 60)})", ", hw_pruefliste.md")

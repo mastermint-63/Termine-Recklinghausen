@@ -1086,14 +1086,34 @@
     {
         "name": "1. Recklinghäuser Weihnachtscircus",
         "datum": "2026-12-17",
-        "uhrzeit": "",
+        "uhrzeit": "15:30",
         "ort": "Rathausplatz Recklinghausen",
-        "link": "",
-        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar.",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
         "kategorie": "Familie",
         "freigegeben": true,
         "hw_mail": "kalender:em4571f3ff-75f7-4a51-abad-151449ad7b22@gmx.de",
-        "herkunft": "redaktion"
+        "herkunft": "redaktion",
+        "hw_aenderungen": [
+            {
+                "mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+                "feld": "uhrzeit",
+                "alt": "",
+                "neu": "15:30"
+            },
+            {
+                "mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+                "feld": "link",
+                "alt": "",
+                "neu": "https://recklinghaeuser-weihnachtscircus.ticket.io/"
+            },
+            {
+                "mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+                "feld": "beschreibung",
+                "alt": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar.",
+                "neu": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr."
+            }
+        ]
     },
     {
         "name": "Digitales Erbe - Was passiert mit den Daten, wenn jemand verstirbt?",
@@ -2424,5 +2444,221 @@
         "freigegeben": true,
         "hw_mail": "gmx:8654807a9f244dfd9ad98374cd3d77bb@recklinghausen.de",
         "herkunft": "pressemitteilung_stadt"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-18",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-19",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-20",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-21",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-22",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-23",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-24",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-25",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-26",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-27",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-28",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-29",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-30",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2026-12-31",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2027-01-01",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2027-01-02",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "1. Recklinghäuser Weihnachtscircus",
+        "datum": "2027-01-03",
+        "uhrzeit": "15:30",
+        "ort": "Rathausplatz Recklinghausen",
+        "link": "https://recklinghaeuser-weihnachtscircus.ticket.io/",
+        "beschreibung": "Weihnachtscircus auf dem Rathausplatz Recklinghausen, veranstaltet von den Machern des Rathausplatz Recklinghausen, für die ganze Familie. Der Circus läuft vom 17. Dezember bis zum 3. Januar, Vorstellungen täglich um 15:30 und 19:30 Uhr, am 24. Dezember nur um 15:30 Uhr.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:008101dd6c2c$7ecabe80$7c603b80$@wisnet.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Afrika & Europa – zwei Kontinente und ihre Musik",
+        "datum": "2026-11-08",
+        "uhrzeit": "16:00",
+        "ort": "Gymnasialkirche, Heilige-Geist-Straße 18, Recklinghausen",
+        "link": "",
+        "beschreibung": "Konzert der Reihe „Mezzoforte“: Konzertorganist Dr. Hans-Joachim Heßler und Perkussionist Birdy Steppuhn verbinden europäische Orgelmusik mit afrikanischen Schlaginstrumenten, als Brücke dient der Flamenco. Das Konzert dauert etwa eine Stunde. Der Eintritt ist frei, um Spenden wird gebeten.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MiakT-1wuTAP0fWp-00bny8@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
     }
 ]

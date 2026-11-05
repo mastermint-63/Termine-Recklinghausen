@@ -50,7 +50,7 @@ log = logging.getLogger("rueckmeldung")
 _WOCHENTAGE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
 _PRAEFIX = re.compile(r"^\s*(?:(?:re|aw|wg|fwd?|wtr|antw)\s*:\s*)+", re.I)
 _MESSAGE_ID = re.compile(r"^[\x21-\x3b\x3d\x3f-\x7e]{1,250}$")
-_FELDER = {"uhrzeit": "Uhrzeit", "ort": "Ort", "link": "Link", "datum": "Datum"}
+_FELDER = {"uhrzeit": "Uhrzeit", "ort": "Ort", "link": "Link", "datum": "Datum", "beschreibung": "Beschreibung"}
 
 
 # --------------------------------------------------------------------------- Text
@@ -94,7 +94,8 @@ def _link(inhalte: list[dict]) -> str:
     """Monatsseite des ersten Termins, mit Sprung auf den Tag, wenn die Seite ihn enthält."""
     import app
     for i in inhalte:
-        for e in i.get("eingetragen", []) + i.get("geaendert", []) + i.get("abgesagt", []) + i.get("bekannt", []):
+        for e in (i.get("eingetragen", []) + i.get("geaendert", []) + i.get("ergaenzt", []) + i.get("abgesagt", [])
+                  + i.get("bekannt", [])):
             try:
                 d = datetime.strptime(e.get("datum", ""), "%Y-%m-%d")
             except ValueError:
@@ -121,11 +122,20 @@ def baue_text(inhalte: list[dict], vorname: str = "", anrede: str = "", nachsatz
     abschnitte = [
         ("Eingetragen", "eingetragen", termin),
         ("Geändert", "geaendert", lambda e: f"{termin(e)}: {hw_bericht.bereinige(_was(e.get('was')), 80)}"),
+        ("Ergänzt", "ergaenzt", lambda e: f"{termin(e)}: {hw_bericht.bereinige(_was(e.get('was')), 80)}"),
         ("Abgesagt", "abgesagt", termin),
         ("Stand schon im Kalender", "bekannt", termin),
         ("Wird noch von Hand geprüft", "pruefen", termin),
         ("Nicht übernommen", "verworfen", lambda e: f"{termin(e)} ({grund(e)})"),
+        ("Kein Termin erkannt", "nichts_erkannt", lambda e: f"- {hw_bericht.bereinige(e.get('auszug'), 80)}"),
+        ("Terminseite gesehen", "seiten", lambda e: f"- {hw_bericht.bereinige(e.get('host'), 80)}"),
     ]
+    hinweise = {
+        "nichts_erkannt": "Das Programm liest nur Termine und beantwortet keine Fragen. "
+                          "Bitte Titel, Datum, Uhrzeit und Ort nennen.",
+        "seiten": "Termine von solchen Seiten erscheinen nicht automatisch im Kalender. "
+                  "Die Seite wird von Hand geprüft. Einzelne Termine bitte mit Datum schicken.",
+    }
     mehrere = len(inhalte) > 1
     vorname = hw_bericht.bereinige(vorname, 40)
     anrede = hw_bericht.bereinige(anrede, 100) or (f"Hallo {vorname}," if vorname else "Hallo,")
@@ -136,10 +146,15 @@ def baue_text(inhalte: list[dict], vorname: str = "", anrede: str = "", nachsatz
         eintraege = [e for i in inhalte for e in i.get(schluessel, [])]
         if not eintraege:
             continue
+        # Leerzeile vor jedem Abschnitt: Outlook zieht sonst die Überschrift an die Zeile davor (Erich, 04.11.2026)
+        if zeilen[-1]:
+            zeilen.append("")
         zeilen.append(f"{titel}:")
         zeilen += [zeile(e) for e in eintraege[:MAX_ZEILEN]]
         if len(eintraege) > MAX_ZEILEN:
             zeilen.append(f"... und {len(eintraege) - MAX_ZEILEN} weitere")
+        if schluessel in hinweise:
+            zeilen.append(hinweise[schluessel])
     zeilen += ["", f"Zum Kalender: {_link(inhalte)}", "",
                "Neue Termine, Korrekturen und Absagen schickst du einfach wieder an diese Adresse."]
     if nachsatz:

@@ -291,6 +291,8 @@ _STOPPWOERTER = {
     'reise', 'familienfragen',
     # Fehlalarme 10.10.2026: Pflegegrad/Lichterlauf "kinder", Ausschüsse "sitzung"
     'kinder', 'jugendliche', 'öffentlich', 'öffentliche', 'öffentlicher', 'sitzung', 'grundkurs',
+    # Fehlalarm 04.11.2026: "Afrika & Europa ... ihre Musik" ≈ "The Glams, Live-Musik ..."
+    'musik',
 }
 
 
@@ -358,6 +360,15 @@ def _gleiche_zeitnah(uhrzeit_a: str, uhrzeit_b: str) -> bool:
     if h_a is not None and h_b is not None:
         return abs(h_a - h_b) <= 2
     return False
+
+
+def _uhrzeit_weicht_ab(uhrzeit_a: str, uhrzeit_b: str) -> bool:
+    """True, wenn beide Angaben eine konkrete Uhrzeit nennen und sich unterscheiden ("19.00 Uhr" = "19:00 Uhr")."""
+    def minuten(u: str) -> int | None:
+        m = re.search(r'(\d{1,2})(?:[:.](\d{2}))?', u or '')
+        return int(m.group(1)) * 60 + int(m.group(2) or 0) if m else None
+    a, b = minuten(uhrzeit_a), minuten(uhrzeit_b)
+    return a is not None and b is not None and a != b
 
 
 def _termin_score(t: Termin) -> int:
@@ -534,8 +545,12 @@ def entferne_duplikate(termine: list[Termin]) -> list[Termin]:
                 elif _ist_fuzzy_duplikat(norm_k, norm_v) and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit):
                     ist_duplikat = True
                     print(f"[Fuzzy-Dedup] '{kandidat.name}' ({kandidat.quelle}) ≈ '{vorhandener.name}' ({vorhandener.quelle})")
-                # Stufe 3: Markantes Schlüsselwort + kompatible Uhrzeit
-                elif _hat_markantes_schluesselwort(norm_k, norm_v) and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit):
+                # Stufe 3: Markantes Schlüsselwort + kompatible Uhrzeit. Redaktionstermine nur bei gleicher Uhrzeit:
+                # Eine doppelte Zeile ist besser als ein verlorener Termin (Entscheidung FS, 05.11.2026)
+                elif (_hat_markantes_schluesselwort(norm_k, norm_v)
+                      and _gleiche_zeitnah(kandidat.uhrzeit, vorhandener.uhrzeit)
+                      and not ('manuell' in (kandidat.quelle, vorhandener.quelle)
+                               and _uhrzeit_weicht_ab(kandidat.uhrzeit, vorhandener.uhrzeit))):
                     ist_duplikat = True
                     print(f"[Keyword-Dedup] '{kandidat.name}' ({kandidat.quelle}) ≈ '{vorhandener.name}' ({vorhandener.quelle})")
                 if ist_duplikat:

@@ -528,6 +528,19 @@ def _pdf_zu_text(b: bytes) -> str:
         return ""
 
 
+def _pdf_als_bilder(b: bytes, hoechstens: int) -> list:
+    """PDF ohne Textebene (Scan, Zeitungsausschnitt) -> [(media_type, JPEG)]. agy liest Bilder, aber keine solchen PDFs."""
+    if hoechstens <= 0:
+        return []
+    try:
+        import fitz
+        with fitz.open(stream=b, filetype="pdf") as doc:
+            return [("image/jpeg", doc[i].get_pixmap(dpi=150).tobytes("jpeg"))
+                    for i in range(min(hoechstens, doc.page_count))]
+    except Exception:
+        return []
+
+
 def _agy_home() -> str:
     """HOME für agy: `AGY_HOME` oder der Headless-Ordner. Fehlt er, lieber abbrechen als mit Allowlist laufen."""
     home = os.environ.get("AGY_HOME") or AGY_HEADLESS_HOME
@@ -552,7 +565,8 @@ def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list
             p.write_bytes(b)
             anhang_hinweise.append(str(p))
 
-        full_prompt = prompt
+        # Ein gesperrter Befehl beendet den Lauf ohne Antwort (Befund 05.11.2026, Gemini bei 39 von 97 Mails)
+        full_prompt = prompt + "\n\nFühre keine Befehle aus und rufe keine Links ab, beides ist gesperrt. Antworte direkt."
         if anhang_hinweise:
             full_prompt += (
                 "\n\nAngehängte Dateien im Arbeitsverzeichnis (lies sie bei Bedarf mit read_file): "
@@ -579,6 +593,10 @@ def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list
         if payload.get("structured_output") is not None:
             return payload["structured_output"]
         raw = (payload.get("response") or "").strip()
+        if not raw:
+            verweigert = ", ".join(str(a.get("display_name") or a.get("action") or "?")
+                                   for a in payload.get("denied_actions") or [])
+            raise RuntimeError("agy: keine Antwort" + (f", verweigert: {verweigert}" if verweigert else ""))
         if raw.startswith("```"):
             raw = raw.split("\n", 1)[1]
             if raw.endswith("```"):
@@ -587,7 +605,13 @@ def _run_agy_hw(prompt: str, schema: dict, modell: str, bilder: list, pdfs: list
 
 
 def analysiere(client, mail: Mail, heute: date) -> dict:
-    pdf_texte = [t for t in (_pdf_zu_text(b) for b in mail.pdfs) if t]
+    pdf_texte, pdf_bilder = [], []
+    for b in mail.pdfs:
+        text = _pdf_zu_text(b)
+        if text:
+            pdf_texte.append(text)
+        else:
+            pdf_bilder += _pdf_als_bilder(b, MAX_BILDER - len(mail.bilder) - len(pdf_bilder))
     zusatz_pdf = ("\n\n[Angehängtes PDF-Dokument]\n" + "\n\n---\n\n".join(pdf_texte)) if pdf_texte else ""
     kopf = (f"Heutiges Datum: {heute.isoformat()} ({_WOCHENTAGE_LANG[heute.weekday()]})\n"
             f"Empfangsdatum der Mail: {mail.datum.date().isoformat()} ({_WOCHENTAGE_LANG[mail.datum.weekday()]})\n"
@@ -620,7 +644,8 @@ def analysiere(client, mail: Mail, heute: date) -> dict:
             else:
                 runner = client if callable(client) else _run_agy_hw
                 prompt = f"{system_text}\n\n{kopf}"
-                ergebnis = runner(prompt, TOOL["input_schema"], modell, mail.bilder, mail.pdfs)
+                # PDFs nicht als Datei: Das Modell will sie sonst per Befehl lesen, und das ist gesperrt
+                ergebnis = runner(prompt, TOOL["input_schema"], modell, list(mail.bilder) + pdf_bilder, [])
                 log.info("Modell %s (agy), %d Termine, %d Änderungen, %d Seiten", modell,
                          len(ergebnis.get("termine", [])), len(ergebnis.get("aenderungen", [])),
                          len(ergebnis.get("terminseiten", [])))
@@ -720,6 +745,9 @@ def bewerte_termin(t: dict, mail: Mail, heute: date, ausgeschlossen, ist_dublett
         return "verwerfen", "steht schon im Kalender", None
 
     probleme, warnungen = [], []
+    aehnlich = eintrag.pop("_aehnlich", "")
+    if aehnlich:
+        warnungen.append(f"ähnlicher Termin im Kalender: {aehnlich}")
     infos = [laeuft] if laeuft else []
     if mail.vertrauen != "vertraut":
         probleme.append(mail.vertrauen_grund or "Absender nicht vertrauenswürdig")
@@ -838,6 +866,12 @@ def ist_dublette_im_kalender(eintrag: dict):
         vorher = app.entferne_duplikate([replace(t) for t in bestehende])
         nachher = app.entferne_duplikate([replace(kandidat)] + [replace(t) for t in bestehende])
         if len(nachher) != len(vorher):
+            # Nur ein gemeinsames Wort bei anderer Uhrzeit: eintragen, aber im Bericht "bitte ansehen"
+            norm = app._normalisiere(eintrag["name"])
+            for t in bestehende:
+                if _name_treffer(norm, app._normalisiere(t.name)) == 1 and app._uhrzeit_weicht_ab(uhr, t.uhrzeit):
+                    eintrag["_aehnlich"] = kalender_zeile(t)
+                    break
             return None
         for t in bestehende:
             if len(app.entferne_duplikate([replace(kandidat), replace(t)])) == 1:
@@ -1259,7 +1293,7 @@ def melde_neue_seiten(seiten: list, mail: Mail, dry_run: bool) -> list[str]:
 
 def neuer_bericht() -> dict:
     return {"erstellt": datetime.now().isoformat(timespec="seconds"), "mails": 0, "eingetragen": [],
-            "geaendert": [], "abgesagt": [], "pruefen": [], "neue_seiten": [], "quellfehler": [],
+            "geaendert": [], "ergaenzt": [], "abgesagt": [], "pruefen": [], "neue_seiten": [], "quellfehler": [],
             "verwaist": [], "ohne_ergebnis": [], "verworfen": [], "fehler": []}
 
 
@@ -1295,14 +1329,52 @@ def rueckmeldung_inhalt(eigen: dict) -> dict | None:
     inhalt = {
         "eingetragen": [kurz(e) for e in eigen.get("eingetragen", [])],
         "geaendert": [{**kurz(e), "was": e.get("was", "")} for e in eigen.get("geaendert", [])],
+        "ergaenzt": [{**kurz(e), "was": e.get("was", "")} for e in eigen.get("ergaenzt", [])],
         "abgesagt": [kurz(e) for e in eigen.get("abgesagt", [])],
         "bekannt": [kurz(e) for e in eigen.get("bekannt", [])],
         "pruefen": [kurz(e) for e in eigen.get("pruefen", [])],
         "verworfen": [{**kurz(e), "grund": kurzgrund(e.get("grund", "")),
                        **({"im_kalender": e["im_kalender"]} if e.get("im_kalender") else {})}
                       for e in eigen.get("verworfen", [])],
+        "nichts_erkannt": list(eigen.get("nichts_erkannt", [])),
+        "seiten": list(eigen.get("seiten", [])),
     }
     return inhalt if any(inhalt.values()) else None
+
+
+def ergaenze_eintrag(t: dict, mail: Mail, eintraege: list) -> tuple[str, str] | None:
+    """Dublette mit neuen Angaben: füllt beim einen passenden manuellen Eintrag Lücken -> (Name, geänderte Felder).
+
+    Nur Redaktion direkt. Vorhandene Uhrzeit, Ort und Link bleiben stehen (das wäre eine Korrektur, die die Mail
+    ausdrücklich sagen muss), die Beschreibung wird nur durch eine deutlich längere ersetzt. Anlass: Uhrzeiten und
+    Zeitraum des Weihnachtscircus gingen zweimal als "steht schon im Kalender" verloren (Erich, 03./04.11.2026).
+    """
+    if not ist_redaktion_direkt(mail):
+        return None
+    try:
+        d = datetime.strptime(t.get("datum", ""), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    ziele = finde_ziele(t.get("name") or "", d, eintraege, bestehende=lambda _d: [])
+    if len(ziele) != 1:
+        return None
+    e = eintraege[ziele[0]["index"]]
+    link = (t.get("link") or "").strip()
+    if not link.startswith(("http://", "https://")) or _norm(link) not in _norm(mail.text):
+        link = ""
+    neu = {"uhrzeit": normalisiere_uhrzeit(t.get("uhrzeit", "")),
+           "ort": re.sub(r"\s+", " ", t.get("ort") or "").strip()[:150], "link": link,
+           "beschreibung": re.sub(r"\s+", " ", t.get("beschreibung") or "").strip()[:800]}
+    felder = [f for f in ("uhrzeit", "ort", "link") if neu[f] and not e.get(f)]
+    if len(neu["beschreibung"]) >= len(e.get("beschreibung") or "") + 20:
+        felder.append("beschreibung")
+    if not felder:
+        return None
+    spur = e.setdefault("hw_aenderungen", [])
+    for f in felder:
+        spur.append({"mail": mail.schluessel, "feld": f, "alt": e.get(f, ""), "neu": neu[f]})
+        e[f] = neu[f]
+    return e.get("name", ""), ", ".join(felder)
 
 
 def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: list, korrekturen: list,
@@ -1313,8 +1385,8 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
     inklusive "bekannt" (Wiederholung, von haenge_an() übersprungen), das der Gesamtbericht nicht führt.
     """
     gesamt = bericht
-    bericht = {k: [] for k in ("eingetragen", "geaendert", "abgesagt", "bekannt", "pruefen", "neue_seiten",
-                               "quellfehler", "ohne_ergebnis", "verworfen")}
+    bericht = {k: [] for k in ("eingetragen", "geaendert", "ergaenzt", "abgesagt", "bekannt", "pruefen", "neue_seiten",
+                               "quellfehler", "ohne_ergebnis", "verworfen", "nichts_erkannt", "seiten")}
     ergebnis = analysiere(client, mail, heute)
     zaehler = {"auto": 0, "pruefen": 0, "verwerfen": 0}
     for t in ergebnis.get("termine", [])[:MAX_TERMINE_PRO_MAIL]:
@@ -1326,6 +1398,13 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
             return treffer
 
         status, grund, eintrag = bewerte_termin(t, mail, heute, ausgeschlossen, dublette, finde_konflikt)
+        ergaenzt = ergaenze_eintrag(t, mail, eintraege) if grund == "steht schon im Kalender" else None
+        if ergaenzt:
+            zaehler["auto"] += 1
+            log.info("  [ERGÄNZT] %s - %s (%s) | Beleg: %s", t.get("datum"), ergaenzt[0][:70], ergaenzt[1],
+                     (t.get("beleg") or "")[:90])
+            bericht["ergaenzt"].append({"datum": t.get("datum", ""), "name": ergaenzt[0], "was": ergaenzt[1]})
+            continue
         zaehler[status] += 1
         im_kalender = kalender_zeile(treffer)[:150] if status == "verwerfen" else ""
         log.info("  [%s] %s %s - %s (%s) | Beleg: %s", status.upper(), t.get("datum"), t.get("uhrzeit", ""),
@@ -1377,6 +1456,15 @@ def verarbeite_mail(client, mail: Mail, heute: date, dry_run: bool, eintraege: l
     # damit ein Aussetzer des Modells auffällt (Antworten sind nicht deterministisch)
     if mail.konto == "kalender" and not any(ergebnis.get(k) for k in ("termine", "aenderungen", "terminseiten")):
         bericht["ohne_ergebnis"].append(mail.betreff[:80] or "(ohne Betreff)")
+    # Auch ohne Termin bekommt der Absender eine Antwort, sonst wirkt die Mail verschluckt (Erich, 03.11.2026)
+    if mail.konto == "kalender" and not ergebnis.get("termine") and not ergebnis.get("aenderungen"):
+        urls = [(s.get("url") or "").strip().rstrip(".,;)") for s in ergebnis.get("terminseiten", [])]
+        hosts = sorted({_host(u) for u in urls if u.startswith(("http://", "https://")) and _norm(u) in _norm(mail.text)})
+        if hosts:
+            bericht["seiten"] = [{"host": h} for h in hosts]
+        else:
+            auszug = " ".join(mail.text.split())[:80] or mail.betreff[:80] or "(Mail ohne Text)"
+            bericht["nichts_erkannt"] = [{"auszug": auszug + (" (mit Anhang)" if mail.hat_anhang else "")}]
     for k, v in bericht.items():
         if k in gesamt:
             gesamt[k] += v
