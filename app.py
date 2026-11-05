@@ -1162,9 +1162,14 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
 
         .datum-gruppe {{
             margin-bottom: 20px;
+            scroll-margin-top: var(--datum-top, 70px);
         }}
 
         .datum-header {{
+            /* Datum bleibt beim Scrollen unter der Filterleiste stehen (Wunsch Erich, 03.11.2026) */
+            position: sticky;
+            top: var(--datum-top, 70px);
+            z-index: 50;
             font-weight: 600;
             font-size: 1rem;
             padding: 10px 15px;
@@ -1857,6 +1862,17 @@ def generiere_html(termine: list[Termin], jahr: int, monat: int,
     </div>
 
     <script>
+        // Datumsköpfe rasten direkt unter der Filterleiste ein, deren Höhe hängt von der Fensterbreite ab
+        (function() {{
+            const leiste = document.querySelector('.filter-bar');
+            if (!leiste) return;
+            const setze = () => document.documentElement.style.setProperty(
+                '--datum-top', (leiste.offsetHeight + parseInt(getComputedStyle(leiste).top || 0, 10) + 4) + 'px');
+            setze();
+            if (window.ResizeObserver) new ResizeObserver(setze).observe(leiste);
+            else window.addEventListener('resize', setze);
+        }})();
+
         // Heutigen Tag im Kalender markieren + zum ersten heutigen/zukünftigen Termin springen
         (function() {{
             const heute = new Date();
