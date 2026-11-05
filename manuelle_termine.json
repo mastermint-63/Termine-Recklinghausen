@@ -2388,5 +2388,41 @@
         "freigegeben": true,
         "hw_mail": "kalender:1MAxPb-1xDa4S1TVx-00F09N@mrelayeu.kundenserver.de",
         "herkunft": "redaktion"
+    },
+    {
+        "name": "Ausstellung „BODENSTÄNDIG“",
+        "datum": "2026-11-08",
+        "uhrzeit": "16:00",
+        "ort": "Atelierhaus Recklinghausen, Königstraße 49a",
+        "link": "",
+        "beschreibung": "Das Atelierhaus Recklinghausen zeigt ab Sonntag, 8. November, die Ausstellung „BODENSTÄNDIG“. Die Eröffnung beginnt um 16 Uhr. Das Ende der Ausstellung und die Öffnungszeiten sind im sichtbaren Teil des Artikels nicht genannt.",
+        "kategorie": "Kunst",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MMoXC-1x8HnI0e2e-00P11U@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "007-Melodien beim LitDOM-Gottesdienst",
+        "datum": "2026-11-07",
+        "uhrzeit": "18:00",
+        "ort": "Gemeindezentrum Arche, Nordseestraße 104, Recklinghausen",
+        "link": "",
+        "beschreibung": "Beim LitDOM-Gottesdienst im Kirchraum auf dem Quellberg stehen bekannte Melodien aus den James-Bond-Filmen im Mittelpunkt. Die Gottesdienstreihe verbindet die Atmosphäre der Geheimagenten-Filme mit einem Blick hinter die Kulissen.",
+        "kategorie": "Kirche",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MCKO4-1xFKqd2DGU-00GfaY@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Infoabend: Bürgerschaftliches Engagement im Ruhestand",
+        "datum": "2026-11-17",
+        "uhrzeit": "16:00",
+        "ort": "Willy-Brandt-Haus, Herzogswall 17",
+        "link": "",
+        "beschreibung": "Die VHS Recklinghausen und das Netzwerk Bürgerengagement informieren über Möglichkeiten für ehrenamtliches Engagement im Ruhestand und stellen Einsatzfelder vor. Die Veranstaltung endet um 18:00 Uhr und ist kostenfrei. Um Anmeldung bis zum 10. November wird gebeten.",
+        "kategorie": "Ehrenamt",
+        "freigegeben": true,
+        "hw_mail": "gmx:8654807a9f244dfd9ad98374cd3d77bb@recklinghausen.de",
+        "herkunft": "pressemitteilung_stadt"
     }
 ]
