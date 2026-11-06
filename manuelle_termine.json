@@ -1673,11 +1673,19 @@
         "uhrzeit": "19:00",
         "ort": "Atelier „Gelbes Haus“, König-Ludwig-Straße 8",
         "link": "",
-        "beschreibung": "Intermediale Performance von Bernd Leistikow und „clockwork reorranged“, ein von der Stadt Recklinghausen gefördertes Kunstprojekt. Einlass 18 Uhr, Beginn 19 Uhr.",
+        "beschreibung": "Intermediale Performance von Bernd Leistikow und „clockwork rearranged“ im Rahmen eines Kunstprojekts. Einlass ist um 18:00 Uhr, Beginn um 19:00 Uhr. Eine weitere Aufführung findet am 21. November statt.",
         "kategorie": "Kunst",
         "freigegeben": true,
         "hw_mail": "kalender:1M4rkF-1xMb4Y2MeF-0094va@mrelayeu.kundenserver.de",
-        "herkunft": "zeitung"
+        "herkunft": "zeitung",
+        "hw_aenderungen": [
+            {
+                "mail": "kalender:004701dd68b4$de011dc0$9a035940$@holzwurm-recklinghausen.de",
+                "feld": "beschreibung",
+                "alt": "Intermediale Performance von Bernd Leistikow und „clockwork reorranged“, ein von der Stadt Recklinghausen gefördertes Kunstprojekt. Einlass 18 Uhr, Beginn 19 Uhr.",
+                "neu": "Intermediale Performance von Bernd Leistikow und „clockwork rearranged“ im Rahmen eines Kunstprojekts. Einlass ist um 18:00 Uhr, Beginn um 19:00 Uhr. Eine weitere Aufführung findet am 21. November statt."
+            }
+        ]
     },
     {
         "name": "taubenmilch – wortträume & gesänge (intermediale Performance)",
@@ -1695,25 +1703,53 @@
         "name": "Filmabend: Flora and Son",
         "datum": "2026-12-05",
         "uhrzeit": "19:30",
-        "ort": "",
+        "ort": "Atelier „Gelbes Haus“, König-Ludwig-Straße 8, Recklinghausen",
         "link": "",
-        "beschreibung": "Gezeigt wird die Musikkomödie „Flora and Son“ (2023, Regie John Carney). Im Anschluss besteht Gelegenheit zur Diskussion. Teilnahme 5 Euro.",
+        "beschreibung": "Gezeigt wird die Musikkomödie „Flora and Son“ (2023) von Regisseur John Carney mit anschließender Diskussionsgelegenheit. Die Teilnahme kostet 5 Euro. Anmeldung per E-Mail an schuch@campus-emscherland.eu.",
         "kategorie": "Film",
         "freigegeben": true,
         "hw_mail": "kalender:1M4rkF-1xMb4Y2MeF-0094va@mrelayeu.kundenserver.de",
-        "herkunft": "zeitung"
+        "herkunft": "zeitung",
+        "hw_aenderungen": [
+            {
+                "mail": "kalender:004701dd68b4$de011dc0$9a035940$@holzwurm-recklinghausen.de",
+                "feld": "ort",
+                "alt": "",
+                "neu": "Atelier „Gelbes Haus“, König-Ludwig-Straße 8, Recklinghausen"
+            },
+            {
+                "mail": "kalender:004701dd68b4$de011dc0$9a035940$@holzwurm-recklinghausen.de",
+                "feld": "beschreibung",
+                "alt": "Gezeigt wird die Musikkomödie „Flora and Son“ (2023, Regie John Carney). Im Anschluss besteht Gelegenheit zur Diskussion. Teilnahme 5 Euro.",
+                "neu": "Gezeigt wird die Musikkomödie „Flora and Son“ (2023) von Regisseur John Carney mit anschließender Diskussionsgelegenheit. Die Teilnahme kostet 5 Euro. Anmeldung per E-Mail an schuch@campus-emscherland.eu."
+            }
+        ]
     },
     {
         "name": "Abend zur Wintersonnenwende",
         "datum": "2026-12-20",
         "uhrzeit": "17:00",
-        "ort": "",
+        "ort": "Atelier „Gelbes Haus“, König-Ludwig-Straße 8, Recklinghausen",
         "link": "",
-        "beschreibung": "Kultureller und spiritueller Abend zur Wintersonnenwende, Jahresabschluss. Geplant sind Live-Musik, Lesungen, Rituale und Segnungen am Feuer, dazu eine warme Suppe. Teilnahme 25 Euro.",
+        "beschreibung": "Kultureller und spiritueller Abend zur Wintersonnenwende mit Live-Musik, Lesungen, Ritualen und Segnungen am Feuer sowie warmer Suppe. Die Teilnahme kostet 25 Euro. Anmeldung per E-Mail an schuch@campus-emscherland.eu.",
         "kategorie": "Sonstiges",
         "freigegeben": true,
         "hw_mail": "kalender:1M4rkF-1xMb4Y2MeF-0094va@mrelayeu.kundenserver.de",
-        "herkunft": "zeitung"
+        "herkunft": "zeitung",
+        "hw_aenderungen": [
+            {
+                "mail": "kalender:004701dd68b4$de011dc0$9a035940$@holzwurm-recklinghausen.de",
+                "feld": "ort",
+                "alt": "",
+                "neu": "Atelier „Gelbes Haus“, König-Ludwig-Straße 8, Recklinghausen"
+            },
+            {
+                "mail": "kalender:004701dd68b4$de011dc0$9a035940$@holzwurm-recklinghausen.de",
+                "feld": "beschreibung",
+                "alt": "Kultureller und spiritueller Abend zur Wintersonnenwende, Jahresabschluss. Geplant sind Live-Musik, Lesungen, Rituale und Segnungen am Feuer, dazu eine warme Suppe. Teilnahme 25 Euro.",
+                "neu": "Kultureller und spiritueller Abend zur Wintersonnenwende mit Live-Musik, Lesungen, Ritualen und Segnungen am Feuer sowie warmer Suppe. Die Teilnahme kostet 25 Euro. Anmeldung per E-Mail an schuch@campus-emscherland.eu."
+            }
+        ]
     },
     {
         "name": "Spaziergang mit Köpfchen",
@@ -2659,6 +2695,114 @@
         "kategorie": "Konzert",
         "freigegeben": true,
         "hw_mail": "kalender:1MiakT-1wuTAP0fWp-00bny8@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Weihnachtsmarkt Recklinghausen",
+        "datum": "2026-12-19",
+        "uhrzeit": "12:00",
+        "ort": "Altstadtmarkt, Kirchplatz, Palais Vest Platz",
+        "link": "https://weihnachtsmarkt-re.de/",
+        "beschreibung": "Weihnachtsmarkt in Recklinghausen, geöffnet von 12:00 bis 21:00 Uhr (Gesamtzeitraum: 19.12. bis 23.12.2026).",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "kalender:012101dd6d0f$de90c6f0$9bb254d0$@imkmedia.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Weihnachtsmarkt Recklinghausen",
+        "datum": "2026-12-20",
+        "uhrzeit": "12:00",
+        "ort": "Altstadtmarkt, Kirchplatz, Palais Vest Platz",
+        "link": "https://weihnachtsmarkt-re.de/",
+        "beschreibung": "Weihnachtsmarkt in Recklinghausen, geöffnet von 12:00 bis 21:00 Uhr (Gesamtzeitraum: 19.12. bis 23.12.2026).",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "kalender:012101dd6d0f$de90c6f0$9bb254d0$@imkmedia.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Weihnachtsmarkt Recklinghausen",
+        "datum": "2026-12-21",
+        "uhrzeit": "12:00",
+        "ort": "Altstadtmarkt, Kirchplatz, Palais Vest Platz",
+        "link": "https://weihnachtsmarkt-re.de/",
+        "beschreibung": "Weihnachtsmarkt in Recklinghausen, geöffnet von 12:00 bis 21:00 Uhr (Gesamtzeitraum: 19.12. bis 23.12.2026).",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "kalender:012101dd6d0f$de90c6f0$9bb254d0$@imkmedia.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Weihnachtsmarkt Recklinghausen",
+        "datum": "2026-12-22",
+        "uhrzeit": "12:00",
+        "ort": "Altstadtmarkt, Kirchplatz, Palais Vest Platz",
+        "link": "https://weihnachtsmarkt-re.de/",
+        "beschreibung": "Weihnachtsmarkt in Recklinghausen, geöffnet von 12:00 bis 21:00 Uhr (Gesamtzeitraum: 19.12. bis 23.12.2026).",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "kalender:012101dd6d0f$de90c6f0$9bb254d0$@imkmedia.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Weihnachtsmarkt Recklinghausen",
+        "datum": "2026-12-23",
+        "uhrzeit": "12:00",
+        "ort": "Altstadtmarkt, Kirchplatz, Palais Vest Platz",
+        "link": "https://weihnachtsmarkt-re.de/",
+        "beschreibung": "Weihnachtsmarkt in Recklinghausen, geöffnet von 12:00 bis 21:00 Uhr (Gesamtzeitraum: 19.12. bis 23.12.2026).",
+        "kategorie": "Fest",
+        "freigegeben": true,
+        "hw_mail": "kalender:012101dd6d0f$de90c6f0$9bb254d0$@imkmedia.de",
+        "herkunft": "redaktion"
+    },
+    {
+        "name": "Rockorchester Vest – The Vest Side of Rock",
+        "datum": "2026-11-21",
+        "uhrzeit": "19:30",
+        "ort": "Dorfhaus Essel, Esseler Straße 218, Recklinghausen",
+        "link": "",
+        "beschreibung": "Das Rockorchester Vest präsentiert unter der Leitung von Luis Andrade Rock- und Popstücke im Programm „The Vest Side of Rock“ (Konzertwochenende 21.–22. November). Einlass ist ab 18:30 Uhr. Eintritt 20 Euro, ermäßigt 17 Euro; Tickets unter rockorchester-vest.de.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:006101dd6d67$5ae48e10$10adaa30$@holzwurm-recklinghausen.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Rockorchester Vest – The Vest Side of Rock",
+        "datum": "2026-11-22",
+        "uhrzeit": "18:30",
+        "ort": "Dorfhaus Essel, Esseler Straße 218, Recklinghausen",
+        "link": "",
+        "beschreibung": "Das Rockorchester Vest präsentiert unter der Leitung von Luis Andrade Rock- und Popstücke im Programm „The Vest Side of Rock“ (Konzertwochenende 21.–22. November). Einlass ist ab 17:30 Uhr. Eintritt 20 Euro, ermäßigt 17 Euro; Tickets unter rockorchester-vest.de.",
+        "kategorie": "Konzert",
+        "freigegeben": true,
+        "hw_mail": "kalender:006101dd6d67$5ae48e10$10adaa30$@holzwurm-recklinghausen.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Lesung: Gerrit Haug – „100 werden!“",
+        "datum": "2026-11-10",
+        "uhrzeit": "18:00",
+        "ort": "Future Health Club, Bert-Brecht-Straße 2",
+        "link": "",
+        "beschreibung": "Der Sportwissenschaftler Gerrit Haug stellt sein Buch „100 werden!“ vor und gibt Einblicke in Themen wie Gesundheit, Fitness und Langlebigkeit. Die Veranstaltung dauert von 18:00 bis 19:30 Uhr. Der Eintritt ist kostenfrei, eine vorherige Anmeldung ist online möglich.",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "kalender:006b01dd6d67$b984f360$2c8eda20$@holzwurm-recklinghausen.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Singen hält Stimme und Seele fit",
+        "datum": "2026-11-09",
+        "uhrzeit": "15:30",
+        "ort": "Beethovenstraße 31",
+        "link": "",
+        "beschreibung": "Gemeinsames Singen von Volks- und Wanderliedern sowie Schlagern mit dem „Vergissmeinnicht“-Chor der Diakoniestation. Vorerfahrungen oder Notenkenntnisse sind nicht erforderlich, auch Menschen mit Demenz sind willkommen. Die Veranstaltung dauert bis 16:45 Uhr, kostet 4,20 Euro und eine Anmeldung ist nicht erforderlich.",
+        "kategorie": "Treffen",
+        "freigegeben": true,
+        "hw_mail": "kalender:007101dd6d68$01e31ab0$05a95010$@holzwurm-recklinghausen.de",
         "herkunft": "zeitung"
     }
 ]
