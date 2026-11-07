@@ -1,16 +1,5 @@
 [
     {
-        "datum": "2026-10-23",
-        "name": "Drohnenshow am Rathaus",
-        "name_norm": "drohnenshow am rathaus",
-        "quelle": "re-leuchtet",
-        "aenderung": {},
-        "absage": true,
-        "hw_mail": "kalender:1MfYgC-1weHd113Em-00kkz0@mrelayeu.kundenserver.de",
-        "freigegeben": true,
-        "angelegt": "2026-10-23"
-    },
-    {
         "datum": "2026-10-28",
         "name": "Als die Bilder laufen lernten",
         "name_norm": "als die bilder laufen lernten",
@@ -85,5 +74,18 @@
         "freigegeben": true,
         "angelegt": "2026-11-04",
         "verschoben_auf": "2026-11-25"
+    },
+    {
+        "datum": "2026-11-09",
+        "name": "Stolpersteine und ihre Geschichte",
+        "name_norm": "stolpersteine und ihre geschichte",
+        "quelle": "adfc",
+        "aenderung": {
+            "uhrzeit": "15:00"
+        },
+        "absage": false,
+        "hw_mail": "kalender:1MC2k1-1xCy3n1W2v-0034HQ@mrelayeu.kundenserver.de",
+        "freigegeben": true,
+        "angelegt": "2026-11-07"
     }
 ]

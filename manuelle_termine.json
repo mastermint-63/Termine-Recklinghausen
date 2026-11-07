@@ -2804,5 +2804,113 @@
         "freigegeben": true,
         "hw_mail": "kalender:007101dd6d68$01e31ab0$05a95010$@holzwurm-recklinghausen.de",
         "herkunft": "zeitung"
+    },
+    {
+        "name": "Duo stellt Aphorismen, Lyrik und Kurzprosa vor",
+        "datum": "2026-11-12",
+        "uhrzeit": "17:00",
+        "ort": "Kristall Café, Kärntener Straße 30",
+        "link": "",
+        "beschreibung": "Bettina Ittermann und Helmut Peters lesen eigene Texte in Form von Aphorismen, Lyrik und Kurzprosa. Der Eintritt kostet 15 Euro inklusive Brotzeit oder einem Stück Torte sowie einer Tasse Kaffee. Eine Anmeldung ist erforderlich (Tel. 02361/3038808, WhatsApp 0159/01571422 oder im Café).",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "kalender:1N33V5-1wM0f41EVx-00uSI3@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Gewaltloser Einsatz gegen Krieg",
+        "datum": "2026-11-08",
+        "uhrzeit": "15:00",
+        "ort": "Garten der Religionen, Friedrich-Ebert-Straße 231",
+        "link": "https://www.garten-der-religionen-recklinghausen.de/",
+        "beschreibung": "Im Garten der Religionen findet zum Auftakt der ökumenischen Friedensdekade ein interreligiöses Friedensgebet mit Liedern und Gebeten statt. Unter dem Thema „couragiert widerständig“ werden Beispiele von Menschen aus verschiedenen Religionen vorgestellt, die sich gewaltlos gegen Krieg und Gewalt eingesetzt haben.",
+        "kategorie": "Kirche",
+        "freigegeben": true,
+        "hw_mail": "kalender:1M1HuU-1xNex41tXu-00C75b@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "IGA-Roadshow in Recklinghausen",
+        "datum": "2026-11-08",
+        "uhrzeit": "15:00",
+        "ort": "Innenstadt",
+        "link": "",
+        "beschreibung": "Die IGA-Roadshow informiert im Rahmen des verkaufsoffenen Sonntags bei \"Recklinghausen leuchtet\" über die Internationale Gartenausstellung 2027. Besucher können Fragen stellen und sich über die Zukunftsgärten und das Programm informieren. Ende laut Zeitungsausschnitt 20 Uhr, laut Mailtext 18 Uhr.",
+        "kategorie": "Sonstiges",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MkYLW-1weSgF0BMk-00ba1D@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Netzwerk sucht Gartenfreunde",
+        "datum": "2026-11-09",
+        "uhrzeit": "19:00",
+        "ort": "Willy-Brandt-Haus, Herzogswall 17, Recklinghausen",
+        "link": "",
+        "beschreibung": "Treffen des Fachforums Nachhaltige Stadtentwicklung der Lokalen Agenda 21. Gesucht werden Mitstreiter für das Netzwerk „Unsere Gartenvielfalt Recklinghausen“ mit Blick auf die IGA 2027. Alle Interessierten sind eingeladen.",
+        "kategorie": "Treffen",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MqsGv-1wlLRh1pnF-00fiU0@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Letzter Wille? Klar geregelt!",
+        "datum": "2026-11-10",
+        "uhrzeit": "17:30",
+        "ort": "Evangelisches Johanneswerk, Wohnverbund, Wasserbank 46-50",
+        "link": "",
+        "beschreibung": "Fachanwältin Christina Brammen informiert über Erbrecht, Vererben und die Absicherung von Kindern mit Beeinträchtigung, gefolgt von einer Fragerunde sowie Fingerfood und Getränken (Ende 19 Uhr). Die Teilnahme ist kostenlos; Anmeldung erforderlich (Tel. 02361/60810, wv-recklinghausen@johanneswerk.de).",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1N7AEs-1wQeiB0jsq-00yayK@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "kfd informiert sich über Bücher",
+        "datum": "2026-11-10",
+        "uhrzeit": "16:00",
+        "ort": "Bücherei Herz Jesu, Niederstraße 29",
+        "link": "",
+        "beschreibung": "Bücherei-Mitarbeiterin Christa Rössmann stellt bei einer Lesung die Bücher „Die Anatomie der Einsamkeit“ von Louise Pelt und „Sonnenaufgang Nr. 5“ von Carsten Henn vor. Der Eintritt ist frei, Spenden sind willkommen. Eine Anmeldung bei Maria Schell unter Tel. (02361) 33681 ist erforderlich.",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MOAmt-1x9aN641EH-00XXUf@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "kfd informiert sich über Bücher",
+        "datum": "2026-11-16",
+        "uhrzeit": "19:00",
+        "ort": "Bücherei Herz Jesu, Niederstraße 29",
+        "link": "",
+        "beschreibung": "Bücherei-Mitarbeiterin Christa Rössmann stellt bei einer Lesung die Bücher „Die Anatomie der Einsamkeit“ von Louise Pelt und „Sonnenaufgang Nr. 5“ von Carsten Henn vor. Der Eintritt ist frei, Spenden sind willkommen. Eine Anmeldung bei Maria Schell unter Tel. (02361) 33681 ist erforderlich.",
+        "kategorie": "Lesung",
+        "freigegeben": true,
+        "hw_mail": "kalender:1MOAmt-1x9aN641EH-00XXUf@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Und alles preist Gott",
+        "datum": "2026-11-10",
+        "uhrzeit": "18:00",
+        "ort": "Pfarrsaal St. Franziskus, Friedrich-Ebert-Straße 231",
+        "link": "",
+        "beschreibung": "Vortrag von Prof. Dr. Asmaa El Maaroufi über Schöpfungsspiritualität und ökologische Verantwortung aus islamischer Sicht im Rahmen der Reihe „Interreligiöses Forum“ des Fördervereins „Garten der Religionen“ mit anschließendem Gespräch. Die Veranstaltung endet um 20 Uhr. Der Eintritt ist frei, Spenden sind willkommen.",
+        "kategorie": "Vortrag",
+        "freigegeben": true,
+        "hw_mail": "kalender:1N1Ofr-1wNVmE1rTP-012OfM@mrelayeu.kundenserver.de",
+        "herkunft": "zeitung"
+    },
+    {
+        "name": "Darf ich bitten? – das Tanzcafé",
+        "datum": "2026-11-11",
+        "uhrzeit": "15:00",
+        "ort": "Tanzhaus La Danza, Herner Straße 160",
+        "link": "",
+        "beschreibung": "Tanzcafé der Alzheimer-Gesellschaft Vest Recklinghausen von 15 bis 17 Uhr für alle mit Freude am Tanzen, auch für Menschen mit Demenz. Teilnahme kostet 7 Euro, Inhaber von Recklinghausen-Pass und Ehrenamtskarte haben freien Eintritt. Eine Anmeldung ist nicht erforderlich.",
+        "kategorie": "Familie",
+        "freigegeben": true,
+        "hw_mail": "kalender:000001dd6e33$c50f88e0$4f2e9aa0$@holzwurm-recklinghausen.de",
+        "herkunft": "zeitung"
     }
 ]
